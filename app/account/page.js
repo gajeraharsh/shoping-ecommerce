@@ -285,58 +285,7 @@ export default function AccountPage() {
 
         {/* Loyalty Program & Quick Actions Combined */}
         <div className="lg:col-span-1">
-          <div className="space-y-6 h-fit">
-            {/* Recent Activity */}
-            <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-                <span className="text-sm text-gray-500">Last 7 days</span>
-              </div>
-              <div className="max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                <div className="space-y-4 pr-2">
-                  {recentActivity.slice(0, 3).map((activity, index) => {
-                    const Icon = activity.icon;
-                    return (
-                      <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white transition-colors">
-                        <div className={`w-8 h-8 rounded-full ${activity.bgColor} flex items-center justify-center ${activity.color} flex-shrink-0`}>
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 mb-1 leading-tight">{activity.title}</p>
-                          <p className="text-xs text-gray-600 mb-2 line-clamp-2 leading-tight">{activity.description}</p>
-                          <p className="text-xs text-gray-500">{activity.time}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {recentActivity.length > 3 && (
-                    <div className="space-y-4">
-                      {recentActivity.slice(3).map((activity, index) => {
-                        const Icon = activity.icon;
-                        return (
-                          <div key={index + 3} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white transition-colors">
-                            <div className={`w-8 h-8 rounded-full ${activity.bgColor} flex items-center justify-center ${activity.color} flex-shrink-0`}>
-                              <Icon className="h-4 w-4" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-semibold text-gray-900 mb-1 leading-tight">{activity.title}</p>
-                              <p className="text-xs text-gray-600 mb-2 line-clamp-2 leading-tight">{activity.description}</p>
-                              <p className="text-xs text-gray-500">{activity.time}</p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <button className="text-sm text-primary hover:text-primary/80 font-medium">
-                  View all activity →
-                </button>
-              </div>
-            </div>
-
+          <div className="space-y-6">
             {/* Loyalty Program */}
             <div className="bg-gradient-to-br from-primary via-pink-500 to-purple-600 text-white rounded-xl p-6">
               <div className="flex items-center gap-2 mb-4">
