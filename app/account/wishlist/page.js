@@ -341,7 +341,7 @@ export default function WishlistPage() {
         }>
           {sortedItems.map(item => (
             <div key={item.id} className={`bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 group ${
-              viewMode === 'list' ? 'flex gap-6 p-6' : 'p-4'
+              viewMode === 'list' ? 'flex gap-6 p-6' : 'p-5'
             }`}>
               {/* Selection Checkbox */}
               <div className="absolute top-4 left-4 z-10">
