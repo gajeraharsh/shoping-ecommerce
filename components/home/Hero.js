@@ -68,20 +68,20 @@ export default function Hero() {
                       </span>
                     )}
                   </div>
-                  <div className="p-5 flex flex-col flex-grow">
-                    <div className="flex items-center gap-2 mb-1 text-sm text-yellow-600">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  <div className="p-3 sm:p-4 lg:p-5 flex flex-col flex-grow">
+                    <div className="flex items-center gap-2 mb-1 text-xs sm:text-sm text-yellow-600">
+                      <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
                       <span>
                         {product.rating} ({product.reviews})
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2">
+                    <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-800 dark:text-white mb-1 line-clamp-2">
                       {product.name}
                     </h3>
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-lg font-bold text-pink-600">₹{product.price}</span>
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                      <span className="text-base sm:text-lg font-bold text-pink-600">₹{product.price}</span>
                       {product.originalPrice && (
-                        <span className="text-sm text-gray-400 line-through">
+                        <span className="text-xs sm:text-sm text-gray-400 line-through">
                           ₹{product.originalPrice}
                         </span>
                       )}
