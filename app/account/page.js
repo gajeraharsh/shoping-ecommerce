@@ -151,9 +151,9 @@ export default function AccountPage() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         {/* Profile Information */}
-        <div className="xl:col-span-3">
+        <div className="xl:col-span-2">
           <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
@@ -282,101 +282,124 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {/* Recent Activity & Quick Actions */}
-        <div className="xl:col-span-2 space-y-6">
-          {/* Recent Activity */}
-          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-              <span className="text-sm text-gray-500">Last 7 days</span>
-            </div>
-            <div className="space-y-4">
-              {recentActivity.map((activity, index) => {
-                const Icon = activity.icon;
-                return (
-                  <div key={index} className="flex items-start gap-4 p-3 rounded-lg hover:bg-white transition-colors">
-                    <div className={`w-10 h-10 rounded-full ${activity.bgColor} flex items-center justify-center ${activity.color} flex-shrink-0`}>
-                      <Icon className="h-5 w-5" />
+        {/* Sidebar - Recent Activity, Loyalty Program & Quick Actions */}
+        <div className="xl:col-span-1">
+          <div className="space-y-6 h-fit">
+            {/* Recent Activity */}
+            <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+                <span className="text-sm text-gray-500">Last 7 days</span>
+              </div>
+              <div className="max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                <div className="space-y-4 pr-2">
+                  {recentActivity.slice(0, 3).map((activity, index) => {
+                    const Icon = activity.icon;
+                    return (
+                      <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white transition-colors">
+                        <div className={`w-8 h-8 rounded-full ${activity.bgColor} flex items-center justify-center ${activity.color} flex-shrink-0`}>
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-gray-900 mb-1 leading-tight">{activity.title}</p>
+                          <p className="text-xs text-gray-600 mb-2 line-clamp-2 leading-tight">{activity.description}</p>
+                          <p className="text-xs text-gray-500">{activity.time}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {recentActivity.length > 3 && (
+                    <div className="space-y-4">
+                      {recentActivity.slice(3).map((activity, index) => {
+                        const Icon = activity.icon;
+                        return (
+                          <div key={index + 3} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white transition-colors">
+                            <div className={`w-8 h-8 rounded-full ${activity.bgColor} flex items-center justify-center ${activity.color} flex-shrink-0`}>
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold text-gray-900 mb-1 leading-tight">{activity.title}</p>
+                              <p className="text-xs text-gray-600 mb-2 line-clamp-2 leading-tight">{activity.description}</p>
+                              <p className="text-xs text-gray-500">{activity.time}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 mb-1">{activity.title}</p>
-                      <p className="text-xs text-gray-600 mb-2 line-clamp-2">{activity.description}</p>
-                      <p className="text-xs text-gray-500">{activity.time}</p>
-                    </div>
-                  </div>
-                );
-              })}
+                  )}
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <button className="text-sm text-primary hover:text-primary/80 font-medium">
+                  View all activity →
+                </button>
+              </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <button className="text-sm text-primary hover:text-primary/80 font-medium">
-                View all activity →
-              </button>
-            </div>
-          </div>
 
-          {/* Loyalty Program */}
-          <div className="bg-gradient-to-br from-primary via-pink-500 to-purple-600 text-white rounded-xl p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Award className="h-6 w-6" />
-              <h3 className="text-lg font-semibold">Loyalty Program</h3>
-            </div>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-pink-100">Current Points</span>
-                <span className="text-2xl font-bold">2,450</span>
+            {/* Loyalty Program */}
+            <div className="bg-gradient-to-br from-primary via-pink-500 to-purple-600 text-white rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Award className="h-5 w-5" />
+                <h3 className="text-lg font-semibold">Loyalty Program</h3>
               </div>
-              <div className="w-full bg-pink-500/30 rounded-full h-3">
-                <div className="bg-white h-3 rounded-full" style={{ width: '65%' }}></div>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-pink-100 text-sm">Current Points</span>
+                  <span className="text-xl font-bold">2,450</span>
+                </div>
+                <div className="w-full bg-pink-500/30 rounded-full h-2">
+                  <div className="bg-white h-2 rounded-full" style={{ width: '65%' }}></div>
+                </div>
+                <p className="text-sm text-pink-100">550 points until Gold status</p>
+                <button className="w-full bg-white/20 hover:bg-white/30 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium">
+                  View Rewards
+                </button>
               </div>
-              <p className="text-sm text-pink-100">550 points until Gold status</p>
-              <button className="w-full bg-white/20 hover:bg-white/30 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium">
-                View Rewards
-              </button>
             </div>
-          </div>
 
-          {/* Quick Actions */}
-          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <button className="flex flex-col items-center gap-2 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                <Package className="h-6 w-6 text-blue-600" />
-                <span className="text-sm font-medium text-blue-900">Track Order</span>
-              </button>
-              <button className="flex flex-col items-center gap-2 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                <RotateCcw className="h-6 w-6 text-green-600" />
-                <span className="text-sm font-medium text-green-900">Return Item</span>
-              </button>
-              <button className="flex flex-col items-center gap-2 p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                <Heart className="h-6 w-6 text-purple-600" />
-                <span className="text-sm font-medium text-purple-900">Wishlist</span>
-              </button>
-              <button className="flex flex-col items-center gap-2 p-4 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
-                <CreditCard className="h-6 w-6 text-pink-600" />
-                <span className="text-sm font-medium text-pink-900">Payments</span>
-              </button>
+            {/* Quick Actions */}
+            <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <button className="flex flex-col items-center gap-2 p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                  <Package className="h-5 w-5 text-blue-600" />
+                  <span className="text-xs font-medium text-blue-900 text-center">Track Order</span>
+                </button>
+                <button className="flex flex-col items-center gap-2 p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+                  <RotateCcw className="h-5 w-5 text-green-600" />
+                  <span className="text-xs font-medium text-green-900 text-center">Return Item</span>
+                </button>
+                <button className="flex flex-col items-center gap-2 p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
+                  <Heart className="h-5 w-5 text-purple-600" />
+                  <span className="text-xs font-medium text-purple-900 text-center">Wishlist</span>
+                </button>
+                <button className="flex flex-col items-center gap-2 p-3 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
+                  <CreditCard className="h-5 w-5 text-pink-600" />
+                  <span className="text-xs font-medium text-pink-900 text-center">Payments</span>
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Account Summary */}
-          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Summary</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-sm text-gray-600">Member since</span>
-                <span className="text-sm font-medium text-gray-900">Jan 2023</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-sm text-gray-600">Total orders</span>
-                <span className="text-sm font-medium text-gray-900">12</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-sm text-gray-600">Amount spent</span>
-                <span className="text-sm font-medium text-gray-900">₹24,750</span>
-              </div>
-              <div className="flex justify-between items-center py-2">
-                <span className="text-sm text-gray-600">Saved amount</span>
-                <span className="text-sm font-medium text-green-600">₹3,240</span>
+            {/* Account Summary */}
+            <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Summary</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-sm text-gray-600">Member since</span>
+                  <span className="text-sm font-medium text-gray-900">Jan 2023</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-sm text-gray-600">Total orders</span>
+                  <span className="text-sm font-medium text-gray-900">12</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-sm text-gray-600">Amount spent</span>
+                  <span className="text-sm font-medium text-gray-900">₹24,750</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-sm text-gray-600">Saved amount</span>
+                  <span className="text-sm font-medium text-green-600">₹3,240</span>
+                </div>
               </div>
             </div>
           </div>
