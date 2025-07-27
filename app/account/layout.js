@@ -191,10 +191,10 @@ export default function AccountLayout({ children }) {
                           : 'text-gray-700 hover:bg-gray-50 hover:shadow-sm'
                       }`}
                     >
-                      <Icon className={`h-5 w-5 ${isActive ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-700'}`} />
+                      <Icon className={`h-5 w-5 ${isActive ? 'text-primary' : 'text-gray-500 group-hover:text-gray-700'}`} />
                       <div className="flex-1">
                         <div className="font-medium text-sm">{item.name}</div>
-                        <div className={`text-xs ${isActive ? 'text-blue-600' : 'text-gray-500'}`}>
+                        <div className={`text-xs ${isActive ? 'text-primary' : 'text-gray-500'}`}>
                           {item.description}
                         </div>
                       </div>
