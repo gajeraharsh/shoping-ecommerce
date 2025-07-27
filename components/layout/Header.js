@@ -21,6 +21,16 @@ export default function Header() {
   const cartCount = getCartItemsCount();
   const wishlistCount = wishlistItems.length;
 
+  const handleSearch = (searchTerm) => {
+    router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
+  };
+
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      handleSearch(searchQuery);
+    }
+  };
+
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Products', href: '/products' },
