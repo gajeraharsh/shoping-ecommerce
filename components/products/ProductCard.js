@@ -205,23 +205,23 @@ export default function ProductCard({ product }) {
           {/* Colors Preview */}
           <div className="flex items-center justify-between">
             <div className="flex gap-1">
-              {product.colors.slice(0, 4).map((color, index) => (
+              {product.colors.slice(0, 3).map((color, index) => (
                 <div
                   key={index}
-                  className="w-5 h-5 rounded-full border-2 border-gray-200 shadow-sm hover:scale-110 transition-transform cursor-pointer"
+                  className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm hover:scale-110 transition-transform cursor-pointer"
                   style={{ backgroundColor: color.toLowerCase() }}
                   title={color}
                 />
               ))}
-              {product.colors.length > 4 && (
-                <div className="w-5 h-5 rounded-full bg-gray-100 border-2 border-gray-200 flex items-center justify-center text-xs text-gray-500 font-medium">
-                  +{product.colors.length - 4}
+              {product.colors.length > 3 && (
+                <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 font-medium">
+                  +{product.colors.length - 3}
                 </div>
               )}
             </div>
-            
+
             {/* Size indicator */}
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-gray-500 dark:text-gray-400">
               {product.sizes.length} sizes
             </div>
           </div>
