@@ -64,7 +64,7 @@ export default function OrdersPage() {
         {
           id: 3,
           name: 'Designer Kurta Set',
-          image: '/api/placeholder/100/100',
+          image: 'https://images.pexels.com/photos/8674628/pexels-photo-8674628.jpeg?auto=compress&cs=tinysrgb&w=300',
           price: 1899,
           quantity: 1,
           size: 'XL',
