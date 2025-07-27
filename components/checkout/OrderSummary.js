@@ -1,14 +1,83 @@
 'use client';
 
+import { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
+import { Tag, Check, X } from 'lucide-react';
 
 export default function OrderSummary() {
   const { cartItems, getCartTotal } = useCart();
-  
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponError, setCouponError] = useState('');
+  const [isApplying, setIsApplying] = useState(false);
+
+  // Mock coupon data
+  const validCoupons = {
+    'WELCOME10': {
+      type: 'percentage',
+      value: 10,
+      minOrder: 500,
+      description: '10% off on orders above ₹500'
+    },
+    'FLAT50': {
+      type: 'fixed',
+      value: 50,
+      minOrder: 200,
+      description: '₹50 off on orders above ₹200'
+    },
+    'FIRST20': {
+      type: 'percentage',
+      value: 20,
+      minOrder: 1000,
+      description: '20% off on orders above ₹1000'
+    }
+  };
+
   const subtotal = getCartTotal();
   const shipping = subtotal > 999 ? 0 : 99;
   const tax = Math.round(subtotal * 0.18);
-  const total = subtotal + shipping + tax;
+
+  // Calculate discount
+  let discount = 0;
+  if (appliedCoupon) {
+    if (appliedCoupon.type === 'percentage') {
+      discount = Math.round((subtotal * appliedCoupon.value) / 100);
+    } else {
+      discount = appliedCoupon.value;
+    }
+  }
+
+  const total = subtotal + shipping + tax - discount;
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return;
+
+    setIsApplying(true);
+    setCouponError('');
+
+    // Simulate API call
+    setTimeout(() => {
+      const coupon = validCoupons[couponCode.toUpperCase()];
+
+      if (!coupon) {
+        setCouponError('Invalid coupon code');
+      } else if (subtotal < coupon.minOrder) {
+        setCouponError(`Minimum order amount ₹${coupon.minOrder} required`);
+      } else {
+        setAppliedCoupon(coupon);
+        setCouponCode('');
+        setCouponError('');
+      }
+
+      setIsApplying(false);
+    }, 1000);
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    setCouponError('');
+  };
 
   return (
     <div className="bg-white border rounded-lg p-6 sticky top-24">
