@@ -68,14 +68,14 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
+        <div className="border-t border-gray-800 dark:border-gray-700 mt-6 sm:mt-8 pt-6 sm:pt-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+            <p className="text-gray-400 dark:text-gray-300 text-xs sm:text-sm text-center sm:text-left">
               &copy; 2024 Fashionista. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-400 hover:text-white text-sm">Privacy Policy</Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white text-sm">Terms of Service</Link>
+            <div className="flex space-x-4 sm:space-x-6 mt-0">
+              <Link href="/privacy" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm transition-colors">Terms of Service</Link>
             </div>
           </div>
         </div>
