@@ -283,8 +283,8 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {/* Sidebar - Recent Activity, Loyalty Program & Quick Actions */}
-        <div className="xl:col-span-1">
+        {/* Loyalty Program & Quick Actions Combined */}
+        <div className="lg:col-span-1">
           <div className="space-y-6 h-fit">
             {/* Recent Activity */}
             <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
