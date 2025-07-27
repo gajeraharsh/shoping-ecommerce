@@ -236,7 +236,7 @@ export default function OrdersPage() {
               >
                 {option.label}
                 <span className={`px-2 py-0.5 rounded-full text-xs ${
-                  activeFilter === option.id ? 'bg-blue-200' : 'bg-gray-200'
+                  activeFilter === option.id ? 'bg-pink-200' : 'bg-gray-200'
                 }`}>
                   {option.count}
                 </span>
