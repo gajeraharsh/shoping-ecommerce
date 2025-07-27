@@ -11,11 +11,25 @@ import QuickViewModal from '@/components/modals/QuickViewModal';
 
 export default function ProductCard({ product }) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [showQuickView, setShowQuickView] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
   const { showToast } = useToast();
-  
+
   const inWishlist = isInWishlist(product.id);
+
+  // Badge logic
+  const getBadge = () => {
+    if (product.isNew) return { text: 'NEW', color: 'bg-green-500' };
+    if (product.isTrending) return { text: 'TRENDING', color: 'bg-purple-500' };
+    if (product.discount > 30) return { text: 'HOT DEAL', color: 'bg-red-500' };
+    if (product.stock < 10) return { text: 'LOW STOCK', color: 'bg-orange-500' };
+    return null;
+  };
+
+  const badge = getBadge();
 
   const handleWishlistToggle = (e) => {
     e.preventDefault();
