@@ -187,7 +187,7 @@ export default function AccountLayout({ children }) {
                       href={item.href}
                       className={`flex items-center gap-3 px-4 py-3 mb-1 rounded-lg transition-all duration-200 group ${
                         isActive
-                          ? 'bg-blue-50 text-blue-700 shadow-sm border border-blue-100'
+                          ? 'bg-pink-50 text-pink-700 shadow-sm border border-pink-100'
                           : 'text-gray-700 hover:bg-gray-50 hover:shadow-sm'
                       }`}
                     >
