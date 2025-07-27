@@ -49,8 +49,14 @@ export default function NewsletterSignup({ variant = 'default', onClose }) {
         <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
           {/* Close Button */}
           <button
-            onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className="absolute top-4 right-4 z-50 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors bg-white/90 dark:bg-gray-700/90 shadow-lg"
+            aria-label="Close popup"
+            type="button"
           >
             <X className="h-5 w-5 text-gray-400 dark:text-gray-300" />
           </button>
