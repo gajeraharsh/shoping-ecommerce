@@ -4,7 +4,7 @@ import { categories } from '@/utils/mockData';
 export default function Categories() {
   return (
     <section className="py-8 sm:py-12 lg:py-16 bg-white dark:bg-gray-900">
-      <div className="container mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Shop by Category

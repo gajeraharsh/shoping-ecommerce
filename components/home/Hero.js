@@ -26,11 +26,11 @@ export default function Hero() {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full filter blur-3xl"></div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 lg:py-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-16 relative z-10">
         {/* Main Hero Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16">
           {/* Text Content */}
-          <div className="lg:col-span-5 text-center lg:text-left">
+          <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
               New Collection 2024
@@ -66,7 +66,7 @@ export default function Hero() {
           </div>
 
           {/* Featured Product Showcase */}
-          <div className="lg:col-span-7">
+          <div>
             {loading ? (
               <div className="animate-pulse">
                 <div className="bg-gray-200 dark:bg-gray-700 rounded-3xl h-[500px] lg:h-[600px]"></div>
