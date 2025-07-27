@@ -307,20 +307,41 @@ export default function NotificationsPage() {
       </div>
 
       {/* Notification Categories */}
-      <div className="space-y-8">
+      <div className="space-y-6">
         {notificationCategories.map(category => {
           const Icon = category.icon;
+          const isExpanded = expandedCategories[category.id];
+
           return (
-            <div key={category.id} className="bg-white border border-gray-200 rounded-xl p-6">
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <Icon className={`h-5 w-5 ${category.color}`} />
-                  {category.title}
-                </h3>
-                <p className="text-gray-600">{category.description}</p>
+            <div key={category.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+              {/* Category Header */}
+              <div className="p-6 border-b border-gray-100">
+                <button
+                  onClick={() => toggleCategory(category.id)}
+                  className="w-full flex items-center justify-between text-left group"
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className={`h-6 w-6 ${category.color}`} />
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors">
+                        {category.title}
+                      </h3>
+                      <p className="text-sm text-gray-600">{category.description}</p>
+                    </div>
+                  </div>
+                  <div className={`transform transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>
+                    <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </button>
               </div>
 
-              <div className="space-y-4">
+              {/* Category Content */}
+              {isExpanded && (
+                <div className="p-6 max-h-96 overflow-y-auto scrollbar-hide">
+
+                  <div className="space-y-4">
                 {category.settings.map(setting => (
                   <div key={setting.key} className="border border-gray-100 rounded-lg p-4">
                     <div className="flex items-start justify-between mb-3">
@@ -407,8 +428,10 @@ export default function NotificationsPage() {
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  ))}
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
