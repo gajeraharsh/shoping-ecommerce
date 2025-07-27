@@ -4,6 +4,13 @@ import Hero from '@/components/home/Hero';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import Categories from '@/components/home/Categories';
 import Newsletter from '@/components/home/Newsletter';
+import TrustBadges from '@/components/ui/TrustBadges';
+import SocialProof from '@/components/ui/SocialProof';
+import { ProductRecommendationGrid } from '@/components/products/ProductRecommendations';
+import RecentlyViewed from '@/components/products/RecentlyViewed';
+import NewsletterSignup from '@/components/marketing/NewsletterSignup';
+import ExitIntentPopup from '@/components/marketing/ExitIntentPopup';
+import InstagramFeed from '@/components/social/InstagramFeed';
 
 export default function Home() {
   return (
@@ -11,11 +18,22 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <TrustBadges variant="compact" />
         <Categories />
         <FeaturedProducts />
-        <Newsletter />
+        <ProductRecommendationGrid />
+        <TrustBadges variant="social" />
+        <SocialProof variant="testimonials" />
+        <RecentlyViewed />
+        <NewsletterSignup />
+        <SocialProof variant="reviews" />
+        <InstagramFeed />
       </main>
       <Footer />
+
+      {/* Modern Features */}
+      <SocialProof variant="activity" />
+      <ExitIntentPopup />
     </div>
   );
 }
