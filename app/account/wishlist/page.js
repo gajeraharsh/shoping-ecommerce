@@ -408,18 +408,18 @@ export default function WishlistPage() {
                 </div>
 
                 {/* Actions */}
-                <div className={`flex gap-2 ${viewMode === 'list' ? 'mt-4' : ''}`}>
+                <div className={`flex gap-3 ${viewMode === 'list' ? 'mt-6' : ''}`}>
                   <button
                     onClick={() => handleAddToCart(item)}
                     disabled={!item.inStock}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-sm font-medium"
                   >
                     <ShoppingCart className="h-4 w-4" />
                     {item.inStock ? 'Add to Cart' : 'Out of Stock'}
                   </button>
                   <Link
                     href={`/products/${item.id}`}
-                    className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                    className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center"
                   >
                     <Eye className="h-4 w-4" />
                   </Link>
