@@ -66,27 +66,27 @@ export default function Header() {
           </div>
 
           {/* Action Icons */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
             {/* Mobile Search */}
-            <button className="lg:hidden p-2 text-gray-700 hover:text-primary">
-              <Search className="h-5 w-5" />
+            <button className="lg:hidden p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+              <Search className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
 
             {/* Wishlist */}
-            <Link href="/wishlist" className="relative p-2 text-gray-700 hover:text-primary">
-              <Heart className="h-5 w-5" />
+            <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+              <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-primary text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-xs">
                   {wishlistCount}
                 </span>
               )}
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative p-2 text-gray-700 hover:text-primary">
-              <ShoppingBag className="h-5 w-5" />
+            <Link href="/cart" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+              <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-primary text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-xs">
                   {cartCount}
                 </span>
               )}
@@ -94,10 +94,10 @@ export default function Header() {
 
             {/* User Account */}
             <div className="relative group">
-              <button className="p-2 text-gray-700 hover:text-primary">
-                <User className="h-5 w-5" />
+              <button className="p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+                <User className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
-              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 {user ? (
                   <>
                     <Link
