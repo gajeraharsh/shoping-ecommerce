@@ -48,14 +48,14 @@ export default function InstagramFeed() {
   ];
 
   return (
-    <div className="py-16 bg-gray-50">
+    <div className="py-16 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Instagram className="h-8 w-8 text-pink-500" />
-            <h2 className="text-3xl font-bold text-gray-900">Follow Us on Instagram</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Follow Us on Instagram</h2>
           </div>
-          <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
             Get daily fashion inspiration, styling tips, and behind-the-scenes content from our community
           </p>
           <a
