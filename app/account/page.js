@@ -45,7 +45,7 @@ export default function AccountPage() {
       title: 'Total Orders',
       value: '12',
       icon: Package,
-      color: 'bg-blue-100 text-blue-600',
+      color: 'bg-primary/10 text-primary',
       trend: '+2 this month'
     },
     {
