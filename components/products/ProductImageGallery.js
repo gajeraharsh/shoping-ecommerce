@@ -52,7 +52,7 @@ export default function ProductImageGallery({ images }) {
               className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 ${
                 currentImage === index
                   ? 'border-primary'
-                  : 'border-gray-300 hover:border-gray-400'
+                  : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
               }`}
             >
               <img
