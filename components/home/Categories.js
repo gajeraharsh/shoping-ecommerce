@@ -27,9 +27,9 @@ export default function Categories() {
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"></div>
-              <div className="absolute bottom-4 left-4 text-white">
-                <h3 className="text-xl font-bold mb-1">{category.name}</h3>
-                <p className="text-sm opacity-90">{category.count} items</p>
+              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 text-white">
+                <h3 className="text-sm sm:text-lg lg:text-xl font-bold mb-1">{category.name}</h3>
+                <p className="text-xs sm:text-sm opacity-90">{category.count} items</p>
               </div>
             </Link>
           ))}
