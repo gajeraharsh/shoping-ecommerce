@@ -192,11 +192,11 @@ export default function ExitIntentPopup() {
         </div>
 
         {/* Trust indicators */}
-        <div className="bg-gray-50 dark:bg-gray-700 px-6 py-3 border-t dark:border-gray-600">
-          <div className="flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-            <span>🔒 Secure Checkout</span>
+        <div className="bg-gray-50 dark:bg-gray-700 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 border-t dark:border-gray-600">
+          <div className="flex items-center justify-center gap-2 sm:gap-3 lg:gap-4 text-xs text-gray-500 dark:text-gray-400 flex-wrap">
+            <span>🔒 Secure</span>
             <span>📦 Free Returns</span>
-            <span>⚡ Instant Discount</span>
+            <span>⚡ Instant</span>
           </div>
         </div>
       </div>
