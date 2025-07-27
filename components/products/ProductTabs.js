@@ -152,13 +152,13 @@ export default function ProductTabs({ product }) {
 
             <div className="space-y-6">
               {mockReviews.map(review => (
-                <div key={review.id} className="border-b border-gray-200 pb-6">
+                <div key={review.id} className="border-b border-gray-200 dark:border-gray-700 pb-6">
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">{review.user}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">{review.user}</span>
                         {review.verified && (
-                          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                          <span className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 text-xs px-2 py-1 rounded">
                             Verified Purchase
                           </span>
                         )}
@@ -171,16 +171,16 @@ export default function ProductTabs({ product }) {
                               className={`h-3 w-3 ${
                                 i < review.rating
                                   ? 'fill-yellow-400 text-yellow-400'
-                                  : 'text-gray-300'
+                                  : 'text-gray-300 dark:text-gray-600'
                               }`}
                             />
                           ))}
                         </div>
-                        <span className="text-sm text-gray-500">{review.date}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{review.date}</span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600">{review.comment}</p>
+                  <p className="text-gray-600 dark:text-gray-300">{review.comment}</p>
                 </div>
               ))}
             </div>
