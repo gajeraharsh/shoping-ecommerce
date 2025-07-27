@@ -12,9 +12,11 @@ import AdvancedSearch from '@/components/search/AdvancedSearch';
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const { getCartItemsCount } = useCart();
   const { wishlistItems } = useWishlist();
   const { user, logout } = useAuth();
+  const router = useRouter();
 
   const cartCount = getCartItemsCount();
   const wishlistCount = wishlistItems.length;
