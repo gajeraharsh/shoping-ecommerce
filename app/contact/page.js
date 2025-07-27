@@ -57,9 +57,9 @@ export default function ContactPage() {
                   <Mail className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Email Us</h3>
-                  <p className="text-gray-600">support@fashionista.com</p>
-                  <p className="text-gray-600">business@fashionista.com</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Email Us</h3>
+                  <p className="text-gray-600 dark:text-gray-300">support@fashionista.com</p>
+                  <p className="text-gray-600 dark:text-gray-300">business@fashionista.com</p>
                 </div>
               </div>
 
@@ -68,9 +68,9 @@ export default function ContactPage() {
                   <Phone className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Call Us</h3>
-                  <p className="text-gray-600">+1 (555) 123-4567</p>
-                  <p className="text-gray-600">+1 (555) 123-4568</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Call Us</h3>
+                  <p className="text-gray-600 dark:text-gray-300">+1 (555) 123-4567</p>
+                  <p className="text-gray-600 dark:text-gray-300">+1 (555) 123-4568</p>
                 </div>
               </div>
 
@@ -79,9 +79,9 @@ export default function ContactPage() {
                   <MapPin className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Visit Us</h3>
-                  <p className="text-gray-600">123 Fashion Street</p>
-                  <p className="text-gray-600">New York, NY 10001</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Visit Us</h3>
+                  <p className="text-gray-600 dark:text-gray-300">123 Fashion Street</p>
+                  <p className="text-gray-600 dark:text-gray-300">New York, NY 10001</p>
                 </div>
               </div>
 
@@ -90,10 +90,10 @@ export default function ContactPage() {
                   <Clock className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Business Hours</h3>
-                  <p className="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                  <p className="text-gray-600">Saturday: 10:00 AM - 4:00 PM</p>
-                  <p className="text-gray-600">Sunday: Closed</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Business Hours</h3>
+                  <p className="text-gray-600 dark:text-gray-300">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                  <p className="text-gray-600 dark:text-gray-300">Saturday: 10:00 AM - 4:00 PM</p>
+                  <p className="text-gray-600 dark:text-gray-300">Sunday: Closed</p>
                 </div>
               </div>
             </div>
