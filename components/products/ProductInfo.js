@@ -45,7 +45,7 @@ export default function ProductInfo({ product }) {
     <div className="space-y-6">
       {/* Product Title & Rating */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{product.name}</h1>
         <div className="flex items-center gap-4">
           <div className="flex items-center">
             <div className="flex">
@@ -55,12 +55,12 @@ export default function ProductInfo({ product }) {
                   className={`h-4 w-4 ${
                     i < Math.floor(product.rating)
                       ? 'fill-yellow-400 text-yellow-400'
-                      : 'text-gray-300'
+                      : 'text-gray-300 dark:text-gray-600'
                   }`}
                 />
               ))}
             </div>
-            <span className="ml-2 text-sm text-gray-600">
+            <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
               {product.rating} ({product.reviews} reviews)
             </span>
           </div>
@@ -69,13 +69,13 @@ export default function ProductInfo({ product }) {
 
       {/* Price */}
       <div className="flex items-center gap-4">
-        <span className="text-3xl font-bold text-gray-900">₹{product.price}</span>
+        <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{product.price}</span>
         {product.originalPrice && (
           <>
-            <span className="text-xl text-gray-500 line-through">
+            <span className="text-xl text-gray-500 dark:text-gray-400 line-through">
               ₹{product.originalPrice}
             </span>
-            <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-semibold">
+            <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-2 py-1 rounded text-sm font-semibold">
               {product.discount}% OFF
             </span>
           </>
@@ -84,7 +84,7 @@ export default function ProductInfo({ product }) {
 
       {/* Size Selection */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">Size</h3>
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Size</h3>
         <div className="flex gap-2">
           {product.sizes.map(size => (
             <button
@@ -93,7 +93,7 @@ export default function ProductInfo({ product }) {
               className={`px-4 py-2 border rounded-lg transition-colors ${
                 selectedSize === size
                   ? 'bg-primary text-white border-primary'
-                  : 'border-gray-300 hover:border-primary hover:text-primary'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-800'
               }`}
             >
               {size}
@@ -104,7 +104,7 @@ export default function ProductInfo({ product }) {
 
       {/* Color Selection */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">Color</h3>
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Color</h3>
         <div className="flex gap-2">
           {product.colors.map(color => (
             <button
@@ -113,7 +113,7 @@ export default function ProductInfo({ product }) {
               className={`px-4 py-2 border rounded-lg transition-colors ${
                 selectedColor === color
                   ? 'bg-primary text-white border-primary'
-                  : 'border-gray-300 hover:border-primary hover:text-primary'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-800'
               }`}
             >
               {color}
@@ -124,18 +124,18 @@ export default function ProductInfo({ product }) {
 
       {/* Quantity */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">Quantity</h3>
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Quantity</h3>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50"
+            className="w-10 h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             -
           </button>
-          <span className="text-lg font-semibold w-12 text-center">{quantity}</span>
+          <span className="text-lg font-semibold w-12 text-center text-gray-900 dark:text-white">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50"
+            className="w-10 h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             +
           </button>
@@ -153,34 +153,34 @@ export default function ProductInfo({ product }) {
         </button>
         <button
           onClick={handleWishlistToggle}
-          className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-6 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
-          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
         </button>
       </div>
 
       {/* Product Features */}
-      <div className="border-t pt-6">
+      <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-3">
             <Truck className="h-5 w-5 text-primary" />
             <div>
-              <div className="font-medium">Free Shipping</div>
-              <div className="text-sm text-gray-600">On orders over ₹999</div>
+              <div className="font-medium text-gray-900 dark:text-white">Free Shipping</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">On orders over ₹999</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <RotateCcw className="h-5 w-5 text-primary" />
             <div>
-              <div className="font-medium">Easy Returns</div>
-              <div className="text-sm text-gray-600">30-day return policy</div>
+              <div className="font-medium text-gray-900 dark:text-white">Easy Returns</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">30-day return policy</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <Shield className="h-5 w-5 text-primary" />
             <div>
-              <div className="font-medium">Secure Payment</div>
-              <div className="text-sm text-gray-600">100% secure checkout</div>
+              <div className="font-medium text-gray-900 dark:text-white">Secure Payment</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">100% secure checkout</div>
             </div>
           </div>
         </div>

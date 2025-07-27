@@ -41,7 +41,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-40">
+    <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-40 transition-colors">
       <div className="container mx-auto px-2 sm:px-4">
         <div className="flex items-center justify-between h-14 sm:h-16 min-w-0">
           {/* Logo */}
@@ -49,8 +49,8 @@ export default function Header() {
             <div className="bg-primary text-white px-2 sm:px-3 py-1 rounded-lg font-bold text-lg sm:text-xl">
               F
             </div>
-            <span className="text-lg sm:text-xl font-bold text-gray-900 hidden xs:block">Fashionista</span>
-            <span className="text-lg font-bold text-gray-900 xs:hidden">F</span>
+            <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white hidden xs:block">Fashionista</span>
+            <span className="text-lg font-bold text-gray-900 dark:text-white xs:hidden">F</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -59,7 +59,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-primary transition-colors font-medium"
+                className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium"
               >
                 {item.name}
               </Link>
@@ -77,7 +77,7 @@ export default function Header() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleSearchKeyPress}
                 onFocus={() => setShowAdvancedSearch(true)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer"
               />
             </div>
           </div>
@@ -87,13 +87,13 @@ export default function Header() {
             {/* Mobile Search */}
             <button
               onClick={() => setShowAdvancedSearch(true)}
-              className="lg:hidden p-1.5 sm:p-2 text-gray-700 hover:text-primary transition-colors"
+              className="lg:hidden p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors"
             >
               <Search className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
 
             {/* Wishlist */}
-            <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+            <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary">
               <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-primary text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-xs">
@@ -103,7 +103,7 @@ export default function Header() {
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+            <Link href="/cart" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary">
               <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-primary text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-xs">
@@ -117,27 +117,27 @@ export default function Header() {
 
             {/* User Account */}
             <div className="relative group">
-              <button className="p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+              <button className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary">
                 <User className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
-              <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 {user ? (
                   <>
                     <Link
                       href="/account"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       My Account
                     </Link>
                     <Link
                       href="/account"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       Orders
                     </Link>
                     <button
                       onClick={logout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       Logout
                     </button>
@@ -146,13 +146,13 @@ export default function Header() {
                   <>
                     <Link
                       href="/auth/login"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       Login
                     </Link>
                     <Link
                       href="/auth/register"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       Register
                     </Link>
@@ -164,7 +164,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-1.5 sm:p-2 text-gray-700 hover:text-primary"
+              className="md:hidden p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary"
             >
               {isMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
             </button>
@@ -173,14 +173,14 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-2 sm:py-4">
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-2 sm:py-4">
             <div className="flex flex-col space-y-1">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="px-2 sm:px-4 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded text-sm sm:text-base"
+                  className="px-2 sm:px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700 rounded text-sm sm:text-base"
                 >
                   {item.name}
                 </Link>
@@ -195,7 +195,7 @@ export default function Header() {
                     placeholder="Search products..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                   />
                 </div>
               </div>

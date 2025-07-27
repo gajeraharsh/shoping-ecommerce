@@ -32,7 +32,7 @@ export default function Newsletter() {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex justify-center mb-6">
-            <div className="bg-white rounded-full p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-full p-4">
               <Mail className="h-8 w-8 text-primary" />
             </div>
           </div>
@@ -51,13 +51,13 @@ export default function Newsletter() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address"
-                className="flex-1 px-4 py-3 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-white"
+                className="flex-1 px-4 py-3 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-white text-gray-900 dark:text-white bg-white dark:bg-gray-800"
                 disabled={loading}
               />
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-white text-primary px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors font-semibold disabled:opacity-50"
+                className="bg-white dark:bg-gray-800 text-primary px-8 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-semibold disabled:opacity-50"
               >
                 {loading ? 'Subscribing...' : 'Subscribe'}
               </button>

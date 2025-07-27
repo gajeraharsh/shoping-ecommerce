@@ -34,14 +34,14 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
-      
+
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Contact Us</h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             We'd love to hear from you. Send us a message and we'll respond as soon as possible.
           </p>
         </div>
@@ -49,51 +49,51 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <div>
-            <h2 className="text-2xl font-semibold mb-6">Get in Touch</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Get in Touch</h2>
             
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
+                <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
                   <Mail className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Email Us</h3>
-                  <p className="text-gray-600">support@fashionista.com</p>
-                  <p className="text-gray-600">business@fashionista.com</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Email Us</h3>
+                  <p className="text-gray-600 dark:text-gray-300">support@fashionista.com</p>
+                  <p className="text-gray-600 dark:text-gray-300">business@fashionista.com</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
+                <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
                   <Phone className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Call Us</h3>
-                  <p className="text-gray-600">+1 (555) 123-4567</p>
-                  <p className="text-gray-600">+1 (555) 123-4568</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Call Us</h3>
+                  <p className="text-gray-600 dark:text-gray-300">+1 (555) 123-4567</p>
+                  <p className="text-gray-600 dark:text-gray-300">+1 (555) 123-4568</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
+                <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
                   <MapPin className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Visit Us</h3>
-                  <p className="text-gray-600">123 Fashion Street</p>
-                  <p className="text-gray-600">New York, NY 10001</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Visit Us</h3>
+                  <p className="text-gray-600 dark:text-gray-300">123 Fashion Street</p>
+                  <p className="text-gray-600 dark:text-gray-300">New York, NY 10001</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
+                <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
                   <Clock className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Business Hours</h3>
-                  <p className="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                  <p className="text-gray-600">Saturday: 10:00 AM - 4:00 PM</p>
-                  <p className="text-gray-600">Sunday: Closed</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Business Hours</h3>
+                  <p className="text-gray-600 dark:text-gray-300">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                  <p className="text-gray-600 dark:text-gray-300">Saturday: 10:00 AM - 4:00 PM</p>
+                  <p className="text-gray-600 dark:text-gray-300">Sunday: Closed</p>
                 </div>
               </div>
             </div>
@@ -101,11 +101,11 @@ export default function ContactPage() {
 
           {/* Contact Form */}
           <div>
-            <h2 className="text-2xl font-semibold mb-6">Send Us a Message</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Send Us a Message</h2>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Full Name
                 </label>
                 <input
@@ -115,13 +115,13 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Your full name"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Email Address
                 </label>
                 <input
@@ -131,13 +131,13 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="your.email@example.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Subject
                 </label>
                 <select
@@ -146,7 +146,7 @@ export default function ContactPage() {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
                   <option value="">Select a subject</option>
                   <option value="general">General Inquiry</option>
@@ -159,7 +159,7 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Message
                 </label>
                 <textarea
@@ -169,7 +169,7 @@ export default function ContactPage() {
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                   placeholder="Please describe your inquiry in detail..."
                 />
               </div>
@@ -194,23 +194,23 @@ export default function ContactPage() {
 
         {/* FAQ Section */}
         <div className="mt-16">
-          <h2 className="text-2xl font-semibold text-center mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-2xl font-semibold text-center mb-8 text-gray-900 dark:text-white">Frequently Asked Questions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">What are your shipping options?</h3>
-              <p className="text-gray-600">We offer standard, express, and overnight shipping options. Free shipping on orders over $75.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What are your shipping options?</h3>
+              <p className="text-gray-600 dark:text-gray-300">We offer standard, express, and overnight shipping options. Free shipping on orders over $75.</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">What is your return policy?</h3>
-              <p className="text-gray-600">We accept returns within 30 days of purchase. Items must be in original condition with tags.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What is your return policy?</h3>
+              <p className="text-gray-600 dark:text-gray-300">We accept returns within 30 days of purchase. Items must be in original condition with tags.</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Do you ship internationally?</h3>
-              <p className="text-gray-600">Yes, we ship to most countries worldwide. International shipping rates apply.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Do you ship internationally?</h3>
+              <p className="text-gray-600 dark:text-gray-300">Yes, we ship to most countries worldwide. International shipping rates apply.</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">How can I track my order?</h3>
-              <p className="text-gray-600">You'll receive a tracking number via email once your order ships. You can track it on our website.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">How can I track my order?</h3>
+              <p className="text-gray-600 dark:text-gray-300">You'll receive a tracking number via email once your order ships. You can track it on our website.</p>
             </div>
           </div>
         </div>

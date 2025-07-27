@@ -5,17 +5,28 @@ import { Moon, Sun } from 'lucide-react';
 
 export default function DarkModeToggle() {
   const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Check for saved theme preference or default to light mode
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
+
     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
       setIsDark(true);
       document.documentElement.classList.add('dark');
     }
   }, []);
+
+  // Prevent hydration issues by not rendering until mounted
+  if (!mounted) {
+    return (
+      <div className="p-2 rounded-lg w-9 h-9 flex items-center justify-center">
+        <div className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+      </div>
+    );
+  }
 
   const toggleDarkMode = () => {
     const newIsDark = !isDark;

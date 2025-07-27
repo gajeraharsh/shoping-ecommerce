@@ -48,14 +48,14 @@ export default function InstagramFeed() {
   ];
 
   return (
-    <div className="py-16 bg-gray-50">
+    <div className="py-16 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Instagram className="h-8 w-8 text-pink-500" />
-            <h2 className="text-3xl font-bold text-gray-900">Follow Us on Instagram</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Follow Us on Instagram</h2>
           </div>
-          <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
             Get daily fashion inspiration, styling tips, and behind-the-scenes content from our community
           </p>
           <a
@@ -74,7 +74,7 @@ export default function InstagramFeed() {
           {instagramPosts.map((post) => (
             <div
               key={post.id}
-              className="group relative aspect-square bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
+              className="group relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer"
             >
               <img
                 src={post.image}
@@ -108,15 +108,15 @@ export default function InstagramFeed() {
         </div>
 
         <div className="text-center mt-8">
-          <p className="text-gray-600 mb-4">
-            Tag us <span className="font-semibold text-pink-500">@fashionista</span> and use 
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
+            Tag us <span className="font-semibold text-pink-500">@fashionista</span> and use
             <span className="font-semibold text-pink-500"> #FashionistaStyle</span> for a chance to be featured!
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {['#FashionistaStyle', '#OOTD', '#EthnicWear', '#CasualChic', '#Traditional'].map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium hover:bg-pink-200 transition-colors cursor-pointer"
+                className="px-3 py-1 bg-pink-100 dark:bg-pink-900/50 text-pink-700 dark:text-pink-400 rounded-full text-sm font-medium hover:bg-pink-200 dark:hover:bg-pink-900/70 transition-colors cursor-pointer"
               >
                 {tag}
               </span>

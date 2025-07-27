@@ -108,11 +108,11 @@ export default function ProductRecommendations({
   };
 
   return (
-    <div className="py-12 bg-gray-50">
+    <div className="py-12 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-2 mb-8">
           {getIcon()}
-          <h2 className="text-2xl font-bold text-gray-900">{getTitle()}</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{getTitle()}</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -123,7 +123,7 @@ export default function ProductRecommendations({
 
         {type === 'trending' && (
           <div className="text-center mt-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full border text-sm text-gray-600">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 rounded-full border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-300">
               <TrendingUp className="h-4 w-4 text-primary" />
               <span>Updated hourly based on customer activity</span>
             </div>

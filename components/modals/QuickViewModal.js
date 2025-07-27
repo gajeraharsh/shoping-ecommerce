@@ -29,14 +29,28 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+
+      // Add escape key handler
+      const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+          onClose();
+        }
+      };
+
+      document.addEventListener('keydown', handleEscape);
+
+      return () => {
+        document.body.style.overflow = 'unset';
+        document.removeEventListener('keydown', handleEscape);
+      };
     } else {
       document.body.style.overflow = 'unset';
     }
-    
+
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   if (!isOpen || !product) return null;
 
@@ -73,21 +87,35 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quickview-title"
+    >
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      
+
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+      <div
+        className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close Button */}
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 bg-white/80 hover:bg-white rounded-full transition-colors"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose();
+          }}
+          className="absolute top-4 right-4 z-50 p-2 bg-white/80 hover:bg-white dark:bg-gray-700/80 dark:hover:bg-gray-700 rounded-full transition-colors shadow-lg"
+          aria-label="Close modal"
+          type="button"
         >
-          <X className="h-5 w-5" />
+          <X className="h-5 w-5 text-gray-600 dark:text-gray-300" />
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 h-full">
@@ -133,7 +161,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
           {/* Product Details */}
           <div className="p-6 overflow-y-auto">
             <div className="mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{product.name}</h2>
+              <h2 id="quickview-title" className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{product.name}</h2>
               
               <div className="flex items-center gap-2 mb-2">
                 <div className="flex items-center">

@@ -42,7 +42,7 @@ export default function ProductTabs({ product }) {
 
   return (
     <div className="mt-12">
-      <div className="border-b border-gray-200">
+      <div className="border-b border-gray-200 dark:border-gray-700">
         <nav className="flex space-x-8">
           {tabs.map(tab => (
             <button
@@ -51,7 +51,7 @@ export default function ProductTabs({ product }) {
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
               }`}
             >
               {tab.label}
@@ -63,11 +63,11 @@ export default function ProductTabs({ product }) {
       <div className="py-6">
         {activeTab === 'description' && (
           <div className="prose max-w-none">
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
               {product.description}
             </p>
-            <h4 className="font-semibold mt-4 mb-2">Key Features:</h4>
-            <ul className="list-disc list-inside space-y-1 text-gray-600">
+            <h4 className="font-semibold mt-4 mb-2 text-gray-900 dark:text-white">Key Features:</h4>
+            <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-300">
               <li>Premium quality fabric</li>
               <li>Comfortable fit for all-day wear</li>
               <li>Easy care and maintenance</li>
@@ -79,29 +79,29 @@ export default function ProductTabs({ product }) {
         {activeTab === 'specifications' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-semibold mb-3">Product Details</h4>
+              <h4 className="font-semibold mb-3 text-gray-900 dark:text-white">Product Details</h4>
               <dl className="space-y-2">
                 <div className="flex justify-between">
-                  <dt className="text-gray-600">Fabric:</dt>
-                  <dd className="font-medium">{product.fabric}</dd>
+                  <dt className="text-gray-600 dark:text-gray-400">Fabric:</dt>
+                  <dd className="font-medium text-gray-900 dark:text-white">{product.fabric}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-600">Care Instructions:</dt>
-                  <dd className="font-medium">{product.care}</dd>
+                  <dt className="text-gray-600 dark:text-gray-400">Care Instructions:</dt>
+                  <dd className="font-medium text-gray-900 dark:text-white">{product.care}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-600">Available Sizes:</dt>
-                  <dd className="font-medium">{product.sizes.join(', ')}</dd>
+                  <dt className="text-gray-600 dark:text-gray-400">Available Sizes:</dt>
+                  <dd className="font-medium text-gray-900 dark:text-white">{product.sizes.join(', ')}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-600">Available Colors:</dt>
-                  <dd className="font-medium">{product.colors.join(', ')}</dd>
+                  <dt className="text-gray-600 dark:text-gray-400">Available Colors:</dt>
+                  <dd className="font-medium text-gray-900 dark:text-white">{product.colors.join(', ')}</dd>
                 </div>
               </dl>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">Fit & Styling</h4>
-              <ul className="space-y-2 text-gray-600">
+              <h4 className="font-semibold mb-3 text-gray-900 dark:text-white">Fit & Styling</h4>
+              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                 <li>Regular fit</li>
                 <li>Model is 5'6" wearing size M</li>
                 <li>Pairs well with jeans, palazzo, or leggings</li>
@@ -115,7 +115,7 @@ export default function ProductTabs({ product }) {
           <div>
             <div className="flex items-center gap-6 mb-6">
               <div className="text-center">
-                <div className="text-3xl font-bold">{product.rating}</div>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white">{product.rating}</div>
                 <div className="flex justify-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
@@ -123,12 +123,12 @@ export default function ProductTabs({ product }) {
                       className={`h-4 w-4 ${
                         i < Math.floor(product.rating)
                           ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-gray-300'
+                          : 'text-gray-300 dark:text-gray-600'
                       }`}
                     />
                   ))}
                 </div>
-                <div className="text-sm text-gray-600">{product.reviews} reviews</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">{product.reviews} reviews</div>
               </div>
               
               <div className="flex-1">
@@ -136,13 +136,13 @@ export default function ProductTabs({ product }) {
                   <div key={rating} className="flex items-center gap-2 mb-1">
                     <span className="text-sm w-3">{rating}</span>
                     <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                    <div className="flex-1 bg-gray-200 rounded-full h-2">
-                      <div 
+                    <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div
                         className="bg-yellow-400 h-2 rounded-full"
                         style={{ width: `${rating === 5 ? 60 : rating === 4 ? 30 : 10}%` }}
                       />
                     </div>
-                    <span className="text-sm text-gray-600 w-8">
+                    <span className="text-sm text-gray-600 dark:text-gray-300 w-8">
                       {rating === 5 ? '60%' : rating === 4 ? '30%' : '10%'}
                     </span>
                   </div>
@@ -152,13 +152,13 @@ export default function ProductTabs({ product }) {
 
             <div className="space-y-6">
               {mockReviews.map(review => (
-                <div key={review.id} className="border-b border-gray-200 pb-6">
+                <div key={review.id} className="border-b border-gray-200 dark:border-gray-700 pb-6">
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">{review.user}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">{review.user}</span>
                         {review.verified && (
-                          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                          <span className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 text-xs px-2 py-1 rounded">
                             Verified Purchase
                           </span>
                         )}
@@ -171,16 +171,16 @@ export default function ProductTabs({ product }) {
                               className={`h-3 w-3 ${
                                 i < review.rating
                                   ? 'fill-yellow-400 text-yellow-400'
-                                  : 'text-gray-300'
+                                  : 'text-gray-300 dark:text-gray-600'
                               }`}
                             />
                           ))}
                         </div>
-                        <span className="text-sm text-gray-500">{review.date}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{review.date}</span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600">{review.comment}</p>
+                  <p className="text-gray-600 dark:text-gray-300">{review.comment}</p>
                 </div>
               ))}
             </div>
@@ -189,25 +189,25 @@ export default function ProductTabs({ product }) {
 
         {activeTab === 'size-guide' && (
           <div>
-            <h4 className="font-semibold mb-4">Size Chart</h4>
+            <h4 className="font-semibold mb-4 text-gray-900 dark:text-white">Size Chart</h4>
             <div className="overflow-x-auto">
-              <table className="min-w-full border border-gray-200">
+              <table className="min-w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                 <thead>
-                  <tr className="bg-gray-50">
-                    <th className="px-4 py-2 text-left border-b">Size</th>
-                    <th className="px-4 py-2 text-left border-b">Bust (inches)</th>
-                    <th className="px-4 py-2 text-left border-b">Waist (inches)</th>
-                    <th className="px-4 py-2 text-left border-b">Hip (inches)</th>
-                    <th className="px-4 py-2 text-left border-b">Length (inches)</th>
+                  <tr className="bg-gray-50 dark:bg-gray-700">
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Size</th>
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Bust (inches)</th>
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Waist (inches)</th>
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Hip (inches)</th>
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Length (inches)</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="px-4 py-2 border-b font-medium">S</td>
-                    <td className="px-4 py-2 border-b">34-36</td>
-                    <td className="px-4 py-2 border-b">28-30</td>
-                    <td className="px-4 py-2 border-b">36-38</td>
-                    <td className="px-4 py-2 border-b">28-30</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 font-medium text-gray-900 dark:text-white">S</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300">34-36</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300">28-30</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300">36-38</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300">28-30</td>
                   </tr>
                   <tr>
                     <td className="px-4 py-2 border-b font-medium">M</td>
