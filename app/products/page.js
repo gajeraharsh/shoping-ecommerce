@@ -77,7 +77,7 @@ export default function ProductsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="flex gap-8">
