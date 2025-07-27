@@ -150,7 +150,7 @@ export default function OrderSummary() {
               <button
                 onClick={applyCoupon}
                 disabled={isApplying || !couponCode.trim()}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm disabled:opacity-50"
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm disabled:opacity-50"
               >
                 {isApplying ? 'Applying...' : 'Apply'}
               </button>
