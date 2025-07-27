@@ -17,11 +17,21 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <TrustBadges variant="compact" />
         <Categories />
         <FeaturedProducts />
-        <Newsletter />
+        <ProductRecommendationGrid />
+        <TrustBadges variant="social" />
+        <SocialProof variant="testimonials" />
+        <RecentlyViewed />
+        <NewsletterSignup />
+        <SocialProof variant="reviews" />
       </main>
       <Footer />
+
+      {/* Modern Features */}
+      <SocialProof variant="activity" />
+      <ExitIntentPopup />
     </div>
   );
 }
