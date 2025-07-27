@@ -91,10 +91,10 @@ export default function SocialProof({ variant = 'reviews' }) {
                   <div className="w-24 h-24 bg-gradient-to-br from-primary to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
                     {testimonials[activeTestimonial].name.charAt(0)}
                   </div>
-                  <h4 className="text-xl font-semibold text-gray-900">
+                  <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
                     {testimonials[activeTestimonial].name}
                   </h4>
-                  <p className="text-gray-600">{testimonials[activeTestimonial].role}</p>
+                  <p className="text-gray-600 dark:text-gray-300">{testimonials[activeTestimonial].role}</p>
                   <div className="flex justify-center mt-2">
                     {[...Array(testimonials[activeTestimonial].rating)].map((_, i) => (
                       <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
