@@ -30,11 +30,12 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="bg-primary text-white px-3 py-1 rounded-lg font-bold text-xl">
+          <Link href="/" className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+            <div className="bg-primary text-white px-2 sm:px-3 py-1 rounded-lg font-bold text-lg sm:text-xl">
               F
             </div>
-            <span className="text-xl font-bold text-gray-900">Fashionista</span>
+            <span className="text-lg sm:text-xl font-bold text-gray-900 hidden xs:block">Fashionista</span>
+            <span className="text-lg font-bold text-gray-900 xs:hidden">F</span>
           </Link>
 
           {/* Desktop Navigation */}
