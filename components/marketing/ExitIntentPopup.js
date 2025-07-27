@@ -62,6 +62,20 @@ export default function ExitIntentPopup() {
     return () => clearInterval(timer);
   }, [isVisible]);
 
+  // Handle escape key press
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isVisible]);
+
   const handleClose = () => {
     setIsVisible(false);
   };
