@@ -256,7 +256,7 @@ export default function AccountLayout({ children }) {
                         onClick={closeSidebar}
                         className={`flex items-center gap-3 px-4 py-3 mb-1 rounded-lg transition-all ${
                           isActive
-                            ? 'bg-blue-50 text-blue-700'
+                            ? 'bg-pink-50 text-pink-700'
                             : 'text-gray-700 hover:bg-gray-50'
                         }`}
                       >
