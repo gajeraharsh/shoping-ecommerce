@@ -17,7 +17,7 @@ export default function OrderSummary() {
       type: 'percentage',
       value: 10,
       minOrder: 500,
-      description: '10% off on orders above ₹500'
+      description: '10% off on orders above ���500'
     },
     'FLAT50': {
       type: 'fixed',
@@ -144,7 +144,7 @@ export default function OrderSummary() {
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
                 placeholder="Enter coupon code"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
                 onKeyPress={(e) => e.key === 'Enter' && applyCoupon()}
               />
               <button
