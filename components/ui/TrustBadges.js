@@ -37,11 +37,11 @@ export default function TrustBadges({ variant = 'default' }) {
 
   if (variant === 'compact') {
     return (
-      <div className="flex items-center justify-center gap-6 py-4 bg-gray-50 border-y">
+      <div className="flex items-center justify-center gap-6 py-4 bg-gray-50 dark:bg-gray-800 border-y border-gray-200 dark:border-gray-700">
         {badges.map((badge, index) => (
           <div key={index} className="flex items-center gap-2 text-sm">
             <badge.icon className={`h-4 w-4 ${badge.color}`} />
-            <span className="font-medium text-gray-700">{badge.title}</span>
+            <span className="font-medium text-gray-700 dark:text-gray-300">{badge.title}</span>
           </div>
         ))}
       </div>
