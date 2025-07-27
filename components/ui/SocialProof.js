@@ -131,14 +131,14 @@ export default function SocialProof({ variant = 'reviews' }) {
   if (variant === 'activity') {
     return (
       <div className="fixed bottom-4 left-4 z-40">
-        <div className="bg-white rounded-lg shadow-lg border p-4 max-w-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 max-w-sm">
           <div className="flex items-center gap-2 mb-3">
             <Users className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium text-gray-900">Recent Activity</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-white">Recent Activity</span>
           </div>
           <div className="space-y-2">
             {recentActivity.slice(0, 2).map((activity, index) => (
-              <div key={index} className="text-xs text-gray-600 flex items-center gap-1">
+              <div key={index} className="text-xs text-gray-600 dark:text-gray-300 flex items-center gap-1">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span>Someone from <strong>{activity.location}</strong> {activity.action} <strong>{activity.product}</strong></span>
               </div>
