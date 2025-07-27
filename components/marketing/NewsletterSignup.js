@@ -112,13 +112,13 @@ export default function NewsletterSignup({ variant = 'default', onClose }) {
 
   if (variant === 'inline') {
     return (
-      <div className="bg-gray-50 rounded-2xl p-6">
+      <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+          <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
             <Mail className="h-6 w-6 text-primary" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Stay Updated</h3>
-          <p className="text-gray-600 text-sm">Get the latest trends and exclusive offers</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Stay Updated</h3>
+          <p className="text-gray-600 dark:text-gray-300 text-sm">Get the latest trends and exclusive offers</p>
         </div>
 
         {isSubscribed ? (
