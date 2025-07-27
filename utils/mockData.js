@@ -60,9 +60,12 @@ export const mockProducts = [
       "https://images.pexels.com/photos/994517/pexels-photo-994517.jpeg"
     ],
     sizes: ["S", "M", "L"],
-    colors: ["White", "Black", "Pink"],
+    colors: ["White", "Black", "Pink", "Blue"],
     rating: 4.3,
     reviews: 67,
+    stock: 3,
+    isNew: false,
+    isTrending: false,
     description: "Trendy crop top with modern design. Pairs perfectly with high-waisted jeans or skirts.",
     fabric: "Cotton Blend",
     care: "Machine wash warm",
