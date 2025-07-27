@@ -112,6 +112,9 @@ export default function Header() {
               )}
             </Link>
 
+            {/* Dark Mode Toggle */}
+            <DarkModeToggle />
+
             {/* User Account */}
             <div className="relative group">
               <button className="p-1.5 sm:p-2 text-gray-700 hover:text-primary">
