@@ -22,7 +22,7 @@ import {
 import Link from 'next/link';
 
 export default function AccountLayout({ children }) {
-  const { user, logout } = useAuth();
+  const { user, logout, login } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
