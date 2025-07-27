@@ -28,14 +28,14 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="animate-shimmer h-96 lg:h-[600px] rounded-lg"></div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
+            <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-64 sm:h-80 md:h-96 lg:h-[600px] rounded-lg"></div>
             <div className="space-y-4">
-              <div className="animate-shimmer h-8 rounded"></div>
-              <div className="animate-shimmer h-6 rounded w-3/4"></div>
-              <div className="animate-shimmer h-4 rounded w-1/2"></div>
-              <div className="animate-shimmer h-12 rounded"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-6 sm:h-8 rounded"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 sm:h-6 rounded w-3/4"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-3 sm:h-4 rounded w-1/2"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-10 sm:h-12 rounded"></div>
             </div>
           </div>
         </div>
@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
-        <div className="container mx-auto px-4 py-8 text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <div className="text-6xl mb-4">🔍</div>
           <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Product Not Found</h1>
           <p className="text-gray-600 dark:text-gray-300">The product you're looking for doesn't exist.</p>
@@ -61,8 +61,8 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-12">
           <ProductImageGallery images={product.images} />
           <ProductInfo product={product} />
         </div>

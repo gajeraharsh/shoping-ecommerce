@@ -15,9 +15,9 @@ export default function ProductImageGallery({ images }) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {/* Main Image */}
-      <div className="relative aspect-[3/4] bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+      <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
         <img
           src={images[currentImage]}
           alt={`Product image ${currentImage + 1}`}
@@ -28,15 +28,15 @@ export default function ProductImageGallery({ images }) {
           <>
             <button
               onClick={prevImage}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 p-2 rounded-full text-gray-700 dark:text-gray-300"
+              className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 p-1.5 sm:p-2 rounded-full text-gray-700 dark:text-gray-300 transition-colors"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 p-2 rounded-full text-gray-700 dark:text-gray-300"
+              className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 p-1.5 sm:p-2 rounded-full text-gray-700 dark:text-gray-300 transition-colors"
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
             </button>
           </>
         )}
@@ -44,12 +44,12 @@ export default function ProductImageGallery({ images }) {
 
       {/* Thumbnail Images */}
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto">
+        <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2">
           {images.map((image, index) => (
             <button
               key={index}
               onClick={() => setCurrentImage(index)}
-              className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 ${
+              className={`flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-colors ${
                 currentImage === index
                   ? 'border-primary'
                   : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'

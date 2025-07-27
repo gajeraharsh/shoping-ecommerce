@@ -42,11 +42,11 @@ export default function ProductInfo({ product }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Product Title & Rating */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{product.name}</h1>
-        <div className="flex items-center gap-4">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">{product.name}</h1>
+        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
           <div className="flex items-center">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
@@ -60,7 +60,7 @@ export default function ProductInfo({ product }) {
                 />
               ))}
             </div>
-            <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
+            <span className="ml-1 sm:ml-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               {product.rating} ({product.reviews} reviews)
             </span>
           </div>
@@ -68,14 +68,14 @@ export default function ProductInfo({ product }) {
       </div>
 
       {/* Price */}
-      <div className="flex items-center gap-4">
-        <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{product.price}</span>
+      <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+        <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">₹{product.price}</span>
         {product.originalPrice && (
           <>
-            <span className="text-xl text-gray-500 dark:text-gray-400 line-through">
+            <span className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 line-through">
               ₹{product.originalPrice}
             </span>
-            <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-2 py-1 rounded text-sm font-semibold">
+            <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-2 py-1 rounded text-xs sm:text-sm font-semibold">
               {product.discount}% OFF
             </span>
           </>
@@ -84,13 +84,13 @@ export default function ProductInfo({ product }) {
 
       {/* Size Selection */}
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Size</h3>
-        <div className="flex gap-2">
+        <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-900 dark:text-white">Size</h3>
+        <div className="flex gap-2 flex-wrap">
           {product.sizes.map(size => (
             <button
               key={size}
               onClick={() => setSelectedSize(size)}
-              className={`px-4 py-2 border rounded-lg transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 border rounded-lg transition-colors text-sm sm:text-base ${
                 selectedSize === size
                   ? 'bg-primary text-white border-primary'
                   : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-800'
@@ -104,13 +104,13 @@ export default function ProductInfo({ product }) {
 
       {/* Color Selection */}
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Color</h3>
-        <div className="flex gap-2">
+        <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-900 dark:text-white">Color</h3>
+        <div className="flex gap-2 flex-wrap">
           {product.colors.map(color => (
             <button
               key={color}
               onClick={() => setSelectedColor(color)}
-              className={`px-4 py-2 border rounded-lg transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 border rounded-lg transition-colors text-sm sm:text-base ${
                 selectedColor === color
                   ? 'bg-primary text-white border-primary'
                   : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-800'
@@ -124,18 +124,18 @@ export default function ProductInfo({ product }) {
 
       {/* Quantity */}
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Quantity</h3>
+        <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-900 dark:text-white">Quantity</h3>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-10 h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="w-8 h-8 sm:w-10 sm:h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             -
           </button>
-          <span className="text-lg font-semibold w-12 text-center text-gray-900 dark:text-white">{quantity}</span>
+          <span className="text-base sm:text-lg font-semibold w-10 sm:w-12 text-center text-gray-900 dark:text-white">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="w-10 h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="w-8 h-8 sm:w-10 sm:h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             +
           </button>
@@ -143,44 +143,44 @@ export default function ProductInfo({ product }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <button
           onClick={handleAddToCart}
-          className="flex-1 bg-primary text-white py-3 px-6 rounded-lg hover:bg-primary/90 transition-colors font-semibold flex items-center justify-center gap-2"
+          className="flex-1 bg-primary text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:bg-primary/90 transition-colors font-semibold flex items-center justify-center gap-2 text-sm sm:text-base"
         >
-          <ShoppingBag className="h-5 w-5" />
+          <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
           Add to Cart
         </button>
         <button
           onClick={handleWishlistToggle}
-          className="px-6 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors sm:flex-shrink-0"
         >
-          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
+          <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
         </button>
       </div>
 
       {/* Product Features */}
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-3">
-            <Truck className="h-5 w-5 text-primary" />
+      <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
             <div>
-              <div className="font-medium text-gray-900 dark:text-white">Free Shipping</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">On orders over ₹999</div>
+              <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Free Shipping</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">On orders over ₹999</div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <RotateCcw className="h-5 w-5 text-primary" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
             <div>
-              <div className="font-medium text-gray-900 dark:text-white">Easy Returns</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">30-day return policy</div>
+              <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Easy Returns</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">30-day return policy</div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Shield className="h-5 w-5 text-primary" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
             <div>
-              <div className="font-medium text-gray-900 dark:text-white">Secure Payment</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">100% secure checkout</div>
+              <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Secure Payment</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">100% secure checkout</div>
             </div>
           </div>
         </div>
