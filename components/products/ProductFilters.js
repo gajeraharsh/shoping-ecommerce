@@ -25,12 +25,12 @@ export default function ProductFilters({ filters, onFilterChange }) {
   };
 
   return (
-    <div className="bg-white border rounded-lg p-6 space-y-6">
-      <h3 className="text-lg font-semibold">Filters</h3>
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Filters</h3>
       
       {/* Category Filter */}
       <div>
-        <h4 className="font-medium mb-3">Category</h4>
+        <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Category</h4>
         <div className="space-y-2">
           {categories.map(category => (
             <label key={category.value} className="flex items-center">
@@ -42,7 +42,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
                 onChange={(e) => handleFilterChange('category', e.target.value)}
                 className="mr-2"
               />
-              <span className="text-sm">{category.label}</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">{category.label}</span>
             </label>
           ))}
         </div>
@@ -50,7 +50,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
 
       {/* Price Filter */}
       <div>
-        <h4 className="font-medium mb-3">Price Range</h4>
+        <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Price Range</h4>
         <div className="space-y-2">
           {priceRanges.map(range => (
             <label key={range.value} className="flex items-center">
@@ -62,7 +62,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
                 onChange={(e) => handleFilterChange('priceRange', e.target.value)}
                 className="mr-2"
               />
-              <span className="text-sm">{range.label}</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">{range.label}</span>
             </label>
           ))}
         </div>
@@ -70,7 +70,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
 
       {/* Size Filter */}
       <div>
-        <h4 className="font-medium mb-3">Size</h4>
+        <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Size</h4>
         <div className="grid grid-cols-3 gap-2">
           {sizes.map(size => (
             <button
@@ -79,7 +79,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
               className={`px-3 py-1 text-sm border rounded transition-colors ${
                 filters.size === size
                   ? 'bg-primary text-white border-primary'
-                  : 'border-gray-300 hover:border-primary hover:text-primary'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-700'
               }`}
             >
               {size}
@@ -90,7 +90,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
 
       {/* Color Filter */}
       <div>
-        <h4 className="font-medium mb-3">Color</h4>
+        <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Color</h4>
         <div className="grid grid-cols-4 gap-2">
           {colors.map(color => (
             <button
@@ -98,8 +98,8 @@ export default function ProductFilters({ filters, onFilterChange }) {
               onClick={() => handleFilterChange('color', filters.color === color ? '' : color)}
               className={`w-8 h-8 rounded-full border-2 transition-all ${
                 filters.color === color
-                  ? 'border-gray-900 scale-110'
-                  : 'border-gray-300 hover:scale-105'
+                  ? 'border-gray-900 dark:border-white scale-110'
+                  : 'border-gray-300 dark:border-gray-600 hover:scale-105'
               }`}
               style={{ backgroundColor: color.toLowerCase() }}
               title={color}
