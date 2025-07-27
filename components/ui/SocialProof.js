@@ -104,7 +104,7 @@ export default function SocialProof({ variant = 'reviews' }) {
                 
                 <div className="md:w-2/3">
                   <Quote className="h-8 w-8 text-primary mb-4" />
-                  <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
                     {testimonials[activeTestimonial].text}
                   </p>
                 </div>
