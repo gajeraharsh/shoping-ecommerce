@@ -222,7 +222,7 @@ export default function AccountLayout({ children }) {
               <div className="fixed inset-0 bg-black bg-opacity-50" onClick={closeSidebar} />
               <div className="relative flex flex-col w-80 bg-white shadow-xl">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
+                <div className="bg-gradient-to-r from-primary via-pink-500 to-purple-600 text-white p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg font-semibold">Account Menu</h2>
                     <button
