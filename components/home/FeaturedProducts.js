@@ -19,13 +19,13 @@ export default function FeaturedProducts() {
   }, []);
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-8 sm:py-12 lg:py-16 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Featured Products
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
             Discover our handpicked selection of trending fashion pieces
           </p>
         </div>
