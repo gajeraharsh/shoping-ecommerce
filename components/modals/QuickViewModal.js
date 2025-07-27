@@ -138,7 +138,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
           {/* Product Details */}
           <div className="p-6 overflow-y-auto">
             <div className="mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{product.name}</h2>
+              <h2 id="quickview-title" className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{product.name}</h2>
               
               <div className="flex items-center gap-2 mb-2">
                 <div className="flex items-center">
@@ -166,7 +166,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
             {/* Stock Status */}
             <div className="mb-4">
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                ��� In Stock
+                ✓ In Stock
               </span>
             </div>
 
