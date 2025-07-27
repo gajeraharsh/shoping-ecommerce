@@ -3,7 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Star, ShoppingBag, ArrowRight, Sparkles } from 'lucide-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import { mockProducts } from '@/utils/mockData';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/pagination';
 
 export default function Hero() {
   const [products, setProducts] = useState([]);
@@ -16,7 +23,7 @@ export default function Hero() {
     }, 800);
   }, []);
 
-  const featuredProduct = products[0];
+  const featuredProducts = products.slice(0, 4); // Get first 4 products for swiper
 
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900/20 overflow-hidden">
@@ -65,51 +72,96 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Featured Product Showcase */}
-          <div>
+          {/* Featured Products Swiper */}
+          <div className="relative">
             {loading ? (
               <div className="animate-pulse">
                 <div className="bg-gray-200 dark:bg-gray-700 rounded-3xl h-[500px] lg:h-[600px]"></div>
               </div>
-            ) : featuredProduct && (
-              <div className="relative group">
-                <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden transform group-hover:scale-105 transition-transform duration-500">
-                  <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] overflow-hidden">
-                    <img
-                      src={featuredProduct.images[0]}
-                      alt={featuredProduct.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                    
-                    {/* Product Info Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm">{featuredProduct.rating} ({featuredProduct.reviews} reviews)</span>
-                      </div>
-                      
-                      <h3 className="text-xl sm:text-2xl font-bold mb-2">{featuredProduct.name}</h3>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl font-bold">₹{featuredProduct.price}</span>
-                          {featuredProduct.originalPrice && (
-                            <span className="text-lg text-gray-300 line-through">₹{featuredProduct.originalPrice}</span>
+            ) : (
+              <div className="relative">
+                <Swiper
+                  modules={[Autoplay, EffectFade, Pagination]}
+                  effect="fade"
+                  autoplay={{
+                    delay: 4000,
+                    disableOnInteraction: false,
+                  }}
+                  pagination={{
+                    clickable: true,
+                    bulletClass: 'swiper-pagination-bullet !bg-white/70 !w-3 !h-3',
+                    bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !scale-125',
+                  }}
+                  loop={true}
+                  className="rounded-3xl overflow-hidden shadow-2xl h-[400px] sm:h-[500px] lg:h-[600px]"
+                >
+                  {featuredProducts.map((product, index) => (
+                    <SwiperSlide key={product.id || index}>
+                      <div className="relative h-full group">
+                        <div className="relative h-full overflow-hidden">
+                          <img
+                            src={product.images[0]}
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                          
+                          {/* Discount Badge */}
+                          {product.discount && (
+                            <div className="absolute top-6 right-6 bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
+                              {product.discount}% OFF
+                            </div>
                           )}
+                          
+                          {/* Product Info Overlay */}
+                          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
+                            <div className="flex items-center gap-2 mb-3">
+                              <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                              <span className="text-sm font-medium">{product.rating} ({product.reviews} reviews)</span>
+                            </div>
+                            
+                            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 leading-tight">{product.name}</h3>
+                            
+                            <p className="text-gray-200 mb-4 max-w-md text-sm sm:text-base">
+                              {product.description || 'Discover premium quality and elegant design in our exclusive collection.'}
+                            </p>
+                            
+                            <div className="flex items-center justify-between flex-wrap gap-4">
+                              <div className="flex items-center gap-3">
+                                <span className="text-3xl sm:text-4xl font-bold">₹{product.price}</span>
+                                {product.originalPrice && (
+                                  <span className="text-xl text-gray-300 line-through">₹{product.originalPrice}</span>
+                                )}
+                              </div>
+                              
+                              <Link
+                                href={`/products/${product.id}`}
+                                className="bg-white text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                              >
+                                <ShoppingBag className="w-5 h-5" />
+                                Shop Now
+                              </Link>
+                            </div>
+                          </div>
                         </div>
-                        
-                        <Link
-                          href={`/products/${featuredProduct.id}`}
-                          className="bg-white text-gray-900 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2"
-                        >
-                          <ShoppingBag className="w-4 h-4" />
-                          Shop Now
-                        </Link>
                       </div>
-                    </div>
-                  </div>
-                </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                
+                {/* Custom Pagination Styles */}
+                <style jsx global>{`
+                  .swiper-pagination {
+                    bottom: 20px !important;
+                  }
+                  .swiper-pagination-bullet {
+                    opacity: 0.7 !important;
+                    transition: all 0.3s ease !important;
+                  }
+                  .swiper-pagination-bullet-active {
+                    opacity: 1 !important;
+                  }
+                `}</style>
               </div>
             )}
           </div>
