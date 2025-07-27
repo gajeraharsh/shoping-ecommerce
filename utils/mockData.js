@@ -12,9 +12,12 @@ export const mockProducts = [
       "https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg"
     ],
     sizes: ["S", "M", "L", "XL"],
-    colors: ["Blue", "Pink", "White"],
+    colors: ["Blue", "Pink", "White", "Yellow"],
     rating: 4.5,
     reviews: 128,
+    stock: 8,
+    isNew: false,
+    isTrending: true,
     description: "Beautiful floral printed kurti perfect for casual and semi-formal occasions. Made with premium cotton fabric for comfort.",
     fabric: "100% Cotton",
     care: "Machine wash cold, tumble dry low",
