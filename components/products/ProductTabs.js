@@ -136,13 +136,13 @@ export default function ProductTabs({ product }) {
                   <div key={rating} className="flex items-center gap-2 mb-1">
                     <span className="text-sm w-3">{rating}</span>
                     <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                    <div className="flex-1 bg-gray-200 rounded-full h-2">
-                      <div 
+                    <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div
                         className="bg-yellow-400 h-2 rounded-full"
                         style={{ width: `${rating === 5 ? 60 : rating === 4 ? 30 : 10}%` }}
                       />
                     </div>
-                    <span className="text-sm text-gray-600 w-8">
+                    <span className="text-sm text-gray-600 dark:text-gray-300 w-8">
                       {rating === 5 ? '60%' : rating === 4 ? '30%' : '10%'}
                     </span>
                   </div>
