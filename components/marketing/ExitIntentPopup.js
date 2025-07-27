@@ -125,8 +125,8 @@ export default function ExitIntentPopup() {
 
           <div className="relative z-10">
             <Sparkles className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 mx-auto mb-2 sm:mb-3 animate-bounce" />
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Wait! Don't Leave Yet!</h2>
-            <p className="text-red-100 text-sm sm:text-base">You're about to miss out on something special...</p>
+            <h2 id="popup-title" className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Wait! Don't Leave Yet!</h2>
+            <p id="popup-description" className="text-red-100 text-sm sm:text-base">You're about to miss out on something special...</p>
           </div>
 
           {/* Floating elements */}
