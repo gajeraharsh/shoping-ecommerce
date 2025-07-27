@@ -40,7 +40,7 @@ export default function RecentlyViewed({ showTitle = true, limit = 4 }) {
 
         {recentlyViewed.length > limit && (
           <div className="text-center mt-6">
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
               Showing {limit} of {recentlyViewed.length} recently viewed items
             </span>
           </div>
