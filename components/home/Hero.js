@@ -54,8 +54,8 @@ export default function Hero() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 transition-all duration-300 group overflow-hidden flex flex-col h-full">
-                  <div className="relative h-[400px] md:h-[460px] lg:h-[500px] overflow-hidden">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 dark:border-gray-700 transition-all duration-300 group overflow-hidden flex flex-col h-full">
+                  <div className="relative h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] overflow-hidden">
                     <img
                       src={product.images[0]}
                       alt={product.name}
