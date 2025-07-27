@@ -99,22 +99,22 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">All Products</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">All Products</h1>
           <div className="flex items-center gap-4">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="lg:hidden flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50"
+              className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-white"
             >
               Filters <ChevronDown className="h-4 w-4" />
             </button>
             <select
               value={filters.sortBy}
               onChange={(e) => handleFilterChange({ sortBy: e.target.value })}
-              className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="newest">Newest</option>
               <option value="popular">Most Popular</option>
@@ -130,15 +130,15 @@ export default function ProductsPage() {
           </div>
 
           <div className="flex-1">
-            <div className="mb-4 text-gray-600">
+            <div className="mb-4 text-gray-600 dark:text-gray-300">
               Showing {filteredProducts.length} of {products.length} products
             </div>
             
             {filteredProducts.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold mb-2">No products found</h3>
-                <p className="text-gray-600">Try adjusting your filters</p>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">No products found</h3>
+                <p className="text-gray-600 dark:text-gray-300">Try adjusting your filters</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
