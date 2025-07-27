@@ -42,7 +42,7 @@ export default function ProductTabs({ product }) {
 
   return (
     <div className="mt-12">
-      <div className="border-b border-gray-200">
+      <div className="border-b border-gray-200 dark:border-gray-700">
         <nav className="flex space-x-8">
           {tabs.map(tab => (
             <button
@@ -51,7 +51,7 @@ export default function ProductTabs({ product }) {
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
               }`}
             >
               {tab.label}
