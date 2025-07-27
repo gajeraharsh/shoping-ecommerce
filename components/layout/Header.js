@@ -125,19 +125,19 @@ export default function Header() {
                   <>
                     <Link
                       href="/account"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       My Account
                     </Link>
                     <Link
                       href="/account"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       Orders
                     </Link>
                     <button
                       onClick={logout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       Logout
                     </button>
