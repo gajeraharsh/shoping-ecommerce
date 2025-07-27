@@ -155,7 +155,7 @@ export default function AccountPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Profile Information */}
         <div className="lg:col-span-2">
-          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6 h-full">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
               <button
