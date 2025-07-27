@@ -160,27 +160,27 @@ export default function ProductInfo({ product }) {
       </div>
 
       {/* Product Features */}
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-3">
-            <Truck className="h-5 w-5 text-primary" />
+      <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
             <div>
-              <div className="font-medium text-gray-900 dark:text-white">Free Shipping</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">On orders over ₹999</div>
+              <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Free Shipping</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">On orders over ₹999</div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <RotateCcw className="h-5 w-5 text-primary" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
             <div>
-              <div className="font-medium text-gray-900 dark:text-white">Easy Returns</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">30-day return policy</div>
+              <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Easy Returns</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">30-day return policy</div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Shield className="h-5 w-5 text-primary" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
             <div>
-              <div className="font-medium text-gray-900 dark:text-white">Secure Payment</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">100% secure checkout</div>
+              <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Secure Payment</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">100% secure checkout</div>
             </div>
           </div>
         </div>
