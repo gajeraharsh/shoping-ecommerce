@@ -314,19 +314,68 @@ export default function AccountPage() {
 
           {/* Loyalty Program */}
           <div className="bg-gradient-to-br from-primary via-pink-500 to-purple-600 text-white rounded-xl p-6">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-4">
               <Award className="h-6 w-6" />
               <h3 className="text-lg font-semibold">Loyalty Program</h3>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-purple-100">Current Points</span>
-                <span className="text-xl font-bold">2,450</span>
+                <span className="text-pink-100">Current Points</span>
+                <span className="text-2xl font-bold">2,450</span>
               </div>
-              <div className="w-full bg-purple-500/30 rounded-full h-2">
-                <div className="bg-white h-2 rounded-full" style={{ width: '65%' }}></div>
+              <div className="w-full bg-pink-500/30 rounded-full h-3">
+                <div className="bg-white h-3 rounded-full" style={{ width: '65%' }}></div>
               </div>
-              <p className="text-sm text-purple-100">550 points until Gold status</p>
+              <p className="text-sm text-pink-100">550 points until Gold status</p>
+              <button className="w-full bg-white/20 hover:bg-white/30 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium">
+                View Rewards
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <button className="flex flex-col items-center gap-2 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                <Package className="h-6 w-6 text-blue-600" />
+                <span className="text-sm font-medium text-blue-900">Track Order</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+                <RotateCcw className="h-6 w-6 text-green-600" />
+                <span className="text-sm font-medium text-green-900">Return Item</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
+                <Heart className="h-6 w-6 text-purple-600" />
+                <span className="text-sm font-medium text-purple-900">Wishlist</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-4 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
+                <CreditCard className="h-6 w-6 text-pink-600" />
+                <span className="text-sm font-medium text-pink-900">Payments</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Account Summary */}
+          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Summary</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                <span className="text-sm text-gray-600">Member since</span>
+                <span className="text-sm font-medium text-gray-900">Jan 2023</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                <span className="text-sm text-gray-600">Total orders</span>
+                <span className="text-sm font-medium text-gray-900">12</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                <span className="text-sm text-gray-600">Amount spent</span>
+                <span className="text-sm font-medium text-gray-900">₹24,750</span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-sm text-gray-600">Saved amount</span>
+                <span className="text-sm font-medium text-green-600">₹3,240</span>
+              </div>
             </div>
           </div>
         </div>
