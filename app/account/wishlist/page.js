@@ -354,7 +354,7 @@ export default function WishlistPage() {
               </div>
 
               {/* Image */}
-              <div className={`relative ${viewMode === 'list' ? 'w-32 h-32 flex-shrink-0' : 'aspect-[3/4] mb-4'}`}>
+              <div className={`relative ${viewMode === 'list' ? 'w-40 h-40 flex-shrink-0' : 'aspect-[3/4] mb-5'}`}>
                 <img
                   src={item.image}
                   alt={item.name}
