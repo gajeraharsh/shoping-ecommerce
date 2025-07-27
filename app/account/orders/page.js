@@ -83,7 +83,7 @@ export default function OrdersPage() {
         {
           id: 4,
           name: 'Premium Silk Saree',
-          image: '/api/placeholder/100/100',
+          image: 'https://images.pexels.com/photos/9558618/pexels-photo-9558618.jpeg?auto=compress&cs=tinysrgb&w=300',
           price: 2999,
           quantity: 1,
           size: 'Free Size',
@@ -92,7 +92,7 @@ export default function OrdersPage() {
         {
           id: 5,
           name: 'Matching Blouse',
-          image: '/api/placeholder/100/100',
+          image: 'https://images.pexels.com/photos/7679659/pexels-photo-7679659.jpeg?auto=compress&cs=tinysrgb&w=300',
           price: 300,
           quantity: 1,
           size: 'M',
