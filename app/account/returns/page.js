@@ -266,7 +266,7 @@ export default function ReturnsPage() {
               </div>
             ) : (
               filteredReturns.map(returnItem => {
-                const statusConfig = statusConfig[returnItem.status] || statusConfig.processing;
+                const currentStatusConfig = statusConfig[returnItem.status] || statusConfig.processing;
                 return (
                   <div key={returnItem.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
                     {/* Header */}
