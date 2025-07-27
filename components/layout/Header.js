@@ -27,8 +27,8 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-40">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+      <div className="container mx-auto px-2 sm:px-4">
+        <div className="flex items-center justify-between h-14 sm:h-16 min-w-0">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
             <div className="bg-primary text-white px-2 sm:px-3 py-1 rounded-lg font-bold text-lg sm:text-xl">
