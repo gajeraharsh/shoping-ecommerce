@@ -26,43 +26,43 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li><Link href="/products" className="text-gray-400 hover:text-white">All Products</Link></li>
-              <li><Link href="/products?category=kurtis" className="text-gray-400 hover:text-white">Kurtis</Link></li>
-              <li><Link href="/products?category=dresses" className="text-gray-400 hover:text-white">Dresses</Link></li>
-              <li><Link href="/products?category=ethnic" className="text-gray-400 hover:text-white">Ethnic Wear</Link></li>
-              <li><Link href="/wishlist" className="text-gray-400 hover:text-white">Wishlist</Link></li>
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Quick Links</h3>
+            <ul className="space-y-1.5 sm:space-y-2">
+              <li><Link href="/products" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">All Products</Link></li>
+              <li><Link href="/products?category=kurtis" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">Kurtis</Link></li>
+              <li><Link href="/products?category=dresses" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">Dresses</Link></li>
+              <li><Link href="/products?category=ethnic" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">Ethnic Wear</Link></li>
+              <li><Link href="/wishlist" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">Wishlist</Link></li>
             </ul>
           </div>
 
           {/* Customer Service */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Customer Service</h3>
-            <ul className="space-y-2">
-              <li><Link href="/contact" className="text-gray-400 hover:text-white">Contact Us</Link></li>
-              <li><Link href="/shipping" className="text-gray-400 hover:text-white">Shipping Info</Link></li>
-              <li><Link href="/returns" className="text-gray-400 hover:text-white">Returns</Link></li>
-              <li><Link href="/size-guide" className="text-gray-400 hover:text-white">Size Guide</Link></li>
-              <li><Link href="/faq" className="text-gray-400 hover:text-white">FAQ</Link></li>
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Customer Service</h3>
+            <ul className="space-y-1.5 sm:space-y-2">
+              <li><Link href="/contact" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">Contact Us</Link></li>
+              <li><Link href="/shipping" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">Shipping Info</Link></li>
+              <li><Link href="/returns" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">Returns</Link></li>
+              <li><Link href="/size-guide" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">Size Guide</Link></li>
+              <li><Link href="/faq" className="text-gray-400 dark:text-gray-300 hover:text-white text-sm sm:text-base transition-colors">FAQ</Link></li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Info</h3>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <Mail className="h-4 w-4 text-primary" />
-                <span className="text-gray-400">support@fashionista.com</span>
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Contact Info</h3>
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <Mail className="h-4 w-4 text-primary flex-shrink-0" />
+                <span className="text-gray-400 dark:text-gray-300 text-sm sm:text-base">support@fashionista.com</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="h-4 w-4 text-primary" />
-                <span className="text-gray-400">+1 (555) 123-4567</span>
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <Phone className="h-4 w-4 text-primary flex-shrink-0" />
+                <span className="text-gray-400 dark:text-gray-300 text-sm sm:text-base">+1 (555) 123-4567</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span className="text-gray-400">123 Fashion St, NY 10001</span>
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                <span className="text-gray-400 dark:text-gray-300 text-sm sm:text-base">123 Fashion St, NY 10001</span>
               </div>
             </div>
           </div>
