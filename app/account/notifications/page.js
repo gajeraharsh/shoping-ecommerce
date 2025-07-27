@@ -494,7 +494,7 @@ export default function NotificationsPage() {
 
       {/* Save Button */}
       <div className="flex justify-end mt-8">
-        <button className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+        <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
           <Check className="h-4 w-4" />
           Save Preferences
         </button>
