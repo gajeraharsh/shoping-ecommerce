@@ -53,7 +53,7 @@ export default function ContactPage() {
             
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
+                <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
                   <Mail className="h-6 w-6 text-primary" />
                 </div>
                 <div>
@@ -64,7 +64,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
+                <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
                   <Phone className="h-6 w-6 text-primary" />
                 </div>
                 <div>
@@ -75,7 +75,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
+                <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
                   <MapPin className="h-6 w-6 text-primary" />
                 </div>
                 <div>
@@ -86,7 +86,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
+                <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
                   <Clock className="h-6 w-6 text-primary" />
                 </div>
                 <div>
