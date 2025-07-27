@@ -112,9 +112,14 @@ export default function ExitIntentPopup() {
       <div className="relative bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-sm sm:max-w-lg w-full overflow-hidden animate-in zoom-in-95 duration-300 focus-within:outline-none">
         {/* Close Button */}
         <button
-          onClick={handleClose}
-          className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 p-1.5 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleClose();
+          }}
+          className="absolute top-2 sm:top-4 right-2 sm:right-4 z-50 p-1.5 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm shadow-lg"
           aria-label="Close popup"
+          type="button"
         >
           <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
         </button>
