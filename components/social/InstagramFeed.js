@@ -36,7 +36,7 @@ export default function InstagramFeed() {
       image: 'https://images.pexels.com/photos/994517/pexels-photo-994517.jpeg',
       likes: 278,
       comments: 18,
-      caption: 'Behind the scenes at our latest photoshoot 📸 #BTS #Fashion'
+      caption: 'Behind the scenes at our latest photoshoot �� #BTS #Fashion'
     },
     {
       id: 6,
@@ -74,7 +74,7 @@ export default function InstagramFeed() {
           {instagramPosts.map((post) => (
             <div
               key={post.id}
-              className="group relative aspect-square bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
+              className="group relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer"
             >
               <img
                 src={post.image}
