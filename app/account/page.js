@@ -280,7 +280,7 @@ export default function AccountPage() {
           </div>
 
           {/* Loyalty Program */}
-          <div className="bg-gradient-to-br from-purple-600 to-blue-600 text-white rounded-xl p-6">
+          <div className="bg-gradient-to-br from-primary via-pink-500 to-purple-600 text-white rounded-xl p-6">
             <div className="flex items-center gap-2 mb-3">
               <Award className="h-6 w-6" />
               <h3 className="text-lg font-semibold">Loyalty Program</h3>
