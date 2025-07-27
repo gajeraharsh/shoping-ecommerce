@@ -23,8 +23,8 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative py-16 bg-gradient-to-r from-pink-50 to-purple-100">
-      <div className="container mx-auto px-4 relative overflow-visible">
+    <section className="relative py-8 sm:py-12 lg:py-16 bg-gradient-to-r from-pink-50 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20">
+      <div className="container mx-auto px-2 sm:px-4 relative overflow-visible">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           loop={true}
