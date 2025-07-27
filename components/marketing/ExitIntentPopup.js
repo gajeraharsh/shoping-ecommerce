@@ -114,25 +114,25 @@ export default function ExitIntentPopup() {
           <div className="absolute bottom-3 right-6 w-3 h-3 bg-pink-300 rounded-full animate-pulse delay-300"></div>
         </div>
 
-        <div className="p-6">
+        <div className="p-3 sm:p-4 lg:p-6">
           {/* Offer */}
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              <Gift className="h-4 w-4" />
+          <div className="text-center mb-4 sm:mb-6">
+            <div className="inline-flex items-center gap-1 sm:gap-2 bg-yellow-100 text-yellow-800 px-2 sm:px-3 lg:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-3 sm:mb-4">
+              <Gift className="h-3 w-3 sm:h-4 sm:w-4" />
               EXCLUSIVE OFFER
             </div>
-            
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-2">
               Get <span className="text-red-500">20% OFF</span> Your First Order!
             </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-3 sm:mb-4 px-2">
               Plus free shipping on orders over ₹999. Limited time offer!
             </p>
 
             {/* Countdown */}
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <Clock className="h-5 w-5 text-red-500" />
-              <span className="text-lg font-bold text-red-500">
+            <div className="flex items-center justify-center gap-1 sm:gap-2 mb-4 sm:mb-6">
+              <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
+              <span className="text-sm sm:text-base lg:text-lg font-bold text-red-500">
                 Expires in: {formatTime(timeLeft)}
               </span>
             </div>
