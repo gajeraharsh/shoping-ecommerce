@@ -10,6 +10,7 @@ import { ProductRecommendationGrid } from '@/components/products/ProductRecommen
 import RecentlyViewed from '@/components/products/RecentlyViewed';
 import NewsletterSignup from '@/components/marketing/NewsletterSignup';
 import ExitIntentPopup from '@/components/marketing/ExitIntentPopup';
+import InstagramFeed from '@/components/social/InstagramFeed';
 
 export default function Home() {
   return (
