@@ -265,8 +265,8 @@ export default function OrdersPage() {
           </div>
         ) : (
           sortedOrders.map(order => {
-            const statusConfig = statusConfig[order.status] || statusConfig.processing;
-            const StatusIcon = statusConfig.icon;
+            const currentStatusConfig = statusConfig[order.status] || statusConfig.processing;
+            const StatusIcon = currentStatusConfig.icon;
 
             return (
               <div key={order.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
