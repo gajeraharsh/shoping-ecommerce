@@ -130,14 +130,14 @@ export default function ProductCard({ product }) {
             {/* Wishlist Button */}
             <button
               onClick={handleWishlistToggle}
-              className={`absolute top-3 right-3 p-2 rounded-full transition-all transform hover:scale-110 z-10 shadow-lg ${
-                inWishlist 
-                  ? 'bg-red-50 border border-red-200' 
+              className={`absolute top-2 sm:top-3 right-2 sm:right-3 p-1.5 sm:p-2 rounded-full transition-all transform hover:scale-110 z-10 shadow-lg ${
+                inWishlist
+                  ? 'bg-red-50 border border-red-200'
                   : 'bg-white/90 hover:bg-white'
               }`}
             >
               <Heart
-                className={`h-4 w-4 transition-colors ${
+                className={`h-3 w-3 sm:h-4 sm:w-4 transition-colors ${
                   inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'
                 }`}
               />
