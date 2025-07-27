@@ -165,22 +165,23 @@ export default function ProductCard({ product }) {
         </Link>
 
         {/* Product Info */}
-        <div className="p-4">
+        <div className="p-2 sm:p-3 lg:p-4">
           <Link href={`/products/${product.id}`}>
-            <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-primary transition-colors">
+            <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-1 sm:mb-2 line-clamp-2 hover:text-primary transition-colors">
               {product.name}
             </h3>
           </Link>
-          
-          <div className="flex items-center gap-2 mb-2">
+
+          <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
             <div className="flex items-center">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="text-sm text-gray-600 ml-1">{product.rating}</span>
+              <Star className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 ml-1">{product.rating}</span>
             </div>
-            <span className="text-sm text-gray-400">({product.reviews})</span>
+            <span className="text-xs sm:text-sm text-gray-400">({product.reviews})</span>
             {product.stock <= 10 && (
-              <span className="text-xs text-orange-600 font-medium bg-orange-50 px-2 py-0.5 rounded-full">
-                Low Stock
+              <span className="text-xs text-orange-600 font-medium bg-orange-50 px-1 sm:px-2 py-0.5 rounded-full">
+                <span className="hidden sm:inline">Low Stock</span>
+                <span className="sm:hidden">Low</span>
               </span>
             )}
           </div>
