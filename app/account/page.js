@@ -284,22 +284,31 @@ export default function AccountPage() {
         <div className="xl:col-span-2 space-y-6">
           {/* Recent Activity */}
           <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+              <span className="text-sm text-gray-500">Last 7 days</span>
+            </div>
             <div className="space-y-4">
               {recentActivity.map((activity, index) => {
                 const Icon = activity.icon;
                 return (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className={`w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center ${activity.color}`}>
-                      <Icon className="h-4 w-4" />
+                  <div key={index} className="flex items-start gap-4 p-3 rounded-lg hover:bg-white transition-colors">
+                    <div className={`w-10 h-10 rounded-full ${activity.bgColor} flex items-center justify-center ${activity.color} flex-shrink-0`}>
+                      <Icon className="h-5 w-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                      <p className="text-sm font-semibold text-gray-900 mb-1">{activity.title}</p>
+                      <p className="text-xs text-gray-600 mb-2 line-clamp-2">{activity.description}</p>
                       <p className="text-xs text-gray-500">{activity.time}</p>
                     </div>
                   </div>
                 );
               })}
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <button className="text-sm text-primary hover:text-primary/80 font-medium">
+                View all activity →
+              </button>
             </div>
           </div>
 
