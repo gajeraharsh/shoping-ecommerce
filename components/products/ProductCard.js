@@ -33,6 +33,7 @@ export default function ProductCard({ product }) {
 
   const handleWishlistToggle = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     if (inWishlist) {
       removeFromWishlist(product.id);
       showToast('Removed from wishlist', 'info');
@@ -44,8 +45,21 @@ export default function ProductCard({ product }) {
 
   const handleQuickAdd = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     addToCart(product, product.sizes[0], product.colors[0], 1);
     showToast('Added to cart', 'success');
+  };
+
+  const handleQuickView = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowQuickView(true);
+  };
+
+  const handleImageCycle = () => {
+    if (product.images && product.images.length > 1 && isHovered) {
+      setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+    }
   };
 
   return (
