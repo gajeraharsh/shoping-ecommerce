@@ -115,7 +115,7 @@ export default function ProductTabs({ product }) {
           <div>
             <div className="flex items-center gap-6 mb-6">
               <div className="text-center">
-                <div className="text-3xl font-bold">{product.rating}</div>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white">{product.rating}</div>
                 <div className="flex justify-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
@@ -123,12 +123,12 @@ export default function ProductTabs({ product }) {
                       className={`h-4 w-4 ${
                         i < Math.floor(product.rating)
                           ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-gray-300'
+                          : 'text-gray-300 dark:text-gray-600'
                       }`}
                     />
                   ))}
                 </div>
-                <div className="text-sm text-gray-600">{product.reviews} reviews</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">{product.reviews} reviews</div>
               </div>
               
               <div className="flex-1">
