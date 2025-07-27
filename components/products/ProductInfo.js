@@ -124,18 +124,18 @@ export default function ProductInfo({ product }) {
 
       {/* Quantity */}
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Quantity</h3>
+        <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-900 dark:text-white">Quantity</h3>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-10 h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="w-8 h-8 sm:w-10 sm:h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             -
           </button>
-          <span className="text-lg font-semibold w-12 text-center text-gray-900 dark:text-white">{quantity}</span>
+          <span className="text-base sm:text-lg font-semibold w-10 sm:w-12 text-center text-gray-900 dark:text-white">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="w-10 h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="w-8 h-8 sm:w-10 sm:h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             +
           </button>
