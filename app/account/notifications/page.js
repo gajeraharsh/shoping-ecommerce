@@ -19,6 +19,14 @@ import {
 } from 'lucide-react';
 
 export default function NotificationsPage() {
+  const [expandedCategories, setExpandedCategories] = useState({
+    transactional: true,
+    security: true,
+    shopping: false,
+    marketing: false,
+    engagement: false
+  });
+
   const [settings, setSettings] = useState({
     // Email Notifications
     email: {
