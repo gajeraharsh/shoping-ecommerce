@@ -74,8 +74,8 @@ export default function AboutPage() {
         <div className="mb-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-              <div className="space-y-4 text-gray-600 leading-relaxed">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Our Story</h2>
+              <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                 <p>
                   Founded in 2018, Fashionista started with a simple belief: that everyone deserves 
                   access to beautiful, well-made clothing that makes them feel confident and authentic.
@@ -94,13 +94,13 @@ export default function AboutPage() {
             </div>
             <div className="relative">
               <div className="bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-2xl p-8 text-center">
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8">
+                <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-8">
                   <div className="text-4xl font-bold text-primary mb-2">1M+</div>
-                  <div className="text-gray-600 mb-4">Happy Customers</div>
+                  <div className="text-gray-600 dark:text-gray-300 mb-4">Happy Customers</div>
                   <div className="text-4xl font-bold text-primary mb-2">50+</div>
-                  <div className="text-gray-600 mb-4">Countries Served</div>
+                  <div className="text-gray-600 dark:text-gray-300 mb-4">Countries Served</div>
                   <div className="text-4xl font-bold text-primary mb-2">10K+</div>
-                  <div className="text-gray-600">Products Available</div>
+                  <div className="text-gray-600 dark:text-gray-300">Products Available</div>
                 </div>
               </div>
             </div>
@@ -109,15 +109,15 @@ export default function AboutPage() {
 
         {/* Values Section */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Our Values</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Our Values</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div key={index} className="text-center">
                 <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <value.icon className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{value.title}</h3>
-                <p className="text-gray-600">{value.description}</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">{value.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300">{value.description}</p>
               </div>
             ))}
           </div>
@@ -125,17 +125,17 @@ export default function AboutPage() {
 
         {/* Timeline Section */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Our Journey</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Our Journey</h2>
           <div className="max-w-4xl mx-auto">
             <div className="relative">
               <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-primary/20"></div>
               {milestones.map((milestone, index) => (
                 <div key={index} className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
                   <div className={`w-full max-w-md ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
-                    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-lg">
+                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-lg">
                       <div className="text-2xl font-bold text-primary mb-2">{milestone.year}</div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{milestone.title}</h3>
-                      <p className="text-gray-600">{milestone.description}</p>
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{milestone.title}</h3>
+                      <p className="text-gray-600 dark:text-gray-300">{milestone.description}</p>
                     </div>
                   </div>
                   <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-white"></div>
@@ -147,7 +147,7 @@ export default function AboutPage() {
 
         {/* Team Section */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Meet Our Team</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Meet Our Team</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {team.map((member, index) => (
               <div key={index} className="text-center">
@@ -156,9 +156,9 @@ export default function AboutPage() {
                     <div className="text-6xl">👤</div>
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{member.name}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{member.name}</h3>
                 <div className="text-primary font-medium mb-3">{member.role}</div>
-                <p className="text-gray-600">{member.description}</p>
+                <p className="text-gray-600 dark:text-gray-300">{member.description}</p>
               </div>
             ))}
           </div>
@@ -175,8 +175,8 @@ export default function AboutPage() {
 
         {/* Contact CTA */}
         <div className="text-center mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Want to Know More?</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Want to Know More?</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
             We'd love to hear from you! Get in touch with any questions or feedback.
           </p>
           <a
