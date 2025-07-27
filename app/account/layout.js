@@ -166,10 +166,10 @@ export default function AccountLayout({ children }) {
                   </div>
                   <div>
                     <h2 className="text-lg font-semibold">{user.name}</h2>
-                    <p className="text-blue-100 text-sm">{user.email}</p>
+                    <p className="text-pink-100 text-sm">{user.email}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                      <span className="text-xs text-blue-100">Active Member</span>
+                      <span className="text-xs text-pink-100">Active Member</span>
                     </div>
                   </div>
                 </div>
