@@ -2,18 +2,20 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  Calendar, 
-  MapPin, 
-  Mail, 
-  Phone, 
-  Edit3, 
-  Package, 
-  Heart, 
+import {
+  Calendar,
+  MapPin,
+  Mail,
+  Phone,
+  Edit3,
+  Package,
+  Heart,
   CreditCard,
   Award,
   TrendingUp,
-  Star
+  Star,
+  Truck,
+  RotateCcw
 } from 'lucide-react';
 
 export default function AccountPage() {
