@@ -75,17 +75,17 @@ export default function SocialProof({ variant = 'reviews' }) {
 
   if (variant === 'testimonials') {
     return (
-      <div className="bg-gray-50 py-16">
+      <div className="bg-gray-50 dark:bg-gray-800 py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">What Our Customers Say</h3>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">What Our Customers Say</h3>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Real feedback from real customers who love shopping with us
             </p>
           </div>
-          
+
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8">
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="md:w-1/3 text-center">
                   <div className="w-24 h-24 bg-gradient-to-br from-primary to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
