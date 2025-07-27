@@ -93,7 +93,7 @@ export default function Header() {
             </button>
 
             {/* Wishlist */}
-            <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+            <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary">
               <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-primary text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-xs">
@@ -103,7 +103,7 @@ export default function Header() {
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+            <Link href="/cart" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary">
               <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-primary text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-xs">
@@ -117,10 +117,10 @@ export default function Header() {
 
             {/* User Account */}
             <div className="relative group">
-              <button className="p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+              <button className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary">
                 <User className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
-              <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 {user ? (
                   <>
                     <Link
