@@ -49,7 +49,7 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <div>
-            <h2 className="text-2xl font-semibold mb-6">Get in Touch</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Get in Touch</h2>
             
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
