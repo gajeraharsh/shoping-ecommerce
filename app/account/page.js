@@ -329,29 +329,6 @@ export default function AccountPage() {
                 </button>
               </div>
             </div>
-
-            {/* Account Summary */}
-            <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Summary</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Member since</span>
-                  <span className="text-sm font-medium text-gray-900">Jan 2023</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Total orders</span>
-                  <span className="text-sm font-medium text-gray-900">12</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-600">Amount spent</span>
-                  <span className="text-sm font-medium text-gray-900">₹24,750</span>
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-sm text-gray-600">Saved amount</span>
-                  <span className="text-sm font-medium text-green-600">₹3,240</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
