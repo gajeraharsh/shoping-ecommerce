@@ -28,8 +28,50 @@ export default function AccountLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!user) {
-    router.push('/auth/login');
-    return null;
+    // Demo login for testing
+    const handleDemoLogin = () => {
+      const demoUser = {
+        id: 1,
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        phone: '+91 9876543210'
+      };
+      login(demoUser);
+    };
+
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Account Access Required</h1>
+            <p className="text-gray-600">Please log in to access your account dashboard</p>
+          </div>
+
+          <div className="space-y-4">
+            <button
+              onClick={handleDemoLogin}
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            >
+              Demo Login (For Testing)
+            </button>
+
+            <Link
+              href="/auth/login"
+              className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium text-center block"
+            >
+              Go to Login Page
+            </Link>
+
+            <Link
+              href="/"
+              className="w-full text-gray-500 py-2 px-4 text-center block hover:text-gray-700 transition-colors"
+            >
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const navigation = [
