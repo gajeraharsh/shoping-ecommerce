@@ -4,6 +4,12 @@ import Hero from '@/components/home/Hero';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import Categories from '@/components/home/Categories';
 import Newsletter from '@/components/home/Newsletter';
+import TrustBadges from '@/components/ui/TrustBadges';
+import SocialProof from '@/components/ui/SocialProof';
+import { ProductRecommendationGrid } from '@/components/products/ProductRecommendations';
+import RecentlyViewed from '@/components/products/RecentlyViewed';
+import NewsletterSignup from '@/components/marketing/NewsletterSignup';
+import ExitIntentPopup from '@/components/marketing/ExitIntentPopup';
 
 export default function Home() {
   return (
