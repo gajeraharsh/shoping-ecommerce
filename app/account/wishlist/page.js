@@ -377,32 +377,32 @@ export default function WishlistPage() {
               {/* Content */}
               <div className={`flex-1 ${viewMode === 'list' ? 'flex flex-col justify-between' : ''}`}>
                 <div>
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-gray-900 text-sm line-clamp-2">{item.name}</h3>
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="font-semibold text-gray-900 text-base line-clamp-2 pr-2">{item.name}</h3>
                     <button
                       onClick={() => removeFromWishlist(item.id)}
-                      className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                      className="text-gray-400 hover:text-red-500 transition-colors p-1 flex-shrink-0"
                     >
-                      <Heart className="h-4 w-4 fill-current text-red-500" />
+                      <Heart className="h-5 w-5 fill-current text-red-500" />
                     </button>
                   </div>
 
-                  <div className="text-xs text-gray-500 mb-2">{item.brand}</div>
+                  <div className="text-sm text-gray-500 mb-3 font-medium">{item.brand}</div>
 
                   {/* Rating */}
-                  <div className="flex items-center gap-1 mb-3">
+                  <div className="flex items-center gap-2 mb-4">
                     <div className="flex items-center">
-                      <Star className="h-3 w-3 fill-current text-yellow-400" />
-                      <span className="text-xs font-medium text-gray-700 ml-1">{item.rating}</span>
+                      <Star className="h-4 w-4 fill-current text-yellow-400" />
+                      <span className="text-sm font-medium text-gray-700 ml-1">{item.rating}</span>
                     </div>
-                    <span className="text-xs text-gray-500">({item.reviewCount})</span>
+                    <span className="text-sm text-gray-500">({item.reviewCount} reviews)</span>
                   </div>
 
                   {/* Price */}
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-lg font-bold text-gray-900">₹{item.price}</span>
+                  <div className="flex items-center gap-2 mb-5">
+                    <span className="text-xl font-bold text-gray-900">₹{item.price}</span>
                     {item.originalPrice > item.price && (
-                      <span className="text-sm text-gray-500 line-through">₹{item.originalPrice}</span>
+                      <span className="text-base text-gray-500 line-through">₹{item.originalPrice}</span>
                     )}
                   </div>
                 </div>
