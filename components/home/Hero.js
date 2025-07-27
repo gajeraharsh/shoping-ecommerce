@@ -66,7 +66,7 @@ export default function Hero() {
           </div>
 
           {/* Featured Product Showcase */}
-          <div className="lg:col-span-7">
+          <div>
             {loading ? (
               <div className="animate-pulse">
                 <div className="bg-gray-200 dark:bg-gray-700 rounded-3xl h-[500px] lg:h-[600px]"></div>
