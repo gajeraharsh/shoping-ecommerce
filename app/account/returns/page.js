@@ -276,7 +276,7 @@ export default function ReturnsPage() {
                           <div className="text-sm text-gray-500">
                             {returnItem.type === 'return' ? 'Return' : 'Exchange'} #{returnItem.id}
                           </div>
-                          <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${statusConfig.color}`}>
+                          <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${currentStatusConfig.color}`}>
                             {getStatusIcon(returnItem.status)}
                             {returnItem.status.charAt(0).toUpperCase() + returnItem.status.slice(1)}
                           </div>
