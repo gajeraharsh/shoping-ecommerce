@@ -194,23 +194,23 @@ export default function ContactPage() {
 
         {/* FAQ Section */}
         <div className="mt-16">
-          <h2 className="text-2xl font-semibold text-center mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-2xl font-semibold text-center mb-8 text-gray-900 dark:text-white">Frequently Asked Questions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">What are your shipping options?</h3>
-              <p className="text-gray-600">We offer standard, express, and overnight shipping options. Free shipping on orders over $75.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What are your shipping options?</h3>
+              <p className="text-gray-600 dark:text-gray-300">We offer standard, express, and overnight shipping options. Free shipping on orders over $75.</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">What is your return policy?</h3>
-              <p className="text-gray-600">We accept returns within 30 days of purchase. Items must be in original condition with tags.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What is your return policy?</h3>
+              <p className="text-gray-600 dark:text-gray-300">We accept returns within 30 days of purchase. Items must be in original condition with tags.</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Do you ship internationally?</h3>
-              <p className="text-gray-600">Yes, we ship to most countries worldwide. International shipping rates apply.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Do you ship internationally?</h3>
+              <p className="text-gray-600 dark:text-gray-300">Yes, we ship to most countries worldwide. International shipping rates apply.</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">How can I track my order?</h3>
-              <p className="text-gray-600">You'll receive a tracking number via email once your order ships. You can track it on our website.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">How can I track my order?</h3>
+              <p className="text-gray-600 dark:text-gray-300">You'll receive a tracking number via email once your order ships. You can track it on our website.</p>
             </div>
           </div>
         </div>
