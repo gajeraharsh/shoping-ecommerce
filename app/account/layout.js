@@ -238,7 +238,7 @@ export default function AccountLayout({ children }) {
                     </div>
                     <div>
                       <div className="font-medium">{user.name}</div>
-                      <div className="text-blue-100 text-sm">{user.email}</div>
+                      <div className="text-pink-100 text-sm">{user.email}</div>
                     </div>
                   </div>
                 </div>
