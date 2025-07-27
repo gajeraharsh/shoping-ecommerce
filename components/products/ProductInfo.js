@@ -143,19 +143,19 @@ export default function ProductInfo({ product }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <button
           onClick={handleAddToCart}
-          className="flex-1 bg-primary text-white py-3 px-6 rounded-lg hover:bg-primary/90 transition-colors font-semibold flex items-center justify-center gap-2"
+          className="flex-1 bg-primary text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:bg-primary/90 transition-colors font-semibold flex items-center justify-center gap-2 text-sm sm:text-base"
         >
-          <ShoppingBag className="h-5 w-5" />
+          <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
           Add to Cart
         </button>
         <button
           onClick={handleWishlistToggle}
-          className="px-6 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors sm:flex-shrink-0"
         >
-          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
+          <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
         </button>
       </div>
 
