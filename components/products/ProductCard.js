@@ -186,16 +186,16 @@ export default function ProductCard({ product }) {
             )}
           </div>
 
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-gray-900">₹{product.price}</span>
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+              <span className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white">₹{product.price}</span>
               {product.originalPrice && (
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-xs sm:text-sm text-gray-500 line-through">
                   ₹{product.originalPrice}
                 </span>
               )}
               {product.discount && (
-                <span className="text-xs text-green-600 font-medium">
+                <span className="text-xs text-green-600 font-medium hidden sm:inline">
                   Save ₹{product.originalPrice - product.price}
                 </span>
               )}
