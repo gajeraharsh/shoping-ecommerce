@@ -43,9 +43,9 @@ export default function Hero() {
           {(loading ? Array.from({ length: 6 }) : products).map((product, index) => (
             <SwiperSlide key={index}>
               {loading ? (
-                <div className="bg-white rounded-2xl shadow-md border border-gray-200 animate-pulse h-full flex flex-col">
-                  <div className="h-[400px] md:h-[460px] lg:h-[500px] bg-gray-200 rounded-t-2xl" />
-                  <div className="p-5 flex flex-col gap-2 flex-grow">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 animate-pulse h-full flex flex-col">
+                  <div className="h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] bg-gray-200 dark:bg-gray-700 rounded-t-2xl" />
+                  <div className="p-3 sm:p-4 lg:p-5 flex flex-col gap-2 flex-grow">
                     <div className="h-4 w-24 bg-gray-300 rounded" />
                     <div className="h-6 w-3/4 bg-gray-300 rounded" />
                     <div className="h-5 w-1/2 bg-gray-300 rounded" />
