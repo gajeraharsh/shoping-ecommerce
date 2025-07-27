@@ -257,7 +257,7 @@ export default function AccountPage() {
         </div>
 
         {/* Recent Activity & Quick Actions */}
-        <div className="space-y-6">
+        <div className="xl:col-span-2 space-y-6">
           {/* Recent Activity */}
           <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
