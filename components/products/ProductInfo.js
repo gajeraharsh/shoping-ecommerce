@@ -104,13 +104,13 @@ export default function ProductInfo({ product }) {
 
       {/* Color Selection */}
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Color</h3>
-        <div className="flex gap-2">
+        <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-900 dark:text-white">Color</h3>
+        <div className="flex gap-2 flex-wrap">
           {product.colors.map(color => (
             <button
               key={color}
               onClick={() => setSelectedColor(color)}
-              className={`px-4 py-2 border rounded-lg transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 border rounded-lg transition-colors text-sm sm:text-base ${
                 selectedColor === color
                   ? 'bg-primary text-white border-primary'
                   : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-800'
