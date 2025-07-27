@@ -31,11 +31,13 @@ export default function Hero() {
           navigation={{ nextEl: '.hero-swiper-next', prevEl: '.hero-swiper-prev' }}
           pagination={{ clickable: true, el: '.hero-swiper-pagination' }}
           autoplay={{ delay: 4000, disableOnInteraction: false }}
-          spaceBetween={24}
+          spaceBetween={16}
           breakpoints={{
-            640: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
+            0: { slidesPerView: 1, spaceBetween: 12 },
+            640: { slidesPerView: 1, spaceBetween: 16 },
+            768: { slidesPerView: 2, spaceBetween: 20 },
+            1024: { slidesPerView: 3, spaceBetween: 24 },
+            1280: { slidesPerView: 4, spaceBetween: 24 },
           }}
         >
           {(loading ? Array.from({ length: 6 }) : products).map((product, index) => (
