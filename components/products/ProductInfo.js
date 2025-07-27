@@ -46,7 +46,7 @@ export default function ProductInfo({ product }) {
       {/* Product Title & Rating */}
       <div>
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">{product.name}</h1>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
           <div className="flex items-center">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
@@ -60,7 +60,7 @@ export default function ProductInfo({ product }) {
                 />
               ))}
             </div>
-            <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
+            <span className="ml-1 sm:ml-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               {product.rating} ({product.reviews} reviews)
             </span>
           </div>
