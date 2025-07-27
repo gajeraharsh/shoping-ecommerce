@@ -144,20 +144,21 @@ export default function ProductCard({ product }) {
             </button>
 
             {/* Quick Actions */}
-            <div className="absolute bottom-3 left-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+            <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 right-2 sm:right-3 flex gap-1 sm:gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
               <button
                 onClick={handleQuickAdd}
-                className="flex-1 bg-primary text-white py-2.5 px-4 rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium flex items-center justify-center gap-2 shadow-lg backdrop-blur-sm"
+                className="flex-1 bg-primary text-white py-2 sm:py-2.5 px-2 sm:px-4 rounded-lg hover:bg-primary/90 transition-colors text-xs sm:text-sm font-medium flex items-center justify-center gap-1 sm:gap-2 shadow-lg backdrop-blur-sm"
               >
-                <Plus className="h-4 w-4" />
-                Quick Add
+                <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Quick Add</span>
+                <span className="sm:hidden">Add</span>
               </button>
-              <button 
+              <button
                 onClick={handleQuickView}
-                className="bg-white/90 text-gray-700 p-2.5 rounded-lg hover:bg-white transition-colors shadow-lg backdrop-blur-sm"
+                className="bg-white/90 text-gray-700 p-2 sm:p-2.5 rounded-lg hover:bg-white transition-colors shadow-lg backdrop-blur-sm"
                 title="Quick View"
               >
-                <Eye className="h-4 w-4" />
+                <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
             </div>
           </div>
