@@ -45,7 +45,7 @@ export default function ProductInfo({ product }) {
     <div className="space-y-4 sm:space-y-6">
       {/* Product Title & Rating */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{product.name}</h1>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">{product.name}</h1>
         <div className="flex items-center gap-4">
           <div className="flex items-center">
             <div className="flex">
