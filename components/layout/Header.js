@@ -49,8 +49,8 @@ export default function Header() {
             <div className="bg-primary text-white px-2 sm:px-3 py-1 rounded-lg font-bold text-lg sm:text-xl">
               F
             </div>
-            <span className="text-lg sm:text-xl font-bold text-gray-900 hidden xs:block">Fashionista</span>
-            <span className="text-lg font-bold text-gray-900 xs:hidden">F</span>
+            <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white hidden xs:block">Fashionista</span>
+            <span className="text-lg font-bold text-gray-900 dark:text-white xs:hidden">F</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -59,7 +59,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-primary transition-colors font-medium"
+                className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium"
               >
                 {item.name}
               </Link>
@@ -77,7 +77,7 @@ export default function Header() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleSearchKeyPress}
                 onFocus={() => setShowAdvancedSearch(true)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer"
               />
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function Header() {
             {/* Mobile Search */}
             <button
               onClick={() => setShowAdvancedSearch(true)}
-              className="lg:hidden p-1.5 sm:p-2 text-gray-700 hover:text-primary transition-colors"
+              className="lg:hidden p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors"
             >
               <Search className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
