@@ -159,7 +159,7 @@ export default function AccountLayout({ children }) {
           <div className="hidden lg:block w-80 flex-shrink-0">
             <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
               {/* User Profile Section */}
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
+              <div className="bg-gradient-to-r from-primary via-pink-500 to-purple-600 text-white p-6">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-xl font-bold backdrop-blur-sm">
                     {user.name.charAt(0).toUpperCase()}
