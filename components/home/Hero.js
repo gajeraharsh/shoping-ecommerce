@@ -89,15 +89,15 @@ export default function Hero() {
                     <div className="mt-auto space-y-2">
                       <Link
                         href={`/products/${product.id}`}
-                        className="block text-center bg-pink-600 hover:bg-pink-700 text-white text-sm font-bold py-2 rounded-lg transition-all shadow group-hover:scale-105 group-hover:shadow-lg"
+                        className="block text-center bg-pink-600 hover:bg-pink-700 text-white text-xs sm:text-sm font-bold py-2 sm:py-2.5 rounded-lg transition-all shadow group-hover:scale-105 group-hover:shadow-lg"
                       >
                         View Details
                       </Link>
                       <Link
                         href={`/products/${product.id}`}
-                        className="block text-center bg-gray-900 hover:bg-gray-800 text-white text-sm font-bold py-2 rounded-lg transition-all flex items-center justify-center gap-2 shadow group-hover:scale-105 group-hover:shadow-lg"
+                        className="block text-center bg-gray-900 hover:bg-gray-800 text-white text-xs sm:text-sm font-bold py-2 sm:py-2.5 rounded-lg transition-all flex items-center justify-center gap-1 sm:gap-2 shadow group-hover:scale-105 group-hover:shadow-lg"
                       >
-                        <ShoppingBag className="h-5 w-5" />
+                        <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
                         Shop Now
                       </Link>
                     </div>
