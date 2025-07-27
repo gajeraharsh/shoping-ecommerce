@@ -110,7 +110,7 @@ export default function OrdersPage() {
         {
           id: 6,
           name: 'Denim Jacket',
-          image: '/api/placeholder/100/100',
+          image: 'https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg?auto=compress&cs=tinysrgb&w=300',
           price: 1299,
           quantity: 1,
           size: 'S',
