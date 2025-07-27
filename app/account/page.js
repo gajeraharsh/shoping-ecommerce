@@ -332,6 +332,76 @@ export default function AccountPage() {
           </div>
         </div>
       </div>
+
+      {/* Account Summary - Now Horizontal */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Member since</p>
+              <p className="text-lg font-semibold text-gray-900">Jan 2023</p>
+            </div>
+            <Calendar className="h-8 w-8 text-primary" />
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Total orders</p>
+              <p className="text-lg font-semibold text-gray-900">12</p>
+            </div>
+            <Package className="h-8 w-8 text-blue-600" />
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Amount spent</p>
+              <p className="text-lg font-semibold text-gray-900">₹24,750</p>
+            </div>
+            <CreditCard className="h-8 w-8 text-purple-600" />
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Saved amount</p>
+              <p className="text-lg font-semibold text-green-600">₹3,240</p>
+            </div>
+            <Award className="h-8 w-8 text-green-600" />
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activity - Full Width */}
+      <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-semibold text-gray-900">Recent Activity</h3>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-500">Last 7 days</span>
+            <button className="text-sm text-primary hover:text-primary/80 font-medium transition-colors">
+              View All →
+            </button>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {recentActivity.slice(0, 6).map((activity, index) => {
+            const Icon = activity.icon;
+            return (
+              <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg hover:shadow-md transition-all duration-300 border border-gray-100">
+                <div className={`w-10 h-10 rounded-full ${activity.bgColor} flex items-center justify-center ${activity.color} flex-shrink-0`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-gray-900 mb-1 leading-tight">{activity.title}</p>
+                  <p className="text-xs text-gray-600 mb-2 line-clamp-2 leading-tight">{activity.description}</p>
+                  <p className="text-xs text-gray-500">{activity.time}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
