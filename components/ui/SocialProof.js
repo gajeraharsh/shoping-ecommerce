@@ -150,16 +150,16 @@ export default function SocialProof({ variant = 'reviews' }) {
   }
 
   return (
-    <div className="py-12 bg-white">
+    <div className="py-12 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Customer Reviews</h3>
-          <p className="text-gray-600">See what our customers are saying</p>
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Customer Reviews</h3>
+          <p className="text-gray-600 dark:text-gray-300">See what our customers are saying</p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {reviews.map((review) => (
-            <div key={review.id} className="bg-gray-50 rounded-xl p-6">
+            <div key={review.id} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-semibold">
