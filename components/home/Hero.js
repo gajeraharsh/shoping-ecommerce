@@ -26,7 +26,7 @@ export default function Hero() {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full filter blur-3xl"></div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 lg:py-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-16 relative z-10">
         {/* Main Hero Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16">
           {/* Text Content */}
