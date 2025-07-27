@@ -1,0 +1,204 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { X, Gift, Clock, Sparkles } from 'lucide-react';
+
+export default function ExitIntentPopup() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasShown, setHasShown] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+
+  useEffect(() => {
+    // Check if popup was already shown this session
+    const shown = sessionStorage.getItem('exitIntentShown');
+    if (shown) {
+      setHasShown(true);
+      return;
+    }
+
+    let mouseLeaveTimer;
+
+    const handleMouseLeave = (e) => {
+      // Only trigger if mouse leaves from the top of the page
+      if (e.clientY <= 0 && !hasShown) {
+        mouseLeaveTimer = setTimeout(() => {
+          setIsVisible(true);
+          setHasShown(true);
+          sessionStorage.setItem('exitIntentShown', 'true');
+        }, 500);
+      }
+    };
+
+    const handleMouseEnter = () => {
+      if (mouseLeaveTimer) {
+        clearTimeout(mouseLeaveTimer);
+      }
+    };
+
+    document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('mouseenter', handleMouseEnter);
+
+    return () => {
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mouseenter', handleMouseEnter);
+      if (mouseLeaveTimer) clearTimeout(mouseLeaveTimer);
+    };
+  }, [hasShown]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          setIsVisible(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isVisible]);
+
+  const handleClose = () => {
+    setIsVisible(false);
+  };
+
+  const handleClaim = () => {
+    // Here you would typically handle the discount claim
+    console.log('Discount claimed!');
+    setIsVisible(false);
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        onClick={handleClose}
+      />
+      
+      {/* Modal */}
+      <div className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden animate-in zoom-in-95 duration-300">
+        {/* Close Button */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 z-10 p-2 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          <X className="h-5 w-5 text-gray-400" />
+        </button>
+
+        {/* Header with animation */}
+        <div className="bg-gradient-to-r from-red-500 to-pink-600 text-white p-6 text-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 animate-pulse"></div>
+          
+          <div className="relative z-10">
+            <Sparkles className="h-12 w-12 mx-auto mb-3 animate-bounce" />
+            <h2 className="text-2xl font-bold mb-2">Wait! Don't Leave Yet!</h2>
+            <p className="text-red-100">You're about to miss out on something special...</p>
+          </div>
+
+          {/* Floating elements */}
+          <div className="absolute top-2 left-4 w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-3 right-6 w-3 h-3 bg-pink-300 rounded-full animate-pulse delay-300"></div>
+        </div>
+
+        <div className="p-6">
+          {/* Offer */}
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              <Gift className="h-4 w-4" />
+              EXCLUSIVE OFFER
+            </div>
+            
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              Get <span className="text-red-500">20% OFF</span> Your First Order!
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Plus free shipping on orders over ₹999. Limited time offer!
+            </p>
+
+            {/* Countdown */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <Clock className="h-5 w-5 text-red-500" />
+              <span className="text-lg font-bold text-red-500">
+                Expires in: {formatTime(timeLeft)}
+              </span>
+            </div>
+          </div>
+
+          {/* Benefits */}
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <h4 className="font-semibold text-gray-900 mb-3">What you'll get:</h4>
+            <ul className="space-y-2 text-sm text-gray-600">
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                20% discount on your first purchase
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                Free shipping (save ₹150)
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                Access to exclusive member deals
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                Priority customer support
+              </li>
+            </ul>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="space-y-3">
+            <button
+              onClick={handleClaim}
+              className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-6 rounded-lg font-bold text-lg hover:from-red-600 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg"
+            >
+              🎉 Claim My 20% Discount
+            </button>
+            
+            <button
+              onClick={handleClose}
+              className="w-full text-gray-500 hover:text-gray-700 transition-colors text-sm"
+            >
+              No thanks, I'll pay full price
+            </button>
+          </div>
+
+          {/* Social proof */}
+          <div className="text-center mt-4">
+            <div className="flex items-center justify-center gap-1 text-yellow-400 mb-1">
+              {[...Array(5)].map((_, i) => (
+                <span key={i} className="text-lg">★</span>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500">
+              Join 50,000+ happy customers who saved with this offer
+            </p>
+          </div>
+        </div>
+
+        {/* Trust indicators */}
+        <div className="bg-gray-50 px-6 py-3 border-t">
+          <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+            <span>🔒 Secure Checkout</span>
+            <span>📦 Free Returns</span>
+            <span>⚡ Instant Discount</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
