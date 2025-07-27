@@ -84,7 +84,10 @@ export default function Header() {
           {/* Action Icons */}
           <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
             {/* Mobile Search */}
-            <button className="lg:hidden p-1.5 sm:p-2 text-gray-700 hover:text-primary">
+            <button
+              onClick={() => setShowAdvancedSearch(true)}
+              className="lg:hidden p-1.5 sm:p-2 text-gray-700 hover:text-primary transition-colors"
+            >
               <Search className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
 
