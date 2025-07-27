@@ -100,8 +100,8 @@ export default function ProductTabs({ product }) {
               </dl>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">Fit & Styling</h4>
-              <ul className="space-y-2 text-gray-600">
+              <h4 className="font-semibold mb-3 text-gray-900 dark:text-white">Fit & Styling</h4>
+              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                 <li>Regular fit</li>
                 <li>Model is 5'6" wearing size M</li>
                 <li>Pairs well with jeans, palazzo, or leggings</li>
