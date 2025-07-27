@@ -166,15 +166,15 @@ export default function SocialProof({ variant = 'reviews' }) {
                     {review.name.charAt(0)}
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900 flex items-center gap-2">
+                    <div className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                       {review.name}
                       {review.verified && (
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                        <span className="text-xs bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full">
                           Verified
                         </span>
                       )}
                     </div>
-                    <div className="text-sm text-gray-500 flex items-center gap-1">
+                    <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                       <MapPin className="h-3 w-3" />
                       {review.location}
                     </div>
@@ -187,11 +187,11 @@ export default function SocialProof({ variant = 'reviews' }) {
                 </div>
               </div>
               
-              <p className="text-gray-700 mb-4 leading-relaxed">{review.review}</p>
+              <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">{review.review}</p>
               
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-500">Purchased: {review.product}</span>
-                <button className="flex items-center gap-1 text-gray-500 hover:text-primary transition-colors">
+                <span className="text-gray-500 dark:text-gray-400">Purchased: {review.product}</span>
+                <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-primary transition-colors">
                   <ThumbsUp className="h-3 w-3" />
                   {review.helpfulCount}
                 </button>
