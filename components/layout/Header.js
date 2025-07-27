@@ -199,6 +199,13 @@ export default function Header() {
           </div>
         )}
       </div>
+
+      {/* Advanced Search Modal */}
+      <AdvancedSearch
+        isOpen={showAdvancedSearch}
+        onClose={() => setShowAdvancedSearch(false)}
+        onSearch={handleSearch}
+      />
     </header>
   );
 }
