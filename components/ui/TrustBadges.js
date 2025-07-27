@@ -80,20 +80,20 @@ export default function TrustBadges({ variant = 'default' }) {
   }
 
   return (
-    <div className="py-12 bg-white">
+    <div className="py-12 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Why Choose Fashionista?</h3>
-          <p className="text-gray-600">Your satisfaction is our priority</p>
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Why Choose Fashionista?</h3>
+          <p className="text-gray-600 dark:text-gray-300">Your satisfaction is our priority</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {badges.map((badge, index) => (
             <div key={index} className="text-center">
-              <div className={`w-16 h-16 mx-auto mb-4 bg-gray-50 rounded-full flex items-center justify-center`}>
+              <div className={`w-16 h-16 mx-auto mb-4 bg-gray-50 dark:bg-gray-800 rounded-full flex items-center justify-center`}>
                 <badge.icon className={`h-8 w-8 ${badge.color}`} />
               </div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">{badge.title}</h4>
-              <p className="text-gray-600 text-sm">{badge.description}</p>
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{badge.title}</h4>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">{badge.description}</p>
             </div>
           ))}
         </div>
