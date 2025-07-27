@@ -186,7 +186,7 @@ export default function WishlistPage() {
           </p>
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
           >
             <Heart className="h-4 w-4" />
             Start Wishlist
