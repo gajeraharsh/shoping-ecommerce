@@ -36,7 +36,7 @@ export default function InstagramFeed() {
       image: 'https://images.pexels.com/photos/994517/pexels-photo-994517.jpeg',
       likes: 278,
       comments: 18,
-      caption: 'Behind the scenes at our latest photoshoot �� #BTS #Fashion'
+      caption: 'Behind the scenes at our latest photoshoot 📸 #BTS #Fashion'
     },
     {
       id: 6,
@@ -108,15 +108,15 @@ export default function InstagramFeed() {
         </div>
 
         <div className="text-center mt-8">
-          <p className="text-gray-600 mb-4">
-            Tag us <span className="font-semibold text-pink-500">@fashionista</span> and use 
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
+            Tag us <span className="font-semibold text-pink-500">@fashionista</span> and use
             <span className="font-semibold text-pink-500"> #FashionistaStyle</span> for a chance to be featured!
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {['#FashionistaStyle', '#OOTD', '#EthnicWear', '#CasualChic', '#Traditional'].map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium hover:bg-pink-200 transition-colors cursor-pointer"
+                className="px-3 py-1 bg-pink-100 dark:bg-pink-900/50 text-pink-700 dark:text-pink-400 rounded-full text-sm font-medium hover:bg-pink-200 dark:hover:bg-pink-900/70 transition-colors cursor-pointer"
               >
                 {tag}
               </span>
