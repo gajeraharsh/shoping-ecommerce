@@ -92,6 +92,13 @@ export default function NotificationsPage() {
     }));
   };
 
+  const toggleCategory = (categoryId) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+  };
+
   const notificationCategories = [
     {
       id: 'transactional',
