@@ -150,14 +150,14 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
-            <div className="flex flex-col space-y-2">
+          <div className="md:hidden border-t border-gray-200 py-2 sm:py-4">
+            <div className="flex flex-col space-y-1">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="px-4 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded"
+                  className="px-2 sm:px-4 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded text-sm sm:text-base"
                 >
                   {item.name}
                 </Link>
