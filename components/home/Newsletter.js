@@ -32,7 +32,7 @@ export default function Newsletter() {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex justify-center mb-6">
-            <div className="bg-white rounded-full p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-full p-4">
               <Mail className="h-8 w-8 text-primary" />
             </div>
           </div>
