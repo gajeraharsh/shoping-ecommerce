@@ -35,7 +35,7 @@ export default function OrdersPage() {
         {
           id: 1,
           name: 'Floral Summer Dress',
-          image: '/api/placeholder/100/100',
+          image: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=300',
           price: 1899,
           quantity: 1,
           size: 'M',
@@ -44,7 +44,7 @@ export default function OrdersPage() {
         {
           id: 2,
           name: 'Cotton Casual Shirt',
-          image: '/api/placeholder/100/100',
+          image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=300',
           price: 600,
           quantity: 1,
           size: 'L',
