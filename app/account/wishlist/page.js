@@ -335,9 +335,9 @@ export default function WishlistPage() {
           <p className="text-gray-500">Try adjusting your search or filters</p>
         </div>
       ) : (
-        <div className={viewMode === 'grid' 
-          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6' 
-          : 'space-y-4'
+        <div className={viewMode === 'grid'
+          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'
+          : 'space-y-6'
         }>
           {sortedItems.map(item => (
             <div key={item.id} className={`bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 group ${
