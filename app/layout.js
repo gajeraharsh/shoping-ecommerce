@@ -20,8 +20,10 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <CartProvider>
             <WishlistProvider>
-              {children}
-              <Toaster />
+              <RecentlyViewedProvider>
+                {children}
+                <Toaster />
+              </RecentlyViewedProvider>
             </WishlistProvider>
           </CartProvider>
         </AuthProvider>
