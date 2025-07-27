@@ -28,9 +28,9 @@ export default function Hero() {
 
       <div className="container mx-auto px-4 py-8 lg:py-16 relative z-10">
         {/* Main Hero Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16">
           {/* Text Content */}
-          <div className="lg:col-span-5 text-center lg:text-left">
+          <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
               New Collection 2024
