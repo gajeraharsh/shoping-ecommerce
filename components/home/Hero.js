@@ -2,14 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Star, ShoppingBag } from 'lucide-react';
+import { Star, ShoppingBag, ArrowRight, Sparkles } from 'lucide-react';
 import { mockProducts } from '@/utils/mockData';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
 export default function Hero() {
   const [products, setProducts] = useState([]);
@@ -17,132 +11,181 @@ export default function Hero() {
 
   useEffect(() => {
     setTimeout(() => {
-      setProducts(mockProducts.slice(0, 8));
+      setProducts(mockProducts.slice(0, 6));
       setLoading(false);
-    }, 1000);
+    }, 800);
   }, []);
 
+  const featuredProduct = products[0];
+
   return (
-    <section className="relative py-8 sm:py-12 lg:py-16 bg-gradient-to-r from-pink-50 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20">
-      <div className="container mx-auto px-2 sm:px-4 relative overflow-visible">
-        <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          loop={true}
-          navigation={{ nextEl: '.hero-swiper-next', prevEl: '.hero-swiper-prev' }}
-          pagination={{ clickable: true, el: '.hero-swiper-pagination' }}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
-          spaceBetween={16}
-          breakpoints={{
-            0: { slidesPerView: 1, spaceBetween: 12 },
-            640: { slidesPerView: 1, spaceBetween: 16 },
-            768: { slidesPerView: 2, spaceBetween: 20 },
-            1024: { slidesPerView: 3, spaceBetween: 24 },
-            1280: { slidesPerView: 4, spaceBetween: 24 },
-          }}
-        >
-          {(loading ? Array.from({ length: 6 }) : products).map((product, index) => (
-            <SwiperSlide key={index}>
+    <section className="relative min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900/20 overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-pink-300 rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full filter blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 lg:py-16 relative z-10">
+        {/* Main Hero Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16">
+          {/* Text Content */}
+          <div className="lg:col-span-5 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Sparkles className="w-4 h-4" />
+              New Collection 2024
+            </div>
+            
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+              Discover Your 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">
+                {" "}Perfect Style
+              </span>
+            </h1>
+            
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0">
+              Explore our exclusive collection of traditional kurties, modern dresses, and ethnic wear crafted for the modern woman.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Link
+                href="/products"
+                className="bg-pink-600 hover:bg-pink-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              >
+                Shop Collection
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              
+              <Link
+                href="/products?category=kurtis"
+                className="border-2 border-pink-600 text-pink-600 hover:bg-pink-600 hover:text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                View Kurties
+              </Link>
+            </div>
+          </div>
+
+          {/* Featured Product Showcase */}
+          <div className="lg:col-span-7">
+            {loading ? (
+              <div className="animate-pulse">
+                <div className="bg-gray-200 dark:bg-gray-700 rounded-3xl h-[500px] lg:h-[600px]"></div>
+              </div>
+            ) : featuredProduct && (
+              <div className="relative group">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden transform group-hover:scale-105 transition-transform duration-500">
+                  <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] overflow-hidden">
+                    <img
+                      src={featuredProduct.images[0]}
+                      alt={featuredProduct.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    
+                    {/* Product Info Overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm">{featuredProduct.rating} ({featuredProduct.reviews} reviews)</span>
+                      </div>
+                      
+                      <h3 className="text-xl sm:text-2xl font-bold mb-2">{featuredProduct.name}</h3>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl font-bold">₹{featuredProduct.price}</span>
+                          {featuredProduct.originalPrice && (
+                            <span className="text-lg text-gray-300 line-through">₹{featuredProduct.originalPrice}</span>
+                          )}
+                        </div>
+                        
+                        <Link
+                          href={`/products/${featuredProduct.id}`}
+                          className="bg-white text-gray-900 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2"
+                        >
+                          <ShoppingBag className="w-4 h-4" />
+                          Shop Now
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          {(loading ? Array.from({ length: 5 }) : products.slice(1, 6)).map((product, index) => (
+            <div key={index} className="group">
               {loading ? (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 animate-pulse h-full flex flex-col">
-                  <div className="h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] bg-gray-200 dark:bg-gray-700 rounded-t-2xl" />
-                  <div className="p-3 sm:p-4 lg:p-5 flex flex-col gap-2 flex-grow">
-                    <div className="h-4 w-24 bg-gray-300 rounded" />
-                    <div className="h-6 w-3/4 bg-gray-300 rounded" />
-                    <div className="h-5 w-1/2 bg-gray-300 rounded" />
-                    <div className="h-10 bg-gray-300 rounded-lg mt-auto" />
-                    <div className="h-10 bg-gray-300 rounded-lg" />
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg animate-pulse">
+                  <div className="h-60 bg-gray-200 dark:bg-gray-700 rounded-t-2xl"></div>
+                  <div className="p-4 space-y-3">
+                    <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
+                    <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded w-1/2"></div>
+                    <div className="h-8 bg-gray-300 dark:bg-gray-600 rounded"></div>
                   </div>
                 </div>
               ) : (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 dark:border-gray-700 transition-all duration-300 group overflow-hidden flex flex-col h-full">
-                  <div className="relative h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] overflow-hidden">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group-hover:transform group-hover:-translate-y-2">
+                  <div className="relative h-60 overflow-hidden">
                     <img
                       src={product.images[0]}
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      draggable={false}
                     />
                     {product.discount && (
-                      <span className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 text-xs font-semibold rounded-full shadow-md">
+                      <span className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 text-xs font-bold rounded-full">
                         {product.discount}% OFF
                       </span>
                     )}
                   </div>
-                  <div className="p-3 sm:p-4 lg:p-5 flex flex-col flex-grow">
-                    <div className="flex items-center gap-2 mb-1 text-xs sm:text-sm text-yellow-600">
-                      <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
-                      <span>
+                  
+                  <div className="p-4">
+                    <div className="flex items-center gap-1 mb-2">
+                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
                         {product.rating} ({product.reviews})
                       </span>
                     </div>
-                    <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-800 dark:text-white mb-1 line-clamp-2">
+                    
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 text-sm">
                       {product.name}
                     </h3>
-                    <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                      <span className="text-base sm:text-lg font-bold text-pink-600">₹{product.price}</span>
+                    
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="font-bold text-pink-600">₹{product.price}</span>
                       {product.originalPrice && (
-                        <span className="text-xs sm:text-sm text-gray-400 line-through">
-                          ₹{product.originalPrice}
-                        </span>
+                        <span className="text-xs text-gray-400 line-through">₹{product.originalPrice}</span>
                       )}
                     </div>
-                    <div className="mt-auto space-y-2">
-                      <Link
-                        href={`/products/${product.id}`}
-                        className="block text-center bg-pink-600 hover:bg-pink-700 text-white text-xs sm:text-sm font-bold py-2 sm:py-2.5 rounded-lg transition-all shadow group-hover:scale-105 group-hover:shadow-lg"
-                      >
-                        View Details
-                      </Link>
-                      <Link
-                        href={`/products/${product.id}`}
-                        className="block text-center bg-gray-900 hover:bg-gray-800 text-white text-xs sm:text-sm font-bold py-2 sm:py-2.5 rounded-lg transition-all flex items-center justify-center gap-1 sm:gap-2 shadow group-hover:scale-105 group-hover:shadow-lg"
-                      >
-                        <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
-                        Shop Now
-                      </Link>
-                    </div>
+                    
+                    <Link
+                      href={`/products/${product.id}`}
+                      className="w-full bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      Shop Now
+                    </Link>
                   </div>
                 </div>
               )}
-            </SwiperSlide>
+            </div>
           ))}
+        </div>
 
-          {/* Arrows */}
-          <button
-            className="hero-swiper-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-700 p-2 rounded-full z-30 shadow transition"
-            aria-label="Previous"
+        {/* Call to Action */}
+        <div className="text-center mt-12">
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 text-pink-600 hover:text-pink-700 font-semibold text-lg group"
           >
-            <svg
-              width="24"
-              height="24"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-
-          <button
-            className="hero-swiper-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-700 p-2 rounded-full z-30 shadow transition"
-            aria-label="Next"
-          >
-            <svg
-              width="24"
-              height="24"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </button>
-
-          {/* Pagination Dots */}
-          <div className="hero-swiper-pagination absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-30" />
-        </Swiper>
+            View All Products
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
       </div>
     </section>
   );
