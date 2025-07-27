@@ -7,20 +7,20 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-8 sm:py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Company Info */}
-          <div>
+          <div className="col-span-1 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <div className="bg-primary text-white px-3 py-1 rounded-lg font-bold text-xl">
+              <div className="bg-primary text-white px-3 py-1 rounded-lg font-bold text-lg sm:text-xl">
                 F
               </div>
-              <span className="text-xl font-bold">Fashionista</span>
+              <span className="text-lg sm:text-xl font-bold">Fashionista</span>
             </div>
-            <p className="text-gray-400 mb-4">
+            <p className="text-gray-400 dark:text-gray-300 mb-4 text-sm sm:text-base">
               Your destination for premium fashion. Discover the latest trends and timeless classics.
             </p>
             <div className="flex space-x-4">
-              <Facebook className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer" />
-              <Instagram className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer" />
-              <Twitter className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer" />
+              <Facebook className="h-5 w-5 text-gray-400 dark:text-gray-300 hover:text-white cursor-pointer transition-colors" />
+              <Instagram className="h-5 w-5 text-gray-400 dark:text-gray-300 hover:text-white cursor-pointer transition-colors" />
+              <Twitter className="h-5 w-5 text-gray-400 dark:text-gray-300 hover:text-white cursor-pointer transition-colors" />
             </div>
           </div>
 
