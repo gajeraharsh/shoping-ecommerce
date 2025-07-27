@@ -189,25 +189,25 @@ export default function ProductTabs({ product }) {
 
         {activeTab === 'size-guide' && (
           <div>
-            <h4 className="font-semibold mb-4">Size Chart</h4>
+            <h4 className="font-semibold mb-4 text-gray-900 dark:text-white">Size Chart</h4>
             <div className="overflow-x-auto">
-              <table className="min-w-full border border-gray-200">
+              <table className="min-w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                 <thead>
-                  <tr className="bg-gray-50">
-                    <th className="px-4 py-2 text-left border-b">Size</th>
-                    <th className="px-4 py-2 text-left border-b">Bust (inches)</th>
-                    <th className="px-4 py-2 text-left border-b">Waist (inches)</th>
-                    <th className="px-4 py-2 text-left border-b">Hip (inches)</th>
-                    <th className="px-4 py-2 text-left border-b">Length (inches)</th>
+                  <tr className="bg-gray-50 dark:bg-gray-700">
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Size</th>
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Bust (inches)</th>
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Waist (inches)</th>
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Hip (inches)</th>
+                    <th className="px-4 py-2 text-left border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Length (inches)</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="px-4 py-2 border-b font-medium">S</td>
-                    <td className="px-4 py-2 border-b">34-36</td>
-                    <td className="px-4 py-2 border-b">28-30</td>
-                    <td className="px-4 py-2 border-b">36-38</td>
-                    <td className="px-4 py-2 border-b">28-30</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 font-medium text-gray-900 dark:text-white">S</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300">34-36</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300">28-30</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300">36-38</td>
+                    <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300">28-30</td>
                   </tr>
                   <tr>
                     <td className="px-4 py-2 border-b font-medium">M</td>
