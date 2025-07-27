@@ -146,13 +146,13 @@ export default function Header() {
                   <>
                     <Link
                       href="/auth/login"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       Login
                     </Link>
                     <Link
                       href="/auth/register"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       Register
                     </Link>
@@ -164,7 +164,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-1.5 sm:p-2 text-gray-700 hover:text-primary"
+              className="md:hidden p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary"
             >
               {isMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
             </button>
@@ -173,7 +173,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-2 sm:py-4">
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-2 sm:py-4">
             <div className="flex flex-col space-y-1">
               {navigation.map((item) => (
                 <Link
