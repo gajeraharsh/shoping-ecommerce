@@ -277,9 +277,9 @@ export default function OrdersPage() {
                       <div className="text-sm text-gray-500">
                         Order #{order.id}
                       </div>
-                      <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${statusConfig.color}`}>
+                      <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${currentStatusConfig.color}`}>
                         <StatusIcon className="h-4 w-4" />
-                        {statusConfig.label}
+                        {currentStatusConfig.label}
                       </div>
                     </div>
                     
