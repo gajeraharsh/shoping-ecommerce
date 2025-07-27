@@ -75,23 +75,47 @@ export default function AccountPage() {
     {
       type: 'order',
       title: 'Order #ORD001 delivered',
+      description: 'Floral Summer Dress and Cotton Shirt',
       time: '2 hours ago',
       icon: Package,
-      color: 'text-green-600'
+      color: 'text-green-600',
+      bgColor: 'bg-green-100'
     },
     {
       type: 'wishlist',
       title: 'Added Floral Summer Dress to wishlist',
+      description: 'Size M, Blue color - ₹1,899',
       time: '1 day ago',
       icon: Heart,
-      color: 'text-pink-600'
+      color: 'text-pink-600',
+      bgColor: 'bg-pink-100'
     },
     {
       type: 'review',
       title: 'Reviewed Cotton Kurta Set',
+      description: 'Rated 5 stars - "Great quality!"',
       time: '3 days ago',
       icon: Star,
-      color: 'text-yellow-600'
+      color: 'text-yellow-600',
+      bgColor: 'bg-yellow-100'
+    },
+    {
+      type: 'order',
+      title: 'Order #ORD002 shipped',
+      description: 'Premium Silk Saree - Expected delivery: Jan 25',
+      time: '5 days ago',
+      icon: Truck,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
+    },
+    {
+      type: 'payment',
+      title: 'Payment method updated',
+      description: 'Added new Visa card ending in 4567',
+      time: '1 week ago',
+      icon: CreditCard,
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-100'
     }
   ];
 
