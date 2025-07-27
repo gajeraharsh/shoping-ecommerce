@@ -162,17 +162,17 @@ export default function ExitIntentPopup() {
           </div>
 
           {/* CTA Buttons */}
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             <button
               onClick={handleClaim}
-              className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 px-6 rounded-lg font-bold text-lg hover:from-red-600 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg"
+              className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg font-bold text-sm sm:text-base lg:text-lg hover:from-red-600 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg"
             >
               🎉 Claim My 20% Discount
             </button>
-            
+
             <button
               onClick={handleClose}
-              className="w-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors text-sm"
+              className="w-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors text-xs sm:text-sm py-2"
             >
               No thanks, I'll pay full price
             </button>
