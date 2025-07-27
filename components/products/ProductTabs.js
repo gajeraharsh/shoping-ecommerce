@@ -63,11 +63,11 @@ export default function ProductTabs({ product }) {
       <div className="py-6">
         {activeTab === 'description' && (
           <div className="prose max-w-none">
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
               {product.description}
             </p>
-            <h4 className="font-semibold mt-4 mb-2">Key Features:</h4>
-            <ul className="list-disc list-inside space-y-1 text-gray-600">
+            <h4 className="font-semibold mt-4 mb-2 text-gray-900 dark:text-white">Key Features:</h4>
+            <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-300">
               <li>Premium quality fabric</li>
               <li>Comfortable fit for all-day wear</li>
               <li>Easy care and maintenance</li>
@@ -79,23 +79,23 @@ export default function ProductTabs({ product }) {
         {activeTab === 'specifications' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-semibold mb-3">Product Details</h4>
+              <h4 className="font-semibold mb-3 text-gray-900 dark:text-white">Product Details</h4>
               <dl className="space-y-2">
                 <div className="flex justify-between">
-                  <dt className="text-gray-600">Fabric:</dt>
-                  <dd className="font-medium">{product.fabric}</dd>
+                  <dt className="text-gray-600 dark:text-gray-400">Fabric:</dt>
+                  <dd className="font-medium text-gray-900 dark:text-white">{product.fabric}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-600">Care Instructions:</dt>
-                  <dd className="font-medium">{product.care}</dd>
+                  <dt className="text-gray-600 dark:text-gray-400">Care Instructions:</dt>
+                  <dd className="font-medium text-gray-900 dark:text-white">{product.care}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-600">Available Sizes:</dt>
-                  <dd className="font-medium">{product.sizes.join(', ')}</dd>
+                  <dt className="text-gray-600 dark:text-gray-400">Available Sizes:</dt>
+                  <dd className="font-medium text-gray-900 dark:text-white">{product.sizes.join(', ')}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-600">Available Colors:</dt>
-                  <dd className="font-medium">{product.colors.join(', ')}</dd>
+                  <dt className="text-gray-600 dark:text-gray-400">Available Colors:</dt>
+                  <dd className="font-medium text-gray-900 dark:text-white">{product.colors.join(', ')}</dd>
                 </div>
               </dl>
             </div>
