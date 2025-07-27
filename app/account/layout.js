@@ -156,7 +156,7 @@ export default function AccountLayout({ children }) {
 
         <div className="flex gap-8">
           {/* Sidebar - Desktop */}
-          <div className="hidden lg:block w-80 flex-shrink-0">
+          <div className="hidden lg:block w-72 xl:w-80 flex-shrink-0">
             <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
               {/* User Profile Section */}
               <div className="bg-gradient-to-r from-primary via-pink-500 to-purple-600 text-white p-6">
