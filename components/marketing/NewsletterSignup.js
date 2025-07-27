@@ -50,9 +50,9 @@ export default function NewsletterSignup({ variant = 'default', onClose }) {
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="absolute top-4 right-4 z-10 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
           >
-            <X className="h-5 w-5 text-gray-400" />
+            <X className="h-5 w-5 text-gray-400 dark:text-gray-300" />
           </button>
 
           {isSubscribed ? (
@@ -60,8 +60,8 @@ export default function NewsletterSignup({ variant = 'default', onClose }) {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Welcome to Fashionista!</h3>
-              <p className="text-gray-600 mb-4">Check your email for your 10% discount code.</p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Welcome to Fashionista!</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">Check your email for your 10% discount code.</p>
               <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
                 <span className="text-primary font-semibold">Discount Code: WELCOME10</span>
               </div>
@@ -86,7 +86,7 @@ export default function NewsletterSignup({ variant = 'default', onClose }) {
                       placeholder="Enter your email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full pl-11 pr-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                       required
                     />
                   </div>
@@ -99,7 +99,7 @@ export default function NewsletterSignup({ variant = 'default', onClose }) {
                   </button>
                 </form>
 
-                <div className="text-xs text-gray-500 text-center">
+                <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
                   By subscribing, you agree to receive marketing emails. Unsubscribe anytime.
                 </div>
               </div>
