@@ -46,7 +46,10 @@ export default function NewsletterSignup({ variant = 'default', onClose }) {
         />
         
         {/* Modal */}
-        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div
+          className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Close Button */}
           <button
             onClick={(e) => {
