@@ -45,7 +45,7 @@ export default function ProductInfo({ product }) {
     <div className="space-y-6">
       {/* Product Title & Rating */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{product.name}</h1>
         <div className="flex items-center gap-4">
           <div className="flex items-center">
             <div className="flex">
@@ -55,12 +55,12 @@ export default function ProductInfo({ product }) {
                   className={`h-4 w-4 ${
                     i < Math.floor(product.rating)
                       ? 'fill-yellow-400 text-yellow-400'
-                      : 'text-gray-300'
+                      : 'text-gray-300 dark:text-gray-600'
                   }`}
                 />
               ))}
             </div>
-            <span className="ml-2 text-sm text-gray-600">
+            <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
               {product.rating} ({product.reviews} reviews)
             </span>
           </div>
@@ -69,13 +69,13 @@ export default function ProductInfo({ product }) {
 
       {/* Price */}
       <div className="flex items-center gap-4">
-        <span className="text-3xl font-bold text-gray-900">₹{product.price}</span>
+        <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{product.price}</span>
         {product.originalPrice && (
           <>
-            <span className="text-xl text-gray-500 line-through">
+            <span className="text-xl text-gray-500 dark:text-gray-400 line-through">
               ₹{product.originalPrice}
             </span>
-            <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-semibold">
+            <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-2 py-1 rounded text-sm font-semibold">
               {product.discount}% OFF
             </span>
           </>
@@ -84,7 +84,7 @@ export default function ProductInfo({ product }) {
 
       {/* Size Selection */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">Size</h3>
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Size</h3>
         <div className="flex gap-2">
           {product.sizes.map(size => (
             <button
@@ -93,7 +93,7 @@ export default function ProductInfo({ product }) {
               className={`px-4 py-2 border rounded-lg transition-colors ${
                 selectedSize === size
                   ? 'bg-primary text-white border-primary'
-                  : 'border-gray-300 hover:border-primary hover:text-primary'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-800'
               }`}
             >
               {size}
@@ -104,7 +104,7 @@ export default function ProductInfo({ product }) {
 
       {/* Color Selection */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">Color</h3>
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Color</h3>
         <div className="flex gap-2">
           {product.colors.map(color => (
             <button
@@ -113,7 +113,7 @@ export default function ProductInfo({ product }) {
               className={`px-4 py-2 border rounded-lg transition-colors ${
                 selectedColor === color
                   ? 'bg-primary text-white border-primary'
-                  : 'border-gray-300 hover:border-primary hover:text-primary'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-800'
               }`}
             >
               {color}
