@@ -27,6 +27,7 @@ export default function Home() {
         <RecentlyViewed />
         <NewsletterSignup />
         <SocialProof variant="reviews" />
+        <InstagramFeed />
       </main>
       <Footer />
 
