@@ -93,9 +93,10 @@ export default function ExitIntentPopup() {
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 z-10 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+          className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 p-1.5 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm"
+          aria-label="Close popup"
         >
-          <X className="h-5 w-5 text-gray-400 dark:text-gray-300" />
+          <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
         </button>
 
         {/* Header with animation */}
