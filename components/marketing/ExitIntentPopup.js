@@ -109,7 +109,10 @@ export default function ExitIntentPopup() {
       />
 
       {/* Modal */}
-      <div className="relative bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-sm sm:max-w-lg w-full overflow-hidden animate-in zoom-in-95 duration-300 focus-within:outline-none">
+      <div
+        className="relative bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-sm sm:max-w-lg w-full overflow-hidden animate-in zoom-in-95 duration-300 focus-within:outline-none"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close Button */}
         <button
           onClick={(e) => {
