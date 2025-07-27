@@ -179,13 +179,13 @@ export default function ExitIntentPopup() {
           </div>
 
           {/* Social proof */}
-          <div className="text-center mt-4">
-            <div className="flex items-center justify-center gap-1 text-yellow-400 mb-1">
+          <div className="text-center mt-3 sm:mt-4">
+            <div className="flex items-center justify-center gap-0.5 sm:gap-1 text-yellow-400 mb-1">
               {[...Array(5)].map((_, i) => (
-                <span key={i} className="text-lg">★</span>
+                <span key={i} className="text-sm sm:text-base lg:text-lg">★</span>
               ))}
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-500 dark:text-gray-400 px-2">
               Join 50,000+ happy customers who saved with this offer
             </p>
           </div>
