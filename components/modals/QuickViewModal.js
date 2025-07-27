@@ -103,10 +103,16 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
       <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
         {/* Close Button */}
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 bg-white/80 hover:bg-white rounded-full transition-colors"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose();
+          }}
+          className="absolute top-4 right-4 z-50 p-2 bg-white/80 hover:bg-white dark:bg-gray-700/80 dark:hover:bg-gray-700 rounded-full transition-colors shadow-lg"
+          aria-label="Close modal"
+          type="button"
         >
-          <X className="h-5 w-5" />
+          <X className="h-5 w-5 text-gray-600 dark:text-gray-300" />
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 h-full">
