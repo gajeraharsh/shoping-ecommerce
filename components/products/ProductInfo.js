@@ -68,14 +68,14 @@ export default function ProductInfo({ product }) {
       </div>
 
       {/* Price */}
-      <div className="flex items-center gap-4">
-        <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{product.price}</span>
+      <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+        <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">₹{product.price}</span>
         {product.originalPrice && (
           <>
-            <span className="text-xl text-gray-500 dark:text-gray-400 line-through">
+            <span className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 line-through">
               ₹{product.originalPrice}
             </span>
-            <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-2 py-1 rounded text-sm font-semibold">
+            <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-2 py-1 rounded text-xs sm:text-sm font-semibold">
               {product.discount}% OFF
             </span>
           </>
