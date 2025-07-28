@@ -105,7 +105,7 @@ export default function ProductCard({ product }) {
               </div>
             )}
             
-            {/* Multiple Badges */}
+            {/* Badges */}
             <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex flex-col gap-1 z-10">
               {product.discount && (
                 <div className="bg-red-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-semibold shadow-lg">

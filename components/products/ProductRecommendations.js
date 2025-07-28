@@ -108,24 +108,24 @@ export default function ProductRecommendations({
   };
 
   return (
-    <div className="py-12 bg-gray-50 dark:bg-gray-800">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center gap-2 mb-8">
+    <div className="py-16 bg-gray-50 dark:bg-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-center gap-3 mb-12">
           {getIcon()}
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{getTitle()}</h2>
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">{getTitle()}</h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
           {recommendations.map(product => (
             <ProductCard key={`rec-${product.id}`} product={product} />
           ))}
         </div>
 
         {type === 'trending' && (
-          <div className="text-center mt-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 rounded-full border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-300">
-              <TrendingUp className="h-4 w-4 text-primary" />
-              <span>Updated hourly based on customer activity</span>
+          <div className="text-center mt-12">
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-900 rounded-full border border-gray-200 dark:border-gray-700 text-base text-gray-600 dark:text-gray-300 shadow-lg">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              <span className="font-medium">Updated hourly based on customer activity</span>
             </div>
           </div>
         )}
