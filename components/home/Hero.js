@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Star, ShoppingBag, ArrowRight, Sparkles } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
+import ProductCard from '@/components/products/ProductCard';
+import ProductSkeleton from '@/components/products/ProductSkeleton';
 import { mockProducts } from '@/utils/mockData';
 
 // Import Swiper styles
@@ -167,75 +169,36 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-          {(loading ? Array.from({ length: 5 }) : products.slice(1, 6)).map((product, index) => (
-            <div key={index} className="group">
-              {loading ? (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg animate-pulse">
-                  <div className="h-60 bg-gray-200 dark:bg-gray-700 rounded-t-2xl"></div>
-                  <div className="p-4 space-y-3">
-                    <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
-                    <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded w-1/2"></div>
-                    <div className="h-8 bg-gray-300 dark:bg-gray-600 rounded"></div>
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group-hover:transform group-hover:-translate-y-2">
-                  <div className="relative h-60 overflow-hidden">
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    {product.discount && (
-                      <span className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 text-xs font-bold rounded-full">
-                        {product.discount}% OFF
-                      </span>
-                    )}
-                  </div>
-                  
-                  <div className="p-4">
-                    <div className="flex items-center gap-1 mb-2">
-                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                      <span className="text-xs text-gray-600 dark:text-gray-400">
-                        {product.rating} ({product.reviews})
-                      </span>
-                    </div>
-                    
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 text-sm">
-                      {product.name}
-                    </h3>
-                    
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="font-bold text-pink-600">₹{product.price}</span>
-                      {product.originalPrice && (
-                        <span className="text-xs text-gray-400 line-through">₹{product.originalPrice}</span>
-                      )}
-                    </div>
-                    
-                    <Link
-                      href={`/products/${product.id}`}
-                      className="w-full bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
-                    >
-                      <ShoppingBag className="w-4 h-4" />
-                      Shop Now
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+        {/* Featured Products Section with Enhanced Title */}
+        <div className="text-center mb-12 lg:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+            Featured This Week
+          </h2>
+          <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4 leading-relaxed">
+            Handpicked favorites that showcase the latest trends and timeless elegance
+          </p>
+        </div>
+
+        {/* Product Grid - Now using consistent ProductCard components */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 mb-12 lg:mb-16">
+          {loading ? (
+            Array.from({ length: 4 }).map((_, index) => (
+              <ProductSkeleton key={index} />
+            ))
+          ) : (
+            products.slice(1, 5).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          )}
         </div>
 
         {/* Call to Action */}
-        <div className="text-center mt-12">
+        <div className="text-center">
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 text-pink-600 hover:text-pink-700 font-semibold text-lg group"
+            className="inline-block bg-gradient-to-r from-pink-600 to-purple-600 text-white px-10 py-4 rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold text-lg"
           >
-            View All Products
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            Explore All Products
           </Link>
         </div>
       </div>
