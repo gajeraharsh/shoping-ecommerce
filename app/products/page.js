@@ -85,7 +85,7 @@ export default function ProductsPage() {
               <div className="animate-shimmer h-96 rounded-lg"></div>
             </div>
             <div className="flex-1">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {[...Array(12)].map((_, i) => (
                   <ProductSkeleton key={i} />
                 ))}
@@ -102,8 +102,8 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">All Products</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">All Products</h1>
           <div className="flex items-center gap-4">
             <button
               onClick={() => setShowFilters(!showFilters)}
@@ -141,7 +141,7 @@ export default function ProductsPage() {
                 <p className="text-gray-600 dark:text-gray-300">Try adjusting your filters</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {filteredProducts.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
