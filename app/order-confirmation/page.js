@@ -25,15 +25,15 @@ export default function OrderConfirmationPage() {
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-full overflow-x-hidden">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="mb-8">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold text-green-600 mb-2">Order Confirmed!</h1>
-            <p className="text-gray-600">Thank you for your purchase. Your order has been received.</p>
+          <div className="mb-6 sm:mb-8 px-4">
+            <CheckCircle className="h-12 w-12 sm:h-16 sm:w-16 text-green-500 mx-auto mb-4" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-green-600 mb-2">Order Confirmed!</h1>
+            <p className="text-sm sm:text-base text-gray-600">Thank you for your purchase. Your order has been received.</p>
           </div>
 
-          <div className="bg-white border rounded-lg p-6 mb-8 text-left">
+          <div className="bg-white border rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 text-left">
             <h2 className="text-xl font-semibold mb-4">Order Details</h2>
             <div className="space-y-2">
               <div className="flex justify-between">
