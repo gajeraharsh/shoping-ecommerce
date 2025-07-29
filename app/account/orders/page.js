@@ -173,16 +173,16 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8 overflow-x-hidden">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">My Orders</h1>
-        <p className="text-gray-600">Track and manage all your fashion purchases</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">My Orders</h1>
+        <p className="text-sm sm:text-base text-gray-600">Track and manage all your fashion purchases</p>
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-        <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+      <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center sm:justify-between">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -191,17 +191,17 @@ export default function OrdersPage() {
               placeholder="Search orders by ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
             />
           </div>
 
           {/* Sort and Filter Controls */}
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <div className="relative">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="appearance-none bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -213,7 +213,7 @@ export default function OrdersPage() {
 
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors lg:hidden"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors sm:hidden text-sm"
             >
               <Filter className="h-4 w-4" />
               Filters
@@ -222,13 +222,13 @@ export default function OrdersPage() {
         </div>
 
         {/* Status Filters */}
-        <div className={`mt-4 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+        <div className={`mt-4 ${showFilters ? 'block' : 'hidden sm:block'}`}>
           <div className="flex flex-wrap gap-2">
             {filterOptions.map(option => (
               <button
                 key={option.id}
                 onClick={() => setActiveFilter(option.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   activeFilter === option.id
                     ? 'bg-pink-100 text-pink-700 border border-pink-200'
                     : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
@@ -247,17 +247,17 @@ export default function OrdersPage() {
       </div>
 
       {/* Orders List */}
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {sortedOrders.length === 0 ? (
-          <div className="text-center py-12 bg-white border border-gray-200 rounded-xl">
-            <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
-            <p className="text-gray-500 mb-6">
+          <div className="text-center py-8 sm:py-12 bg-white border border-gray-200 rounded-lg sm:rounded-xl px-4">
+            <Package className="h-12 w-12 sm:h-16 sm:w-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No orders found</h3>
+            <p className="text-sm sm:text-base text-gray-500 mb-6">
               {searchQuery ? 'Try adjusting your search terms' : 'You haven\'t placed any orders yet'}
             </p>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm sm:text-base"
             >
               <Package className="h-4 w-4" />
               Start Shopping
