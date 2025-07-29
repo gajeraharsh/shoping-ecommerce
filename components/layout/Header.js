@@ -92,7 +92,7 @@ export default function Header() {
             </button>
 
             {/* Wishlist */}
-            <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary">
+            <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary flex items-center justify-center">
               <Heart className="h-4 w-4" />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] leading-none min-w-[16px]">
@@ -102,7 +102,7 @@ export default function Header() {
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary">
+            <Link href="/cart" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary flex items-center justify-center">
               <ShoppingBag className="h-4 w-4" />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] leading-none min-w-[16px]">
