@@ -28,8 +28,8 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-full overflow-x-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12">
             <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-64 sm:h-80 md:h-96 lg:h-[600px] rounded-lg"></div>
             <div className="space-y-4">
               <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-6 sm:h-8 rounded"></div>
@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 text-center max-w-full overflow-x-hidden">
           <div className="text-6xl mb-4">🔍</div>
           <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Product Not Found</h1>
           <p className="text-gray-600 dark:text-gray-300">The product you're looking for doesn't exist.</p>
@@ -61,8 +61,8 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-12">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-full overflow-x-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12 mb-6 sm:mb-8 md:mb-12">
           <ProductImageGallery images={product.images} />
           <ProductInfo product={product} />
         </div>

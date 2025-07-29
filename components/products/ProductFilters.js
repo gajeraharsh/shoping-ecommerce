@@ -25,8 +25,8 @@ export default function ProductFilters({ filters, onFilterChange }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Filters</h3>
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 lg:p-6 space-y-4 lg:space-y-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white lg:block hidden">Filters</h3>
       
       {/* Category Filter */}
       <div>
@@ -71,12 +71,12 @@ export default function ProductFilters({ filters, onFilterChange }) {
       {/* Size Filter */}
       <div>
         <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Size</h4>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-2">
           {sizes.map(size => (
             <button
               key={size}
               onClick={() => handleFilterChange('size', filters.size === size ? '' : size)}
-              className={`px-3 py-1 text-sm border rounded transition-colors ${
+              className={`px-2 lg:px-3 py-1.5 lg:py-1 text-xs lg:text-sm border rounded transition-colors ${
                 filters.size === size
                   ? 'bg-primary text-white border-primary'
                   : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-700'
@@ -91,12 +91,12 @@ export default function ProductFilters({ filters, onFilterChange }) {
       {/* Color Filter */}
       <div>
         <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Color</h4>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-4 gap-2">
           {colors.map(color => (
             <button
               key={color}
               onClick={() => handleFilterChange('color', filters.color === color ? '' : color)}
-              className={`w-8 h-8 rounded-full border-2 transition-all ${
+              className={`w-7 h-7 lg:w-8 lg:h-8 rounded-full border-2 transition-all ${
                 filters.color === color
                   ? 'border-gray-900 dark:border-white scale-110'
                   : 'border-gray-300 dark:border-gray-600 hover:scale-105'
@@ -116,7 +116,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
           size: '',
           color: ''
         })}
-        className="w-full text-center text-primary hover:underline text-sm"
+        className="w-full text-center text-primary hover:underline text-sm py-2 border border-primary/20 rounded-lg hover:bg-primary/5 transition-colors"
       >
         Clear All Filters
       </button>

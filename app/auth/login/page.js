@@ -54,14 +54,14 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-full overflow-x-hidden">
         <div className="max-w-md mx-auto">
-          <div className="bg-white border rounded-lg p-8">
-            <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
+          <div className="bg-white border rounded-lg p-6 sm:p-8">
+            <h1 className="text-xl sm:text-2xl font-bold text-center mb-6">Login</h1>
             
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                   Email
                 </label>
                 <input
@@ -70,13 +70,13 @@ export default function LoginPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm sm:text-base"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="password" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
                 <div className="relative">
@@ -86,7 +86,7 @@ export default function LoginPage() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary pr-10"
+                    className="w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary pr-10 text-sm sm:text-base"
                     required
                   />
                   <button
@@ -102,14 +102,14 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+                className="w-full bg-primary text-white py-3 sm:py-2.5 px-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 font-medium text-sm sm:text-base"
               >
                 {loading ? 'Logging in...' : 'Login'}
               </button>
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-sm sm:text-base">
                 Don't have an account?{' '}
                 <Link href="/auth/register" className="text-primary hover:underline">
                   Sign up

@@ -14,9 +14,9 @@ import InstagramFeed from '@/components/social/InstagramFeed';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900 w-full overflow-x-hidden">
       <Header />
-      <main>
+      <main className="w-full overflow-x-hidden">
         <Hero />
         <TrustBadges variant="compact" />
         <Categories />

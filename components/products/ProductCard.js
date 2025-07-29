@@ -73,7 +73,7 @@ export default function ProductCard({ product }) {
   return (
     <>
       <div
-        className="group relative bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1"
+        className="group relative bg-white dark:bg-gray-800 rounded-lg sm:rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1 w-full"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -130,14 +130,14 @@ export default function ProductCard({ product }) {
             {/* Wishlist Button */}
             <button
               onClick={handleWishlistToggle}
-              className={`absolute top-2 sm:top-3 right-2 sm:right-3 p-1.5 sm:p-2 rounded-full transition-all transform hover:scale-110 z-10 shadow-lg ${
+              className={`absolute top-2 sm:top-3 right-2 sm:right-3 p-2 sm:p-2 rounded-full transition-all transform hover:scale-110 z-10 shadow-lg min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] flex items-center justify-center ${
                 inWishlist
                   ? 'bg-red-50 border border-red-200'
                   : 'bg-white/90 hover:bg-white'
               }`}
             >
               <Heart
-                className={`h-3 w-3 sm:h-4 sm:w-4 transition-colors ${
+                className={`h-4 w-4 sm:h-4 sm:w-4 transition-colors ${
                   inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'
                 }`}
               />

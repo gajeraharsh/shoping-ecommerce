@@ -122,28 +122,28 @@ export default function AccountPage() {
   ];
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8 overflow-x-hidden">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Welcome back, {user?.name?.split(' ')[0]}!</h1>
-        <p className="text-gray-600">Manage your account and track your fashion journey</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Welcome back, {user?.name?.split(' ')[0]}!</h1>
+        <p className="text-sm sm:text-base text-gray-600">Manage your account and track your fashion journey</p>
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <div key={index} className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`w-12 h-12 rounded-xl ${stat.color} flex items-center justify-center`}>
-                  <Icon className="h-6 w-6" />
+            <div key={index} className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl ${stat.color} flex items-center justify-center`}>
+                  <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
-                <TrendingUp className="h-4 w-4 text-green-500" />
+                <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
               </div>
               <div className="space-y-1">
-                <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-                <div className="text-sm font-medium text-gray-700">{stat.title}</div>
+                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">{stat.value}</div>
+                <div className="text-xs sm:text-sm font-medium text-gray-700 line-clamp-1">{stat.title}</div>
                 <div className="text-xs text-green-600">{stat.trend}</div>
               </div>
             </div>
@@ -152,26 +152,26 @@ export default function AccountPage() {
       </div>
 
       {/* Profile, Loyalty & Quick Actions - Horizontal Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {/* Profile Information */}
         <div className="lg:col-span-2">
-          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6 h-full">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
+          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 h-full">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Profile Information</h2>
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm sm:text-base"
               >
                 <Edit3 className="h-4 w-4" />
                 {isEditing ? 'Cancel' : 'Edit Profile'}
               </button>
             </div>
 
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    <Mail className="h-4 w-4 inline mr-2" />
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                    <Mail className="h-3 w-3 sm:h-4 sm:w-4 inline mr-2" />
                     Full Name
                   </label>
                   {isEditing ? (
@@ -180,10 +180,10 @@ export default function AccountPage() {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
                     />
                   ) : (
-                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium">
+                    <div className="px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 rounded-lg text-gray-900 font-medium text-sm sm:text-base">
                       {user?.name}
                     </div>
                   )}

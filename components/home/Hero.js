@@ -35,9 +35,9 @@ export default function Hero() {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full filter blur-3xl"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 lg:py-16 relative z-10">
         {/* Main Hero Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center mb-8 sm:mb-12 lg:mb-16">
           {/* Text Content */}
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
@@ -45,29 +45,29 @@ export default function Hero() {
               New Collection 2024
             </div>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-              Discover Your 
+            <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight">
+              Discover Your
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">
                 {" "}Perfect Style
               </span>
             </h1>
             
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0 px-2 sm:px-0">
               Explore our exclusive collection of traditional kurties, modern dresses, and ethnic wear crafted for the modern woman.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-2 sm:px-0">
               <Link
                 href="/products"
-                className="bg-pink-600 hover:bg-pink-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                className="bg-pink-600 hover:bg-pink-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-sm sm:text-base"
               >
                 Shop Collection
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </Link>
-              
+
               <Link
                 href="/products?category=kurtis"
-                className="border-2 border-pink-600 text-pink-600 hover:bg-pink-600 hover:text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+                className="border-2 border-pink-600 text-pink-600 hover:bg-pink-600 hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 View Kurties
               </Link>
@@ -95,7 +95,7 @@ export default function Hero() {
                     bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !scale-125',
                   }}
                   loop={true}
-                  className="rounded-3xl overflow-hidden shadow-2xl h-[400px] sm:h-[500px] lg:h-[600px]"
+                  className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl h-[350px] xs:h-[400px] sm:h-[500px] lg:h-[600px]"
                 >
                   {featuredProducts.map((product, index) => (
                     <SwiperSlide key={product.id || index}>
@@ -116,32 +116,33 @@ export default function Hero() {
                           )}
                           
                           {/* Product Info Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
-                            <div className="flex items-center gap-2 mb-3">
-                              <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                              <span className="text-sm font-medium">{product.rating} ({product.reviews} reviews)</span>
+                          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8 text-white">
+                            <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                              <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                              <span className="text-xs sm:text-sm font-medium">{product.rating} ({product.reviews} reviews)</span>
                             </div>
-                            
-                            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 leading-tight">{product.name}</h3>
-                            
-                            <p className="text-gray-200 mb-4 max-w-md text-sm sm:text-base">
+
+                            <h3 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 leading-tight line-clamp-2">{product.name}</h3>
+
+                            <p className="text-gray-200 mb-3 sm:mb-4 max-w-md text-xs sm:text-sm md:text-base line-clamp-2 hidden xs:block">
                               {product.description || 'Discover premium quality and elegant design in our exclusive collection.'}
                             </p>
-                            
-                            <div className="flex items-center justify-between flex-wrap gap-4">
-                              <div className="flex items-center gap-3">
-                                <span className="text-3xl sm:text-4xl font-bold">₹{product.price}</span>
+
+                            <div className="flex items-center justify-between flex-wrap gap-2 sm:gap-4">
+                              <div className="flex items-center gap-2 sm:gap-3">
+                                <span className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold">₹{product.price}</span>
                                 {product.originalPrice && (
-                                  <span className="text-xl text-gray-300 line-through">₹{product.originalPrice}</span>
+                                  <span className="text-sm xs:text-base sm:text-xl text-gray-300 line-through">₹{product.originalPrice}</span>
                                 )}
                               </div>
-                              
+
                               <Link
                                 href={`/products/${product.id}`}
-                                className="bg-white text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                                className="bg-white text-gray-900 px-4 xs:px-6 sm:px-8 py-2 xs:py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 flex items-center gap-1 sm:gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-xs xs:text-sm sm:text-base"
                               >
-                                <ShoppingBag className="w-5 h-5" />
-                                Shop Now
+                                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <span className="hidden xs:inline">Shop Now</span>
+                                <span className="xs:hidden">Shop</span>
                               </Link>
                             </div>
                           </div>
@@ -170,17 +171,17 @@ export default function Hero() {
         </div>
 
         {/* Featured Products Section with Enhanced Title */}
-        <div className="text-center mb-12 lg:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 px-2">
             Featured This Week
           </h2>
-          <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4 leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4 leading-relaxed">
             Handpicked favorites that showcase the latest trends and timeless elegance
           </p>
         </div>
 
         {/* Product Grid - Now using consistent ProductCard components */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 mb-12 lg:mb-16">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 xl:gap-8 mb-8 sm:mb-12 lg:mb-16">
           {loading ? (
             Array.from({ length: 4 }).map((_, index) => (
               <ProductSkeleton key={index} />
@@ -193,10 +194,10 @@ export default function Hero() {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center">
+        <div className="text-center px-4">
           <Link
             href="/products"
-            className="inline-block bg-gradient-to-r from-pink-600 to-purple-600 text-white px-10 py-4 rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold text-lg"
+            className="inline-block bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 sm:px-8 lg:px-10 py-3 sm:py-4 rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold text-sm sm:text-base lg:text-lg"
           >
             Explore All Products
           </Link>

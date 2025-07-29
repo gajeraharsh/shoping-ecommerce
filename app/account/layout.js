@@ -142,21 +142,21 @@ export default function AccountLayout({ children }) {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 overflow-x-hidden">
         {/* Mobile menu button */}
         <div className="lg:hidden mb-4">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-shadow"
+            className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 sm:px-4 py-2 shadow-sm hover:shadow-md transition-shadow text-sm sm:text-base"
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
             <span className="font-medium">Account Menu</span>
           </button>
         </div>
 
-        <div className="flex gap-8">
+        <div className="flex gap-4 lg:gap-8">
           {/* Sidebar - Desktop */}
-          <div className="hidden lg:block w-72 xl:w-80 flex-shrink-0">
+          <div className="hidden lg:block w-64 xl:w-72 flex-shrink-0">
             <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
               {/* User Profile Section */}
               <div className="bg-gradient-to-r from-primary via-pink-500 to-purple-600 text-white p-6">
@@ -220,7 +220,7 @@ export default function AccountLayout({ children }) {
           {sidebarOpen && (
             <div className="lg:hidden fixed inset-0 z-50 flex">
               <div className="fixed inset-0 bg-black bg-opacity-50" onClick={closeSidebar} />
-              <div className="relative flex flex-col w-80 bg-white shadow-xl">
+              <div className="relative flex flex-col w-80 max-w-[85vw] bg-white shadow-xl overflow-y-auto">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-primary via-pink-500 to-purple-600 text-white p-6">
                   <div className="flex items-center justify-between mb-4">
@@ -287,7 +287,7 @@ export default function AccountLayout({ children }) {
           )}
 
           {/* Main Content */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 overflow-x-hidden">
             <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
               {children}
             </div>
