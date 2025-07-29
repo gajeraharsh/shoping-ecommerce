@@ -11,6 +11,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
   title: 'Fashionista - Premium Fashion Store',
   description: 'Discover the latest trends in fashion with our curated collection of dresses, kurtis, and more.',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
 };
 
 export default function RootLayout({ children }) {
