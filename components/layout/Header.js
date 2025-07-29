@@ -82,7 +82,7 @@ export default function Header() {
           </div>
 
           {/* Action Icons */}
-          <div className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
+          <div className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0 h-full">
             {/* Mobile Search */}
             <button
               onClick={() => setShowAdvancedSearch(true)}
