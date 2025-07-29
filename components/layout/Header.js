@@ -86,7 +86,7 @@ export default function Header() {
             {/* Mobile Search */}
             <button
               onClick={() => setShowAdvancedSearch(true)}
-              className="lg:hidden p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors"
+              className="lg:hidden p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors flex items-center justify-center"
             >
               <Search className="h-4 w-4" />
             </button>
