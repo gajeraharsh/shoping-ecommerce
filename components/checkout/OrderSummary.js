@@ -80,8 +80,8 @@ export default function OrderSummary() {
   };
 
   return (
-    <div className="bg-white border rounded-lg p-6 sticky top-24">
-      <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+    <div className="bg-white border rounded-lg p-4 sm:p-6 lg:sticky lg:top-24">
+      <h2 className="text-lg sm:text-xl font-semibold mb-4">Order Summary</h2>
 
       {/* Items */}
       <div className="space-y-3 mb-6">
