@@ -1,6 +1,7 @@
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import BlogCard from '@/components/blog/BlogCard';
+import BlogImage, { AuthorAvatar } from '@/components/blog/BlogImage';
 import { Calendar, Clock, User, Heart, MessageCircle, Share2, BookOpen, Tag, ArrowLeft } from 'lucide-react';
 
 export default function BlogPostPage({ params }) {
@@ -31,12 +32,12 @@ export default function BlogPostPage({ params }) {
     `,
     author: "Priya Sharma",
     authorBio: "Fashion stylist and blogger with over 8 years of experience in ethnic wear styling. Priya specializes in making traditional fashion accessible and modern for today's woman.",
-    authorImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+    authorImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
     date: "2024-01-15",
     readTime: "5 min read",
     category: "Styling Tips",
     tags: ["kurti", "styling", "fashion", "ethnic wear", "versatile", "occasion wear"],
-    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1200&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1200&h=600&fit=crop",
     likes: 245,
     comments: 18,
     shares: 34
@@ -49,12 +50,12 @@ export default function BlogPostPage({ params }) {
       title: "The Art of Layering: Master the Ethnic Chic Look",
       excerpt: "Learn how to layer ethnic pieces to create stunning, contemporary outfits.",
       author: "Anita Desai",
-      authorImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+      authorImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
       date: "2024-01-12",
       readTime: "7 min read",
       category: "Fashion Guide",
       tags: ["ethnic", "layering", "style"],
-      image: "https://images.unsplash.com/photo-1594736797933-d0e501ba2fe6?w=800&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=800&h=600&fit=crop",
       likes: 189,
       comments: 12
     },
@@ -63,12 +64,12 @@ export default function BlogPostPage({ params }) {
       title: "Trending Colors This Season: What to Wear Now",
       excerpt: "Discover the hottest color trends for this season and how to incorporate them.",
       author: "Kavya Menon",
-      authorImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+      authorImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       date: "2024-01-08",
       readTime: "4 min read",
       category: "Trends",
       tags: ["colors", "trends", "seasonal"],
-      image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&h=600&fit=crop",
       likes: 203,
       comments: 15
     }
@@ -107,8 +108,8 @@ export default function BlogPostPage({ params }) {
             {/* Author and meta info */}
             <div className="flex items-center justify-center gap-6 mb-8">
               <div className="flex items-center gap-3">
-                <img 
-                  src={blogPost.authorImage} 
+                <AuthorAvatar
+                  src={blogPost.authorImage}
                   alt={blogPost.author}
                   className="w-12 h-12 rounded-full object-cover border-3 border-white shadow-lg"
                 />
@@ -158,10 +159,12 @@ export default function BlogPostPage({ params }) {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-            <img 
-              src={blogPost.image} 
+            <BlogImage
+              src={blogPost.image}
               alt={blogPost.title}
               className="w-full h-96 md:h-[500px] object-cover"
+              aspectRatio="h-96 md:h-[500px]"
+              priority={true}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           </div>
@@ -204,8 +207,8 @@ export default function BlogPostPage({ params }) {
                   About the Author
                 </h3>
                 <div className="flex items-start gap-6">
-                  <img 
-                    src={blogPost.authorImage} 
+                  <AuthorAvatar
+                    src={blogPost.authorImage}
                     alt={blogPost.author}
                     className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
                   />

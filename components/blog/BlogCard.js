@@ -1,14 +1,16 @@
 import { Calendar, Clock, Heart, MessageCircle, User } from 'lucide-react';
+import BlogImage, { AuthorAvatar } from './BlogImage';
 
 export default function BlogCard({ post }) {
   return (
     <article className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden group">
       {/* Image */}
       <div className="relative overflow-hidden">
-        <img 
-          src={post.image} 
+        <BlogImage
+          src={post.image}
           alt={post.title}
           className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+          aspectRatio="h-64"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         
@@ -36,8 +38,8 @@ export default function BlogCard({ post }) {
       <div className="p-6">
         {/* Author and date */}
         <div className="flex items-center gap-3 mb-4">
-          <img 
-            src={post.authorImage} 
+          <AuthorAvatar
+            src={post.authorImage}
             alt={post.author}
             className="w-10 h-10 rounded-full object-cover border-2 border-pink-100 dark:border-pink-900"
           />
