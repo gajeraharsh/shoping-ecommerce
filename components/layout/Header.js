@@ -86,13 +86,13 @@ export default function Header() {
             {/* Mobile Search */}
             <button
               onClick={() => setShowAdvancedSearch(true)}
-              className="lg:hidden p-1.5 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors"
+              className="lg:hidden p-1 sm:p-1.5 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors"
             >
               <Search className="h-4 w-4" />
             </button>
 
             {/* Wishlist */}
-            <Link href="/wishlist" className="relative p-1.5 text-gray-700 dark:text-gray-300 hover:text-primary">
+            <Link href="/wishlist" className="relative p-1 sm:p-1.5 text-gray-700 dark:text-gray-300 hover:text-primary">
               <Heart className="h-4 w-4" />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] leading-none min-w-[16px]">
@@ -102,7 +102,7 @@ export default function Header() {
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative p-1.5 text-gray-700 dark:text-gray-300 hover:text-primary">
+            <Link href="/cart" className="relative p-1 sm:p-1.5 text-gray-700 dark:text-gray-300 hover:text-primary">
               <ShoppingBag className="h-4 w-4" />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] leading-none min-w-[16px]">
