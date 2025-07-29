@@ -10,7 +10,7 @@ import { ProductRecommendationGrid } from '@/components/products/ProductRecommen
 import RecentlyViewed from '@/components/products/RecentlyViewed';
 import NewsletterSignup from '@/components/marketing/NewsletterSignup';
 import ExitIntentPopup from '@/components/marketing/ExitIntentPopup';
-import InstagramFeed from '@/components/social/InstagramFeed';
+import InstagramReelsFeed from '@/components/social/InstagramReelsFeed';
 
 export default function Home() {
   return (
@@ -27,7 +27,7 @@ export default function Home() {
         <RecentlyViewed />
         <NewsletterSignup />
         <SocialProof variant="reviews" />
-        <InstagramFeed />
+        <InstagramReelsFeed />
       </main>
       <Footer />
 
