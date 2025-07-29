@@ -169,18 +169,18 @@ export default function AddressesPage() {
   };
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8 overflow-x-hidden">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div className="mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Delivery Addresses</h1>
-            <p className="text-gray-600">Manage your saved delivery addresses</p>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Delivery Addresses</h1>
+            <p className="text-sm sm:text-base text-gray-600">Manage your saved delivery addresses</p>
           </div>
           
           <button
             onClick={openAddModal}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base w-full sm:w-auto"
           >
             <Plus className="h-4 w-4" />
             Add New Address
@@ -189,17 +189,17 @@ export default function AddressesPage() {
       </div>
 
       {/* Address List */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {addresses.map(address => (
-          <div key={address.id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+          <div key={address.id} className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300">
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 flex-shrink-0">
                   {getAddressIcon(address.type)}
                 </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                <div className="min-w-0">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 flex items-center gap-2 truncate">
                     {address.label}
                     {address.isDefault && (
                       <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
@@ -207,33 +207,33 @@ export default function AddressesPage() {
                       </span>
                     )}
                   </h3>
-                  <p className="text-sm text-gray-600">{address.type.charAt(0).toUpperCase() + address.type.slice(1)} Address</p>
+                  <p className="text-xs sm:text-sm text-gray-600">{address.type.charAt(0).toUpperCase() + address.type.slice(1)} Address</p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                 <button
                   onClick={() => openEditModal(address)}
-                  className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  className="p-1.5 sm:p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                 >
-                  <Edit3 className="h-4 w-4" />
+                  <Edit3 className="h-3 w-3 sm:h-4 sm:w-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(address.id)}
-                  className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  className="p-1.5 sm:p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                 </button>
               </div>
             </div>
 
             {/* Address Details */}
-            <div className="space-y-3 mb-4">
+            <div className="space-y-2 sm:space-y-3 mb-4">
               <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                <div className="text-sm text-gray-700">
+                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                <div className="text-xs sm:text-sm text-gray-700 min-w-0">
                   <div className="font-medium">{address.name}</div>
-                  <div>{address.address}</div>
+                  <div className="line-clamp-2">{address.address}</div>
                   {address.landmark && <div className="text-gray-500">Landmark: {address.landmark}</div>}
                   <div>{address.city}, {address.state} - {address.pincode}</div>
                   <div>{address.country}</div>
@@ -241,27 +241,27 @@ export default function AddressesPage() {
               </div>
               
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-700">{address.phone}</span>
+                <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                <span className="text-xs sm:text-sm text-gray-700">{address.phone}</span>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="flex gap-2 pt-4 border-t border-gray-100">
+            <div className="flex flex-col xs:flex-row gap-2 pt-4 border-t border-gray-100">
               {!address.isDefault && (
                 <button
                   onClick={() => setAsDefault(address.id)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                  className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-xs sm:text-sm"
                 >
-                  <Star className="h-4 w-4" />
+                  <Star className="h-3 w-3 sm:h-4 sm:w-4" />
                   Set as Default
                 </button>
               )}
               <button
                 onClick={() => openEditModal(address)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm"
+                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-xs sm:text-sm"
               >
-                <Edit3 className="h-4 w-4" />
+                <Edit3 className="h-3 w-3 sm:h-4 sm:w-4" />
                 Edit
               </button>
             </div>
@@ -291,23 +291,23 @@ export default function AddressesPage() {
 
       {/* Add/Edit Address Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg sm:rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-4 sm:p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                   {editingAddress ? 'Edit Address' : 'Add New Address'}
                 </h2>
                 <button
                   onClick={closeModal}
-                  className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4 sm:h-5 sm:w-5" />
                 </button>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               {/* Address Type */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">Address Type</label>
@@ -348,7 +348,7 @@ export default function AddressesPage() {
               </div>
 
               {/* Personal Details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                   <input
@@ -400,7 +400,7 @@ export default function AddressesPage() {
               </div>
 
               {/* Location Details */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
                   <input
@@ -452,17 +452,17 @@ export default function AddressesPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3 pt-6 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 sm:pt-6 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                  className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm sm:text-base"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
                 >
                   <Check className="h-4 w-4" />
                   {editingAddress ? 'Update Address' : 'Save Address'}
