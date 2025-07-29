@@ -15,8 +15,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} transition-colors`}>
+    <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
+      <body className={`${inter.className} transition-colors overflow-x-hidden`}>
         <AuthProvider>
           <CartProvider>
             <WishlistProvider>
