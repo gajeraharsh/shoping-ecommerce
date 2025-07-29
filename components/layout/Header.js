@@ -118,7 +118,7 @@ export default function Header() {
 
             {/* User Account */}
             <div className="relative group hidden sm:block">
-              <button className="p-1.5 text-gray-700 dark:text-gray-300 hover:text-primary">
+              <button className="p-1 sm:p-1.5 text-gray-700 dark:text-gray-300 hover:text-primary">
                 <User className="h-4 w-4" />
               </button>
               <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
