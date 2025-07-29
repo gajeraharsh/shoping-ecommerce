@@ -3,6 +3,7 @@ import Footer from '@/components/layout/Footer';
 import BlogCard from '@/components/blog/BlogCard';
 import BlogHero from '@/components/blog/BlogHero';
 import BlogCategories from '@/components/blog/BlogCategories';
+import BlogImage, { AuthorAvatar } from '@/components/blog/BlogImage';
 import { Calendar, User, Tag } from 'lucide-react';
 
 export default function BlogPage() {
@@ -19,7 +20,7 @@ export default function BlogPage() {
       readTime: "5 min read",
       category: "Styling Tips",
       tags: ["kurti", "styling", "fashion"],
-      image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=600&fit=crop",
       featured: true,
       likes: 245,
       comments: 18
@@ -35,7 +36,7 @@ export default function BlogPage() {
       readTime: "7 min read",
       category: "Fashion Guide",
       tags: ["ethnic", "layering", "style"],
-      image: "https://images.unsplash.com/photo-1594736797933-d0e501ba2fe6?w=800&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=800&h=600&fit=crop",
       featured: false,
       likes: 189,
       comments: 12
@@ -139,10 +140,12 @@ export default function BlogPage() {
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-8 shadow-xl">
               <div className="relative group overflow-hidden rounded-2xl">
-                <img 
-                  src={featuredPost.image} 
+                <BlogImage
+                  src={featuredPost.image}
                   alt={featuredPost.title}
                   className="w-full h-80 lg:h-96 object-cover transition-transform duration-700 group-hover:scale-110"
+                  aspectRatio="h-80 lg:h-96"
+                  priority={true}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute top-4 left-4">
@@ -154,8 +157,8 @@ export default function BlogPage() {
               
               <div className="flex flex-col justify-center">
                 <div className="flex items-center gap-4 mb-4">
-                  <img 
-                    src={featuredPost.authorImage} 
+                  <AuthorAvatar
+                    src={featuredPost.authorImage}
                     alt={featuredPost.author}
                     className="w-12 h-12 rounded-full object-cover border-3 border-white shadow-lg"
                   />
