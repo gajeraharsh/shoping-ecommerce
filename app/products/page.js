@@ -79,13 +79,13 @@ export default function ProductsPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
           <div className="flex gap-8">
             <div className="hidden lg:block w-64">
               <div className="animate-shimmer h-96 rounded-lg"></div>
             </div>
             <div className="flex-1">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
                 {[...Array(12)].map((_, i) => (
                   <ProductSkeleton key={i} />
                 ))}
@@ -101,20 +101,20 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">All Products</h1>
-          <div className="flex items-center gap-4">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-8 gap-4">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 dark:text-white">All Products</h1>
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-white"
+              className="lg:hidden flex items-center gap-2 px-3 sm:px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-white text-sm"
             >
               Filters <ChevronDown className="h-4 w-4" />
             </button>
             <select
               value={filters.sortBy}
               onChange={(e) => handleFilterChange({ sortBy: e.target.value })}
-              className="px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-3 sm:px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
             >
               <option value="newest">Newest</option>
               <option value="popular">Most Popular</option>
@@ -124,24 +124,49 @@ export default function ProductsPage() {
           </div>
         </div>
 
-        <div className="flex gap-8">
-          <div className={`${showFilters ? 'block' : 'hidden'} lg:block w-full lg:w-64 mb-8 lg:mb-0`}>
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+          {/* Mobile Filters Overlay */}
+          {showFilters && (
+            <div className="lg:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setShowFilters(false)}>
+              <div className="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white dark:bg-gray-900 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Filters</h2>
+                    <button
+                      onClick={() => setShowFilters(false)}
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <ProductFilters filters={filters} onFilterChange={handleFilterChange} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Desktop Filters */}
+          <div className="hidden lg:block w-64 flex-shrink-0">
             <ProductFilters filters={filters} onFilterChange={handleFilterChange} />
           </div>
 
-          <div className="flex-1">
-            <div className="mb-4 text-gray-600 dark:text-gray-300">
+          <div className="flex-1 min-w-0">
+            <div className="mb-4 text-sm sm:text-base text-gray-600 dark:text-gray-300 px-1">
               Showing {filteredProducts.length} of {products.length} products
             </div>
-            
+
             {filteredProducts.length === 0 ? (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">No products found</h3>
+                <div className="text-4xl sm:text-6xl mb-4">🔍</div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-900 dark:text-white">No products found</h3>
                 <p className="text-gray-600 dark:text-gray-300">Try adjusting your filters</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
                 {filteredProducts.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
