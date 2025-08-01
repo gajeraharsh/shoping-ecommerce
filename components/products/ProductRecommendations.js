@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { fetchTrendingProducts, fetchNewProducts } from '@/store/slices/productsSlice';
 import ProductCard from './ProductCard';
 import { Sparkles, TrendingUp, Heart, ShoppingBag } from 'lucide-react';
-import { mockProducts } from '@/utils/mockData';
 
 export default function ProductRecommendations({ 
   currentProduct, 
@@ -11,63 +13,95 @@ export default function ProductRecommendations({
   title,
   limit = 4 
 }) {
-  const [recommendations, setRecommendations] = useState([]);
+  const dispatch = useAppDispatch();
+  const { allProducts, trendingProducts, newProducts, loading } = useAppSelector((state) => ({
+    allProducts: state.products.allProducts,
+    trendingProducts: state.products.trendingProducts,
+    newProducts: state.products.newProducts,
+    loading: state.products.loading,
+  }));
 
   useEffect(() => {
+    // Fetch data based on type
+    switch (type) {
+      case 'trending':
+        if (trendingProducts.length === 0 && !loading.trending) {
+          dispatch(fetchTrendingProducts());
+        }
+        break;
+      case 'new-arrivals':
+        if (newProducts.length === 0 && !loading.new) {
+          dispatch(fetchNewProducts());
+        }
+        break;
+      default:
+        // For other types, we'll use existing data or fetch all products if needed
+        break;
+    }
+  }, []);
+
+  // Get recommendations based on type
+  const getRecommendations = () => {
     let filteredProducts = [];
 
     switch (type) {
       case 'related':
         // Products from same category, excluding current product
-        filteredProducts = mockProducts.filter(product => 
+        filteredProducts = (allProducts || []).filter(product => 
           product.category === currentProduct?.category && 
           product.id !== currentProduct?.id
         );
         break;
       
       case 'trending':
-        // Products marked as trending or with high ratings
-        filteredProducts = mockProducts.filter(product => 
-          product.isTrending || product.rating >= 4.5
-        );
+        filteredProducts = trendingProducts || [];
         break;
       
       case 'similar-price':
         // Products within similar price range
         if (currentProduct) {
-          const priceRange = currentProduct.price * 0.3; // 30% range
-          filteredProducts = mockProducts.filter(product => 
-            Math.abs(product.price - currentProduct.price) <= priceRange &&
-            product.id !== currentProduct.id
-          );
+          const currentPrice = typeof currentProduct.price === 'string' ? 
+            parseInt(currentProduct.price) : currentProduct.price;
+          const priceRange = currentPrice * 0.3; // 30% range
+          filteredProducts = (allProducts || []).filter(product => {
+            const productPrice = typeof product.price === 'string' ? 
+              parseInt(product.price) : product.price;
+            return Math.abs(productPrice - currentPrice) <= priceRange &&
+              product.id !== currentProduct.id;
+          });
         }
         break;
       
       case 'recently-viewed':
         // This would typically come from a recently viewed context
-        filteredProducts = mockProducts.slice(0, 4);
+        filteredProducts = (allProducts || []).slice(0, 4);
         break;
       
       case 'best-sellers':
         // Products with high review counts
-        filteredProducts = mockProducts
-          .sort((a, b) => b.reviews - a.reviews)
+        filteredProducts = (allProducts || [])
+          .sort((a, b) => (b._count?.reviews || b.reviews || 0) - (a._count?.reviews || a.reviews || 0))
           .slice(0, limit);
         break;
       
       case 'new-arrivals':
-        // Products marked as new or recently added
-        filteredProducts = mockProducts.filter(product => product.isNew);
+        filteredProducts = newProducts || [];
         break;
       
       default:
-        filteredProducts = mockProducts.slice(0, limit);
+        filteredProducts = (allProducts || []).slice(0, limit);
     }
 
     // Shuffle and limit results
-    const shuffled = filteredProducts.sort(() => 0.5 - Math.random());
-    setRecommendations(shuffled.slice(0, limit));
-  }, [currentProduct, type, limit]);
+    if (!filteredProducts || filteredProducts.length === 0) {
+      return [];
+    }
+    
+    const shuffled = [...filteredProducts].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, limit);
+  };
+
+  const recommendations = getRecommendations();
 
   if (recommendations.length === 0) {
     return null;

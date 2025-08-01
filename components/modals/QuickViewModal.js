@@ -19,8 +19,16 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
   useEffect(() => {
     if (product) {
-      setSelectedSize(product.sizes[0] || '');
-      setSelectedColor(product.colors[0] || '');
+      // Get available sizes and colors from variants or fallback to direct arrays
+      const availableSizes = product.variants && product.variants.length > 0 
+        ? [...new Set(product.variants.map(v => v.size))] 
+        : (product.sizes || []);
+      const availableColors = product.variants && product.variants.length > 0 
+        ? [...new Set(product.variants.map(v => v.color))] 
+        : (product.colors || []);
+      
+      setSelectedSize(availableSizes[0] || '');
+      setSelectedColor(availableColors[0] || '');
       setQuantity(1);
       setSelectedImageIndex(0);
     }
@@ -123,21 +131,21 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
           <div className="relative bg-gray-50">
             <div className="aspect-square relative overflow-hidden">
               <img
-                src={product.images[selectedImageIndex]}
-                alt={product.name}
+                src={product.images?.[selectedImageIndex]?.url || product.images?.[selectedImageIndex] || '/api/placeholder/400/400'}
+                alt={product.images?.[selectedImageIndex]?.alt || product.name}
                 className="w-full h-full object-cover"
               />
               
               {/* Discount Badge */}
-              {product.discount && (
-                <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  {product.discount}% OFF
+              {product.comparePrice && product.price && (
+                <div className="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
+                  -{Math.round(((product.comparePrice - product.price) / product.comparePrice) * 100)}% OFF
                 </div>
               )}
             </div>
             
             {/* Image Thumbnails */}
-            {product.images.length > 1 && (
+            {product.images && product.images.length > 1 && (
               <div className="flex gap-2 p-4 overflow-x-auto">
                 {product.images.map((image, index) => (
                   <button
@@ -148,8 +156,8 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                     }`}
                   >
                     <img
-                      src={image}
-                      alt={`${product.name} ${index + 1}`}
+                      src={image?.url || image || '/api/placeholder/400/400'}
+                      alt={image?.alt || `${product.name} ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -166,21 +174,21 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
               <div className="flex items-center gap-2 mb-2">
                 <div className="flex items-center">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  <span className="text-sm text-gray-600 ml-1">{product.rating}</span>
+                  <span className="text-sm text-gray-600 ml-1">{product.rating || 0}</span>
                 </div>
-                <span className="text-sm text-gray-400">({product.reviews} reviews)</span>
+                <span className="text-sm text-gray-400">({product.reviewCount || product.reviews || 0} reviews)</span>
               </div>
 
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl font-bold text-gray-900">₹{product.price}</span>
-                {product.originalPrice && (
+                <span className="text-2xl font-bold text-gray-900">₹{parseFloat(product.price || 0).toFixed(2)}</span>
+                {product.comparePrice && (
                   <span className="text-lg text-gray-500 line-through">
-                    ₹{product.originalPrice}
+                    ₹{parseFloat(product.comparePrice || 0).toFixed(2)}
                   </span>
                 )}
-                {product.discount && (
+                {product.comparePrice && product.price && (
                   <span className="text-green-600 text-sm font-medium">
-                    Save ₹{product.originalPrice - product.price}
+                    Save ₹{(parseFloat(product.comparePrice) - parseFloat(product.price)).toFixed(2)}
                   </span>
                 )}
               </div>
@@ -188,8 +196,12 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
             {/* Stock Status */}
             <div className="mb-4">
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                ✓ In Stock
+              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                (product.stock || product.quantity || 0) > 0 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-red-100 text-red-800'
+              }`}>
+                {(product.stock || product.quantity || 0) > 0 ? '✓ In Stock' : '✗ Out of Stock'}
               </span>
             </div>
 
@@ -197,19 +209,24 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
             <div className="mb-6">
               <h4 className="text-sm font-medium text-gray-900 mb-3">Size</h4>
               <div className="flex flex-wrap gap-2">
-                {product.sizes.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 border rounded-lg text-sm font-medium transition-colors ${
-                      selectedSize === size
-                        ? 'border-primary bg-primary text-white'
-                        : 'border-gray-300 text-gray-700 hover:border-primary'
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
+                {(() => {
+                  const availableSizes = product.variants && product.variants.length > 0 
+                    ? [...new Set(product.variants.map(v => v.size))] 
+                    : (product.sizes || []);
+                  return availableSizes.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`px-4 py-2 border rounded-lg text-sm font-medium transition-colors ${
+                        selectedSize === size
+                          ? 'border-primary bg-primary text-white'
+                          : 'border-gray-300 text-gray-700 hover:border-primary'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ));
+                })()}
               </div>
             </div>
 
@@ -217,19 +234,24 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
             <div className="mb-6">
               <h4 className="text-sm font-medium text-gray-900 mb-3">Color</h4>
               <div className="flex flex-wrap gap-2">
-                {product.colors.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`w-8 h-8 rounded-full border-2 transition-all ${
-                      selectedColor === color
-                        ? 'border-primary ring-2 ring-primary/30'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                    style={{ backgroundColor: color.toLowerCase() }}
-                    title={color}
-                  />
-                ))}
+                {(() => {
+                  const availableColors = product.variants && product.variants.length > 0 
+                    ? [...new Set(product.variants.map(v => v.color))] 
+                    : (product.colors || []);
+                  return availableColors.map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => setSelectedColor(color)}
+                      className={`w-8 h-8 rounded-full border-2 transition-all ${
+                        selectedColor === color
+                          ? 'border-primary ring-2 ring-primary/30'
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      style={{ backgroundColor: color.toLowerCase() }}
+                      title={color}
+                    />
+                  ));
+                })()}
               </div>
             </div>
 

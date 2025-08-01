@@ -23,8 +23,10 @@ export default function ProductCard({ product }) {
   const getBadge = () => {
     if (product.isNew) return { text: 'NEW', color: 'bg-green-500' };
     if (product.isTrending) return { text: 'TRENDING', color: 'bg-purple-500' };
-    if (product.discount > 30) return { text: 'HOT DEAL', color: 'bg-red-500' };
-    if (product.stock < 10) return { text: 'LOW STOCK', color: 'bg-orange-500' };
+    const discount = product.comparePrice && product.price ? 
+      Math.round(((product.comparePrice - product.price) / product.comparePrice) * 100) : 0;
+    if (discount > 30) return { text: 'HOT DEAL', color: 'bg-red-500' };
+    if (product.stockQuantity < 10) return { text: 'LOW STOCK', color: 'bg-orange-500' };
     return null;
   };
   
@@ -33,9 +35,10 @@ export default function ProductCard({ product }) {
   // Image cycling effect
   useEffect(() => {
     let interval;
-    if (isHovered && product.images && product.images.length > 1) {
+    const images = product.images || [];
+    if (isHovered && images.length > 1) {
       interval = setInterval(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+        setCurrentImageIndex((prev) => (prev + 1) % images.length);
       }, 1500);
     } else {
       setCurrentImageIndex(0);
@@ -60,7 +63,10 @@ export default function ProductCard({ product }) {
   const handleQuickAdd = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product, product.sizes[0], product.colors[0], 1);
+    const firstVariant = product.variants?.[0];
+    const size = firstVariant?.size || product.sizes?.[0] || 'M';
+    const color = firstVariant?.color || product.colors?.[0] || 'Default';
+    addToCart(product, size, color, 1);
     showToast('Added to cart', 'success');
   };
 
@@ -83,8 +89,8 @@ export default function ProductCard({ product }) {
               <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%]"></div>
             )}
             <img
-              src={product.images[currentImageIndex] || product.images[0]}
-              alt={product.name}
+              src={product.images?.[currentImageIndex]?.url || product.images?.[0]?.url || product.images?.[0] || '/api/placeholder/300/400'}
+              alt={product.images?.[currentImageIndex]?.alt || product.name}
               className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
@@ -92,7 +98,7 @@ export default function ProductCard({ product }) {
             />
             
             {/* Image dots indicator */}
-            {product.images.length > 1 && isHovered && (
+            {product.images && product.images.length > 1 && isHovered && (
               <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex gap-1">
                 {product.images.map((_, index) => (
                   <div
@@ -107,15 +113,15 @@ export default function ProductCard({ product }) {
             
             {/* Badges */}
             <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex flex-col gap-1 z-10">
-              {product.discount && (
-                <div className="bg-red-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-semibold shadow-lg">
-                  {product.discount}% OFF
-                </div>
+              {product.comparePrice && product.price && (
+                <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg">
+                  -{Math.round(((product.comparePrice - product.price) / product.comparePrice) * 100)}%
+                </span>
               )}
               {badge && (
-                <div className={`${badge.color} text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-semibold shadow-lg`}>
+                <span className={`${badge.color} text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg`}>
                   {badge.text}
-                </div>
+                </span>
               )}
             </div>
 
@@ -166,7 +172,7 @@ export default function ProductCard({ product }) {
 
         {/* Product Info */}
         <div className="p-2 sm:p-3 lg:p-4">
-          <Link href={`/products/${product.id}`}>
+          <Link href={`/products/${product.slug || product.id}`}>
             <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-1 sm:mb-2 line-clamp-2 hover:text-primary transition-colors">
               {product.name}
             </h3>
@@ -175,10 +181,14 @@ export default function ProductCard({ product }) {
           <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
             <div className="flex items-center">
               <Star className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
-              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 ml-1">{product.rating}</span>
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 ml-1">
+                {product.rating || '4.5'}
+              </span>
             </div>
-            <span className="text-xs sm:text-sm text-gray-400">({product.reviews})</span>
-            {product.stock <= 10 && (
+            <span className="text-xs sm:text-sm text-gray-400">
+              ({product._count?.reviews || product.reviews || '0'})
+            </span>
+            {product.stockQuantity <= 10 && (
               <span className="text-xs text-orange-600 font-medium bg-orange-50 px-1 sm:px-2 py-0.5 rounded-full">
                 <span className="hidden sm:inline">Low Stock</span>
                 <span className="sm:hidden">Low</span>
@@ -188,41 +198,62 @@ export default function ProductCard({ product }) {
 
           <div className="flex items-center justify-between mb-2 sm:mb-3">
             <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-              <span className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white">₹{product.price}</span>
-              {product.originalPrice && (
+              <span className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white">
+                ₹{typeof product.price === 'string' ? parseInt(product.price).toLocaleString() : product.price?.toLocaleString()}
+              </span>
+              {product.comparePrice && (
                 <span className="text-xs sm:text-sm text-gray-500 line-through">
-                  ₹{product.originalPrice}
+                  ₹{typeof product.comparePrice === 'string' ? parseInt(product.comparePrice).toLocaleString() : product.comparePrice?.toLocaleString()}
                 </span>
               )}
-              {product.discount && (
+              {product.comparePrice && product.price && (
                 <span className="text-xs text-green-600 font-medium hidden sm:inline">
-                  Save ₹{product.originalPrice - product.price}
+                  Save ₹{(parseInt(product.comparePrice) - parseInt(product.price)).toLocaleString()}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Colors Preview */}
+          {/* Colors and Sizes Preview */}
           <div className="flex items-center justify-between">
             <div className="flex gap-1">
-              {product.colors.slice(0, 3).map((color, index) => (
-                <div
-                  key={index}
-                  className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm hover:scale-110 transition-transform cursor-pointer"
-                  style={{ backgroundColor: color.toLowerCase() }}
-                  title={color}
-                />
-              ))}
-              {product.colors.length > 3 && (
+              {product.variants && product.variants.length > 0 ? (
+                // Show unique colors from variants
+                [...new Set(product.variants.map(v => v.color))].slice(0, 3).map((color, index) => (
+                  <div
+                    key={index}
+                    className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm hover:scale-110 transition-transform cursor-pointer"
+                    style={{ backgroundColor: color?.toLowerCase() || '#gray' }}
+                    title={color}
+                  />
+                ))
+              ) : product.colors ? (
+                // Fallback to colors array if available
+                product.colors.slice(0, 3).map((color, index) => (
+                  <div
+                    key={index}
+                    className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm hover:scale-110 transition-transform cursor-pointer"
+                    style={{ backgroundColor: color.toLowerCase() }}
+                    title={color}
+                  />
+                ))
+              ) : (
+                // Default color indicator
+                <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border border-gray-200 dark:border-gray-600 bg-gray-300" />
+              )}
+              {product.variants && [...new Set(product.variants.map(v => v.color))].length > 3 && (
                 <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 font-medium">
-                  +{product.colors.length - 3}
+                  +{[...new Set(product.variants.map(v => v.color))].length - 3}
                 </div>
               )}
             </div>
 
             {/* Size indicator */}
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              {product.sizes.length} sizes
+              {product.variants ? 
+                [...new Set(product.variants.map(v => v.size))].length : 
+                product.sizes?.length || 0
+              } sizes
             </div>
           </div>
         </div>
