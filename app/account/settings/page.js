@@ -183,55 +183,7 @@ export default function SettingsPage() {
 
 
 
-              {/* Login Methods */}
-              <div className="border-t pt-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Login Methods</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Mail className="h-5 w-5 text-gray-600" />
-                      <div>
-                        <div className="font-medium text-gray-900">Email Login</div>
-                        <div className="text-sm text-gray-600">Login with your email address</div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleSettingToggle('emailLogin')}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.emailLogin ? 'bg-blue-600' : 'bg-gray-200'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings.emailLogin ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
 
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Smartphone className="h-5 w-5 text-gray-600" />
-                      <div>
-                        <div className="font-medium text-gray-900">Phone Login</div>
-                        <div className="text-sm text-gray-600">Login with your phone number</div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleSettingToggle('phoneLogin')}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.phoneLogin ? 'bg-blue-600' : 'bg-gray-200'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          settings.phoneLogin ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
