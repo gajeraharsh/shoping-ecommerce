@@ -5,9 +5,7 @@ import {
   Lock,
   Shield,
   Eye,
-  EyeOff,
-  Smartphone,
-  Mail
+  EyeOff
 } from 'lucide-react';
 
 export default function SettingsPage() {
