@@ -21,15 +21,8 @@ export default function SettingsPage() {
     confirmPassword: ''
   });
   const [settings, setSettings] = useState({
-    twoFactor: false,
     emailLogin: true,
-    phoneLogin: false,
-    loginAlerts: true,
-    accountActivity: true,
-    marketing: false,
-    orderUpdates: true,
-    newsletters: false,
-    recommendations: true
+    phoneLogin: false
   });
 
   const tabs = [
