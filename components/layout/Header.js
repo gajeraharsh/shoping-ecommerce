@@ -24,6 +24,22 @@ export default function Header() {
   const cartCount = getCartItemsCount();
   const wishlistCount = wishlistItems.length;
 
+  // Handle click outside for profile dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+    }
+
+    if (isProfileDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isProfileDropdownOpen]);
+
   const handleSearch = (searchTerm) => {
     router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
   };
