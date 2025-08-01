@@ -31,12 +31,7 @@ export default function SettingsPage() {
     }));
   };
 
-  const handleSettingToggle = (setting) => {
-    setSettings(prev => ({
-      ...prev,
-      [setting]: !prev[setting]
-    }));
-  };
+
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
