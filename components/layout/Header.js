@@ -64,11 +64,11 @@ export default function Header() {
       <div className="mx-auto px-4 lg:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0 min-w-0">
-            <div className="bg-primary text-white px-2 sm:px-3 py-1 rounded-lg font-bold text-base sm:text-lg">
+          <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
+            <div className="bg-primary text-white px-3 py-1 rounded-lg font-bold text-lg">
               F
             </div>
-            <span className="text-base sm:text-lg font-bold text-gray-900 dark:text-white hidden sm:block truncate">Fashionista</span>
+            <span className="text-lg font-bold text-gray-900 dark:text-white hidden sm:block">Fashionista</span>
           </Link>
 
           {/* Desktop Navigation */}
