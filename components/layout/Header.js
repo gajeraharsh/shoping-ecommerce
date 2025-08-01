@@ -136,11 +136,16 @@ export default function Header() {
           </div>
 
             {/* User Account */}
-            <div className="relative group hidden sm:block">
-              <button className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary flex items-center justify-center">
+            <div className="relative hidden sm:block" ref={profileDropdownRef}>
+              <button
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary flex items-center justify-center"
+              >
                 <User className="h-4 w-4" />
               </button>
-              <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className={`absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg transition-all duration-200 z-50 ${
+                isProfileDropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+              }`}>
                 {user ? (
                   <>
                     <Link
