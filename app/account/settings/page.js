@@ -58,17 +58,7 @@ export default function SettingsPage() {
     });
   };
 
-  const handleDeleteAccount = () => {
-    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      // Handle account deletion logic here
-      alert('Account deletion initiated. You will receive an email with further instructions.');
-    }
-  };
 
-  const exportData = (type) => {
-    // Handle data export logic here
-    alert(`${type} export initiated. You will receive a download link via email.`);
-  };
 
   return (
     <div className="p-6 lg:p-8">
