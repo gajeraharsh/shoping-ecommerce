@@ -5,14 +5,12 @@ import { useRouter, usePathname } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  User, 
-  Package, 
-  MapPin, 
-  Heart, 
+import {
+  User,
+  Package,
+  MapPin,
+  Heart,
   Settings,
-  CreditCard,
-  Bell,
   RotateCcw,
   Truck,
   LogOut,
@@ -105,27 +103,15 @@ export default function AccountLayout({ children }) {
       icon: Heart,
       description: 'Your saved items'
     },
-    { 
-      name: 'Returns', 
-      href: '/account/returns', 
+    {
+      name: 'Returns',
+      href: '/account/returns',
       icon: RotateCcw,
       description: 'Return and exchange requests'
     },
-    { 
-      name: 'Payment Methods', 
-      href: '/account/payments', 
-      icon: CreditCard,
-      description: 'Saved cards and payment options'
-    },
-    { 
-      name: 'Notifications', 
-      href: '/account/notifications', 
-      icon: Bell,
-      description: 'Email and SMS preferences'
-    },
-    { 
-      name: 'Settings', 
-      href: '/account/settings', 
+    {
+      name: 'Settings',
+      href: '/account/settings',
       icon: Settings,
       description: 'Account and security settings'
     }

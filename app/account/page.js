@@ -63,13 +63,6 @@ export default function AccountPage() {
       icon: CreditCard,
       color: 'bg-green-100 text-green-600',
       trend: 'All active'
-    },
-    {
-      title: 'Loyalty Points',
-      value: '2,450',
-      icon: Award,
-      color: 'bg-purple-100 text-purple-600',
-      trend: '+150 earned'
     }
   ];
 
@@ -283,51 +276,27 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {/* Loyalty Program & Quick Actions Combined */}
+        {/* Quick Actions */}
         <div className="lg:col-span-1">
-          <div className="space-y-6">
-            {/* Loyalty Program */}
-            <div className="bg-gradient-to-br from-primary via-pink-500 to-purple-600 text-white rounded-xl p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Award className="h-5 w-5" />
-                <h3 className="text-lg font-semibold">Loyalty Program</h3>
-              </div>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-pink-100 text-sm">Current Points</span>
-                  <span className="text-xl font-bold">2,450</span>
-                </div>
-                <div className="w-full bg-pink-500/30 rounded-full h-2">
-                  <div className="bg-white h-2 rounded-full" style={{ width: '65%' }}></div>
-                </div>
-                <p className="text-sm text-pink-100">550 points until Gold status</p>
-                <button className="w-full bg-white/20 hover:bg-white/30 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium">
-                  View Rewards
-                </button>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <button className="flex flex-col items-center gap-2 p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                  <Package className="h-5 w-5 text-blue-600" />
-                  <span className="text-xs font-medium text-blue-900 text-center">Track Order</span>
-                </button>
-                <button className="flex flex-col items-center gap-2 p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                  <RotateCcw className="h-5 w-5 text-green-600" />
-                  <span className="text-xs font-medium text-green-900 text-center">Return Item</span>
-                </button>
-                <button className="flex flex-col items-center gap-2 p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                  <Heart className="h-5 w-5 text-purple-600" />
-                  <span className="text-xs font-medium text-purple-900 text-center">Wishlist</span>
-                </button>
-                <button className="flex flex-col items-center gap-2 p-3 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
-                  <CreditCard className="h-5 w-5 text-pink-600" />
-                  <span className="text-xs font-medium text-pink-900 text-center">Payments</span>
-                </button>
-              </div>
+          <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-6 h-full">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <button className="flex flex-col items-center gap-2 p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                <Package className="h-5 w-5 text-blue-600" />
+                <span className="text-xs font-medium text-blue-900 text-center">Track Order</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+                <RotateCcw className="h-5 w-5 text-green-600" />
+                <span className="text-xs font-medium text-green-900 text-center">Return Item</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
+                <Heart className="h-5 w-5 text-purple-600" />
+                <span className="text-xs font-medium text-purple-900 text-center">Wishlist</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-3 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
+                <CreditCard className="h-5 w-5 text-pink-600" />
+                <span className="text-xs font-medium text-pink-900 text-center">Payments</span>
+              </button>
             </div>
           </div>
         </div>
