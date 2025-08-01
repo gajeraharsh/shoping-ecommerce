@@ -19,6 +19,7 @@ export default function Header() {
   const { wishlistItems } = useWishlist();
   const { user, logout } = useAuth();
   const router = useRouter();
+  const profileDropdownRef = useRef(null);
 
   const cartCount = getCartItemsCount();
   const wishlistCount = wishlistItems.length;
