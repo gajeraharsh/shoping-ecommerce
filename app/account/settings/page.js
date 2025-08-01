@@ -1,19 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Lock, 
-  Shield, 
-  Eye, 
-  EyeOff, 
-  Smartphone, 
-  Mail,
-  Globe,
-  Trash2,
-  Download,
-  AlertTriangle,
-  Check,
-  X
+import {
+  Lock,
+  Shield,
+  Eye,
+  EyeOff,
+  Smartphone,
+  Mail
 } from 'lucide-react';
 
 export default function SettingsPage() {
