@@ -105,26 +105,26 @@ export default function Header() {
             {/* Mobile Search */}
             <button
               onClick={() => setShowAdvancedSearch(true)}
-              className="lg:hidden p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors flex items-center justify-center"
+              className="lg:hidden p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors"
             >
-              <Search className="h-4 w-4" />
+              <Search className="h-5 w-5" />
             </button>
 
             {/* Wishlist */}
-            <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary flex items-center justify-center">
-              <Heart className="h-4 w-4" />
+            <Link href="/wishlist" className="relative p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
+              <Heart className="h-5 w-5" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] leading-none min-w-[16px]">
+                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium min-w-[20px]">
                   {wishlistCount > 99 ? '99+' : wishlistCount}
                 </span>
               )}
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:text-primary flex items-center justify-center">
-              <ShoppingBag className="h-4 w-4" />
+            <Link href="/cart" className="relative p-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
+              <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] leading-none min-w-[16px]">
+                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium min-w-[20px]">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
