@@ -60,9 +60,9 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-40 transition-colors w-full overflow-hidden">
-      <div className="container mx-auto px-3 sm:px-4 max-w-full">
-        <div className="flex items-center justify-between h-14 sm:h-16 min-w-0 gap-1 sm:gap-0">
+    <header className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-40 transition-colors w-full">
+      <div className="mx-auto px-4 lg:px-6">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0 min-w-0">
             <div className="bg-primary text-white px-2 sm:px-3 py-1 rounded-lg font-bold text-base sm:text-lg">
