@@ -18,10 +18,7 @@ export default function SettingsPage() {
     newPassword: '',
     confirmPassword: ''
   });
-  const [settings, setSettings] = useState({
-    emailLogin: true,
-    phoneLogin: false
-  });
+
 
   const tabs = [
     { id: 'security', label: 'Security', icon: Shield }
