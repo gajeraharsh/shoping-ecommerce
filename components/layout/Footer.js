@@ -36,18 +36,28 @@ export default function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="bg-white text-black px-4 py-2 rounded-lg font-bold text-xl">
+              <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 text-black px-4 py-2 rounded-xl font-bold text-xl shadow-lg">
                 M
               </div>
               <div>
-                <span className="text-xl font-bold">Modave</span>
-                <p className="text-sm text-gray-400">Fashion & Style</p>
+                <span className="text-xl font-bold tracking-tight">Modave</span>
+                <p className="text-sm text-gray-400 uppercase tracking-wider font-medium">Premium Fashion</p>
               </div>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Curating exceptional fashion experiences for the modern woman. 
-              Every piece tells a story of elegance, quality, and timeless style.
+              Curating exceptional fashion experiences for the modern individual.
+              Every piece embodies elegance, uncompromising quality, and timeless sophistication.
             </p>
+            <div className="mb-6">
+              <p className="text-sm font-medium text-gray-300 mb-2">Follow our journey</p>
+              <div className="flex items-center gap-2 text-xs text-gray-400">
+                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>100K+ Happy Customers</span>
+                <span className="mx-2">•</span>
+                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                <span>Premium Quality Guaranteed</span>
+              </div>
+            </div>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <Instagram className="h-6 w-6" />
