@@ -182,14 +182,14 @@ export default function ProductInfo({ product }) {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-12 h-12 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-semibold"
+            className="w-12 h-12 sm:w-12 sm:h-12 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-semibold text-xl touch-manipulation"
           >
             -
           </button>
-          <span className="text-lg font-semibold w-16 text-center text-gray-900 dark:text-white">{quantity}</span>
+          <span className="text-lg sm:text-lg font-semibold w-16 sm:w-16 text-center text-gray-900 dark:text-white">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="w-12 h-12 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-semibold"
+            className="w-12 h-12 sm:w-12 sm:h-12 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-semibold text-xl touch-manipulation"
           >
             +
           </button>
@@ -200,25 +200,25 @@ export default function ProductInfo({ product }) {
       <div className="space-y-4">
         <div className="flex gap-4">
           <button
-            onClick={handleAddToCart}
-            disabled={product.stock === 0}
-            className="flex-1 bg-black dark:bg-white text-white dark:text-black py-4 px-6 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ShoppingBag className="h-5 w-5" />
-            Add to Cart
-          </button>
-          <button
-            onClick={handleWishlistToggle}
-            className="px-6 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
-            <Heart className={`h-5 w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
-          </button>
+          onClick={handleAddToCart}
+          disabled={product.stock === 0}
+          className="flex-1 bg-black dark:bg-white text-white dark:text-black py-4 px-6 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[48px]"
+        >
+          <ShoppingBag className="h-5 w-5 sm:h-5 sm:w-5" />
+          <span className="text-sm sm:text-base">Add to Cart</span>
+        </button>
+        <button
+          onClick={handleWishlistToggle}
+          className="px-4 sm:px-6 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors touch-manipulation min-h-[48px] min-w-[48px]"
+        >
+          <Heart className={`h-6 w-6 sm:h-5 sm:w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
+        </button>
         </div>
         
         <button
           onClick={handleBuyNow}
           disabled={product.stock === 0}
-          className="w-full bg-gradient-to-r from-gray-900 to-black dark:from-gray-100 dark:to-white text-white dark:text-black py-4 px-6 rounded-lg hover:from-black hover:to-gray-900 dark:hover:from-white dark:hover:to-gray-100 transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-gray-900 to-black dark:from-gray-100 dark:to-white text-white dark:text-black py-4 px-6 rounded-lg hover:from-black hover:to-gray-900 dark:hover:from-white dark:hover:to-gray-100 transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[48px] text-sm sm:text-base"
         >
           Buy Now - Fast Checkout
         </button>
@@ -229,7 +229,7 @@ export default function ProductInfo({ product }) {
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Delivery & Returns</h3>
         <div className="space-y-4">
           <div className="flex items-start gap-3">
-            <Truck className="h-5 w-5 text-black dark:text-white flex-shrink-0 mt-0.5" />
+            <Truck className="h-6 w-6 sm:h-5 sm:w-5 text-black dark:text-white flex-shrink-0 mt-0.5" />
             <div>
               <div className="font-medium text-gray-900 dark:text-white">Free Delivery</div>
               <div className="text-sm text-gray-600 dark:text-gray-300">Enter your pincode for delivery date</div>
@@ -238,7 +238,7 @@ export default function ProductInfo({ product }) {
           </div>
           
           <div className="flex items-start gap-3">
-            <RotateCcw className="h-5 w-5 text-black dark:text-white flex-shrink-0 mt-0.5" />
+            <RotateCcw className="h-6 w-6 sm:h-5 sm:w-5 text-black dark:text-white flex-shrink-0 mt-0.5" />
             <div>
               <div className="font-medium text-gray-900 dark:text-white">Easy Returns</div>
               <div className="text-sm text-gray-600 dark:text-gray-300">30-day return policy</div>
@@ -247,7 +247,7 @@ export default function ProductInfo({ product }) {
           </div>
           
           <div className="flex items-start gap-3">
-            <Package className="h-5 w-5 text-black dark:text-white flex-shrink-0 mt-0.5" />
+            <Package className="h-6 w-6 sm:h-5 sm:w-5 text-black dark:text-white flex-shrink-0 mt-0.5" />
             <div>
               <div className="font-medium text-gray-900 dark:text-white">Cash on Delivery</div>
               <div className="text-sm text-gray-600 dark:text-gray-300">Available for orders above ₹999</div>
@@ -261,7 +261,7 @@ export default function ProductInfo({ product }) {
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Product Highlights</h3>
         <div className="grid grid-cols-1 gap-4">
           <div className="flex items-center gap-3">
-            <Shield className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+            <Shield className="h-6 w-6 sm:h-5 sm:w-5 text-black dark:text-white flex-shrink-0" />
             <div>
               <div className="font-medium text-gray-900 dark:text-white">Quality Assured</div>
               <div className="text-sm text-gray-600 dark:text-gray-300">Premium fabric & craftsmanship</div>
@@ -269,7 +269,7 @@ export default function ProductInfo({ product }) {
           </div>
           
           <div className="flex items-center gap-3">
-            <Clock className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+            <Clock className="h-6 w-6 sm:h-5 sm:w-5 text-black dark:text-white flex-shrink-0" />
             <div>
               <div className="font-medium text-gray-900 dark:text-white">Express Delivery</div>
               <div className="text-sm text-gray-600 dark:text-gray-300">Same day delivery available in select cities</div>
@@ -278,7 +278,7 @@ export default function ProductInfo({ product }) {
           
           {product.sustainable && (
             <div className="flex items-center gap-3">
-              <Leaf className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+              <Leaf className="h-6 w-6 sm:h-5 sm:w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
               <div>
                 <div className="font-medium text-gray-900 dark:text-white">Eco-Friendly</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Made with sustainable materials</div>
