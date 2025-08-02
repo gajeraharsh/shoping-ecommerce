@@ -4,7 +4,7 @@ import Hero from '@/components/home/Hero';
 import InstagramFeed from '@/components/social/InstagramFeed';
 import InstagramReelsFeed from '@/components/social/InstagramReelsFeed';
 import SimpleTrustSection from '@/components/ui/SimpleTrustSection';
-import VerifiedTestimonials from '@/components/ui/VerifiedTestimonials';
+import SimpleTestimonials from '@/components/ui/SimpleTestimonials';
 
 export default function Home() {
   return (
