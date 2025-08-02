@@ -189,7 +189,7 @@ export default function ProductTabs({ product }) {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`h-5 w-5 ${
+                        className={`h-5 w-5 sm:h-5 sm:w-5 ${
                           i < Math.floor(product.rating)
                             ? 'fill-yellow-400 text-yellow-400'
                             : 'text-gray-300 dark:text-gray-600'
@@ -203,7 +203,7 @@ export default function ProductTabs({ product }) {
                     {[5, 4, 3, 2, 1].map(rating => (
                       <div key={rating} className="flex items-center gap-2">
                         <span className="text-sm w-4">{rating}</span>
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <Star className="h-4 w-4 sm:h-3 sm:w-3 fill-yellow-400 text-yellow-400" />
                         <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                           <div
                             className="bg-yellow-400 h-2 rounded-full"
@@ -231,7 +231,7 @@ export default function ProductTabs({ product }) {
                             <span className="font-medium text-gray-900 dark:text-white">{review.user}</span>
                             {review.verified && (
                               <span className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                                <ShieldCheck className="h-3 w-3" />
+                                <ShieldCheck className="h-4 w-4 sm:h-3 sm:w-3" />
                                 Verified Purchase
                               </span>
                             )}
@@ -241,7 +241,7 @@ export default function ProductTabs({ product }) {
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  className={`h-4 w-4 ${
+                                  className={`h-4 w-4 sm:h-4 sm:w-4 ${
                                     i < review.rating
                                       ? 'fill-yellow-400 text-yellow-400'
                                       : 'text-gray-300 dark:text-gray-600'
@@ -270,13 +270,13 @@ export default function ProductTabs({ product }) {
                       )}
                       
                       <div className="flex items-center gap-4 text-sm">
-                        <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-                          <ThumbsUp className="h-4 w-4" />
-                          Helpful ({review.helpful})
+                        <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 touch-manipulation py-2">
+                          <ThumbsUp className="h-5 w-5 sm:h-4 sm:w-4" />
+                          <span className="text-sm sm:text-sm">Helpful ({review.helpful})</span>
                         </button>
-                        <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-                          <MessageCircle className="h-4 w-4" />
-                          Reply
+                        <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 touch-manipulation py-2">
+                          <MessageCircle className="h-5 w-5 sm:h-4 sm:w-4" />
+                          <span className="text-sm sm:text-sm">Reply</span>
                         </button>
                       </div>
                     </div>
