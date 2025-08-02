@@ -8,7 +8,7 @@ export default function CartItems() {
   const { cartItems, updateQuantity, removeFromCart } = useCart();
 
   return (
-    <div className="bg-white border rounded-lg w-full overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg w-full overflow-hidden">
       <div className="p-4 sm:p-6 border-b">
         <h2 className="text-lg sm:text-xl font-semibold">Cart Items ({cartItems.length})</h2>
       </div>
