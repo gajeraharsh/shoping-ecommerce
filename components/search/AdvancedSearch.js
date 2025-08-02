@@ -79,6 +79,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-md"
         onClick={onClose}
+        style={{ backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
       />
 
       {/* Search Modal Container */}
