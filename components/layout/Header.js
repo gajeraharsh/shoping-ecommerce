@@ -54,6 +54,7 @@ export default function Header() {
     { name: 'Home', href: '/' },
     { name: 'Collections', href: '/products' },
     { name: 'New Arrivals', href: '/products?sort=newest' },
+    { name: 'Blog', href: '/blog' },
     { name: 'Sale', href: '/products?sale=true' },
     { name: 'About', href: '/about' }
   ];
