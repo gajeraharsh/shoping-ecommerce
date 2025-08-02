@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Heart, Star, ShoppingBag, Eye } from 'lucide-react';
+import { Heart, Star, ShoppingBag, Eye, GitCompare } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
+import { useComparison } from '@/contexts/ComparisonContext';
 import { useToast } from '@/hooks/useToast';
 import QuickViewModal from '@/components/modals/QuickViewModal';
 
