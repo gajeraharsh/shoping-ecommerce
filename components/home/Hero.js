@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Star, ShoppingBag, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import ProductCard from '@/components/products/ProductCard';
@@ -20,189 +20,259 @@ export default function Hero() {
 
   useEffect(() => {
     setTimeout(() => {
-      setProducts(mockProducts.slice(0, 6));
+      setProducts(mockProducts.slice(0, 8));
       setLoading(false);
     }, 800);
   }, []);
 
-  const featuredProducts = products.slice(0, 4); // Get first 4 products for swiper
+  const heroSlides = [
+    {
+      id: 1,
+      title: "Autumn Collection",
+      subtitle: "Elegance Redefined",
+      description: "Discover sophisticated pieces that blend timeless style with contemporary flair",
+      image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2340&auto=format&fit=crop",
+      cta: "Shop Collection",
+      link: "/products?collection=autumn"
+    },
+    {
+      id: 2,
+      title: "Evening Elegance",
+      subtitle: "Luxury Redefined",
+      description: "Exquisite evening wear crafted for the modern woman who values elegance",
+      image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2340&auto=format&fit=crop",
+      cta: "Explore Now",
+      link: "/products?category=evening"
+    },
+    {
+      id: 3,
+      title: "Casual Sophistication",
+      subtitle: "Effortless Style",
+      description: "Premium casual wear that transitions seamlessly from day to night",
+      image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2340&auto=format&fit=crop",
+      cta: "Shop Now",
+      link: "/products?category=casual"
+    }
+  ];
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900/20 overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-pink-300 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full filter blur-3xl"></div>
-      </div>
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Hero Slider */}
+      <section className="relative h-screen">
+        <Swiper
+          modules={[Autoplay, EffectFade, Pagination]}
+          effect="fade"
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+            bulletClass: 'swiper-pagination-bullet !bg-white/50 !w-2 !h-2 !mx-1',
+            bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !w-8 !h-2 !rounded-full',
+          }}
+          loop={true}
+          className="h-full"
+        >
+          {heroSlides.map((slide) => (
+            <SwiperSlide key={slide.id}>
+              <div className="relative h-full">
+                <div className="absolute inset-0 bg-black/30 z-10"></div>
+                <img
+                  src={slide.image}
+                  alt={slide.title}
+                  className="w-full h-full object-cover"
+                />
+                
+                <div className="absolute inset-0 z-20 flex items-center">
+                  <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+                    <div className="max-w-2xl">
+                      <p className="text-white/90 text-sm font-medium tracking-wider uppercase mb-4">
+                        {slide.subtitle}
+                      </p>
+                      <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                        {slide.title}
+                      </h1>
+                      <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-lg">
+                        {slide.description}
+                      </p>
+                      <Link
+                        href={slide.link}
+                        className="inline-flex items-center bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 group"
+                      >
+                        {slide.cta}
+                        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 lg:py-16 relative z-10">
-        {/* Main Hero Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center mb-8 sm:mb-12 lg:mb-16">
-          {/* Text Content */}
-          <div className="text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <Sparkles className="w-4 h-4" />
-              New Collection 2024
-            </div>
-            
-            <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight">
-              Discover Your
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">
-                {" "}Perfect Style
-              </span>
-            </h1>
-            
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0 px-2 sm:px-0">
-              Explore our exclusive collection of traditional kurties, modern dresses, and ethnic wear crafted for the modern woman.
+        {/* Custom Pagination Styles */}
+        <style jsx global>{`
+          .swiper-pagination {
+            bottom: 40px !important;
+            left: 48px !important;
+            width: auto !important;
+            text-align: left !important;
+          }
+          @media (max-width: 768px) {
+            .swiper-pagination {
+              left: 24px !important;
+              bottom: 24px !important;
+            }
+          }
+        `}</style>
+      </section>
+
+      {/* Featured Categories */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Discover Our Collections
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Curated selections that define modern elegance and timeless sophistication
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-2 sm:px-0">
-              <Link
-                href="/products"
-                className="bg-pink-600 hover:bg-pink-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-sm sm:text-base"
-              >
-                Shop Collection
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-              </Link>
-
-              <Link
-                href="/products?category=kurtis"
-                className="border-2 border-pink-600 text-pink-600 hover:bg-pink-600 hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base"
-              >
-                View Kurties
-              </Link>
-            </div>
           </div>
 
-          {/* Featured Products Swiper */}
-          <div className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: "New Arrivals",
+                description: "Latest trends and seasonal favorites",
+                image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
+                link: "/products?sort=newest"
+              },
+              {
+                title: "Bestsellers",
+                description: "Customer favorites and top-rated pieces",
+                image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
+                link: "/products?sort=popular"
+              },
+              {
+                title: "Sale",
+                description: "Limited time offers on premium pieces",
+                image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1000&auto=format&fit=crop",
+                link: "/products?sale=true"
+              }
+            ].map((category, index) => (
+              <Link
+                key={index}
+                href={category.link}
+                className="group relative overflow-hidden rounded-2xl aspect-[4/3] block"
+              >
+                <img
+                  src={category.image}
+                  alt={category.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
+                <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                  <h3 className="text-2xl font-bold text-white mb-2">{category.title}</h3>
+                  <p className="text-white/90 mb-4">{category.description}</p>
+                  <div className="inline-flex items-center text-white group-hover:text-white transition-colors">
+                    <span className="font-medium">Explore</span>
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="py-20 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Featured This Week
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Handpicked favorites that showcase exceptional craftsmanship and design
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {loading ? (
-              <div className="animate-pulse">
-                <div className="bg-gray-200 dark:bg-gray-700 rounded-3xl h-[500px] lg:h-[600px]"></div>
-              </div>
+              Array.from({ length: 4 }).map((_, index) => (
+                <ProductSkeleton key={index} />
+              ))
             ) : (
-              <div className="relative">
-                <Swiper
-                  modules={[Autoplay, EffectFade, Pagination]}
-                  effect="fade"
-                  autoplay={{
-                    delay: 4000,
-                    disableOnInteraction: false,
-                  }}
-                  pagination={{
-                    clickable: true,
-                    bulletClass: 'swiper-pagination-bullet !bg-white/70 !w-3 !h-3',
-                    bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !scale-125',
-                  }}
-                  loop={true}
-                  className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl h-[350px] xs:h-[400px] sm:h-[500px] lg:h-[600px]"
-                >
-                  {featuredProducts.map((product, index) => (
-                    <SwiperSlide key={product.id || index}>
-                      <div className="relative h-full group">
-                        <div className="relative h-full overflow-hidden">
-                          <img
-                            src={product.images[0]}
-                            alt={product.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                          
-                          {/* Discount Badge */}
-                          {product.discount && (
-                            <div className="absolute top-6 right-6 bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                              {product.discount}% OFF
-                            </div>
-                          )}
-                          
-                          {/* Product Info Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8 text-white">
-                            <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                              <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
-                              <span className="text-xs sm:text-sm font-medium">{product.rating} ({product.reviews} reviews)</span>
-                            </div>
-
-                            <h3 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 leading-tight line-clamp-2">{product.name}</h3>
-
-                            <p className="text-gray-200 mb-3 sm:mb-4 max-w-md text-xs sm:text-sm md:text-base line-clamp-2 hidden xs:block">
-                              {product.description || 'Discover premium quality and elegant design in our exclusive collection.'}
-                            </p>
-
-                            <div className="flex items-center justify-between flex-wrap gap-2 sm:gap-4">
-                              <div className="flex items-center gap-2 sm:gap-3">
-                                <span className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold">₹{product.price}</span>
-                                {product.originalPrice && (
-                                  <span className="text-sm xs:text-base sm:text-xl text-gray-300 line-through">₹{product.originalPrice}</span>
-                                )}
-                              </div>
-
-                              <Link
-                                href={`/products/${product.id}`}
-                                className="bg-white text-gray-900 px-4 xs:px-6 sm:px-8 py-2 xs:py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 flex items-center gap-1 sm:gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-xs xs:text-sm sm:text-base"
-                              >
-                                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
-                                <span className="hidden xs:inline">Shop Now</span>
-                                <span className="xs:hidden">Shop</span>
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-                
-                {/* Custom Pagination Styles */}
-                <style jsx global>{`
-                  .swiper-pagination {
-                    bottom: 20px !important;
-                  }
-                  .swiper-pagination-bullet {
-                    opacity: 0.7 !important;
-                    transition: all 0.3s ease !important;
-                  }
-                  .swiper-pagination-bullet-active {
-                    opacity: 1 !important;
-                  }
-                `}</style>
-              </div>
+              products.slice(0, 4).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
             )}
           </div>
-        </div>
 
-        {/* Featured Products Section with Enhanced Title */}
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-          <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 px-2">
-            Featured This Week
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4 leading-relaxed">
-            Handpicked favorites that showcase the latest trends and timeless elegance
-          </p>
+          <div className="text-center">
+            <Link
+              href="/products"
+              className="inline-flex items-center bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors group"
+            >
+              View All Products
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
         </div>
+      </section>
 
-        {/* Product Grid - Now using consistent ProductCard components */}
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 xl:gap-8 mb-8 sm:mb-12 lg:mb-16">
-          {loading ? (
-            Array.from({ length: 4 }).map((_, index) => (
-              <ProductSkeleton key={index} />
-            ))
-          ) : (
-            products.slice(1, 5).map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
-          )}
-        </div>
+      {/* Testimonials */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              What Our Customers Say
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300">
+              Hear from women who've found their perfect style
+            </p>
+          </div>
 
-        {/* Call to Action */}
-        <div className="text-center px-4">
-          <Link
-            href="/products"
-            className="inline-block bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 sm:px-8 lg:px-10 py-3 sm:py-4 rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold text-sm sm:text-base lg:text-lg"
-          >
-            Explore All Products
-          </Link>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                quote: "Absolutely stunning quality and the perfect fit. The attention to detail is remarkable.",
+                author: "Sarah Chen",
+                role: "Fashion Enthusiast",
+                rating: 5
+              },
+              {
+                quote: "Finally found a brand that understands elegance. Every piece feels like it was made just for me.",
+                author: "Priya Sharma",
+                role: "Working Professional",
+                rating: 5
+              },
+              {
+                quote: "The craftsmanship is exceptional. These pieces have become staples in my wardrobe.",
+                author: "Emma Thompson",
+                role: "Style Blogger",
+                rating: 5
+              }
+            ].map((testimonial, index) => (
+              <div key={index} className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm">
+                <div className="flex items-center mb-4">
+                  {Array.from({ length: testimonial.rating }).map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg leading-relaxed">
+                  "{testimonial.quote}"
+                </p>
+                <div>
+                  <p className="font-semibold text-gray-900 dark:text-white">{testimonial.author}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">{testimonial.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
