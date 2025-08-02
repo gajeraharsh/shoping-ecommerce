@@ -51,6 +51,21 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Trust & Security Section */}
+        <section className="section-padding-sm bg-white dark:bg-gray-900">
+          <div className="container-fluid">
+            <div className="text-center mb-12">
+              <h2 className="heading-md mb-4">
+                Shop with Complete Confidence
+              </h2>
+              <p className="body-lg text-fade max-w-2xl mx-auto">
+                Your security and satisfaction are our top priorities. We've implemented industry-leading measures to protect your data and ensure a seamless shopping experience.
+              </p>
+            </div>
+            <TrustBadges />
+          </div>
+        </section>
+
         {/* Featured Collections */}
         <section className="section-padding">
           <div className="container-fluid">
