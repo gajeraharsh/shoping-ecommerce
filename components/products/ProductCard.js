@@ -106,17 +106,32 @@ export default function ProductCard({ product }) {
               </div>
             )}
 
-            {/* Wishlist Button */}
-            <button
-              onClick={handleWishlistToggle}
-              className={`absolute top-4 right-4 p-2 rounded-full transition-all ${
-                inWishlist
-                  ? 'bg-red-50 text-red-500'
-                  : 'bg-white/90 text-gray-600 hover:text-red-500'
-              } opacity-0 group-hover:opacity-100`}
-            >
-              <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
-            </button>
+            {/* Action Buttons */}
+            <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all">
+              <button
+                onClick={handleWishlistToggle}
+                className={`p-2 rounded-full transition-all ${
+                  inWishlist
+                    ? 'bg-red-50 text-red-500'
+                    : 'bg-white/90 text-gray-600 hover:text-red-500'
+                }`}
+                title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+              >
+                <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+              </button>
+
+              <button
+                onClick={handleComparisonToggle}
+                className={`p-2 rounded-full transition-all ${
+                  inComparison
+                    ? 'bg-blue-50 text-blue-500'
+                    : 'bg-white/90 text-gray-600 hover:text-blue-500'
+                }`}
+                title={inComparison ? 'Remove from comparison' : 'Add to comparison'}
+              >
+                <GitCompare className={`h-5 w-5 ${inComparison ? 'fill-current' : ''}`} />
+              </button>
+            </div>
 
             {/* Quick Actions */}
             <div className="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
