@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight, Shield, Award } from 'lucide-react';
+import TrustBadges from '@/components/ui/TrustBadges';
 
 export default function Footer() {
   return (
