@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield, Leaf, Clock, MapPin, Package } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/useToast';
@@ -31,6 +31,21 @@ export default function ProductInfo({ product }) {
     showToast('Added to cart successfully!', 'success');
   };
 
+  const handleBuyNow = () => {
+    if (!selectedSize) {
+      showToast('Please select a size', 'error');
+      return;
+    }
+    if (!selectedColor) {
+      showToast('Please select a color', 'error');
+      return;
+    }
+    
+    addToCart(product, selectedSize, selectedColor, quantity);
+    // Navigate to checkout
+    window.location.href = '/checkout';
+  };
+
   const handleWishlistToggle = () => {
     if (inWishlist) {
       removeFromWishlist(product.id);
@@ -42,17 +57,42 @@ export default function ProductInfo({ product }) {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-6">
+      {/* Product Badge */}
+      <div className="flex gap-2 flex-wrap">
+        {product.isNew && (
+          <span className="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-400 px-3 py-1 rounded-full text-sm font-semibold">
+            New Arrival
+          </span>
+        )}
+        {product.isTrending && (
+          <span className="bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-400 px-3 py-1 rounded-full text-sm font-semibold">
+            Trending
+          </span>
+        )}
+        {product.sustainable && (
+          <span className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+            <Leaf className="h-3 w-3" />
+            Sustainable
+          </span>
+        )}
+        {product.stock < 10 && (
+          <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-3 py-1 rounded-full text-sm font-semibold">
+            Only {product.stock} left
+          </span>
+        )}
+      </div>
+
       {/* Product Title & Rating */}
       <div>
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">{product.name}</h1>
-        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+        <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">{product.name}</h1>
+        <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-4 w-4 ${
+                  className={`h-5 w-5 ${
                     i < Math.floor(product.rating)
                       ? 'fill-yellow-400 text-yellow-400'
                       : 'text-gray-300 dark:text-gray-600'
@@ -60,40 +100,54 @@ export default function ProductInfo({ product }) {
                 />
               ))}
             </div>
-            <span className="ml-1 sm:ml-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+            <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
               {product.rating} ({product.reviews} reviews)
             </span>
           </div>
+          <span className="text-sm text-gray-500 dark:text-gray-400">SKU: MOD{product.id.toString().padStart(4, '0')}</span>
         </div>
       </div>
 
       {/* Price */}
-      <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-        <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">₹{product.price}</span>
+      <div className="flex items-center gap-4 flex-wrap">
+        <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{product.price.toLocaleString()}</span>
         {product.originalPrice && (
           <>
-            <span className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 line-through">
-              ₹{product.originalPrice}
+            <span className="text-xl text-gray-500 dark:text-gray-400 line-through">
+              ₹{product.originalPrice.toLocaleString()}
             </span>
-            <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-2 py-1 rounded text-xs sm:text-sm font-semibold">
+            <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-3 py-1 rounded-full text-sm font-semibold">
               {product.discount}% OFF
             </span>
           </>
         )}
       </div>
 
+      {/* Stock Status */}
+      <div className="flex items-center gap-2">
+        <div className={`w-3 h-3 rounded-full ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
+        <span className={`font-medium ${product.stock > 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
+          {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+        </span>
+      </div>
+
       {/* Size Selection */}
       <div>
-        <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-900 dark:text-white">Size</h3>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Size</h3>
+          <button className="text-sm text-black dark:text-white font-medium underline hover:no-underline">
+            Size Guide
+          </button>
+        </div>
+        <div className="flex gap-3 flex-wrap">
           {product.sizes.map(size => (
             <button
               key={size}
               onClick={() => setSelectedSize(size)}
-              className={`px-3 sm:px-4 py-1.5 sm:py-2 border rounded-lg transition-colors text-sm sm:text-base ${
+              className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
                 selectedSize === size
-                  ? 'bg-primary text-white border-primary'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-800'
+                  ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white bg-white dark:bg-gray-800'
               }`}
             >
               {size}
@@ -104,16 +158,16 @@ export default function ProductInfo({ product }) {
 
       {/* Color Selection */}
       <div>
-        <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-900 dark:text-white">Color</h3>
-        <div className="flex gap-2 flex-wrap">
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Color: {selectedColor}</h3>
+        <div className="flex gap-3 flex-wrap">
           {product.colors.map(color => (
             <button
               key={color}
               onClick={() => setSelectedColor(color)}
-              className={`px-3 sm:px-4 py-1.5 sm:py-2 border rounded-lg transition-colors text-sm sm:text-base ${
+              className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
                 selectedColor === color
-                  ? 'bg-primary text-white border-primary'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-800'
+                  ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white bg-white dark:bg-gray-800'
               }`}
             >
               {color}
@@ -124,18 +178,18 @@ export default function ProductInfo({ product }) {
 
       {/* Quantity */}
       <div>
-        <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-900 dark:text-white">Quantity</h3>
-        <div className="flex items-center gap-3">
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Quantity</h3>
+        <div className="flex items-center gap-4">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-8 h-8 sm:w-10 sm:h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            className="w-12 h-12 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-semibold"
           >
             -
           </button>
-          <span className="text-base sm:text-lg font-semibold w-10 sm:w-12 text-center text-gray-900 dark:text-white">{quantity}</span>
+          <span className="text-lg font-semibold w-16 text-center text-gray-900 dark:text-white">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="w-8 h-8 sm:w-10 sm:h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            className="w-12 h-12 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-semibold"
           >
             +
           </button>
@@ -143,46 +197,94 @@ export default function ProductInfo({ product }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+      <div className="space-y-4">
+        <div className="flex gap-4">
+          <button
+            onClick={handleAddToCart}
+            disabled={product.stock === 0}
+            className="flex-1 bg-black dark:bg-white text-white dark:text-black py-4 px-6 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <ShoppingBag className="h-5 w-5" />
+            Add to Cart
+          </button>
+          <button
+            onClick={handleWishlistToggle}
+            className="px-6 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            <Heart className={`h-5 w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
+          </button>
+        </div>
+        
         <button
-          onClick={handleAddToCart}
-          className="flex-1 bg-primary text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:bg-primary/90 transition-colors font-semibold flex items-center justify-center gap-2 text-sm sm:text-base"
+          onClick={handleBuyNow}
+          disabled={product.stock === 0}
+          className="w-full bg-gradient-to-r from-gray-900 to-black dark:from-gray-100 dark:to-white text-white dark:text-black py-4 px-6 rounded-lg hover:from-black hover:to-gray-900 dark:hover:from-white dark:hover:to-gray-100 transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
-          Add to Cart
-        </button>
-        <button
-          onClick={handleWishlistToggle}
-          className="px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors sm:flex-shrink-0"
-        >
-          <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
+          Buy Now - Fast Checkout
         </button>
       </div>
 
-      {/* Product Features */}
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+      {/* Delivery Information */}
+      <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Delivery & Returns</h3>
+        <div className="space-y-4">
+          <div className="flex items-start gap-3">
+            <Truck className="h-5 w-5 text-black dark:text-white flex-shrink-0 mt-0.5" />
             <div>
-              <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Free Shipping</div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">On orders over ₹999</div>
+              <div className="font-medium text-gray-900 dark:text-white">Free Delivery</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">Enter your pincode for delivery date</div>
+              <div className="text-sm text-black dark:text-white font-medium mt-1">Usually delivered in 2-4 business days</div>
             </div>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+          
+          <div className="flex items-start gap-3">
+            <RotateCcw className="h-5 w-5 text-black dark:text-white flex-shrink-0 mt-0.5" />
             <div>
-              <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Easy Returns</div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">30-day return policy</div>
+              <div className="font-medium text-gray-900 dark:text-white">Easy Returns</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">30-day return policy</div>
+              <div className="text-sm text-black dark:text-white font-medium mt-1">No questions asked returns</div>
             </div>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+          
+          <div className="flex items-start gap-3">
+            <Package className="h-5 w-5 text-black dark:text-white flex-shrink-0 mt-0.5" />
             <div>
-              <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">Secure Payment</div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">100% secure checkout</div>
+              <div className="font-medium text-gray-900 dark:text-white">Cash on Delivery</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">Available for orders above ₹999</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Product Highlights */}
+      <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Product Highlights</h3>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="flex items-center gap-3">
+            <Shield className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+            <div>
+              <div className="font-medium text-gray-900 dark:text-white">Quality Assured</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">Premium fabric & craftsmanship</div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <Clock className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+            <div>
+              <div className="font-medium text-gray-900 dark:text-white">Express Delivery</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">Same day delivery available in select cities</div>
+            </div>
+          </div>
+          
+          {product.sustainable && (
+            <div className="flex items-center gap-3">
+              <Leaf className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+              <div>
+                <div className="font-medium text-gray-900 dark:text-white">Eco-Friendly</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">Made with sustainable materials</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
