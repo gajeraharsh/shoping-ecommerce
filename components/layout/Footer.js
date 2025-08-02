@@ -102,21 +102,21 @@ export default function Footer() {
                 <Mail className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-gray-400">Email</p>
-                  <p className="text-white">hello@modave.com</p>
+                  <p className="text-white">{getContactInfo().email}</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <Phone className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-gray-400">Phone</p>
-                  <p className="text-white">+1 (555) 123-4567</p>
+                  <p className="text-white">{getContactInfo().phone}</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-gray-400">Address</p>
-                  <p className="text-white">123 Fashion Ave<br />New York, NY 10001</p>
+                  <p className="text-white">{getContactInfo().address.full}</p>
                 </div>
               </div>
             </div>
