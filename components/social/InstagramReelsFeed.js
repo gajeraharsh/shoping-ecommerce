@@ -7,7 +7,7 @@ export default function InstagramReelsFeed() {
   const [hoveredPost, setHoveredPost] = useState(null);
   const [mutedPosts, setMutedPosts] = useState(new Set());
 
-  // Mock Instagram reels/posts data with more realistic fashion content
+  // Mock Instagram reels/posts data with fashion content
   const instagramReels = [
     {
       id: 1,
@@ -18,10 +18,10 @@ export default function InstagramReelsFeed() {
       comments: 124,
       shares: 67,
       duration: '0:15',
-      caption: 'How to style our new maxi dress 3 different ways ✨ Which look is your favorite? 💕',
-      hashtags: ['#StyleTips', '#MaxiDress', '#OOTD', '#FashionHack'],
+      caption: 'How to style our new maxi dress 3 different ways ✨ Which look is your favorite?',
+      hashtags: ['#StyleTips', '#MaxiDress', '#OOTD', '#ModaveStyle'],
       userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
-      username: 'fashionista_official'
+      username: 'modave_official'
     },
     {
       id: 2,
@@ -30,10 +30,10 @@ export default function InstagramReelsFeed() {
       likes: 1923,
       comments: 89,
       shares: 43,
-      caption: 'Behind the scenes of our summer collection photoshoot 📸',
-      hashtags: ['#BTS', '#SummerCollection', '#Photoshoot'],
+      caption: 'Behind the scenes of our autumn collection photoshoot 📸',
+      hashtags: ['#BTS', '#AutumnCollection', '#Photoshoot'],
       userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face',
-      username: 'fashionista_official'
+      username: 'modave_official'
     },
     {
       id: 3,
@@ -47,7 +47,7 @@ export default function InstagramReelsFeed() {
       caption: 'Transition from day to night look in under 30 seconds! 🌙✨',
       hashtags: ['#DayToNight', '#QuickChange', '#StyleTransition'],
       userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
-      username: 'fashionista_official'
+      username: 'modave_official'
     },
     {
       id: 4,
@@ -59,7 +59,7 @@ export default function InstagramReelsFeed() {
       caption: 'Our customers looking absolutely stunning! 💖 #CustomerSpotlight',
       hashtags: ['#CustomerLove', '#RealCustomers', '#Fashion'],
       userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face',
-      username: 'fashionista_official'
+      username: 'modave_official'
     },
     {
       id: 5,
@@ -73,7 +73,7 @@ export default function InstagramReelsFeed() {
       caption: 'Sustainable fashion tips everyone should know 🌱 Save this post!',
       hashtags: ['#SustainableFashion', '#EcoFriendly', '#Tips'],
       userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
-      username: 'fashionista_official'
+      username: 'modave_official'
     },
     {
       id: 6,
@@ -85,7 +85,7 @@ export default function InstagramReelsFeed() {
       caption: 'New arrivals are here! Swipe to see the entire collection 👗',
       hashtags: ['#NewArrivals', '#Collection', '#Shopping'],
       userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face',
-      username: 'fashionista_official'
+      username: 'modave_official'
     }
   ];
 
@@ -109,40 +109,39 @@ export default function InstagramReelsFeed() {
   };
 
   return (
-    <div className="py-20 bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="container mx-auto px-4">
+    <section className="section-padding bg-white dark:bg-gray-900">
+      <div className="container-fluid">
         {/* Header Section */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="relative">
-              <Instagram className="h-10 w-10 text-transparent bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-text" />
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-full blur-lg opacity-20"></div>
+              <Instagram className="h-10 w-10 text-gray-900 dark:text-white" />
             </div>
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+            <h2 className="heading-lg text-gray-900 dark:text-white">
               Style Stories
             </h2>
           </div>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
+          <p className="body-lg text-fade max-w-3xl mx-auto mb-8">
             Get daily fashion inspiration, styling tutorials, and behind-the-scenes content from our fashion community
           </p>
           <a
-            href="https://instagram.com/fashionista_official"
+            href="https://instagram.com/modave_official"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white px-8 py-4 rounded-full hover:shadow-lg hover:shadow-pink-500/25 transition-all transform hover:scale-105 font-semibold text-lg"
+            className="btn-primary inline-flex items-center gap-3"
           >
             <Instagram className="h-6 w-6" />
-            Follow @fashionista_official
+            Follow @modave_official
             <ExternalLink className="h-5 w-5" />
           </a>
         </div>
 
         {/* Reels Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 lg:gap-8 mb-12">
           {instagramReels.map((reel) => (
             <div
               key={reel.id}
-              className="group relative bg-black rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.02]"
+              className="group relative bg-black rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-[1.02] cursor-pointer"
               style={{ aspectRatio: '9/16' }}
               onMouseEnter={() => setHoveredPost(reel.id)}
               onMouseLeave={() => setHoveredPost(null)}
@@ -160,8 +159,8 @@ export default function InstagramReelsFeed() {
               {/* Video Play Button */}
               {reel.type === 'video' && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className={`transition-all duration-300 ${hoveredPost === reel.id ? 'scale-100 opacity-100' : 'scale-75 opacity-60'}`}>
-                    <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-full p-4 hover:bg-white/30 transition-all cursor-pointer">
+                  <div className={`transition-all duration-300 ${hoveredPost === reel.id ? 'scale-100 opacity-100' : 'scale-75 opacity-70'}`}>
+                    <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-full p-4 hover:bg-white/30 transition-all">
                       <Play className="h-8 w-8 text-white fill-white ml-1" />
                     </div>
                   </div>
@@ -170,7 +169,7 @@ export default function InstagramReelsFeed() {
 
               {/* Video Duration */}
               {reel.type === 'video' && (
-                <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-md text-sm font-medium">
+                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
                   {reel.duration}
                 </div>
               )}
@@ -190,8 +189,11 @@ export default function InstagramReelsFeed() {
               {/* Audio Control for Videos */}
               {reel.type === 'video' && (
                 <button
-                  onClick={() => toggleMute(reel.id)}
-                  className="absolute top-4 right-16 bg-black/50 backdrop-blur-sm text-white p-2 rounded-full hover:bg-black/70 transition-all"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleMute(reel.id);
+                  }}
+                  className="absolute top-16 right-4 bg-black/60 backdrop-blur-sm text-white p-2 rounded-full hover:bg-black/80 transition-all"
                 >
                   {mutedPosts.has(reel.id) ? 
                     <VolumeX className="h-4 w-4" /> : 
@@ -201,21 +203,21 @@ export default function InstagramReelsFeed() {
               )}
 
               {/* Engagement Stats */}
-              <div className="absolute right-4 bottom-20 flex flex-col gap-4">
+              <div className="absolute right-4 bottom-24 flex flex-col gap-4">
                 <div className="flex flex-col items-center gap-1 text-white">
-                  <button className="p-3 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all hover:scale-110">
+                  <button className="p-3 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-all hover:scale-110">
                     <Heart className="h-6 w-6" />
                   </button>
                   <span className="text-xs font-semibold">{formatNumber(reel.likes)}</span>
                 </div>
                 <div className="flex flex-col items-center gap-1 text-white">
-                  <button className="p-3 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all hover:scale-110">
+                  <button className="p-3 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-all hover:scale-110">
                     <MessageCircle className="h-6 w-6" />
                   </button>
                   <span className="text-xs font-semibold">{formatNumber(reel.comments)}</span>
                 </div>
                 <div className="flex flex-col items-center gap-1 text-white">
-                  <button className="p-3 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all hover:scale-110">
+                  <button className="p-3 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-all hover:scale-110">
                     <Share className="h-6 w-6" />
                   </button>
                   <span className="text-xs font-semibold">{formatNumber(reel.shares)}</span>
@@ -224,14 +226,14 @@ export default function InstagramReelsFeed() {
 
               {/* Caption and Hashtags */}
               <div className="absolute bottom-4 left-4 right-20 text-white">
-                <p className="text-sm font-medium mb-2 line-clamp-2">
+                <p className="text-sm font-medium mb-2 line-clamp-2 leading-relaxed">
                   {reel.caption}
                 </p>
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-2">
                   {reel.hashtags.slice(0, 2).map((tag) => (
                     <span
                       key={tag}
-                      className="text-xs text-blue-300 hover:text-blue-200 cursor-pointer"
+                      className="text-xs text-blue-300 hover:text-blue-200 cursor-pointer font-medium"
                     >
                       {tag}
                     </span>
@@ -260,29 +262,29 @@ export default function InstagramReelsFeed() {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className="text-center card-minimal p-8">
+          <h3 className="heading-md text-gray-900 dark:text-white mb-4">
             Be Part of Our Fashion Community
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-            Tag us <span className="font-semibold text-pink-500">@fashionista_official</span> and use 
-            <span className="font-semibold text-pink-500"> #FashionistaStyle</span> for a chance to be featured in our stories!
+          <p className="body-base text-fade mb-6 max-w-2xl mx-auto">
+            Tag us <span className="font-semibold text-gray-900 dark:text-white">@modave_official</span> and use 
+            <span className="font-semibold text-gray-900 dark:text-white"> #ModaveStyle</span> for a chance to be featured in our stories!
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            {['#FashionistaStyle', '#OOTD', '#StyleTips', '#FashionInspo', '#Trendy'].map((tag) => (
+            {['#ModaveStyle', '#OOTD', '#StyleTips', '#FashionInspo', '#ElegantStyle'].map((tag) => (
               <span
                 key={tag}
-                className="px-4 py-2 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900/50 dark:to-purple-900/50 text-pink-700 dark:text-pink-300 rounded-full text-sm font-semibold hover:from-pink-200 hover:to-purple-200 dark:hover:from-pink-900/70 dark:hover:to-purple-900/70 transition-all cursor-pointer transform hover:scale-105"
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all cursor-pointer transform hover:scale-105"
               >
                 {tag}
               </span>
             ))}
           </div>
-          <button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
-            Upload Your Style
+          <button className="btn-primary">
+            Share Your Style
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

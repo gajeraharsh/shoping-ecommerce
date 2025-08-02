@@ -9,7 +9,8 @@ export const mockProducts = [
     images: [
       "https://images.pexels.com/photos/33133599/pexels-photo-33133599.jpeg",
       "https://images.pexels.com/photos/20777203/pexels-photo-20777203.jpeg",
-      "https://images.pexels.com/photos/3061814/pexels-photo-3061814.jpeg"
+      "https://images.pexels.com/photos/3061814/pexels-photo-3061814.jpeg",
+      "https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg"
     ],
     sizes: ["S", "M", "L", "XL"],
     colors: ["Blue", "Pink", "White", "Yellow"],
@@ -18,10 +19,20 @@ export const mockProducts = [
     stock: 8,
     isNew: false,
     isTrending: true,
-    description: "Beautiful floral printed kurti perfect for casual and semi-formal occasions. Made with premium cotton fabric for comfort.",
-    fabric: "100% Cotton",
+    sustainable: true,
+    description: "Beautiful floral printed kurti perfect for casual and semi-formal occasions. Made with premium organic cotton fabric for ultimate comfort and style. Features traditional block printing techniques that support local artisans.",
+    fabric: "100% Organic Cotton",
     care: "Machine wash cold, tumble dry low",
-    createdAt: "2024-01-15"
+    createdAt: "2024-01-15",
+    deliveryTime: "2-4 business days",
+    returnPolicy: "30-day easy returns",
+    highlights: [
+      "Organic cotton fabric",
+      "Hand block printed",
+      "Supports local artisans",
+      "Breathable and comfortable",
+      "Perfect for all seasons"
+    ]
   },
   {
     id: 2,
@@ -33,7 +44,8 @@ export const mockProducts = [
     images: [
       "https://images.pexels.com/photos/33161433/pexels-photo-33161433.jpeg",
       "https://images.pexels.com/photos/33167324/pexels-photo-33167324.jpeg",
-      "https://images.pexels.com/photos/33171268/pexels-photo-33171268.jpeg"
+      "https://images.pexels.com/photos/33171268/pexels-photo-33171268.jpeg",
+      "https://images.pexels.com/photos/1021693/pexels-photo-1021693.jpeg"
     ],
     sizes: ["XS", "S", "M", "L", "XL"],
     colors: ["Black", "Navy", "Maroon", "Emerald", "Wine"],
@@ -42,10 +54,20 @@ export const mockProducts = [
     stock: 15,
     isNew: true,
     isTrending: false,
-    description: "Elegant designer dress with modern cut and premium fabric. Perfect for evening events and special occasions.",
-    fabric: "Polyester Blend",
+    sustainable: false,
+    description: "Elegant designer dress with modern cut and premium fabric. Perfect for evening events and special occasions. Features contemporary silhouette with attention to detail.",
+    fabric: "Premium Polyester Blend",
     care: "Dry clean only",
-    createdAt: "2024-01-14"
+    createdAt: "2024-01-14",
+    deliveryTime: "1-3 business days",
+    returnPolicy: "30-day easy returns",
+    highlights: [
+      "Designer cut",
+      "Premium fabric",
+      "Perfect for occasions",
+      "Modern silhouette",
+      "Available in 5 colors"
+    ]
   },
   {
     id: 3,

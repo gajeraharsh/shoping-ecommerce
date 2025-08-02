@@ -4,10 +4,11 @@ import BlogCard from '@/components/blog/BlogCard';
 import BlogHero from '@/components/blog/BlogHero';
 import BlogCategories from '@/components/blog/BlogCategories';
 import BlogImage, { AuthorAvatar } from '@/components/blog/BlogImage';
+import InstagramFeed from '@/components/social/InstagramFeed';
+import InstagramReelsFeed from '@/components/social/InstagramReelsFeed';
 import { Calendar, User, Tag } from 'lucide-react';
 
 export default function BlogPage() {
-  // Mock blog posts data - replace with your CMS/database data
   const blogPosts = [
     {
       id: 1,
@@ -125,20 +126,20 @@ export default function BlogPage() {
       
       <BlogHero />
       
-      <div className="container mx-auto px-4 py-12">
+      <div className="container-fluid section-padding">
         <BlogCategories categories={categories} />
         
         {/* Featured Post */}
         {featuredPost && (
           <div className="mb-16">
             <div className="flex items-center gap-3 mb-8">
-              <div className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
+              <div className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-full text-sm font-semibold">
                 Featured Story
               </div>
-              <div className="flex-1 h-px bg-gradient-to-r from-pink-200 to-purple-200"></div>
+              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-8 shadow-xl">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-50 dark:bg-gray-800 rounded-3xl p-8 shadow-sm">
               <div className="relative group overflow-hidden rounded-2xl">
                 <BlogImage
                   src={featuredPost.image}
@@ -179,18 +180,18 @@ export default function BlogPage() {
                   </div>
                 </div>
                 
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+                <h2 className="heading-lg text-gray-900 dark:text-white mb-4">
                   {featuredPost.title}
                 </h2>
                 
-                <p className="text-gray-600 dark:text-gray-300 text-lg mb-6 leading-relaxed">
+                <p className="body-lg text-fade mb-6">
                   {featuredPost.excerpt}
                 </p>
                 
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex gap-2">
                     {featuredPost.tags.map(tag => (
-                      <span key={tag} className="bg-pink-100 dark:bg-pink-900/50 text-pink-700 dark:text-pink-400 px-3 py-1 rounded-full text-sm font-medium">
+                      <span key={tag} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm font-medium">
                         #{tag}
                       </span>
                     ))}
@@ -199,10 +200,10 @@ export default function BlogPage() {
                 
                 <a 
                   href={`/blog/${featuredPost.id}`}
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg w-fit"
+                  className="btn-primary w-fit inline-flex items-center"
                 >
                   Read Full Story
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </a>
@@ -212,8 +213,8 @@ export default function BlogPage() {
         )}
         
         {/* Regular Posts Grid */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+        <div className="mb-16">
+          <h2 className="heading-lg text-gray-900 dark:text-white mb-8 text-center">
             Latest Fashion Stories
           </h2>
           
@@ -225,12 +226,18 @@ export default function BlogPage() {
         </div>
         
         {/* Load More Button */}
-        <div className="text-center">
-          <button className="bg-white dark:bg-gray-800 border-2 border-pink-200 dark:border-pink-800 text-pink-600 dark:text-pink-400 px-8 py-4 rounded-full font-semibold hover:bg-pink-50 dark:hover:bg-pink-900/20 transition-all transform hover:scale-105">
+        <div className="text-center mb-16">
+          <button className="btn-outline">
             Load More Stories
           </button>
         </div>
       </div>
+
+      {/* Instagram Reels Section */}
+      <InstagramReelsFeed />
+      
+      {/* Instagram Feed Section */}
+      <InstagramFeed />
       
       <Footer />
     </div>

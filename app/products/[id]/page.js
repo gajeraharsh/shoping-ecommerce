@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ProductImageGallery from '@/components/products/ProductImageGallery';
 import ProductInfo from '@/components/products/ProductInfo';
 import ProductTabs from '@/components/products/ProductTabs';
 import RelatedProducts from '@/components/products/RelatedProducts';
+import RecentlyViewed from '@/components/products/RecentlyViewed';
 import { mockProducts } from '@/utils/mockData';
 
 export default function ProductDetailPage() {
@@ -28,14 +31,18 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
-        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-full overflow-x-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12">
-            <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-64 sm:h-80 md:h-96 lg:h-[600px] rounded-lg"></div>
-            <div className="space-y-4">
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-6 sm:h-8 rounded"></div>
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 sm:h-6 rounded w-3/4"></div>
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-3 sm:h-4 rounded w-1/2"></div>
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-10 sm:h-12 rounded"></div>
+        <div className="container-fluid section-padding">
+          {/* Breadcrumb Skeleton */}
+          <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 w-64 rounded mb-8"></div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-96 lg:h-[600px] rounded-2xl"></div>
+            <div className="space-y-6">
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-8 rounded"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-6 rounded w-3/4"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 rounded w-1/2"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-12 rounded"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-12 rounded"></div>
             </div>
           </div>
         </div>
@@ -48,28 +55,75 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
-        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 text-center max-w-full overflow-x-hidden">
+        <div className="container-fluid section-padding text-center">
           <div className="text-6xl mb-4">🔍</div>
           <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Product Not Found</h1>
-          <p className="text-gray-600 dark:text-gray-300">The product you're looking for doesn't exist.</p>
+          <p className="text-gray-600 dark:text-gray-300 mb-8">The product you're looking for doesn't exist.</p>
+          <Link 
+            href="/products" 
+            className="btn-primary inline-flex items-center"
+          >
+            Browse All Products
+          </Link>
         </div>
         <Footer />
       </div>
     );
   }
 
+  const breadcrumbs = [
+    { name: 'Home', href: '/' },
+    { name: 'Products', href: '/products' },
+    { name: product.category.charAt(0).toUpperCase() + product.category.slice(1), href: `/products?category=${product.category}` },
+    { name: product.name, href: '#', current: true }
+  ];
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
-      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-full overflow-x-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12 mb-6 sm:mb-8 md:mb-12">
+      
+      <div className="container-fluid section-padding">
+        {/* Breadcrumbs */}
+        <nav className="flex mb-8" aria-label="Breadcrumb">
+          <ol className="flex items-center space-x-2">
+            {breadcrumbs.map((breadcrumb, index) => (
+              <li key={breadcrumb.name} className="flex items-center">
+                {index > 0 && (
+                  <ChevronRight className="h-4 w-4 text-gray-400 mr-2" />
+                )}
+                {breadcrumb.current ? (
+                  <span className="text-gray-500 dark:text-gray-400 text-sm truncate max-w-[200px]">
+                    {breadcrumb.name}
+                  </span>
+                ) : (
+                  <Link
+                    href={breadcrumb.href}
+                    className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white text-sm transition-colors"
+                  >
+                    {breadcrumb.name}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        {/* Product Details */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <ProductImageGallery images={product.images} />
           <ProductInfo product={product} />
         </div>
         
+        {/* Product Tabs */}
         <ProductTabs product={product} />
+        
+        {/* Related Products */}
         <RelatedProducts currentProductId={product.id} />
+        
+        {/* Recently Viewed */}
+        <RecentlyViewed currentProductId={product.id} />
       </div>
+      
       <Footer />
     </div>
   );

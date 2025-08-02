@@ -12,17 +12,16 @@ export default function CartPage() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
-        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-full overflow-x-hidden">
-          <div className="text-center py-8 sm:py-12 px-4">
-            <div className="text-4xl sm:text-6xl mb-4">🛒</div>
-            <h1 className="text-xl sm:text-2xl font-bold mb-2">Your cart is empty</h1>
-            <p className="text-gray-600 mb-6 text-sm sm:text-base">Looks like you haven't added anything to your cart yet.</p>
-            <Link
-              href="/products"
-              className="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors text-sm sm:text-base"
-            >
+        <div className="container-fluid section-padding">
+          <div className="text-center py-20">
+            <div className="text-6xl mb-6">🛒</div>
+            <h1 className="heading-lg text-gray-900 dark:text-white mb-4">Your cart is empty</h1>
+            <p className="body-lg text-fade mb-8 max-w-md mx-auto">
+              Looks like you haven't added anything to your cart yet.
+            </p>
+            <Link href="/products" className="btn-primary">
               Continue Shopping
             </Link>
           </div>
@@ -33,12 +32,17 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
-      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-full overflow-x-hidden">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Shopping Cart</h1>
+      <div className="container-fluid section-padding-sm">
+        <div className="mb-8">
+          <h1 className="heading-lg text-gray-900 dark:text-white mb-2">Shopping Cart</h1>
+          <p className="body-base text-fade">
+            {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your cart
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <CartItems />
           </div>

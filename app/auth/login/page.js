@@ -27,7 +27,6 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate login
     setTimeout(() => {
       if (formData.email && formData.password) {
         login({
@@ -52,16 +51,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header />
-      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-full overflow-x-hidden">
+      <div className="container-fluid section-padding-sm">
         <div className="max-w-md mx-auto">
-          <div className="bg-white border rounded-lg p-6 sm:p-8">
-            <h1 className="text-xl sm:text-2xl font-bold text-center mb-6">Login</h1>
+          <div className="card-minimal p-8">
+            <div className="text-center mb-8">
+              <h1 className="heading-md text-gray-900 dark:text-white mb-2">Login</h1>
+              <p className="body-base text-fade">Welcome back to Modave</p>
+            </div>
             
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Email
                 </label>
                 <input
@@ -70,13 +72,14 @@ export default function LoginPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm sm:text-base"
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                  placeholder="Enter your email"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Password
                 </label>
                 <div className="relative">
@@ -86,33 +89,54 @@ export default function LoginPage() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary pr-10 text-sm sm:text-base"
+                    className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white pr-12"
+                    placeholder="Enter your password"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 text-black dark:text-white focus:ring-black dark:focus:ring-white border-gray-300 dark:border-gray-600 rounded"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    Remember me
+                  </label>
+                </div>
+
+                <div className="text-sm">
+                  <Link href="/auth/forgot-password" className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300">
+                    Forgot your password?
+                  </Link>
                 </div>
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary text-white py-3 sm:py-2.5 px-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 font-medium text-sm sm:text-base"
+                className="btn-primary w-full disabled:opacity-50"
               >
-                {loading ? 'Logging in...' : 'Login'}
+                {loading ? 'Signing in...' : 'Sign in'}
               </button>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-gray-600 text-sm sm:text-base">
+            <div className="mt-8 text-center">
+              <p className="body-base text-fade">
                 Don't have an account?{' '}
-                <Link href="/auth/register" className="text-primary hover:underline">
-                  Sign up
+                <Link href="/auth/register" className="font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300">
+                  Create account
                 </Link>
               </p>
             </div>

@@ -1,22 +1,18 @@
 export default function BlogCategories({ categories }) {
   return (
     <div className="mb-12">
-      <div className="flex flex-wrap items-center justify-center gap-4">
-        {categories.map((category, index) => (
+      <div className="flex flex-wrap justify-center gap-3 lg:gap-4">
+        {categories.map((category) => (
           <button
-            key={index}
-            className={`px-6 py-3 rounded-full font-semibold transition-all transform hover:scale-105 ${
+            key={category.name}
+            className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
               category.active
-                ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg'
-                : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-pink-300 dark:hover:border-pink-600 hover:text-pink-600 dark:hover:text-pink-400'
+                ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
             {category.name}
-            <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
-              category.active
-                ? 'bg-white/20 text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-            }`}>
+            <span className="ml-2 text-sm opacity-75">
               {category.count}
             </span>
           </button>
