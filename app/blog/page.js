@@ -4,6 +4,8 @@ import BlogCard from '@/components/blog/BlogCard';
 import BlogHero from '@/components/blog/BlogHero';
 import BlogCategories from '@/components/blog/BlogCategories';
 import BlogImage, { AuthorAvatar } from '@/components/blog/BlogImage';
+import InstagramFeed from '@/components/social/InstagramFeed';
+import InstagramReelsFeed from '@/components/social/InstagramReelsFeed';
 import { Calendar, User, Tag } from 'lucide-react';
 
 export default function BlogPage() {
@@ -198,7 +200,7 @@ export default function BlogPage() {
                 
                 <a 
                   href={`/blog/${featuredPost.id}`}
-                  className="btn-primary w-fit"
+                  className="btn-primary w-fit inline-flex items-center"
                 >
                   Read Full Story
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,7 +213,7 @@ export default function BlogPage() {
         )}
         
         {/* Regular Posts Grid */}
-        <div className="mb-12">
+        <div className="mb-16">
           <h2 className="heading-lg text-gray-900 dark:text-white mb-8 text-center">
             Latest Fashion Stories
           </h2>
@@ -224,12 +226,18 @@ export default function BlogPage() {
         </div>
         
         {/* Load More Button */}
-        <div className="text-center">
+        <div className="text-center mb-16">
           <button className="btn-outline">
             Load More Stories
           </button>
         </div>
       </div>
+
+      {/* Instagram Reels Section */}
+      <InstagramReelsFeed />
+      
+      {/* Instagram Feed Section */}
+      <InstagramFeed />
       
       <Footer />
     </div>
