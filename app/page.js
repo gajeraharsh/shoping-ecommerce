@@ -110,6 +110,12 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Instagram Reels Section */}
+        <InstagramReelsFeed />
+
+        {/* Instagram Feed Section */}
+        <InstagramFeed />
+
         {/* Testimonials */}
         <section className="section-padding bg-gray-50 dark:bg-gray-800">
           <div className="container-fluid">
