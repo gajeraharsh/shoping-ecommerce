@@ -6,6 +6,11 @@ import WriteReview from './WriteReview';
 
 export default function ProductTabs({ product }) {
   const [activeTab, setActiveTab] = useState('description');
+  const [showWriteReview, setShowWriteReview] = useState(false);
+
+  const handleReviewSubmit = (reviewData) => {
+    console.log('Review submitted:', reviewData);
+  };
 
   const tabs = [
     { id: 'description', label: 'Description', count: null },
