@@ -62,6 +62,22 @@ export default function ProductCard({ product }) {
     setShowQuickView(true);
   };
 
+  const handleComparisonToggle = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (inComparison) {
+      removeFromComparison(product.id);
+      showToast('Removed from comparison', 'info');
+    } else {
+      if (canAddMore()) {
+        addToComparison(product);
+        showToast('Added to comparison', 'success');
+      } else {
+        showToast('Maximum 4 products can be compared', 'error');
+      }
+    }
+  };
+
   return (
     <>
       <div
