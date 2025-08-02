@@ -226,7 +226,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
           </div>
 
           {/* Enhanced Product Details */}
-          <div className="p-8 overflow-y-auto bg-white dark:bg-gray-900">
+          <div className="p-8 overflow-y-auto bg-white dark:bg-gray-900 max-h-full">
             {/* Product Header */}
             <div className="mb-8">
               <h2 id="quickview-title" className="heading-md text-gray-900 dark:text-white mb-4 text-shadow-premium">
