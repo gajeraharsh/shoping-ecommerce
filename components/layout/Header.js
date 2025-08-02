@@ -9,6 +9,7 @@ import { useWishlist } from '@/contexts/WishlistContext';
 import { useComparison } from '@/contexts/ComparisonContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
+import ProductComparison from '@/components/products/ProductComparison';
 import DarkModeToggle from '@/components/ui/DarkModeToggle';
 import { BRAND } from '@/lib/brand';
 
