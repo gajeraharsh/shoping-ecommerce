@@ -27,6 +27,7 @@ export default function Header() {
 
   const cartCount = getCartItemsCount();
   const wishlistCount = wishlistItems.length;
+  const comparisonCount = getComparisonCount();
 
   // Handle click outside for profile dropdown
   useEffect(() => {
