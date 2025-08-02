@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CreditCard, Truck, MapPin } from 'lucide-react';
+import SimpleTrustBadges, { SimplePaymentBadges } from '@/components/ui/SimpleTrustBadges';
 
 export default function CheckoutForm({ onSubmit, loading }) {
   const [formData, setFormData] = useState({
@@ -211,6 +212,12 @@ export default function CheckoutForm({ onSubmit, loading }) {
           </div>
         </div>
       </div>
+
+      {/* Security Assurance */}
+      <SimpleTrustBadges className="mb-6" />
+
+      {/* Payment Security */}
+      <SimplePaymentBadges className="mb-6" />
 
       <button
         type="submit"

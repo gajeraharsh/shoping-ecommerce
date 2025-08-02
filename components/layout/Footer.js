@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight, Shield, Award } from 'lucide-react';
+// Removed trust badges import for now
 
 export default function Footer() {
   return (
@@ -114,6 +115,47 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Trust & Certifications */}
+      <div className="border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+          <div className="text-center mb-6">
+            <h3 className="text-lg font-semibold text-white mb-4">Trusted by Thousands of Customers</h3>
+            <div className="flex flex-wrap gap-2 justify-center mb-6">
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <Shield className="h-3 w-3 text-green-600" />
+                <span>SSL Secured</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                <span>PCI Compliant</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <span className="w-2 h-2 bg-purple-600 rounded-full"></span>
+                <span>Free Shipping</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <span className="w-2 h-2 bg-orange-600 rounded-full"></span>
+                <span>Easy Returns</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-center items-center gap-8 mb-6">
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-green-400" />
+              <span className="text-sm text-gray-300">SSL Secured</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="h-5 w-5 text-blue-400" />
+              <span className="text-sm text-gray-300">PCI Compliant</span>
+            </div>
+            <div className="text-sm text-gray-300">
+              Better Business Bureau A+ Rating
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Bottom Bar */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
@@ -130,6 +172,12 @@ export default function Footer() {
               </Link>
               <Link href="/cookies" className="text-gray-400 hover:text-white text-sm transition-colors">
                 Cookie Policy
+              </Link>
+              <Link href="/shipping" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Shipping Info
+              </Link>
+              <Link href="/returns" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Returns
               </Link>
             </div>
           </div>

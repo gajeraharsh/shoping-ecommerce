@@ -58,8 +58,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white">Email Us</h3>
-                  <p className="text-gray-600 dark:text-gray-300">support@fashionista.com</p>
-                  <p className="text-gray-600 dark:text-gray-300">business@fashionista.com</p>
+                  <p className="text-gray-600 dark:text-gray-300">support@modave.com</p>
+                  <p className="text-gray-600 dark:text-gray-300">business@modave.com</p>
                 </div>
               </div>
 
