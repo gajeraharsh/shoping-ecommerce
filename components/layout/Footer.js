@@ -120,7 +120,24 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
           <div className="text-center mb-6">
             <h3 className="text-lg font-semibold text-white mb-4">Trusted by Thousands of Customers</h3>
-            <TrustBadges variant="compact" className="mb-6" />
+            <div className="flex flex-wrap gap-2 justify-center mb-6">
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <Shield className="h-3 w-3 text-green-600" />
+                <span>SSL Secured</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                <span>PCI Compliant</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <span className="w-2 h-2 bg-purple-600 rounded-full"></span>
+                <span>Free Shipping</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <span className="w-2 h-2 bg-orange-600 rounded-full"></span>
+                <span>Easy Returns</span>
+              </div>
+            </div>
           </div>
 
           <div className="flex justify-center items-center gap-8 mb-6">
