@@ -58,10 +58,10 @@ export default function Header() {
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Collections', href: '/products' },
-    { name: 'New Arrivals', href: '/products?sort=newest' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Sale', href: '/products?sale=true' },
+    { name: 'Feed', href: '/feed' },
+    { name: 'Explore', href: '/explore' },
+    { name: 'Shop', href: '/products' },
+    { name: 'Community', href: '/community' },
     { name: 'About', href: '/about' }
   ];
 
@@ -124,7 +124,7 @@ export default function Header() {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <input
                 type="text"
-                placeholder="Search collections..."
+                placeholder="Search creators, posts, products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleSearchKeyPress}
@@ -228,6 +228,12 @@ export default function Header() {
                   </>
                 ) : (
                   <>
+                    <Link
+                      href="/feed"
+                      className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      Explore Feed
+                    </Link>
                     <Link
                       href="/auth/login"
                       className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
