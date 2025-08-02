@@ -84,13 +84,20 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 lg:px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 flex-shrink-0">
-            <div className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg font-bold text-xl tracking-tight">
-              M
+          <Link href="/" className="flex items-center space-x-3 flex-shrink-0 group">
+            <div className="relative">
+              <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black px-4 py-2 rounded-xl font-bold text-xl tracking-tight shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                M
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 rounded-xl opacity-0 group-hover:opacity-30 blur-sm transition-all duration-300"></div>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Modave</span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 -mt-1 hidden sm:block">Fashion & Style</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-black dark:group-hover:text-white transition-colors">
+                Modave
+              </span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 -mt-1 hidden sm:block uppercase tracking-wider font-medium">
+                Premium Fashion
+              </span>
             </div>
           </Link>
 
