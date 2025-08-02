@@ -5,6 +5,7 @@ import { WishlistProvider } from '@/contexts/WishlistContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { RecentlyViewedProvider } from '@/contexts/RecentlyViewedContext';
 import { ComparisonProvider } from '@/contexts/ComparisonContext';
+import { SocialProvider } from '@/contexts/SocialContext';
 import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
