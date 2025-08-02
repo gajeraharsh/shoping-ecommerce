@@ -44,7 +44,8 @@ export const mockProducts = [
     images: [
       "https://images.pexels.com/photos/33161433/pexels-photo-33161433.jpeg",
       "https://images.pexels.com/photos/33167324/pexels-photo-33167324.jpeg",
-      "https://images.pexels.com/photos/33171268/pexels-photo-33171268.jpeg"
+      "https://images.pexels.com/photos/33171268/pexels-photo-33171268.jpeg",
+      "https://images.pexels.com/photos/1021693/pexels-photo-1021693.jpeg"
     ],
     sizes: ["XS", "S", "M", "L", "XL"],
     colors: ["Black", "Navy", "Maroon", "Emerald", "Wine"],
@@ -53,10 +54,20 @@ export const mockProducts = [
     stock: 15,
     isNew: true,
     isTrending: false,
-    description: "Elegant designer dress with modern cut and premium fabric. Perfect for evening events and special occasions.",
-    fabric: "Polyester Blend",
+    sustainable: false,
+    description: "Elegant designer dress with modern cut and premium fabric. Perfect for evening events and special occasions. Features contemporary silhouette with attention to detail.",
+    fabric: "Premium Polyester Blend",
     care: "Dry clean only",
-    createdAt: "2024-01-14"
+    createdAt: "2024-01-14",
+    deliveryTime: "1-3 business days",
+    returnPolicy: "30-day easy returns",
+    highlights: [
+      "Designer cut",
+      "Premium fabric",
+      "Perfect for occasions",
+      "Modern silhouette",
+      "Available in 5 colors"
+    ]
   },
   {
     id: 3,
