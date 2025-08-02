@@ -40,19 +40,18 @@ export default function Footer() {
                 M
               </div>
               <div>
-                <span className="text-xl font-bold tracking-tight">Modave</span>
-                <p className="text-sm text-gray-400 uppercase tracking-wider font-medium">Premium Fashion</p>
+                <span className="text-xl font-bold tracking-tight">{BRAND.name}</span>
+                <p className="text-sm text-gray-400 uppercase tracking-wider font-medium">{BRAND.tagline}</p>
               </div>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Curating exceptional fashion experiences for the modern individual.
-              Every piece embodies elegance, uncompromising quality, and timeless sophistication.
+              {BRAND.description}
             </p>
             <div className="mb-6">
               <p className="text-sm font-medium text-gray-300 mb-2">Follow our journey</p>
               <div className="flex items-center gap-2 text-xs text-gray-400">
                 <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                <span>100K+ Happy Customers</span>
+                <span>{getTrustIndicators().customers} Happy Customers</span>
                 <span className="mx-2">•</span>
                 <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                 <span>Premium Quality Guaranteed</span>
