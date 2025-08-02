@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight, Shield, Award } from 'lucide-react';
-// Removed trust badges import for now
+import { BRAND, getSocialLinks, getContactInfo, getTrustIndicators } from '@/lib/brand';
 
 export default function Footer() {
   return (
