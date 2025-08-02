@@ -49,40 +49,40 @@ export default function ProductImageGallery({ images }) {
           <>
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 p-3 rounded-full text-gray-700 dark:text-gray-300 transition-all duration-300 opacity-0 group-hover:opacity-100"
+              className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 p-2 sm:p-3 rounded-full text-gray-700 dark:text-gray-300 transition-all duration-300 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 touch-manipulation"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-6 w-6 sm:h-5 sm:w-5" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 p-3 rounded-full text-gray-700 dark:text-gray-300 transition-all duration-300 opacity-0 group-hover:opacity-100"
+              className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 p-2 sm:p-3 rounded-full text-gray-700 dark:text-gray-300 transition-all duration-300 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 touch-manipulation"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-6 w-6 sm:h-5 sm:w-5" />
             </button>
           </>
         )}
 
         {/* Action Buttons */}
-        <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex flex-col gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
           <button
             onClick={() => setIsZoomed(!isZoomed)}
-            className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 p-2 rounded-full text-gray-700 dark:text-gray-300 transition-colors"
+            className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 p-3 sm:p-2 rounded-full text-gray-700 dark:text-gray-300 transition-colors touch-manipulation"
             title="Zoom"
           >
-            <ZoomIn className="h-4 w-4" />
+            <ZoomIn className="h-5 w-5 sm:h-4 sm:w-4" />
           </button>
           <button
             onClick={handleShare}
-            className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 p-2 rounded-full text-gray-700 dark:text-gray-300 transition-colors"
+            className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 p-3 sm:p-2 rounded-full text-gray-700 dark:text-gray-300 transition-colors touch-manipulation"
             title="Share"
           >
-            <Share2 className="h-4 w-4" />
+            <Share2 className="h-5 w-5 sm:h-4 sm:w-4" />
           </button>
         </div>
 
         {/* Image Counter */}
         {images.length > 1 && (
-          <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
+          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm sm:text-sm font-medium">
             {currentImage + 1} / {images.length}
           </div>
         )}
@@ -90,12 +90,12 @@ export default function ProductImageGallery({ images }) {
 
       {/* Thumbnail Images */}
       {images.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2">
           {images.map((image, index) => (
             <button
               key={index}
               onClick={() => setCurrentImage(index)}
-              className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+              className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 touch-manipulation ${
                 currentImage === index
                   ? 'border-black dark:border-white shadow-lg scale-105'
                   : 'border-gray-200 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-400 hover:scale-105'
