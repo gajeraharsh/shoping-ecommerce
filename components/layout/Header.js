@@ -96,9 +96,6 @@ export default function Header() {
               <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-black dark:group-hover:text-white transition-colors">
                 {BRAND.name}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 -mt-1 hidden sm:block uppercase tracking-wider font-medium">
-                {BRAND.tagline}
-              </span>
             </div>
           </Link>
 

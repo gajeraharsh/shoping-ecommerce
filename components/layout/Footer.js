@@ -41,7 +41,6 @@ export default function Footer() {
               </div>
               <div>
                 <span className="text-xl font-bold tracking-tight">{BRAND.name}</span>
-                <p className="text-sm text-gray-400 uppercase tracking-wider font-medium">{BRAND.tagline}</p>
               </div>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
