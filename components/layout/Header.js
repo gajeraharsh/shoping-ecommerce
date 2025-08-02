@@ -323,6 +323,14 @@ export default function Header() {
         onClose={() => setShowAdvancedSearch(false)}
         onSearch={handleSearch}
       />
+
+      {/* Product Comparison Modal */}
+      <ProductComparison
+        isOpen={showComparison}
+        onClose={() => setShowComparison(false)}
+        compareProducts={compareProducts}
+        onRemoveProduct={removeFromComparison}
+      />
     </header>
   );
 }
