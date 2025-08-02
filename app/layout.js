@@ -5,28 +5,29 @@ import { WishlistProvider } from '@/contexts/WishlistContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { RecentlyViewedProvider } from '@/contexts/RecentlyViewedContext';
 import { ComparisonProvider } from '@/contexts/ComparisonContext';
+import { SocialProvider } from '@/contexts/SocialContext';
 import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Modave - Premium Fashion & Style',
-  description: 'Discover exceptional fashion pieces that blend timeless style with contemporary flair. Curated collections for the modern woman.',
-  keywords: 'fashion, women clothing, premium fashion, elegant dresses, luxury fashion, online shopping, style, modave',
+  title: 'StyleSphere - Fashion Social & Shopping Platform',
+  description: 'Connect with fashion creators, discover trending styles, and shop directly from social posts. The ultimate fashion community.',
+  keywords: 'fashion social network, style influencers, fashion creators, fashion shopping, outfit inspiration, fashion community, style trends, social commerce',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
   robots: 'index, follow',
-  author: 'Modave Fashion',
+  author: 'StyleSphere',
   openGraph: {
-    title: 'Modave - Premium Fashion & Style',
-    description: 'Discover exceptional fashion pieces that blend timeless style with contemporary flair.',
+    title: 'StyleSphere - Fashion Social & Shopping Platform',
+    description: 'Connect with fashion creators, discover trending styles, and shop directly from social posts.',
     type: 'website',
     locale: 'en_US',
-    siteName: 'Modave',
+    siteName: 'StyleSphere',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Modave - Premium Fashion & Style',
-    description: 'Discover exceptional fashion pieces that blend timeless style with contemporary flair.',
+    title: 'StyleSphere - Fashion Social & Shopping Platform',
+    description: 'Connect with fashion creators, discover trending styles, and shop directly from social posts.',
   },
   verification: {
     google: 'your-google-verification-code',
@@ -38,16 +39,18 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
       <body className={`${inter.className} transition-colors overflow-x-hidden`}>
         <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <ComparisonProvider>
-                <RecentlyViewedProvider>
-                  {children}
-                  <Toaster />
-                </RecentlyViewedProvider>
-              </ComparisonProvider>
-            </WishlistProvider>
-          </CartProvider>
+          <SocialProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <ComparisonProvider>
+                  <RecentlyViewedProvider>
+                    {children}
+                    <Toaster />
+                  </RecentlyViewedProvider>
+                </ComparisonProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </SocialProvider>
         </AuthProvider>
       </body>
     </html>

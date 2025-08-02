@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight, Shield, Award } from 'lucide-react';
-import { BRAND, getSocialLinks, getContactInfo, getTrustIndicators } from '@/lib/brand';
+import { BRAND, getSocialLinks, getContactInfo, getPlatformStats } from '@/lib/brand';
 
 export default function Footer() {
   return (
@@ -37,7 +37,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-3 mb-6">
               <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 text-black px-4 py-2 rounded-xl font-bold text-xl shadow-lg">
-                M
+                S
               </div>
               <div>
                 <span className="text-xl font-bold tracking-tight">{BRAND.name}</span>
@@ -50,7 +50,7 @@ export default function Footer() {
               <p className="text-sm font-medium text-gray-300 mb-2">Follow our journey</p>
               <div className="flex items-center gap-2 text-xs text-gray-400">
                 <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                <span>{getTrustIndicators().customers} Happy Customers</span>
+                <span>{getPlatformStats().users} Active Users</span>
                 <span className="mx-2">•</span>
                 <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                 <span>Premium Quality Guaranteed</span>
@@ -73,10 +73,10 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-6">Shop</h3>
             <ul className="space-y-4">
-              <li><Link href="/products" className="text-gray-400 hover:text-white transition-colors">All Collections</Link></li>
-              <li><Link href="/products?sort=newest" className="text-gray-400 hover:text-white transition-colors">New Arrivals</Link></li>
-              <li><Link href="/products?sale=true" className="text-gray-400 hover:text-white transition-colors">Sale</Link></li>
-              <li><Link href="/products?category=bestsellers" className="text-gray-400 hover:text-white transition-colors">Bestsellers</Link></li>
+              <li><Link href="/products" className="text-gray-400 hover:text-white transition-colors">Shop Products</Link></li>
+              <li><Link href="/feed" className="text-gray-400 hover:text-white transition-colors">Style Feed</Link></li>
+              <li><Link href="/explore" className="text-gray-400 hover:text-white transition-colors">Explore Creators</Link></li>
+              <li><Link href="/community" className="text-gray-400 hover:text-white transition-colors">Community</Link></li>
               <li><Link href="/wishlist" className="text-gray-400 hover:text-white transition-colors">Wishlist</Link></li>
             </ul>
           </div>
@@ -89,7 +89,7 @@ export default function Footer() {
               <li><Link href="/shipping" className="text-gray-400 hover:text-white transition-colors">Shipping & Returns</Link></li>
               <li><Link href="/size-guide" className="text-gray-400 hover:text-white transition-colors">Size Guide</Link></li>
               <li><Link href="/faq" className="text-gray-400 hover:text-white transition-colors">FAQ</Link></li>
-              <li><Link href="/account" className="text-gray-400 hover:text-white transition-colors">My Account</Link></li>
+              <li><Link href="/account" className="text-gray-400 hover:text-white transition-colors">My Profile</Link></li>
             </ul>
           </div>
 
