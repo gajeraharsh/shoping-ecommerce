@@ -76,8 +76,8 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-md"
         onClick={onClose}
       />
       
