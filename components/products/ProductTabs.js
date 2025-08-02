@@ -63,12 +63,12 @@ export default function ProductTabs({ product }) {
     <div className="mt-16">
       <div className="border-b border-gray-200 dark:border-gray-700">
         <nav className="flex overflow-x-auto scrollbar-hide">
-          <div className="flex space-x-8 min-w-max px-1">
+          <div className="flex space-x-6 sm:space-x-8 min-w-max px-1">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-1 border-b-2 font-medium text-base whitespace-nowrap flex items-center gap-2 ${
+                className={`py-4 px-1 border-b-2 font-medium text-sm sm:text-base whitespace-nowrap flex items-center gap-2 touch-manipulation ${
                   activeTab === tab.id
                     ? 'border-black dark:border-white text-black dark:text-white'
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
@@ -98,7 +98,7 @@ export default function ProductTabs({ product }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                 {product.highlights?.map((highlight, index) => (
                   <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                    <ShieldCheck className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+                    <ShieldCheck className="h-6 w-6 sm:h-5 sm:w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
                     <span className="text-gray-900 dark:text-white font-medium">{highlight}</span>
                   </div>
                 ))}
