@@ -39,16 +39,18 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
       <body className={`${inter.className} transition-colors overflow-x-hidden`}>
         <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <ComparisonProvider>
-                <RecentlyViewedProvider>
-                  {children}
-                  <Toaster />
-                </RecentlyViewedProvider>
-              </ComparisonProvider>
-            </WishlistProvider>
-          </CartProvider>
+          <SocialProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <ComparisonProvider>
+                  <RecentlyViewedProvider>
+                    {children}
+                    <Toaster />
+                  </RecentlyViewedProvider>
+                </ComparisonProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </SocialProvider>
         </AuthProvider>
       </body>
     </html>
