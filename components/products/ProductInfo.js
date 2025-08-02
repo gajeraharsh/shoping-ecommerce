@@ -5,11 +5,13 @@ import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield, Leaf, Clock, MapPin
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/useToast';
+import SizeGuideModal from '@/components/modals/SizeGuideModal';
 
 export default function ProductInfo({ product }) {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
   
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
@@ -135,7 +137,10 @@ export default function ProductInfo({ product }) {
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Size</h3>
-          <button className="text-sm text-black dark:text-white font-medium underline hover:no-underline">
+          <button
+            onClick={() => setShowSizeGuide(true)}
+            className="text-sm text-black dark:text-white font-medium underline hover:no-underline"
+          >
             Size Guide
           </button>
         </div>
@@ -287,6 +292,13 @@ export default function ProductInfo({ product }) {
           )}
         </div>
       </div>
+
+      {/* Size Guide Modal */}
+      <SizeGuideModal
+        isOpen={showSizeGuide}
+        onClose={() => setShowSizeGuide(false)}
+        category={product.category}
+      />
     </div>
   );
 }
