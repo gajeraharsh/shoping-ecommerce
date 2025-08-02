@@ -3,11 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, Heart, ShoppingBag, User, Menu, X, Shield } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, Menu, X, Shield, GitCompare } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
+import { useComparison } from '@/contexts/ComparisonContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
+import ProductComparison from '@/components/products/ProductComparison';
 import DarkModeToggle from '@/components/ui/DarkModeToggle';
 import { BRAND } from '@/lib/brand';
 
@@ -16,14 +18,17 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
   const { getCartItemsCount } = useCart();
   const { wishlistItems } = useWishlist();
+  const { getComparisonCount, compareProducts, removeFromComparison } = useComparison();
   const { user, logout } = useAuth();
   const router = useRouter();
   const profileDropdownRef = useRef(null);
 
   const cartCount = getCartItemsCount();
   const wishlistCount = wishlistItems.length;
+  const comparisonCount = getComparisonCount();
 
   // Handle click outside for profile dropdown
   useEffect(() => {
@@ -61,7 +66,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-all duration-300">
+    <header className="bg-white/95 dark:bg-gray-900/95 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-all duration-300">
       {/* Top Bar */}
       <div className="border-b border-gray-50 dark:border-gray-800 py-2 hidden lg:block">
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
@@ -137,6 +142,19 @@ export default function Header() {
               className="lg:hidden p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               <Search className="h-5 w-5" />
+            </button>
+
+            {/* Comparison */}
+            <button
+              onClick={() => setShowComparison(true)}
+              className="relative p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
+              <GitCompare className="h-5 w-5" />
+              {comparisonCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px]">
+                  {comparisonCount}
+                </span>
+              )}
             </button>
 
             {/* Wishlist */}
@@ -304,6 +322,14 @@ export default function Header() {
         isOpen={showAdvancedSearch}
         onClose={() => setShowAdvancedSearch(false)}
         onSearch={handleSearch}
+      />
+
+      {/* Product Comparison Modal */}
+      <ProductComparison
+        isOpen={showComparison}
+        onClose={() => setShowComparison(false)}
+        compareProducts={compareProducts}
+        onRemoveProduct={removeFromComparison}
       />
     </header>
   );

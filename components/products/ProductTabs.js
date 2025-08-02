@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Star, ThumbsUp, MessageCircle, ShieldCheck, Truck, RotateCcw, Edit3 } from 'lucide-react';
 import WriteReview from './WriteReview';
+import ProductReviews from './ProductReviews';
 
 export default function ProductTabs({ product }) {
   const [activeTab, setActiveTab] = useState('description');
@@ -187,126 +188,7 @@ export default function ProductTabs({ product }) {
 
         {activeTab === 'reviews' && (
           <div className="max-w-6xl">
-            {/* Write Review Button */}
-            <div className="mb-8">
-              <button
-                onClick={() => setShowWriteReview(true)}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-medium"
-              >
-                <Edit3 className="h-4 w-4" />
-                Write a Review
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-              <div className="lg:col-span-1">
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 text-center">
-                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{product.rating}</div>
-                  <div className="flex justify-center mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-5 w-5 sm:h-5 sm:w-5 ${
-                          i < Math.floor(product.rating)
-                            ? 'fill-yellow-400 text-yellow-400'
-                            : 'text-gray-300 dark:text-gray-600'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <div className="text-gray-600 dark:text-gray-300 mb-4">Based on {product.reviews} reviews</div>
-                  
-                  <div className="space-y-2">
-                    {[5, 4, 3, 2, 1].map(rating => (
-                      <div key={rating} className="flex items-center gap-2">
-                        <span className="text-sm w-4">{rating}</span>
-                        <Star className="h-4 w-4 sm:h-3 sm:w-3 fill-yellow-400 text-yellow-400" />
-                        <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div
-                            className="bg-yellow-400 h-2 rounded-full"
-                            style={{ 
-                              width: `${rating === 5 ? 65 : rating === 4 ? 25 : rating === 3 ? 8 : rating === 2 ? 2 : 0}%` 
-                            }}
-                          />
-                        </div>
-                        <span className="text-sm text-gray-600 dark:text-gray-300 w-8">
-                          {rating === 5 ? '65%' : rating === 4 ? '25%' : rating === 3 ? '8%' : rating === 2 ? '2%' : '0%'}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="lg:col-span-2">
-                <div className="space-y-6">
-                  {mockReviews.map(review => (
-                    <div key={review.id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <span className="font-medium text-gray-900 dark:text-white">{review.user}</span>
-                            {review.verified && (
-                              <span className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                                <ShieldCheck className="h-4 w-4 sm:h-3 sm:w-3" />
-                                Verified Purchase
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <div className="flex">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className={`h-4 w-4 sm:h-4 sm:w-4 ${
-                                    i < review.rating
-                                      ? 'fill-yellow-400 text-yellow-400'
-                                      : 'text-gray-300 dark:text-gray-600'
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">{review.date}</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">{review.comment}</p>
-                      
-                      {review.images.length > 0 && (
-                        <div className="flex gap-2 mb-4">
-                          {review.images.map((image, index) => (
-                            <img
-                              key={index}
-                              src={image}
-                              alt={`Review image ${index + 1}`}
-                              className="w-16 h-16 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
-                            />
-                          ))}
-                        </div>
-                      )}
-                      
-                      <div className="flex items-center gap-4 text-sm">
-                        <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 touch-manipulation py-2">
-                          <ThumbsUp className="h-5 w-5 sm:h-4 sm:w-4" />
-                          <span className="text-sm sm:text-sm">Helpful ({review.helpful})</span>
-                        </button>
-                        <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 touch-manipulation py-2">
-                          <MessageCircle className="h-5 w-5 sm:h-4 sm:w-4" />
-                          <span className="text-sm sm:text-sm">Reply</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="mt-8 text-center">
-                  <button className="btn-outline">
-                    Load More Reviews
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ProductReviews productId={product.id} />
           </div>
         )}
 

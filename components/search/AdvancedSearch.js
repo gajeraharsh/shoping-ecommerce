@@ -74,11 +74,12 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-[60]">
       {/* Full Page Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-md"
         onClick={onClose}
+        style={{ backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
       />
 
       {/* Search Modal Container */}

@@ -18,7 +18,16 @@ export default function ProductFilters({ filters, onFilterChange }) {
   ];
 
   const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-  const colors = ['Black', 'White', 'Blue', 'Red', 'Pink', 'Green', 'Grey', 'Navy'];
+  const colors = [
+    { name: 'Black', value: 'black', hex: '#000000' },
+    { name: 'White', value: 'white', hex: '#FFFFFF' },
+    { name: 'Blue', value: 'blue', hex: '#3B82F6' },
+    { name: 'Red', value: 'red', hex: '#EF4444' },
+    { name: 'Pink', value: 'pink', hex: '#EC4899' },
+    { name: 'Green', value: 'green', hex: '#10B981' },
+    { name: 'Grey', value: 'grey', hex: '#6B7280' },
+    { name: 'Navy', value: 'navy', hex: '#1E3A8A' }
+  ];
 
   const handleFilterChange = (key, value) => {
     onFilterChange({ [key]: value });
@@ -94,15 +103,15 @@ export default function ProductFilters({ filters, onFilterChange }) {
         <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-4 gap-3">
           {colors.map(color => (
             <button
-              key={color}
-              onClick={() => handleFilterChange('color', filters.color === color ? '' : color)}
+              key={color.value}
+              onClick={() => handleFilterChange('color', filters.color === color.value ? '' : color.value)}
               className={`w-8 h-8 rounded-full border-2 transition-all ${
-                filters.color === color
+                filters.color === color.value
                   ? 'border-gray-900 dark:border-white scale-110 shadow-md'
                   : 'border-gray-200 dark:border-gray-600 hover:scale-105 hover:border-gray-400 dark:hover:border-gray-500'
-              }`}
-              style={{ backgroundColor: color.toLowerCase() }}
-              title={color}
+              } ${color.value === 'white' ? 'border-gray-300' : ''}`}
+              style={{ backgroundColor: color.hex }}
+              title={color.name}
             />
           ))}
         </div>

@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Heart, Star, ShoppingBag, Eye } from 'lucide-react';
+import { Heart, Star, ShoppingBag, Eye, GitCompare } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
+import { useComparison } from '@/contexts/ComparisonContext';
 import { useToast } from '@/hooks/useToast';
 import QuickViewModal from '@/components/modals/QuickViewModal';
 
@@ -15,9 +16,11 @@ export default function ProductCard({ product }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const { addToComparison, removeFromComparison, isInComparison, canAddMore } = useComparison();
   const { showToast } = useToast();
   
   const inWishlist = isInWishlist(product.id);
+  const inComparison = isInComparison(product.id);
 
   // Image cycling effect on hover
   useEffect(() => {
@@ -59,15 +62,31 @@ export default function ProductCard({ product }) {
     setShowQuickView(true);
   };
 
+  const handleComparisonToggle = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (inComparison) {
+      removeFromComparison(product.id);
+      showToast('Removed from comparison', 'info');
+    } else {
+      if (canAddMore()) {
+        addToComparison(product);
+        showToast('Added to comparison', 'success');
+      } else {
+        showToast('Maximum 4 products can be compared', 'error');
+      }
+    }
+  };
+
   return (
     <>
       <div
-        className="group relative bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300 hover:shadow-lg"
+        className="group relative bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300 hover:shadow-lg rounded-xl border border-gray-100 dark:border-gray-800"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <Link href={`/products/${product.id}`}>
-          <div className="relative aspect-[3/4] overflow-hidden bg-gray-50 dark:bg-gray-800">
+          <div className="relative aspect-[3/4] overflow-hidden bg-gray-50 dark:bg-gray-800 rounded-t-xl">
             {!imageLoaded && (
               <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse"></div>
             )}
@@ -87,29 +106,44 @@ export default function ProductCard({ product }) {
               </div>
             )}
 
-            {/* Wishlist Button */}
-            <button
-              onClick={handleWishlistToggle}
-              className={`absolute top-4 right-4 p-2 rounded-full transition-all ${
-                inWishlist
-                  ? 'bg-red-50 text-red-500'
-                  : 'bg-white/90 text-gray-600 hover:text-red-500'
-              } opacity-0 group-hover:opacity-100`}
-            >
-              <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
-            </button>
+            {/* Action Buttons */}
+            <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all">
+              <button
+                onClick={handleWishlistToggle}
+                className={`p-2 rounded-full transition-all ${
+                  inWishlist
+                    ? 'bg-red-50 text-red-500'
+                    : 'bg-white/90 text-gray-600 hover:text-red-500'
+                }`}
+                title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+              >
+                <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+              </button>
+
+              <button
+                onClick={handleComparisonToggle}
+                className={`p-2 rounded-full transition-all ${
+                  inComparison
+                    ? 'bg-blue-50 text-blue-500'
+                    : 'bg-white/90 text-gray-600 hover:text-blue-500'
+                }`}
+                title={inComparison ? 'Remove from comparison' : 'Add to comparison'}
+              >
+                <GitCompare className={`h-5 w-5 ${inComparison ? 'fill-current' : ''}`} />
+              </button>
+            </div>
 
             {/* Quick Actions */}
             <div className="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
               <button
                 onClick={handleQuickAdd}
-                className="flex-1 bg-black text-white py-3 text-sm font-medium hover:bg-gray-800 transition-colors"
+                className="flex-1 bg-black text-white py-2.5 px-4 text-sm font-medium hover:bg-gray-800 transition-colors rounded-lg"
               >
                 Add to Cart
               </button>
               <button
                 onClick={handleQuickView}
-                className="bg-white text-gray-900 p-3 hover:bg-gray-50 transition-colors"
+                className="bg-white text-gray-900 p-2.5 hover:bg-gray-50 transition-colors rounded-lg"
                 title="Quick View"
               >
                 <Eye className="h-4 w-4" />
