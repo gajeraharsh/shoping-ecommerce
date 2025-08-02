@@ -67,7 +67,7 @@ export default function ProductCard({ product }) {
         onMouseLeave={() => setIsHovered(false)}
       >
         <Link href={`/products/${product.id}`}>
-          <div className="relative aspect-[3/4] overflow-hidden bg-gray-50 dark:bg-gray-800">
+          <div className="relative aspect-[3/4] overflow-hidden bg-gray-50 dark:bg-gray-800 rounded-t-xl">
             {!imageLoaded && (
               <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse"></div>
             )}
