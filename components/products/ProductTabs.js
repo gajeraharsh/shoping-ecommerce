@@ -368,9 +368,9 @@ export default function ProductTabs({ product }) {
           <div className="max-w-4xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h3 className="font-semibold text-xl mb-6 text-gray-900 dark:text-white flex items-center gap-2">
-                  <Truck className="h-6 w-6" />
-                  Delivery Information
+                <h3 className="font-semibold text-lg sm:text-xl mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+                  <Truck className="h-7 w-7 sm:h-6 sm:w-6" />
+                  <span className="text-lg sm:text-xl">Delivery Information</span>
                 </h3>
                 
                 <div className="space-y-6">
@@ -397,9 +397,9 @@ export default function ProductTabs({ product }) {
               </div>
               
               <div>
-                <h3 className="font-semibold text-xl mb-6 text-gray-900 dark:text-white flex items-center gap-2">
-                  <RotateCcw className="h-6 w-6" />
-                  Returns & Exchange
+                <h3 className="font-semibold text-lg sm:text-xl mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+                  <RotateCcw className="h-7 w-7 sm:h-6 sm:w-6" />
+                  <span className="text-lg sm:text-xl">Returns & Exchange</span>
                 </h3>
                 
                 <div className="space-y-6">
