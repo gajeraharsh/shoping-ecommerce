@@ -5,118 +5,149 @@ export default function InstagramFeed() {
   const instagramPosts = [
     {
       id: 1,
-      image: 'https://images.pexels.com/photos/994517/pexels-photo-994517.jpeg',
-      likes: 245,
-      comments: 12,
-      caption: 'Summer vibes in our new floral kurti collection! 🌸 #FashionistaStyle #SummerFashion'
+      image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop',
+      likes: 2847,
+      comments: 124,
+      caption: 'Elegant summer collection featuring our bestselling maxi dress ✨ #ModaveStyle'
     },
     {
       id: 2,
-      image: 'https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg',
-      likes: 189,
-      comments: 8,
-      caption: 'Elegant evening wear for special occasions ✨ #EveningWear #Fashionista'
+      image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
+      likes: 1923,
+      comments: 89,
+      caption: 'Behind the scenes at our autumn photoshoot 📸 #BehindTheScenes'
     },
     {
       id: 3,
-      image: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg',
-      likes: 312,
-      comments: 15,
-      caption: 'Casual chic never goes out of style 💫 #CasualWear #OOTD'
+      image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=400&fit=crop',
+      likes: 3456,
+      comments: 156,
+      caption: 'Sustainable fashion meets contemporary style 🌱 #SustainableFashion'
     },
     {
       id: 4,
-      image: 'https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg',
-      likes: 156,
-      comments: 6,
-      caption: 'Traditional meets modern in our ethnic collection 🎨 #Traditional #Modern'
+      image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop',
+      likes: 2167,
+      comments: 92,
+      caption: 'Customer spotlight: Looking absolutely stunning! 💫 #CustomerLove'
     },
     {
       id: 5,
-      image: 'https://images.pexels.com/photos/994517/pexels-photo-994517.jpeg',
-      likes: 278,
-      comments: 18,
-      caption: 'Behind the scenes at our latest photoshoot 📸 #BTS #Fashion'
+      image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=400&fit=crop',
+      likes: 1876,
+      comments: 78,
+      caption: 'New arrivals: Timeless pieces for modern women 👗 #NewArrivals'
     },
     {
       id: 6,
-      image: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg',
-      likes: 201,
-      comments: 9,
-      caption: 'Customer spotlight! Looking gorgeous in our designs 💖 #CustomerLove'
+      image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=400&fit=crop',
+      likes: 2345,
+      comments: 103,
+      caption: 'Effortless elegance in our workwear collection 💼 #WorkwearStyle'
+    },
+    {
+      id: 7,
+      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop',
+      likes: 1654,
+      comments: 67,
+      caption: 'Evening glamour redefined ✨ #EveningWear'
+    },
+    {
+      id: 8,
+      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=400&fit=crop',
+      likes: 2789,
+      comments: 134,
+      caption: 'Casual sophistication for everyday moments 🌸 #CasualChic'
     }
   ];
 
+  const formatNumber = (num) => {
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'k';
+    }
+    return num.toString();
+  };
+
   return (
-    <div className="py-16 bg-gray-50 dark:bg-gray-800">
-      <div className="container mx-auto px-4">
+    <section className="section-padding bg-gray-50 dark:bg-gray-800">
+      <div className="container-fluid">
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Instagram className="h-8 w-8 text-pink-500" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Follow Us on Instagram</h2>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <Instagram className="h-8 w-8 text-gray-900 dark:text-white" />
+            <h2 className="heading-lg text-gray-900 dark:text-white">Follow Our Journey</h2>
           </div>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6">
+          <p className="body-lg text-fade max-w-2xl mx-auto mb-8">
             Get daily fashion inspiration, styling tips, and behind-the-scenes content from our community
           </p>
           <a
-            href="https://instagram.com/fashionista"
+            href="https://instagram.com/modave_official"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 font-medium"
+            className="btn-primary inline-flex items-center gap-2"
           >
             <Instagram className="h-5 w-5" />
-            @fashionista
+            @modave_official
             <ExternalLink className="h-4 w-4" />
           </a>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {/* Instagram Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-12">
           {instagramPosts.map((post) => (
-            <div
+            <a
               key={post.id}
-              className="group relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer"
+              href={`https://instagram.com/modave_official`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-xl overflow-hidden block"
             >
               <img
                 src={post.image}
                 alt="Instagram post"
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
               
               {/* Hover overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                <div className="text-white text-center">
-                  <div className="flex items-center justify-center gap-4 mb-2">
-                    <div className="flex items-center gap-1">
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-300 flex items-center justify-center">
+                <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform scale-75 group-hover:scale-100">
+                  <div className="flex items-center justify-center gap-6 mb-3">
+                    <div className="flex items-center gap-2">
                       <Heart className="h-5 w-5 fill-white" />
-                      <span className="font-medium">{post.likes}</span>
+                      <span className="font-semibold">{formatNumber(post.likes)}</span>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <MessageCircle className="h-5 w-5" />
-                      <span className="font-medium">{post.comments}</span>
+                      <span className="font-semibold">{formatNumber(post.comments)}</span>
                     </div>
                   </div>
-                  <Instagram className="h-6 w-6 mx-auto" />
+                  <Instagram className="h-8 w-8 mx-auto" />
                 </div>
               </div>
 
-              {/* Instagram icon */}
-              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Instagram className="h-5 w-5 text-white" />
+              {/* Instagram icon indicator */}
+              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-black/50 backdrop-blur-sm rounded-full p-2">
+                  <Instagram className="h-4 w-4 text-white" />
+                </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
 
-        <div className="text-center mt-8">
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Tag us <span className="font-semibold text-pink-500">@fashionista</span> and use
-            <span className="font-semibold text-pink-500"> #FashionistaStyle</span> for a chance to be featured!
+        {/* Call to Action */}
+        <div className="text-center bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm">
+          <h3 className="heading-sm text-gray-900 dark:text-white mb-4">
+            Join Our Style Community
+          </h3>
+          <p className="body-base text-fade mb-6">
+            Tag us <span className="font-semibold text-gray-900 dark:text-white">@modave_official</span> and use
+            <span className="font-semibold text-gray-900 dark:text-white"> #ModaveStyle</span> for a chance to be featured!
           </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {['#FashionistaStyle', '#OOTD', '#EthnicWear', '#CasualChic', '#Traditional'].map((tag) => (
+          <div className="flex flex-wrap justify-center gap-3">
+            {['#ModaveStyle', '#OOTD', '#ElegantFashion', '#TimelessStyle', '#ModernWoman'].map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 bg-pink-100 dark:bg-pink-900/50 text-pink-700 dark:text-pink-400 rounded-full text-sm font-medium hover:bg-pink-200 dark:hover:bg-pink-900/70 transition-colors cursor-pointer"
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
               >
                 {tag}
               </span>
@@ -124,6 +155,6 @@ export default function InstagramFeed() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
