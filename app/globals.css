@@ -49,19 +49,36 @@
   }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-optical-sizing: auto;
     overflow-x: hidden;
     min-height: 100vh;
     min-height: 100dvh;
+    letter-spacing: -0.011em;
   }
   html {
     overflow-x: hidden;
     scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-weight: 700;
+    letter-spacing: -0.04em;
   }
 
   /* Prevent horizontal overflow on all containers */
