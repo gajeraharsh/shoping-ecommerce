@@ -25,24 +25,24 @@ export default function ProductFilters({ filters, onFilterChange }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 lg:p-6 space-y-4 lg:space-y-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white lg:block hidden">Filters</h3>
+    <div className="card-minimal p-6 space-y-6">
+      <h3 className="heading-sm text-gray-900 dark:text-white lg:block hidden">Filters</h3>
       
       {/* Category Filter */}
       <div>
-        <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Category</h4>
-        <div className="space-y-2">
+        <h4 className="font-medium mb-4 text-gray-900 dark:text-white">Category</h4>
+        <div className="space-y-3">
           {categories.map(category => (
-            <label key={category.value} className="flex items-center">
+            <label key={category.value} className="flex items-center cursor-pointer">
               <input
                 type="radio"
                 name="category"
                 value={category.value}
                 checked={filters.category === category.value}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
-                className="mr-2"
+                className="mr-3 h-4 w-4 text-black dark:text-white focus:ring-black dark:focus:ring-white border-gray-300 dark:border-gray-600"
               />
-              <span className="text-sm text-gray-700 dark:text-gray-300">{category.label}</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">{category.label}</span>
             </label>
           ))}
         </div>
@@ -50,19 +50,19 @@ export default function ProductFilters({ filters, onFilterChange }) {
 
       {/* Price Filter */}
       <div>
-        <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Price Range</h4>
-        <div className="space-y-2">
+        <h4 className="font-medium mb-4 text-gray-900 dark:text-white">Price Range</h4>
+        <div className="space-y-3">
           {priceRanges.map(range => (
-            <label key={range.value} className="flex items-center">
+            <label key={range.value} className="flex items-center cursor-pointer">
               <input
                 type="radio"
                 name="priceRange"
                 value={range.value}
                 checked={filters.priceRange === range.value}
                 onChange={(e) => handleFilterChange('priceRange', e.target.value)}
-                className="mr-2"
+                className="mr-3 h-4 w-4 text-black dark:text-white focus:ring-black dark:focus:ring-white border-gray-300 dark:border-gray-600"
               />
-              <span className="text-sm text-gray-700 dark:text-gray-300">{range.label}</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">{range.label}</span>
             </label>
           ))}
         </div>
@@ -70,16 +70,16 @@ export default function ProductFilters({ filters, onFilterChange }) {
 
       {/* Size Filter */}
       <div>
-        <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Size</h4>
+        <h4 className="font-medium mb-4 text-gray-900 dark:text-white">Size</h4>
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-2">
           {sizes.map(size => (
             <button
               key={size}
               onClick={() => handleFilterChange('size', filters.size === size ? '' : size)}
-              className={`px-2 lg:px-3 py-1.5 lg:py-1 text-xs lg:text-sm border rounded transition-colors ${
+              className={`px-3 py-2 text-sm border rounded-lg transition-all font-medium ${
                 filters.size === size
-                  ? 'bg-primary text-white border-primary'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary bg-white dark:bg-gray-700'
+                  ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white'
+                  : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500 bg-white dark:bg-gray-800'
               }`}
             >
               {size}
@@ -90,16 +90,16 @@ export default function ProductFilters({ filters, onFilterChange }) {
 
       {/* Color Filter */}
       <div>
-        <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Color</h4>
-        <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-4 gap-2">
+        <h4 className="font-medium mb-4 text-gray-900 dark:text-white">Color</h4>
+        <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-4 gap-3">
           {colors.map(color => (
             <button
               key={color}
               onClick={() => handleFilterChange('color', filters.color === color ? '' : color)}
-              className={`w-7 h-7 lg:w-8 lg:h-8 rounded-full border-2 transition-all ${
+              className={`w-8 h-8 rounded-full border-2 transition-all ${
                 filters.color === color
-                  ? 'border-gray-900 dark:border-white scale-110'
-                  : 'border-gray-300 dark:border-gray-600 hover:scale-105'
+                  ? 'border-gray-900 dark:border-white scale-110 shadow-md'
+                  : 'border-gray-200 dark:border-gray-600 hover:scale-105 hover:border-gray-400 dark:hover:border-gray-500'
               }`}
               style={{ backgroundColor: color.toLowerCase() }}
               title={color}
@@ -116,7 +116,7 @@ export default function ProductFilters({ filters, onFilterChange }) {
           size: '',
           color: ''
         })}
-        className="w-full text-center text-primary hover:underline text-sm py-2 border border-primary/20 rounded-lg hover:bg-primary/5 transition-colors"
+        className="w-full text-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white text-sm py-3 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-medium"
       >
         Clear All Filters
       </button>
