@@ -170,7 +170,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              © 2024 Modave. All rights reserved.
+              © 2024 {BRAND.name}. All rights reserved.
             </p>
             <div className="flex flex-wrap gap-6">
               <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
