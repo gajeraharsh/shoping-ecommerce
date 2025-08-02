@@ -61,7 +61,7 @@ export default function Header() {
   ];
 
   return (
-    <header className={`bg-white/95 dark:bg-gray-900/95 ${!showAdvancedSearch ? 'backdrop-blur-md' : ''} border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-all duration-300`}>
+    <header className="bg-white/95 dark:bg-gray-900/95 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-all duration-300">
       {/* Top Bar */}
       <div className="border-b border-gray-50 dark:border-gray-800 py-2 hidden lg:block">
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
