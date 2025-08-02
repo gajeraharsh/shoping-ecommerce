@@ -255,9 +255,9 @@ export default function PrivacyPage() {
                 If you have any questions about this privacy policy or our data practices, please contact us:
               </p>
               <div className="space-y-2 text-gray-600">
-                <p><strong>Email:</strong> privacy@fashionista.com</p>
+                <p><strong>Email:</strong> privacy@modave.com</p>
                 <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                <p><strong>Mail:</strong> Fashionista Privacy Team, 123 Fashion Street, New York, NY 10001</p>
+                <p><strong>Mail:</strong> Modave Privacy Team, 123 Fashion Avenue, New York, NY 10001</p>
               </div>
             </section>
           </div>
