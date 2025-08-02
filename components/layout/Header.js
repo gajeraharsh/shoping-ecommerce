@@ -65,12 +65,17 @@ export default function Header() {
       <div className="border-b border-gray-50 dark:border-gray-800 py-2 hidden lg:block">
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
           <div className="flex items-center space-x-6">
+            <div className="flex items-center gap-1">
+              <Shield className="h-3 w-3 text-green-600" />
+              <span>Secure Shopping</span>
+            </div>
+            <span>•</span>
             <span>Free shipping on orders over ₹2,999</span>
             <span>•</span>
             <span>24/7 Customer Support</span>
           </div>
           <div className="flex items-center space-x-4">
-            <span>English</span>
+            <span>🇮🇳 English</span>
             <span>₹ INR</span>
           </div>
         </div>
