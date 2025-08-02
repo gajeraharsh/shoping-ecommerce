@@ -17,8 +17,10 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
   const { getCartItemsCount } = useCart();
   const { wishlistItems } = useWishlist();
+  const { getComparisonCount, compareProducts, removeFromComparison } = useComparison();
   const { user, logout } = useAuth();
   const router = useRouter();
   const profileDropdownRef = useRef(null);
