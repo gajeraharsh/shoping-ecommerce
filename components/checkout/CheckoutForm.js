@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CreditCard, Truck, MapPin } from 'lucide-react';
+import TrustBadges, { PaymentSecurityBadges } from '@/components/ui/TrustBadges';
 
 export default function CheckoutForm({ onSubmit, loading }) {
   const [formData, setFormData] = useState({
