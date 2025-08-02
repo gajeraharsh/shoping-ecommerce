@@ -18,7 +18,16 @@ export default function ProductFilters({ filters, onFilterChange }) {
   ];
 
   const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-  const colors = ['Black', 'White', 'Blue', 'Red', 'Pink', 'Green', 'Grey', 'Navy'];
+  const colors = [
+    { name: 'Black', value: 'black', hex: '#000000' },
+    { name: 'White', value: 'white', hex: '#FFFFFF' },
+    { name: 'Blue', value: 'blue', hex: '#3B82F6' },
+    { name: 'Red', value: 'red', hex: '#EF4444' },
+    { name: 'Pink', value: 'pink', hex: '#EC4899' },
+    { name: 'Green', value: 'green', hex: '#10B981' },
+    { name: 'Grey', value: 'grey', hex: '#6B7280' },
+    { name: 'Navy', value: 'navy', hex: '#1E3A8A' }
+  ];
 
   const handleFilterChange = (key, value) => {
     onFilterChange({ [key]: value });
