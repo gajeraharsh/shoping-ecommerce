@@ -93,7 +93,7 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-3 flex-shrink-0 group">
             <div className="relative">
               <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black px-4 py-2 rounded-xl font-bold text-xl tracking-tight shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                M
+                S
               </div>
               <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 rounded-xl opacity-0 group-hover:opacity-30 blur-sm transition-all duration-300"></div>
             </div>
