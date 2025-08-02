@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { ChevronDown, Search } from 'lucide-react';
+import TrustFAQ from '@/components/ui/TrustFAQ';
 
 export default function FAQPage() {
   const [searchQuery, setSearchQuery] = useState('');
