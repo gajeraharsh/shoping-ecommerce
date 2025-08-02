@@ -16,6 +16,7 @@ export default function ProductCard({ product }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const { addToComparison, removeFromComparison, isInComparison, canAddMore } = useComparison();
   const { showToast } = useToast();
   
   const inWishlist = isInWishlist(product.id);
