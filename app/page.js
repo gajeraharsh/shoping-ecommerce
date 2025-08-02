@@ -63,7 +63,7 @@ export default function Home() {
                 Your security and satisfaction are our top priorities. We've implemented industry-leading measures to protect your data and ensure a seamless shopping experience.
               </p>
             </div>
-            <TrustBadges />
+            <SimpleTrustSection />
           </div>
         </section>
 
