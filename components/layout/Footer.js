@@ -1,81 +1,136 @@
 import Link from 'next/link';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 dark:bg-gray-950 text-white w-full overflow-hidden">
-      <div className="container mx-auto px-2 sm:px-4 py-8 sm:py-12 max-w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 lg:gap-8">
+    <footer className="bg-gray-900 dark:bg-black text-white">
+      {/* Newsletter Section */}
+      <div className="border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-3xl font-bold mb-4">Stay in Style</h3>
+              <p className="text-gray-400 text-lg">
+                Subscribe to our newsletter for exclusive access to new collections, styling tips, and special offers.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                className="flex-1 px-6 py-4 bg-gray-800 border border-gray-700 rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+              />
+              <button className="bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center group">
+                Subscribe
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
-          <div className="col-span-1 sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="bg-primary text-white px-2 sm:px-3 py-1 rounded-lg font-bold text-base sm:text-lg">
-                F
+          <div className="lg:col-span-1">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="bg-white text-black px-4 py-2 rounded-lg font-bold text-xl">
+                M
               </div>
-              <span className="text-base sm:text-lg font-bold truncate">Fashionista</span>
+              <div>
+                <span className="text-xl font-bold">Modave</span>
+                <p className="text-sm text-gray-400">Fashion & Style</p>
+              </div>
             </div>
-            <p className="text-gray-400 dark:text-gray-300 mb-4 text-xs sm:text-sm md:text-base leading-relaxed">
-              Your destination for premium fashion. Discover the latest trends and timeless classics.
+            <p className="text-gray-400 mb-6 leading-relaxed">
+              Curating exceptional fashion experiences for the modern woman. 
+              Every piece tells a story of elegance, quality, and timeless style.
             </p>
-            <div className="flex space-x-3 sm:space-x-4">
-              <Facebook className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-300 hover:text-white cursor-pointer transition-colors" />
-              <Instagram className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-300 hover:text-white cursor-pointer transition-colors" />
-              <Twitter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-300 hover:text-white cursor-pointer transition-colors" />
+            <div className="flex space-x-4">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <Instagram className="h-6 w-6" />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <Facebook className="h-6 w-6" />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <Twitter className="h-6 w-6" />
+              </a>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Shop */}
           <div>
-            <h3 className="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4">Quick Links</h3>
-            <ul className="space-y-1.5 sm:space-y-2">
-              <li><Link href="/products" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">All Products</Link></li>
-              <li><Link href="/products?category=kurtis" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">Kurtis</Link></li>
-              <li><Link href="/products?category=dresses" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">Dresses</Link></li>
-              <li><Link href="/products?category=ethnic" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">Ethnic Wear</Link></li>
-              <li><Link href="/wishlist" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">Wishlist</Link></li>
+            <h3 className="text-lg font-semibold mb-6">Shop</h3>
+            <ul className="space-y-4">
+              <li><Link href="/products" className="text-gray-400 hover:text-white transition-colors">All Collections</Link></li>
+              <li><Link href="/products?sort=newest" className="text-gray-400 hover:text-white transition-colors">New Arrivals</Link></li>
+              <li><Link href="/products?sale=true" className="text-gray-400 hover:text-white transition-colors">Sale</Link></li>
+              <li><Link href="/products?category=bestsellers" className="text-gray-400 hover:text-white transition-colors">Bestsellers</Link></li>
+              <li><Link href="/wishlist" className="text-gray-400 hover:text-white transition-colors">Wishlist</Link></li>
             </ul>
           </div>
 
-          {/* Customer Service */}
+          {/* Support */}
           <div>
-            <h3 className="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4">Customer Service</h3>
-            <ul className="space-y-1.5 sm:space-y-2">
-              <li><Link href="/contact" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">Contact Us</Link></li>
-              <li><Link href="/shipping" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">Shipping Info</Link></li>
-              <li><Link href="/returns" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">Returns</Link></li>
-              <li><Link href="/size-guide" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">Size Guide</Link></li>
-              <li><Link href="/faq" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm md:text-base transition-colors">FAQ</Link></li>
+            <h3 className="text-lg font-semibold mb-6">Support</h3>
+            <ul className="space-y-4">
+              <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link href="/shipping" className="text-gray-400 hover:text-white transition-colors">Shipping & Returns</Link></li>
+              <li><Link href="/size-guide" className="text-gray-400 hover:text-white transition-colors">Size Guide</Link></li>
+              <li><Link href="/faq" className="text-gray-400 hover:text-white transition-colors">FAQ</Link></li>
+              <li><Link href="/account" className="text-gray-400 hover:text-white transition-colors">My Account</Link></li>
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact */}
           <div>
-            <h3 className="text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4">Contact Info</h3>
-            <div className="space-y-2 sm:space-y-3">
-              <div className="flex items-start space-x-2 sm:space-x-3">
-                <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-gray-400 dark:text-gray-300 text-xs sm:text-sm md:text-base break-all">support@fashionista.com</span>
+            <h3 className="text-lg font-semibold mb-6">Contact</h3>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <Mail className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-400">Email</p>
+                  <p className="text-white">hello@modave.com</p>
+                </div>
               </div>
-              <div className="flex items-start space-x-2 sm:space-x-3">
-                <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-gray-400 dark:text-gray-300 text-xs sm:text-sm md:text-base">+1 (555) 123-4567</span>
+              <div className="flex items-start space-x-3">
+                <Phone className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-400">Phone</p>
+                  <p className="text-white">+1 (555) 123-4567</p>
+                </div>
               </div>
-              <div className="flex items-start space-x-2 sm:space-x-3">
-                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-gray-400 dark:text-gray-300 text-xs sm:text-sm md:text-base">123 Fashion St, NY 10001</span>
+              <div className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-400">Address</p>
+                  <p className="text-white">123 Fashion Ave<br />New York, NY 10001</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="border-t border-gray-800 dark:border-gray-700 mt-6 sm:mt-8 pt-6 sm:pt-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
-            <p className="text-gray-400 dark:text-gray-300 text-xs sm:text-sm text-center sm:text-left">
-              &copy; 2024 Fashionista. All rights reserved.
+      {/* Bottom Bar */}
+      <div className="border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-400 text-sm">
+              © 2024 Modave. All rights reserved.
             </p>
-            <div className="flex flex-wrap justify-center sm:justify-end space-x-3 sm:space-x-4 lg:space-x-6">
-              <Link href="/privacy" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm transition-colors whitespace-nowrap">Privacy Policy</Link>
-              <Link href="/terms" className="text-gray-400 dark:text-gray-300 hover:text-white text-xs sm:text-sm transition-colors whitespace-nowrap">Terms of Service</Link>
+            <div className="flex flex-wrap gap-6">
+              <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Terms of Service
+              </Link>
+              <Link href="/cookies" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Cookie Policy
+              </Link>
             </div>
           </div>
         </div>
