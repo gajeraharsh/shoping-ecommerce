@@ -13,7 +13,7 @@ export default function CartItems() {
         <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">Cart Items ({cartItems.length})</h2>
       </div>
       
-      <div className="divide-y">
+      <div className="divide-y divide-gray-200 dark:divide-gray-700">
         {cartItems.map(item => (
           <div key={item.cartId} className="p-4 sm:p-6">
             {/* Mobile Layout */}
