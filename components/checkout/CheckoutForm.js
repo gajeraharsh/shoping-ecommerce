@@ -213,6 +213,12 @@ export default function CheckoutForm({ onSubmit, loading }) {
         </div>
       </div>
 
+      {/* Security Assurance */}
+      <TrustBadges variant="checkout" className="mb-6" />
+
+      {/* Payment Security */}
+      <PaymentSecurityBadges className="mb-6" />
+
       <button
         type="submit"
         disabled={loading}
