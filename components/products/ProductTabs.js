@@ -1,10 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Star, ThumbsUp, MessageCircle, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
+import { Star, ThumbsUp, MessageCircle, ShieldCheck, Truck, RotateCcw, Edit3 } from 'lucide-react';
+import WriteReview from './WriteReview';
 
 export default function ProductTabs({ product }) {
   const [activeTab, setActiveTab] = useState('description');
+  const [showWriteReview, setShowWriteReview] = useState(false);
+
+  const handleReviewSubmit = (reviewData) => {
+    console.log('Review submitted:', reviewData);
+  };
 
   const tabs = [
     { id: 'description', label: 'Description', count: null },
@@ -181,6 +187,17 @@ export default function ProductTabs({ product }) {
 
         {activeTab === 'reviews' && (
           <div className="max-w-6xl">
+            {/* Write Review Button */}
+            <div className="mb-8">
+              <button
+                onClick={() => setShowWriteReview(true)}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-medium"
+              >
+                <Edit3 className="h-4 w-4" />
+                Write a Review
+              </button>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
               <div className="lg:col-span-1">
                 <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 text-center">
@@ -429,6 +446,14 @@ export default function ProductTabs({ product }) {
           </div>
         )}
       </div>
+
+      {/* Write Review Modal */}
+      <WriteReview
+        product={product}
+        isOpen={showWriteReview}
+        onClose={() => setShowWriteReview(false)}
+        onSubmit={handleReviewSubmit}
+      />
     </div>
   );
 }

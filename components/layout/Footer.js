@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight, Shield, Award } from 'lucide-react';
-// Removed trust badges import for now
+import { BRAND, getSocialLinks, getContactInfo, getTrustIndicators } from '@/lib/brand';
 
 export default function Footer() {
   return (
@@ -36,18 +36,27 @@ export default function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="bg-white text-black px-4 py-2 rounded-lg font-bold text-xl">
+              <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 text-black px-4 py-2 rounded-xl font-bold text-xl shadow-lg">
                 M
               </div>
               <div>
-                <span className="text-xl font-bold">Modave</span>
-                <p className="text-sm text-gray-400">Fashion & Style</p>
+                <span className="text-xl font-bold tracking-tight">{BRAND.name}</span>
+                <p className="text-sm text-gray-400 uppercase tracking-wider font-medium">{BRAND.tagline}</p>
               </div>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Curating exceptional fashion experiences for the modern woman. 
-              Every piece tells a story of elegance, quality, and timeless style.
+              {BRAND.description}
             </p>
+            <div className="mb-6">
+              <p className="text-sm font-medium text-gray-300 mb-2">Follow our journey</p>
+              <div className="flex items-center gap-2 text-xs text-gray-400">
+                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>{getTrustIndicators().customers} Happy Customers</span>
+                <span className="mx-2">•</span>
+                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                <span>Premium Quality Guaranteed</span>
+              </div>
+            </div>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <Instagram className="h-6 w-6" />
@@ -93,21 +102,21 @@ export default function Footer() {
                 <Mail className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-gray-400">Email</p>
-                  <p className="text-white">hello@modave.com</p>
+                  <p className="text-white">{getContactInfo().email}</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <Phone className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-gray-400">Phone</p>
-                  <p className="text-white">+1 (555) 123-4567</p>
+                  <p className="text-white">{getContactInfo().phone}</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-gray-400">Address</p>
-                  <p className="text-white">123 Fashion Ave<br />New York, NY 10001</p>
+                  <p className="text-white">{getContactInfo().address.full}</p>
                 </div>
               </div>
             </div>
@@ -161,7 +170,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              © 2024 Modave. All rights reserved.
+              © 2024 {BRAND.name}. All rights reserved.
             </p>
             <div className="flex flex-wrap gap-6">
               <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">

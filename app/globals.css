@@ -445,3 +445,104 @@
     gap: 1.5rem;
   }
 }
+
+/* Premium branding enhancements */
+.brand-gradient {
+  background: linear-gradient(135deg, #000000 0%, #434343 100%);
+}
+
+.dark .brand-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+}
+
+/* Enhanced zoom animations */
+.zoom-smooth {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zoom-smooth:hover {
+  transform: scale(1.02);
+}
+
+/* Product image zoom effect */
+.magnify-container {
+  position: relative;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.magnify-glass {
+  position: absolute;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1), 0 8px 25px rgba(0,0,0,0.15);
+  pointer-events: none;
+  background-repeat: no-repeat;
+  z-index: 10;
+}
+
+/* Review stars animation */
+.star-rating {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.star-rating .star {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.star-rating .star:hover {
+  transform: scale(1.1);
+}
+
+/* Premium loading animation */
+@keyframes premium-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.premium-loading {
+  animation: premium-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Enhanced button effects */
+.btn-premium {
+  @apply relative overflow-hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-premium:hover::before {
+  left: 100%;
+}
+
+/* Enhanced focus states */
+.focus-premium {
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black dark:focus:ring-white focus:ring-offset-white dark:focus:ring-offset-gray-900 transition-all duration-200;
+}
+
+/* Text shadow for premium feel */
+.text-shadow-premium {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dark .text-shadow-premium {
+  text-shadow: 0 2px 4px rgba(255,255,255,0.1);
+}
