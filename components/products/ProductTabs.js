@@ -446,6 +446,14 @@ export default function ProductTabs({ product }) {
           </div>
         )}
       </div>
+
+      {/* Write Review Modal */}
+      <WriteReview
+        product={product}
+        isOpen={showWriteReview}
+        onClose={() => setShowWriteReview(false)}
+        onSubmit={handleReviewSubmit}
+      />
     </div>
   );
 }
