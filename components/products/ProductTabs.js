@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Star, ThumbsUp, MessageCircle, ShieldCheck, Truck, RotateCcw, Edit3 } from 'lucide-react';
 import WriteReview from './WriteReview';
+import ProductReviews from './ProductReviews';
 
 export default function ProductTabs({ product }) {
   const [activeTab, setActiveTab] = useState('description');
