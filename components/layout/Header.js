@@ -94,10 +94,10 @@ export default function Header() {
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-black dark:group-hover:text-white transition-colors">
-                Modave
+                {BRAND.name}
               </span>
               <span className="text-xs text-gray-500 dark:text-gray-400 -mt-1 hidden sm:block uppercase tracking-wider font-medium">
-                Premium Fashion
+                {BRAND.tagline}
               </span>
             </div>
           </Link>
