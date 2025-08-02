@@ -103,13 +103,13 @@ export default function ProductCard({ product }) {
             <div className="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
               <button
                 onClick={handleQuickAdd}
-                className="flex-1 bg-black text-white py-3 text-sm font-medium hover:bg-gray-800 transition-colors"
+                className="flex-1 bg-black text-white py-2.5 px-4 text-sm font-medium hover:bg-gray-800 transition-colors rounded-lg"
               >
                 Add to Cart
               </button>
               <button
                 onClick={handleQuickView}
-                className="bg-white text-gray-900 p-3 hover:bg-gray-50 transition-colors"
+                className="bg-white text-gray-900 p-2.5 hover:bg-gray-50 transition-colors rounded-lg"
                 title="Quick View"
               >
                 <Eye className="h-4 w-4" />
