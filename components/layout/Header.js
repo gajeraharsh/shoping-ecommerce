@@ -9,6 +9,7 @@ import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
 import DarkModeToggle from '@/components/ui/DarkModeToggle';
+import { BRAND } from '@/lib/brand';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
