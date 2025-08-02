@@ -20,6 +20,7 @@ export default function ProductCard({ product }) {
   const { showToast } = useToast();
   
   const inWishlist = isInWishlist(product.id);
+  const inComparison = isInComparison(product.id);
 
   // Image cycling effect on hover
   useEffect(() => {
