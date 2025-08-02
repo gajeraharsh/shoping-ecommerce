@@ -147,7 +147,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 h-full pt-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-0 pt-20" style={{ height: 'calc(95vh - 5rem)' }}>
           {/* Enhanced Image Gallery */}
           <div className="relative bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 overflow-hidden">
             <div className="aspect-square relative overflow-hidden group">
