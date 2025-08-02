@@ -74,15 +74,17 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+    <div className="fixed inset-0 z-50">
+      {/* Full Page Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-md"
         onClick={onClose}
       />
-      
-      {/* Search Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+
+      {/* Search Modal Container */}
+      <div className="flex items-start justify-center pt-20 min-h-full">
+        {/* Search Modal */}
+        <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
         {/* Search Input */}
         <div className="flex items-center gap-4 p-6 border-b">
           <Search className="h-6 w-6 text-gray-400" />
@@ -223,6 +225,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
