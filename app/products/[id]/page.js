@@ -83,17 +83,17 @@ export default function ProductDetailPage() {
       <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {/* Breadcrumbs - Mobile Optimized with Proper Overflow Handling */}
-        <nav className="mb-6 sm:mb-8 overflow-hidden" aria-label="Breadcrumb">
-          <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
+        {/* Breadcrumbs - Fixed alignment */}
+        <nav className="mb-6 sm:mb-8" aria-label="Breadcrumb">
+          <ol className="flex items-center overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
             {breadcrumbs.map((breadcrumb, index) => (
-              <div key={breadcrumb.name} className="flex items-center flex-shrink-0">
+              <li key={breadcrumb.name} className="flex items-center flex-shrink-0">
                 {index > 0 && (
-                  <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mx-1 sm:mx-2 flex-shrink-0" />
+                  <ChevronRight className="h-4 w-4 text-gray-400 mx-2 flex-shrink-0" />
                 )}
                 {breadcrumb.current ? (
                   <span 
-                    className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-medium block max-w-[100px] sm:max-w-[150px] md:max-w-[200px] truncate" 
+                    className="text-gray-500 dark:text-gray-400 text-sm font-medium max-w-[120px] sm:max-w-[180px] md:max-w-[240px] truncate" 
                     title={breadcrumb.name}
                   >
                     {breadcrumb.name}
@@ -101,14 +101,14 @@ export default function ProductDetailPage() {
                 ) : (
                   <Link
                     href={breadcrumb.href}
-                    className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white text-xs sm:text-sm transition-colors whitespace-nowrap flex-shrink-0"
+                    className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white text-sm transition-colors whitespace-nowrap"
                   >
                     {breadcrumb.name}
                   </Link>
                 )}
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </nav>
 
         {/* Product Details */}
