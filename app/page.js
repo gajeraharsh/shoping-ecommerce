@@ -15,16 +15,24 @@ export default function Home() {
         <Hero />
         
         {/* Brand Story Section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">
+        <section className="py-20 sm:py-24 lg:py-32 bg-gradient-to-b from-gray-50/50 via-white to-gray-50/30 dark:from-gray-800/50 dark:via-gray-900 dark:to-gray-800/30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
-              <div>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
-                  Crafted for the Modern Woman
-                </h2>
-                <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
-                  Every piece in our collection tells a story of meticulous craftsmanship, 
-                  timeless design, and unwavering attention to detail. We believe fashion 
+              <div className="space-y-8">
+                <div className="space-y-6">
+                  <div className="inline-block">
+                    <div className="w-16 h-px bg-black/20 dark:bg-white/20 mb-4"></div>
+                    <p className="text-sm font-medium tracking-[0.1em] uppercase text-gray-500 dark:text-gray-400">Our Story</p>
+                  </div>
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-gray-900 dark:text-white leading-[1.1] tracking-[-0.02em]">
+                    Crafted for the
+                    <br />
+                    <span className="italic font-extralight text-gray-700 dark:text-gray-200">Modern</span> Woman
+                  </h2>
+                </div>
+                <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-8 sm:mb-10 leading-relaxed font-light max-w-2xl">
+                  Every piece in our collection tells a story of meticulous craftsmanship,
+                  timeless design, and unwavering attention to detail. We believe fashion
                   should empower, inspire, and celebrate the unique beauty within every woman.
                 </p>
                 <div className="grid grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
@@ -37,17 +45,26 @@ export default function Home() {
                     <p className="text-sm text-gray-600 dark:text-gray-400">Happy Customers</p>
                   </div>
                 </div>
-                <a href="/about" className="inline-flex items-center border-2 border-black dark:border-white text-black dark:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300 text-sm sm:text-base touch-manipulation min-h-[48px]">
-                  Our Story
+                <a href="/about" className="inline-flex items-center border border-black/20 dark:border-white/20 text-black dark:text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium hover:border-black dark:hover:border-white hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500 text-sm sm:text-base touch-manipulation min-h-[48px] group">
+                  <span>Our Story</span>
+                  <div className="ml-3 w-4 h-4 rounded-full border border-current opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </a>
               </div>
-              <div className="relative mt-8 lg:mt-0">
-                <img
-                  src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2340&auto=format&fit=crop"
-                  alt="Fashion atelier"
-                  className="w-full h-64 sm:h-80 lg:h-[600px] object-cover rounded-2xl"
-                />
-                <div className="absolute inset-0 bg-black/10 rounded-2xl"></div>
+              <div className="relative mt-12 lg:mt-0">
+                <div className="absolute -inset-4 bg-gradient-to-r from-gray-200/40 to-gray-300/40 dark:from-gray-600/20 dark:to-gray-700/20 rounded-3xl blur-xl"></div>
+                <div className="relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2340&auto=format&fit=crop"
+                    alt="Fashion atelier"
+                    className="w-full h-80 sm:h-96 lg:h-[650px] object-cover rounded-2xl shadow-2xl"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl"></div>
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <p className="text-sm text-gray-800 dark:text-gray-200 font-medium">Premium craftsmanship since 2020</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
