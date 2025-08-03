@@ -86,7 +86,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
@@ -99,7 +99,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
@@ -130,7 +130,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
@@ -143,7 +143,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="state"
                 value={formData.state}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
@@ -156,7 +156,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="zipCode"
                 value={formData.zipCode}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
