@@ -192,9 +192,6 @@ export default function Header() {
               )}
             </Link>
 
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
             {/* User Account */}
             <div className="relative" ref={profileDropdownRef}>
               <button
