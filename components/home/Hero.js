@@ -68,8 +68,11 @@ export default function Hero() {
           }}
           pagination={{
             clickable: true,
-            bulletClass: 'swiper-pagination-bullet !bg-white/50 !w-2 !h-2 !mx-1',
-            bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !w-8 !h-2 !rounded-full',
+            bulletClass: 'swiper-pagination-bullet !bg-white/40 !w-2 !h-2 !mx-1.5 !border !border-white/20',
+          bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !w-12 !h-2 !rounded-full !border-white',
+          renderBullet: function (index, className) {
+            return '<span class="' + className + '"></span>';
+          },
           }}
           loop={true}
           className="h-full"
@@ -77,7 +80,8 @@ export default function Hero() {
           {heroSlides.map((slide) => (
             <SwiperSlide key={slide.id}>
               <div className="relative h-full">
-                <div className="absolute inset-0 bg-black/30 z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent z-10"></div>
                 <img
                   src={slide.image}
                   alt={slide.title}
@@ -87,23 +91,38 @@ export default function Hero() {
                 <div className="absolute inset-0 z-20 flex items-center safe-area-bottom">
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                     <div className="max-w-2xl text-center sm:text-left">
-                      <p className="text-white/90 text-xs sm:text-sm font-medium tracking-[0.1em] uppercase mb-3 sm:mb-4">
-                        {slide.subtitle}
-                      </p>
-                      <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-[1.1] px-2 sm:px-0">
-                        {slide.title}
+                      <div className="space-y-1 mb-6 sm:mb-8">
+                        <p className="text-white/70 text-xs sm:text-sm font-light tracking-[0.2em] uppercase opacity-90">
+                          {slide.subtitle}
+                        </p>
+                        <div className="w-12 h-px bg-white/30 mt-2"></div>
+                      </div>
+                      <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-white mb-6 sm:mb-8 leading-[0.9] tracking-[-0.02em] px-2 sm:px-0">
+                        <span className="font-extralight italic text-white/90">{slide.title.split(' ')[0]}</span>
+                        <br />
+                        <span className="font-bold">{slide.title.split(' ').slice(1).join(' ')}</span>
                       </h1>
-                      <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed max-w-lg mx-auto sm:mx-0 px-2 sm:px-0">
+                      <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-white/80 mb-8 sm:mb-12 leading-relaxed max-w-2xl mx-auto sm:mx-0 px-2 sm:px-0 font-light">
                         {slide.description}
                       </p>
                       <div className="px-2 sm:px-0">
-                        <Link
-                          href={slide.link}
-                          className="inline-flex items-center bg-white text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
-                        >
-                          {slide.cta}
-                          <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                          <Link
+                            href={slide.link}
+                            className="relative inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium hover:bg-white/20 hover:border-white/30 transition-all duration-500 group touch-manipulation min-h-[48px] text-sm sm:text-base backdrop-blur-elegant overflow-hidden"
+                          >
+                            <span className="relative z-10">{slide.cta}</span>
+                            <ArrowRight className="ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300 relative z-10" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                          </Link>
+                          <Link
+                            href="/about"
+                            className="inline-flex items-center text-white/80 hover:text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium border border-white/10 hover:border-white/30 transition-all duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
+                          >
+                            <span>Learn More</span>
+                            <ArrowRight className="ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -172,20 +191,24 @@ export default function Hero() {
               <Link
                 key={index}
                 href={category.link}
-                className="group relative overflow-hidden rounded-xl sm:rounded-2xl aspect-[4/3] block touch-manipulation"
+                className="group relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/3] block touch-manipulation hover-luxury shadow-luxury"
               >
                 <img
                   src={category.image}
                   alt={category.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
-                <div className="absolute inset-0 p-4 sm:p-6 lg:p-8 flex flex-col justify-end">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{category.title}</h3>
-                  <p className="text-white/90 mb-3 sm:mb-4 text-sm sm:text-base">{category.description}</p>
-                  <div className="inline-flex items-center text-white group-hover:text-white transition-colors text-sm sm:text-base">
-                    <span className="font-medium">Explore</span>
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/70 transition-all duration-500"></div>
+                <div className="absolute inset-0 p-6 sm:p-8 lg:p-10 flex flex-col justify-end">
+                  <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-white mb-3 heading-luxury">{category.title}</h3>
+                    <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base text-elegant opacity-90 group-hover:opacity-100 transition-opacity">{category.description}</p>
+                    <div className="inline-flex items-center text-white/90 group-hover:text-white transition-all duration-300 text-sm sm:text-base">
+                      <span className="font-medium">Explore</span>
+                      <div className="ml-3 w-6 h-6 rounded-full border border-white/30 group-hover:border-white flex items-center justify-center transition-all duration-300 group-hover:bg-white/10">
+                        <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform duration-300" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -263,18 +286,18 @@ export default function Hero() {
                 rating: 5
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-xl sm:rounded-2xl shadow-sm">
-                <div className="flex items-center mb-4">
+              <div key={index} className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm p-8 sm:p-10 rounded-2xl sm:rounded-3xl shadow-luxury border border-gray-100/50 dark:border-gray-800/50 hover-luxury group">
+                <div className="flex items-center mb-6">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
+                    <Star key={i} className="w-5 h-5 text-amber-400 fill-current mr-1 opacity-90" />
                   ))}
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed">
+                <p className="text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 text-lg sm:text-xl leading-relaxed text-elegant italic">
                   "{testimonial.quote}"
                 </p>
-                <div>
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">{testimonial.author}</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{testimonial.role}</p>
+                <div className="space-y-1">
+                  <p className="font-medium text-gray-900 dark:text-white text-base sm:text-lg heading-luxury">{testimonial.author}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base tracking-wide">{testimonial.role}</p>
                 </div>
               </div>
             ))}
