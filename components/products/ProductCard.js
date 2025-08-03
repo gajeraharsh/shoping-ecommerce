@@ -142,7 +142,7 @@ export default function ProductCard({ product }) {
                 className="flex-1 bg-black text-white py-2 sm:py-2.5 px-3 sm:px-4 text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors rounded-lg touch-manipulation min-h-[44px] flex items-center justify-center"
                 style={{ margin: 0, border: 'none' }}
               >
-                <ShoppingBag className="h-4 w-4 mr-2 sm:hidden" style={{ margin: 0, padding: 0, display: 'block' }} />
+                <ShoppingBag className="h-4 w-4 mr-3 sm:hidden" style={{ margin: 0, padding: 0, display: 'block' }} />
                 <span className="hidden sm:inline">Add to Cart</span>
                 <span className="sm:hidden">Add</span>
               </button>
