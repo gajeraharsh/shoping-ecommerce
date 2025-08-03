@@ -780,3 +780,136 @@
   box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
   border-color: rgba(0, 0, 0, 0.2);
 }
+
+/* Sophisticated color palette */
+:root {
+  /* Luxury neutrals */
+  --luxury-charcoal: #1a1a1a;
+  --luxury-graphite: #2d2d2d;
+  --luxury-pearl: #f8f8f8;
+  --luxury-cream: #fefefe;
+  --luxury-platinum: #e8e8e8;
+
+  /* Sophisticated accents */
+  --accent-champagne: #f7f3e9;
+  --accent-rose-gold: #e8b4a0;
+  --accent-sage: #9caf88;
+  --accent-steel: #6b7280;
+  --accent-bronze: #cd7f32;
+
+  /* Premium gradients */
+  --gradient-luxury: linear-gradient(135deg, var(--luxury-charcoal) 0%, var(--luxury-graphite) 100%);
+  --gradient-pearl: linear-gradient(135deg, var(--luxury-pearl) 0%, var(--luxury-platinum) 100%);
+  --gradient-champagne: linear-gradient(135deg, var(--accent-champagne) 0%, #f0ebe1 100%);
+}
+
+/* Sophisticated text colors */
+.text-luxury-charcoal {
+  color: var(--luxury-charcoal);
+}
+
+.text-luxury-graphite {
+  color: var(--luxury-graphite);
+}
+
+.text-accent-steel {
+  color: var(--accent-steel);
+}
+
+.text-accent-bronze {
+  color: var(--accent-bronze);
+}
+
+/* Premium background combinations */
+.bg-luxury-gradient {
+  background: var(--gradient-luxury);
+}
+
+.bg-pearl-gradient {
+  background: var(--gradient-pearl);
+}
+
+.bg-champagne-gradient {
+  background: var(--gradient-champagne);
+}
+
+/* Sophisticated hover states */
+.hover-champagne:hover {
+  background-color: var(--accent-champagne);
+  transition: background-color 0.3s ease;
+}
+
+.hover-pearl:hover {
+  background-color: var(--luxury-pearl);
+  transition: background-color 0.3s ease;
+}
+
+/* Elegant borders with sophisticated colors */
+.border-luxury-light {
+  border-color: rgba(232, 180, 160, 0.2);
+}
+
+.border-luxury-champagne {
+  border-color: var(--accent-champagne);
+}
+
+.border-luxury-steel {
+  border-color: rgba(107, 114, 128, 0.3);
+}
+
+/* Premium card styles with sophisticated colors */
+.card-luxury {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 248, 248, 0.98) 100%);
+  border: 1px solid rgba(232, 180, 160, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.dark .card-luxury {
+  background: linear-gradient(135deg,
+    rgba(26, 26, 26, 0.95) 0%,
+    rgba(45, 45, 45, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Sophisticated shadow variations */
+.shadow-champagne {
+  box-shadow:
+    0 4px 20px rgba(247, 243, 233, 0.3),
+    0 8px 40px rgba(232, 180, 160, 0.15);
+}
+
+.shadow-steel {
+  box-shadow:
+    0 4px 20px rgba(107, 114, 128, 0.15),
+    0 8px 40px rgba(107, 114, 128, 0.1);
+}
+
+/* Refined typography with sophisticated colors */
+.text-luxury-primary {
+  color: var(--luxury-charcoal);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+.dark .text-luxury-primary {
+  color: var(--luxury-pearl);
+}
+
+.text-luxury-secondary {
+  color: var(--accent-steel);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+/* Premium selection and focus states */
+.focus-luxury {
+  outline: 2px solid var(--accent-bronze);
+  outline-offset: 2px;
+}
+
+.selection-luxury::selection {
+  background-color: var(--accent-champagne);
+  color: var(--luxury-charcoal);
+}
