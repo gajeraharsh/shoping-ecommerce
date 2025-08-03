@@ -58,7 +58,7 @@ export default function Hero() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Hero Slider */}
-      <section className="relative h-screen">
+      <section className="relative h-screen safe-area-top">
         <Swiper
           modules={[Autoplay, EffectFade, Pagination]}
           effect="fade"
@@ -84,25 +84,27 @@ export default function Hero() {
                   className="w-full h-full object-cover"
                 />
                 
-                <div className="absolute inset-0 z-20 flex items-center">
-                  <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
-                    <div className="max-w-2xl">
-                      <p className="text-white/90 text-sm font-medium tracking-wider uppercase mb-4">
+                <div className="absolute inset-0 z-20 flex items-center safe-area-bottom">
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                    <div className="max-w-2xl text-center sm:text-left">
+                      <p className="text-white/90 text-xs sm:text-sm font-medium tracking-wider uppercase mb-3 sm:mb-4">
                         {slide.subtitle}
                       </p>
-                      <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-4 sm:px-0">
                         {slide.title}
                       </h1>
-                      <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-lg">
+                      <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed max-w-lg mx-auto sm:mx-0 px-4 sm:px-0">
                         {slide.description}
                       </p>
-                      <Link
-                        href={slide.link}
-                        className="inline-flex items-center bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 group"
-                      >
-                        {slide.cta}
-                        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                      </Link>
+                      <div className="px-4 sm:px-0">
+                        <Link
+                          href={slide.link}
+                          className="inline-flex items-center bg-white text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 group touch-manipulation min-h-[44px]"
+                        >
+                          {slide.cta}
+                          <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -121,8 +123,8 @@ export default function Hero() {
           }
           @media (max-width: 768px) {
             .swiper-pagination {
-              left: 24px !important;
-              bottom: 24px !important;
+              left: 16px !important;
+              bottom: 80px !important;
             }
           }
         `}</style>
