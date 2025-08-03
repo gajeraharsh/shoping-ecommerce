@@ -83,30 +83,32 @@ export default function ProductDetailPage() {
       <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {/* Breadcrumbs - Fixed Structure */}
+        {/* Breadcrumbs - Properly Aligned Flat Structure */}
         <nav className="mb-6 sm:mb-8" aria-label="Breadcrumb">
-          <div className="flex items-center overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
             {breadcrumbs.map((breadcrumb, index) => (
-              <div key={breadcrumb.name} className="flex items-center flex-shrink-0">
+              <>
                 {index > 0 && (
-                  <ChevronRight className="h-4 w-4 text-gray-400 mx-2 flex-shrink-0" />
+                  <ChevronRight key={`separator-${index}`} className="h-4 w-4 text-gray-400 flex-shrink-0" />
                 )}
                 {breadcrumb.current ? (
                   <span 
-                    className="text-gray-500 dark:text-gray-400 text-sm font-medium max-w-[120px] sm:max-w-[180px] md:max-w-[240px] truncate inline-block" 
+                    key={breadcrumb.name}
+                    className="text-gray-500 dark:text-gray-400 text-sm font-medium max-w-[120px] sm:max-w-[180px] md:max-w-[240px] truncate flex-shrink-0" 
                     title={breadcrumb.name}
                   >
                     {breadcrumb.name}
                   </span>
                 ) : (
                   <Link
+                    key={breadcrumb.name}
                     href={breadcrumb.href}
-                    className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white text-sm transition-colors whitespace-nowrap"
+                    className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white text-sm transition-colors whitespace-nowrap flex-shrink-0"
                   >
                     {breadcrumb.name}
                   </Link>
                 )}
-              </div>
+              </>
             ))}
           </div>
         </nav>
