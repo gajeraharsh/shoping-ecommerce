@@ -106,47 +106,53 @@ export default function ProductCard({ product }) {
               </div>
             )}
 
-            {/* Action Buttons */}
-            <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all">
+            {/* Action Buttons - Always visible on mobile, hover on desktop */}
+            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex flex-col gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
               <button
                 onClick={handleWishlistToggle}
-                className={`p-2 rounded-full transition-all ${
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full transition-all flex items-center justify-center ${
                   inWishlist
                     ? 'bg-red-50 text-red-500'
                     : 'bg-white/90 text-gray-600 hover:text-red-500'
                 }`}
                 title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                style={{ margin: 0, padding: 0, border: 'none' }}
               >
-                <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+                <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${inWishlist ? 'fill-current' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
               </button>
 
               <button
                 onClick={handleComparisonToggle}
-                className={`p-2 rounded-full transition-all ${
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full transition-all flex items-center justify-center ${
                   inComparison
                     ? 'bg-blue-50 text-blue-500'
                     : 'bg-white/90 text-gray-600 hover:text-blue-500'
                 }`}
                 title={inComparison ? 'Remove from comparison' : 'Add to comparison'}
+                style={{ margin: 0, padding: 0, border: 'none' }}
               >
-                <GitCompare className={`h-5 w-5 ${inComparison ? 'fill-current' : ''}`} />
+                <GitCompare className={`h-4 w-4 sm:h-5 sm:w-5 ${inComparison ? 'fill-current' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
               </button>
             </div>
 
-            {/* Quick Actions */}
-            <div className="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+            {/* Quick Actions - Always visible on mobile, hover on desktop */}
+            <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform translate-y-0 sm:translate-y-2 sm:group-hover:translate-y-0">
               <button
                 onClick={handleQuickAdd}
-                className="flex-1 bg-black text-white py-2.5 px-4 text-sm font-medium hover:bg-gray-800 transition-colors rounded-lg"
+                className="flex-1 bg-black text-white py-2 sm:py-2.5 px-3 sm:px-4 text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors rounded-lg touch-manipulation min-h-[44px] flex items-center justify-center"
+                style={{ margin: 0, border: 'none' }}
               >
-                Add to Cart
+                <ShoppingBag className="h-4 w-4 mr-2 sm:hidden" style={{ margin: 0, padding: 0, display: 'block' }} />
+                <span className="hidden sm:inline">Add to Cart</span>
+                <span className="sm:hidden">Add</span>
               </button>
               <button
                 onClick={handleQuickView}
-                className="bg-white text-gray-900 p-2.5 hover:bg-gray-50 transition-colors rounded-lg"
+                className="bg-white text-gray-900 w-11 h-11 sm:w-auto sm:h-auto sm:p-2.5 hover:bg-gray-50 transition-colors rounded-lg flex items-center justify-center touch-manipulation"
                 title="Quick View"
+                style={{ margin: 0, padding: 0, border: 'none' }}
               >
-                <Eye className="h-4 w-4" />
+                <Eye className="h-4 w-4" style={{ margin: 0, padding: 0, display: 'block' }} />
               </button>
             </div>
           </div>
