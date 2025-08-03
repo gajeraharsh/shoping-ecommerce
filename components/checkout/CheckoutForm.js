@@ -69,7 +69,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       </div>
 
       {/* Shipping Address */}
-      <div className="bg-white border rounded-lg p-4 sm:p-6">
+      <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
           <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
           <h3 className="text-base sm:text-lg font-semibold">Shipping Address</h3>
