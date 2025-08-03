@@ -53,8 +53,8 @@ export default function ContactPage() {
             
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
-                  <Mail className="h-6 w-6 text-primary" />
+                <div className="bg-black/10 dark:bg-white/20 p-3 rounded-lg">
+                  <Mail className="h-6 w-6 text-black dark:text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white">Email Us</h3>
