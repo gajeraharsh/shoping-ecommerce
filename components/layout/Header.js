@@ -57,6 +57,22 @@ export default function Header() {
     };
   }, [isMenuOpen]);
 
+  // Handle escape key for mobile menu
+  useEffect(() => {
+    function handleEscapeKey(event) {
+      if (event.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener('keydown', handleEscapeKey);
+      return () => {
+        document.removeEventListener('keydown', handleEscapeKey);
+      };
+    }
+  }, [isMenuOpen]);
+
   const handleSearch = (searchTerm) => {
     router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
   };
