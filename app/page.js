@@ -165,24 +165,34 @@ export default function Home() {
         </section>
 
         {/* Newsletter */}
-        <section className="py-12 sm:py-16 lg:py-20">
+        <section className="py-20 sm:py-24 lg:py-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-black dark:bg-white rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 text-center">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-semibold text-white dark:text-black mb-3 sm:mb-4">
-                Stay Updated
-              </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-white/80 dark:text-black/80 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed">
-                Be the first to know about new collections, exclusive offers, and styling tips
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-md mx-auto">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-3 sm:px-6 sm:py-4 rounded-full text-black bg-white focus:outline-none focus:ring-2 focus:ring-white text-sm sm:text-base min-h-[48px] touch-manipulation"
-                />
-                <button className="bg-white dark:bg-black text-black dark:text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm sm:text-base min-h-[48px] touch-manipulation">
-                  Subscribe
-                </button>
+            <div className="relative bg-gradient-to-br from-black via-gray-900 to-black dark:from-white dark:via-gray-100 dark:to-white rounded-3xl sm:rounded-[2rem] p-12 sm:p-16 lg:p-20 text-center overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent dark:via-black/5 transform rotate-12 scale-150"></div>
+              <div className="relative z-10">
+                <div className="mb-8">
+                  <div className="w-16 h-px bg-white/30 dark:bg-black/30 mb-4 mx-auto"></div>
+                  <p className="text-sm font-medium tracking-[0.1em] uppercase text-white/60 dark:text-black/60">Newsletter</p>
+                </div>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-light text-white dark:text-black mb-6 sm:mb-8 leading-[1.1] tracking-[-0.02em]">
+                  Stay
+                  <br />
+                  <span className="italic font-extralight">Updated</span>
+                </h2>
+                <p className="text-lg sm:text-xl lg:text-2xl text-white/70 dark:text-black/70 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+                  Be the first to know about new collections, exclusive offers, and styling tips
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 max-w-xl mx-auto">
+                  <input
+                    type="email"
+                    placeholder="Enter your email address"
+                    className="flex-1 px-6 py-4 sm:px-8 sm:py-5 rounded-full text-black bg-white/95 backdrop-blur-sm border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white text-sm sm:text-base min-h-[48px] touch-manipulation font-medium placeholder:text-gray-500"
+                  />
+                  <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white dark:text-black px-8 py-4 sm:px-10 sm:py-5 rounded-full font-medium hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-sm sm:text-base min-h-[48px] touch-manipulation group">
+                    <span>Subscribe</span>
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300 inline" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
