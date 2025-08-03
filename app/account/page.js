@@ -270,45 +270,91 @@ export default function AccountDashboard() {
             <Link
               key={order.id}
               href={`/account/orders/${order.id}`}
-              className="block p-6 sm:p-8 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
+              className="block p-4 sm:p-6 lg:p-8 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group touch-manipulation"
             >
-              <div className="flex items-center gap-4">
+              {/* Mobile Layout */}
+              <div className="flex items-start gap-4 sm:hidden">
                 <img
                   src={order.image}
                   alt="Order"
-                  className="w-16 h-16 rounded-2xl object-cover border border-gray-200 dark:border-gray-600"
+                  className="w-16 h-16 rounded-2xl object-cover border border-gray-200 dark:border-gray-600 flex-shrink-0"
                 />
-                
+
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{order.id}</h3>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {new Date(order.date).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Package className="w-3 h-3" />
-                        {order.items} items
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-bold text-gray-900 dark:text-white text-base mb-1">{order.id}</h3>
+                      <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {new Date(order.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Package className="w-3 h-3" />
+                          {order.items} items
+                        </div>
                       </div>
                     </div>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 flex-shrink-0 mt-1" />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className={`px-3 py-1.5 rounded-xl text-xs font-semibold ${getStatusColor(order.status)}`}>
+                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                    </span>
                     <div className="text-right">
-                      <div className="font-bold text-gray-900 dark:text-white">₹{order.total}</div>
-                      <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                      <div className="font-bold text-gray-900 dark:text-white text-lg">₹{order.total.toLocaleString()}</div>
+                      <div className="flex items-center justify-end gap-1 text-xs text-gray-500 dark:text-gray-400">
                         {getStatusIcon(order.status)}
                         <span className="capitalize">{order.status}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                
-                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 group-hover:translate-x-1 transition-all duration-200" />
+              </div>
+
+              {/* Desktop Layout */}
+              <div className="hidden sm:flex items-center gap-6">
+                <img
+                  src={order.image}
+                  alt="Order"
+                  className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl object-cover border border-gray-200 dark:border-gray-600 flex-shrink-0"
+                />
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-bold text-gray-900 dark:text-white text-lg">{order.id}</h3>
+                    <span className={`px-4 py-2 rounded-xl text-sm font-semibold ${getStatusColor(order.status)}`}>
+                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        {new Date(order.date).toLocaleDateString('en-IN', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Package className="w-4 h-4" />
+                        {order.items} {order.items === 1 ? 'item' : 'items'}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-bold text-gray-900 dark:text-white text-xl">₹{order.total.toLocaleString()}</div>
+                      <div className="flex items-center justify-end gap-2 text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        {getStatusIcon(order.status)}
+                        <span className="capitalize">{order.status}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 group-hover:translate-x-1 transition-all duration-200 flex-shrink-0" />
               </div>
             </Link>
           ))}
