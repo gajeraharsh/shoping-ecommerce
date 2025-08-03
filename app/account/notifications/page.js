@@ -1,504 +1,412 @@
 'use client';
 
-import { useState } from 'react';
-import { 
-  Bell, 
-  Mail, 
-  MessageSquare, 
-  Smartphone,
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import {
+  Bell,
   Package,
   Heart,
-  Tag,
-  CreditCard,
-  Shield,
-  TrendingUp,
   Star,
   Gift,
+  CreditCard,
+  Truck,
+  CheckCircle,
+  AlertCircle,
+  Info,
+  ArrowLeft,
+  Filter,
+  Search,
+  MoreVertical,
+  Trash2,
   Check,
-  X
+  Clock,
+  Calendar,
+  Settings
 } from 'lucide-react';
 
 export default function NotificationsPage() {
-  const [expandedCategories, setExpandedCategories] = useState({
-    transactional: true,
-    security: true,
-    shopping: false,
-    marketing: false,
-    engagement: false
-  });
+  const [notifications, setNotifications] = useState([]);
+  const [filteredNotifications, setFilteredNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const [settings, setSettings] = useState({
-    // Email Notifications
-    email: {
-      orderUpdates: true,
-      shipmentTracking: true,
-      deliveryConfirmation: true,
-      returnUpdates: true,
-      paymentConfirmation: true,
-      accountSecurity: true,
-      wishlistReminders: false,
-      priceDrops: true,
-      backInStock: true,
-      newArrivals: false,
-      salesAndOffers: false,
-      personalizedRecommendations: true,
-      loyaltyUpdates: true,
-      reviewReminders: false,
-      newsletter: false
-    },
-    // SMS Notifications
-    sms: {
-      orderUpdates: true,
-      shipmentTracking: true,
-      deliveryConfirmation: true,
-      paymentConfirmation: false,
-      accountSecurity: true,
-      salesAndOffers: false,
-      priceDrops: false
-    },
-    // Push Notifications (for mobile app)
-    push: {
-      orderUpdates: true,
-      newArrivals: false,
-      salesAndOffers: false,
-      wishlistReminders: true,
-      reviewReminders: false
-    },
-    // Frequency Settings
-    frequency: {
-      newsletter: 'weekly',
-      recommendations: 'bi-weekly',
-      salesAlerts: 'daily'
-    }
-  });
+  useEffect(() => {
+    // Mock notifications data
+    setTimeout(() => {
+      const mockNotifications = [
+        {
+          id: 1,
+          type: 'order',
+          title: 'Order Delivered Successfully',
+          message: 'Your order ORD-2024-001 has been delivered to your address.',
+          timestamp: '2024-01-15T14:30:00Z',
+          read: false,
+          icon: CheckCircle,
+          color: 'text-green-600 bg-green-100 dark:bg-green-900/30'
+        },
+        {
+          id: 2,
+          type: 'promotion',
+          title: 'Special Offer - 30% Off',
+          message: 'Limited time offer on all summer collection. Use code SUMMER30.',
+          timestamp: '2024-01-15T10:00:00Z',
+          read: false,
+          icon: Gift,
+          color: 'text-purple-600 bg-purple-100 dark:bg-purple-900/30'
+        },
+        {
+          id: 3,
+          type: 'shipping',
+          title: 'Order Shipped',
+          message: 'Your order ORD-2024-002 is on its way. Track your package.',
+          timestamp: '2024-01-14T16:45:00Z',
+          read: true,
+          icon: Truck,
+          color: 'text-blue-600 bg-blue-100 dark:bg-blue-900/30'
+        },
+        {
+          id: 4,
+          type: 'wishlist',
+          title: 'Price Drop Alert',
+          message: 'The item in your wishlist "Designer Bag" is now 25% off!',
+          timestamp: '2024-01-14T09:15:00Z',
+          read: true,
+          icon: Heart,
+          color: 'text-red-600 bg-red-100 dark:bg-red-900/30'
+        },
+        {
+          id: 5,
+          type: 'review',
+          title: 'Review Reminder',
+          message: 'How was your recent purchase? Share your experience.',
+          timestamp: '2024-01-13T11:30:00Z',
+          read: true,
+          icon: Star,
+          color: 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30'
+        },
+        {
+          id: 6,
+          type: 'payment',
+          title: 'Payment Successful',
+          message: 'Payment of ₹2,499 has been processed successfully.',
+          timestamp: '2024-01-12T18:20:00Z',
+          read: true,
+          icon: CreditCard,
+          color: 'text-indigo-600 bg-indigo-100 dark:bg-indigo-900/30'
+        },
+        {
+          id: 7,
+          type: 'system',
+          title: 'Security Alert',
+          message: 'New login detected from a different device.',
+          timestamp: '2024-01-10T22:45:00Z',
+          read: true,
+          icon: AlertCircle,
+          color: 'text-orange-600 bg-orange-100 dark:bg-orange-900/30'
+        }
+      ];
+      
+      setNotifications(mockNotifications);
+      setFilteredNotifications(mockNotifications);
+      setLoading(false);
+    }, 1000);
+  }, []);
 
-  const handleToggle = (category, setting) => {
-    setSettings(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [setting]: !prev[category][setting]
+  useEffect(() => {
+    let filtered = notifications;
+
+    // Filter by type
+    if (filter !== 'all') {
+      if (filter === 'unread') {
+        filtered = filtered.filter(n => !n.read);
+      } else {
+        filtered = filtered.filter(n => n.type === filter);
       }
-    }));
-  };
-
-  const handleFrequencyChange = (setting, value) => {
-    setSettings(prev => ({
-      ...prev,
-      frequency: {
-        ...prev.frequency,
-        [setting]: value
-      }
-    }));
-  };
-
-  const toggleCategory = (categoryId) => {
-    setExpandedCategories(prev => ({
-      ...prev,
-      [categoryId]: !prev[categoryId]
-    }));
-  };
-
-  const notificationCategories = [
-    {
-      id: 'transactional',
-      title: 'Transactional',
-      description: 'Order and account-related notifications',
-      icon: Package,
-      color: 'text-blue-600',
-      settings: [
-        { 
-          key: 'orderUpdates', 
-          label: 'Order Updates', 
-          description: 'Status changes for your orders',
-          recommended: true
-        },
-        { 
-          key: 'shipmentTracking', 
-          label: 'Shipment Tracking', 
-          description: 'Real-time shipping updates',
-          recommended: true
-        },
-        { 
-          key: 'deliveryConfirmation', 
-          label: 'Delivery Confirmation', 
-          description: 'When your order is delivered',
-          recommended: true
-        },
-        { 
-          key: 'returnUpdates', 
-          label: 'Return Updates', 
-          description: 'Status of return and exchange requests',
-          recommended: true
-        },
-        { 
-          key: 'paymentConfirmation', 
-          label: 'Payment Confirmation', 
-          description: 'Payment processing notifications',
-          recommended: true
-        }
-      ]
-    },
-    {
-      id: 'security',
-      title: 'Security & Account',
-      description: 'Account security and login notifications',
-      icon: Shield,
-      color: 'text-red-600',
-      settings: [
-        { 
-          key: 'accountSecurity', 
-          label: 'Security Alerts', 
-          description: 'Login attempts and security changes',
-          recommended: true,
-          required: true
-        }
-      ]
-    },
-    {
-      id: 'shopping',
-      title: 'Shopping',
-      description: 'Product and wishlist notifications',
-      icon: Heart,
-      color: 'text-pink-600',
-      settings: [
-        { 
-          key: 'wishlistReminders', 
-          label: 'Wishlist Reminders', 
-          description: 'Reminders about items in your wishlist'
-        },
-        { 
-          key: 'priceDrops', 
-          label: 'Price Drop Alerts', 
-          description: 'When wishlist items go on sale'
-        },
-        { 
-          key: 'backInStock', 
-          label: 'Back in Stock', 
-          description: 'When out-of-stock items become available'
-        }
-      ]
-    },
-    {
-      id: 'marketing',
-      title: 'Marketing & Promotions',
-      description: 'Sales, offers, and new product notifications',
-      icon: Tag,
-      color: 'text-green-600',
-      settings: [
-        { 
-          key: 'newArrivals', 
-          label: 'New Arrivals', 
-          description: 'Latest fashion collections and trends'
-        },
-        { 
-          key: 'salesAndOffers', 
-          label: 'Sales & Offers', 
-          description: 'Special discounts and promotional deals'
-        },
-        { 
-          key: 'personalizedRecommendations', 
-          label: 'Personalized Recommendations', 
-          description: 'Products curated based on your preferences'
-        },
-        { 
-          key: 'loyaltyUpdates', 
-          label: 'Loyalty Program', 
-          description: 'Points balance and rewards updates'
-        }
-      ]
-    },
-    {
-      id: 'engagement',
-      title: 'Engagement',
-      description: 'Reviews, newsletters, and community updates',
-      icon: Star,
-      color: 'text-yellow-600',
-      settings: [
-        { 
-          key: 'reviewReminders', 
-          label: 'Review Reminders', 
-          description: 'Reminders to review purchased items'
-        },
-        { 
-          key: 'newsletter', 
-          label: 'Fashion Newsletter', 
-          description: 'Style tips, trends, and fashion inspiration'
-        }
-      ]
     }
+
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter(n =>
+        n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        n.message.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredNotifications(filtered);
+  }, [notifications, filter, searchQuery]);
+
+  const handleMarkAsRead = (id) => {
+    setNotifications(prev => 
+      prev.map(n => n.id === id ? { ...n, read: true } : n)
+    );
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications(prev => 
+      prev.map(n => ({ ...n, read: true }))
+    );
+  };
+
+  const handleDeleteNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) {
+      return 'Just now';
+    } else if (diffInHours < 24) {
+      return `${diffInHours}h ago`;
+    } else if (diffInHours < 48) {
+      return 'Yesterday';
+    } else {
+      return date.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short'
+      });
+    }
+  };
+
+  const filterOptions = [
+    { value: 'all', label: 'All', count: notifications.length },
+    { value: 'unread', label: 'Unread', count: notifications.filter(n => !n.read).length },
+    { value: 'order', label: 'Orders', count: notifications.filter(n => n.type === 'order').length },
+    { value: 'promotion', label: 'Offers', count: notifications.filter(n => n.type === 'promotion').length },
+    { value: 'shipping', label: 'Shipping', count: notifications.filter(n => n.type === 'shipping').length }
   ];
 
-  const channelIcons = {
-    email: Mail,
-    sms: MessageSquare,
-    push: Smartphone
-  };
+  const unreadCount = notifications.filter(n => !n.read).length;
 
-  const frequencyOptions = [
-    { value: 'daily', label: 'Daily' },
-    { value: 'weekly', label: 'Weekly' },
-    { value: 'bi-weekly', label: 'Bi-weekly' },
-    { value: 'monthly', label: 'Monthly' },
-    { value: 'never', label: 'Never' }
-  ];
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+            <div className="space-y-3">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="h-20 bg-gray-100 dark:bg-gray-700 rounded-2xl"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Notification Preferences</h1>
-        <p className="text-gray-600">Customize how and when you receive notifications</p>
-      </div>
-
-      {/* Quick Settings */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Bell className="h-5 w-5" />
-          Quick Settings
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Package className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">Essential Only</div>
-                <div className="text-sm text-gray-600">Orders & security</div>
-              </div>
+      <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/account"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors lg:hidden"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Notifications</h1>
+              <p className="text-gray-600 dark:text-gray-400">
+                {unreadCount > 0 ? `${unreadCount} unread notifications` : 'All caught up!'}
+              </p>
             </div>
-            <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm">
-              Apply
-            </button>
           </div>
-
-          <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <Heart className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">Recommended</div>
-                <div className="text-sm text-gray-600">Balanced notifications</div>
-              </div>
-            </div>
-            <button className="px-3 py-1 bg-green-600 text-white rounded text-sm">
-              Apply
-            </button>
+          
+          <div className="flex items-center gap-3">
+            {unreadCount > 0 && (
+              <button
+                onClick={handleMarkAllAsRead}
+                className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-4 py-2 rounded-xl transition-colors text-sm font-medium"
+              >
+                <Check className="w-4 h-4" />
+                Mark all read
+              </button>
+            )}
+            <Link
+              href="/account/settings"
+              className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors"
+            >
+              <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            </Link>
           </div>
+        </div>
 
-          <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">All Updates</div>
-                <div className="text-sm text-gray-600">Everything enabled</div>
-              </div>
-            </div>
-            <button className="px-3 py-1 bg-purple-600 text-white rounded text-sm">
-              Apply
-            </button>
+        {/* Search and Filters */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search notifications..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm touch-manipulation"
+            />
+          </div>
+          
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
+            {filterOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setFilter(option.value)}
+                className={`flex items-center gap-2 px-4 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all ${
+                  filter === option.value
+                    ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                <span>{option.label}</span>
+                <span className={`px-2 py-0.5 rounded-full text-xs ${
+                  filter === option.value 
+                    ? 'bg-white/20 dark:bg-black/20' 
+                    : 'bg-gray-200 dark:bg-gray-600'
+                }`}>
+                  {option.count}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Notification Categories */}
-      <div className="space-y-6">
-        {notificationCategories.map(category => {
-          const Icon = category.icon;
-          const isExpanded = expandedCategories[category.id];
-
-          return (
-            <div key={category.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-              {/* Category Header */}
-              <div className="p-6 border-b border-gray-100">
-                <button
-                  onClick={() => toggleCategory(category.id)}
-                  className="w-full flex items-center justify-between text-left group"
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className={`h-6 w-6 ${category.color}`} />
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors">
-                        {category.title}
+      {/* Notifications List */}
+      <div className="space-y-3">
+        {filteredNotifications.length === 0 ? (
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-gray-700 text-center">
+            <Bell className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              {searchQuery || filter !== 'all' ? 'No notifications found' : 'No notifications yet'}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              {searchQuery || filter !== 'all' 
+                ? 'Try adjusting your search or filters'
+                : 'We\'ll notify you when something important happens'
+              }
+            </p>
+          </div>
+        ) : (
+          filteredNotifications.map((notification) => {
+            const Icon = notification.icon;
+            return (
+              <div
+                key={notification.id}
+                className={`bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border transition-all duration-200 hover:shadow-xl ${
+                  notification.read 
+                    ? 'border-gray-200 dark:border-gray-700' 
+                    : 'border-blue-200 dark:border-blue-800 bg-blue-50/30 dark:bg-blue-900/10'
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${notification.color}`}>
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h3 className={`font-semibold text-lg ${
+                        notification.read 
+                          ? 'text-gray-900 dark:text-white' 
+                          : 'text-gray-900 dark:text-white'
+                      }`}>
+                        {notification.title}
+                        {!notification.read && (
+                          <span className="inline-block w-2 h-2 bg-blue-500 rounded-full ml-2" />
+                        )}
                       </h3>
-                      <p className="text-sm text-gray-600">{category.description}</p>
-                    </div>
-                  </div>
-                  <div className={`transform transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>
-                    <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </button>
-              </div>
-
-              {/* Category Content */}
-              {isExpanded && (
-                <div className="p-6 max-h-96 overflow-y-auto scrollbar-hide">
-
-                  <div className="space-y-4">
-                {category.settings.map(setting => (
-                  <div key={setting.key} className="border border-gray-100 rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-gray-900">{setting.label}</h4>
-                          {setting.recommended && (
-                            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
-                              Recommended
-                            </span>
-                          )}
-                          {setting.required && (
-                            <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded-full">
-                              Required
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-600">{setting.description}</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-4">
-                      {/* Email */}
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <Mail className="h-4 w-4 text-gray-600" />
-                          <span className="text-sm font-medium text-gray-700">Email</span>
-                        </div>
-                        <button
-                          onClick={() => handleToggle('email', setting.key)}
-                          disabled={setting.required}
-                          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                            settings.email[setting.key] ? 'bg-blue-600' : 'bg-gray-200'
-                          } ${setting.required ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        >
-                          <span
-                            className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                              settings.email[setting.key] ? 'translate-x-5' : 'translate-x-1'
-                            }`}
-                          />
-                        </button>
-                      </div>
-
-                      {/* SMS */}
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <MessageSquare className="h-4 w-4 text-gray-600" />
-                          <span className="text-sm font-medium text-gray-700">SMS</span>
-                        </div>
-                        <button
-                          onClick={() => handleToggle('sms', setting.key)}
-                          disabled={!settings.sms.hasOwnProperty(setting.key)}
-                          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                            settings.sms[setting.key] ? 'bg-blue-600' : 'bg-gray-200'
-                          } ${!settings.sms.hasOwnProperty(setting.key) ? 'opacity-30 cursor-not-allowed' : ''}`}
-                        >
-                          <span
-                            className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                              settings.sms[setting.key] ? 'translate-x-5' : 'translate-x-1'
-                            }`}
-                          />
-                        </button>
-                      </div>
-
-                      {/* Push */}
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <Smartphone className="h-4 w-4 text-gray-600" />
-                          <span className="text-sm font-medium text-gray-700">Push</span>
-                        </div>
-                        <button
-                          onClick={() => handleToggle('push', setting.key)}
-                          disabled={!settings.push.hasOwnProperty(setting.key)}
-                          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                            settings.push[setting.key] ? 'bg-blue-600' : 'bg-gray-200'
-                          } ${!settings.push.hasOwnProperty(setting.key) ? 'opacity-30 cursor-not-allowed' : ''}`}
-                        >
-                          <span
-                            className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                              settings.push[setting.key] ? 'translate-x-5' : 'translate-x-1'
-                            }`}
-                          />
+                      
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                          {formatTimestamp(notification.timestamp)}
+                        </span>
+                        <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                          <MoreVertical className="w-4 h-4 text-gray-400" />
                         </button>
                       </div>
                     </div>
-                  </div>
-                  ))}
+                    
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
+                      {notification.message}
+                    </p>
+                    
+                    <div className="flex items-center gap-3">
+                      {!notification.read && (
+                        <button
+                          onClick={() => handleMarkAsRead(notification.id)}
+                          className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm"
+                        >
+                          <Check className="w-4 h-4" />
+                          Mark as read
+                        </button>
+                      )}
+                      
+                      <button
+                        onClick={() => handleDeleteNotification(notification.id)}
+                        className="flex items-center gap-2 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium text-sm"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete
+                      </button>
+                      
+                      {(notification.type === 'order' || notification.type === 'shipping') && (
+                        <Link
+                          href="/account/orders"
+                          className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium text-sm"
+                        >
+                          <Package className="w-4 h-4" />
+                          View Order
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
-              )}
-            </div>
-          );
-        })}
+              </div>
+            );
+          })
+        )}
       </div>
 
-      {/* Frequency Settings */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 mt-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-6">Frequency Settings</h3>
-        
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div>
-              <div className="font-medium text-gray-900">Newsletter Frequency</div>
-              <div className="text-sm text-gray-600">How often you receive fashion newsletters</div>
+      {/* Quick Stats */}
+      {notifications.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Notification Summary</h3>
+          
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                {notifications.length}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Total</div>
             </div>
-            <select
-              value={settings.frequency.newsletter}
-              onChange={(e) => handleFrequencyChange('newsletter', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-            >
-              {frequencyOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div>
-              <div className="font-medium text-gray-900">Recommendation Frequency</div>
-              <div className="text-sm text-gray-600">How often you receive personalized recommendations</div>
+            
+            <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
+                {unreadCount}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Unread</div>
             </div>
-            <select
-              value={settings.frequency.recommendations}
-              onChange={(e) => handleFrequencyChange('recommendations', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-            >
-              {frequencyOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div>
-              <div className="font-medium text-gray-900">Sales Alert Frequency</div>
-              <div className="text-sm text-gray-600">How often you receive sales and offer notifications</div>
+            
+            <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">
+                {notifications.filter(n => n.type === 'order').length}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Orders</div>
             </div>
-            <select
-              value={settings.frequency.salesAlerts}
-              onChange={(e) => handleFrequencyChange('salesAlerts', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-            >
-              {frequencyOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
+            
+            <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
+                {notifications.filter(n => n.type === 'promotion').length}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Offers</div>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Save Button */}
-      <div className="flex justify-end mt-8">
-        <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-          <Check className="h-4 w-4" />
-          Save Preferences
-        </button>
-      </div>
+      )}
     </div>
   );
 }

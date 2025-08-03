@@ -41,24 +41,24 @@ export default function CartItems() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => updateQuantity(item.cartId, item.quantity - 1)}
-                      className="w-7 h-7 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50"
+                      className="w-9 h-9 border-2 border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors touch-manipulation"
                     >
-                      <Minus className="h-3 w-3" />
+                      <Minus className="h-4 w-4" />
                     </button>
-                    <span className="text-sm font-medium w-6 text-center">{item.quantity}</span>
+                    <span className="text-base font-medium w-8 text-center">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.cartId, item.quantity + 1)}
-                      className="w-7 h-7 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50"
+                      className="w-9 h-9 border-2 border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors touch-manipulation"
                     >
-                      <Plus className="h-3 w-3" />
+                      <Plus className="h-4 w-4" />
                     </button>
                   </div>
 
                   <button
                     onClick={() => removeFromCart(item.cartId)}
-                    className="text-red-500 hover:text-red-700 p-1"
+                    className="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors touch-manipulation"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-5 w-5" />
                   </button>
                 </div>
               </div>

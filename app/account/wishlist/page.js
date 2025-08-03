@@ -1,195 +1,140 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
-import Link from 'next/link';
-import { 
+import {
   Heart,
-  ShoppingCart,
+  ShoppingBag,
+  Star,
+  ArrowLeft,
   Filter,
   Search,
   Grid3X3,
   List,
-  Star,
-  Trash2,
-  Eye,
   Share2,
-  SortAsc,
-  ChevronDown
+  Trash2,
+  Plus,
+  Minus,
+  Eye,
+  AlertCircle,
+  TrendingDown,
+  Tag,
+  Clock
 } from 'lucide-react';
 
 export default function WishlistPage() {
-  const { wishlistItems, removeFromWishlist } = useWishlist();
+  const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
   const { addToCart } = useCart();
   const [viewMode, setViewMode] = useState('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-  const [filterCategory, setFilterCategory] = useState('all');
+  const [filteredItems, setFilteredItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
 
-  // Mock extended wishlist data
-  const extendedWishlistItems = [
-    {
-      id: 1,
-      name: 'Floral Summer Dress',
-      price: 1899,
-      originalPrice: 2299,
-      image: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=400',
-      category: 'dresses',
-      brand: 'FashionCo',
-      rating: 4.5,
-      reviewCount: 128,
-      inStock: true,
-      addedDate: '2024-01-10',
-      discount: 17
-    },
-    {
-      id: 2,
-      name: 'Designer Kurta Set',
-      price: 2499,
-      originalPrice: 2999,
-      image: 'https://images.pexels.com/photos/8674628/pexels-photo-8674628.jpeg?auto=compress&cs=tinysrgb&w=400',
-      category: 'ethnic',
-      brand: 'EthnicWear',
-      rating: 4.7,
-      reviewCount: 89,
-      inStock: true,
-      addedDate: '2024-01-08',
-      discount: 17
-    },
-    {
-      id: 3,
-      name: 'Casual Cotton Shirt',
-      price: 799,
-      originalPrice: 999,
-      image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=400',
-      category: 'shirts',
-      brand: 'CasualWear',
-      rating: 4.2,
-      reviewCount: 56,
-      inStock: false,
-      addedDate: '2024-01-05',
-      discount: 20
-    },
-    {
-      id: 4,
-      name: 'Premium Silk Saree',
-      price: 4999,
-      originalPrice: 5999,
-      image: 'https://images.pexels.com/photos/9558618/pexels-photo-9558618.jpeg?auto=compress&cs=tinysrgb&w=400',
-      category: 'sarees',
-      brand: 'SilkCraft',
-      rating: 4.9,
-      reviewCount: 203,
-      inStock: true,
-      addedDate: '2024-01-03',
-      discount: 17
-    },
-    {
-      id: 5,
-      name: 'Denim Jacket',
-      price: 1599,
-      originalPrice: 1999,
-      image: 'https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg?auto=compress&cs=tinysrgb&w=400',
-      category: 'jackets',
-      brand: 'DenimCo',
-      rating: 4.3,
-      reviewCount: 74,
-      inStock: true,
-      addedDate: '2024-01-01',
-      discount: 20
-    },
-    {
-      id: 6,
-      name: 'Party Wear Gown',
-      price: 3499,
-      originalPrice: 4299,
-      image: 'https://images.pexels.com/photos/8939970/pexels-photo-8939970.jpeg?auto=compress&cs=tinysrgb&w=400',
-      category: 'dresses',
-      brand: 'PartyWear',
-      rating: 4.6,
-      reviewCount: 145,
-      inStock: true,
-      addedDate: '2023-12-28',
-      discount: 19
+  useEffect(() => {
+    let filtered = [...wishlistItems];
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.category?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
-  ];
 
-  const categories = [
-    { id: 'all', label: 'All Items', count: extendedWishlistItems.length },
-    { id: 'dresses', label: 'Dresses', count: extendedWishlistItems.filter(item => item.category === 'dresses').length },
-    { id: 'ethnic', label: 'Ethnic Wear', count: extendedWishlistItems.filter(item => item.category === 'ethnic').length },
-    { id: 'shirts', label: 'Shirts', count: extendedWishlistItems.filter(item => item.category === 'shirts').length },
-    { id: 'sarees', label: 'Sarees', count: extendedWishlistItems.filter(item => item.category === 'sarees').length },
-    { id: 'jackets', label: 'Jackets', count: extendedWishlistItems.filter(item => item.category === 'jackets').length }
-  ];
-
-  const filteredItems = extendedWishlistItems.filter(item => {
-    if (filterCategory !== 'all' && item.category !== filterCategory) return false;
-    if (searchQuery && !item.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
-
-  const sortedItems = [...filteredItems].sort((a, b) => {
+    // Sort
     switch (sortBy) {
-      case 'newest': return new Date(b.addedDate) - new Date(a.addedDate);
-      case 'oldest': return new Date(a.addedDate) - new Date(b.addedDate);
-      case 'price-low': return a.price - b.price;
-      case 'price-high': return b.price - a.price;
-      case 'rating': return b.rating - a.rating;
-      case 'discount': return b.discount - a.discount;
-      default: return 0;
+      case 'newest':
+        filtered.sort((a, b) => new Date(b.addedAt || 0) - new Date(a.addedAt || 0));
+        break;
+      case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'name':
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
     }
-  });
 
-  const handleSelectItem = (itemId) => {
-    setSelectedItems(prev => 
-      prev.includes(itemId) 
-        ? prev.filter(id => id !== itemId)
-        : [...prev, itemId]
-    );
+    setFilteredItems(filtered);
+  }, [wishlistItems, searchQuery, sortBy]);
+
+  const handleAddToCart = (item) => {
+    addToCart(item, 'M', 'Black', 1);
+    // Could show a toast notification here
   };
 
-  const handleSelectAll = () => {
-    setSelectedItems(
-      selectedItems.length === sortedItems.length 
-        ? [] 
-        : sortedItems.map(item => item.id)
-    );
-  };
-
-  const handleBulkRemove = () => {
-    selectedItems.forEach(itemId => removeFromWishlist(itemId));
+  const handleAddAllToCart = () => {
+    selectedItems.forEach(item => {
+      addToCart(item, 'M', 'Black', 1);
+    });
     setSelectedItems([]);
   };
 
-  const handleAddToCart = (item) => {
-    addToCart({
-      ...item,
-      size: 'M', // Default size
-      color: 'Default',
-      quantity: 1
+  const handleSelectItem = (item) => {
+    setSelectedItems(prev => {
+      const isSelected = prev.find(p => p.id === item.id);
+      if (isSelected) {
+        return prev.filter(p => p.id !== item.id);
+      } else {
+        return [...prev, item];
+      }
     });
   };
 
-  if (extendedWishlistItems.length === 0) {
+  const handleSelectAll = () => {
+    if (selectedItems.length === filteredItems.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems([...filteredItems]);
+    }
+  };
+
+  const handleRemoveSelected = () => {
+    selectedItems.forEach(item => {
+      removeFromWishlist(item.id);
+    });
+    setSelectedItems([]);
+  };
+
+  const calculateTotalValue = () => {
+    return wishlistItems.reduce((total, item) => total + item.price, 0);
+  };
+
+  if (wishlistItems.length === 0) {
     return (
-      <div className="p-6 lg:p-8">
-        <div className="text-center py-16">
-          <div className="w-24 h-24 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Heart className="h-12 w-12 text-pink-600" />
+      <div className="space-y-6">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-3 mb-6">
+            <Link
+              href="/account"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors lg:hidden"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
+              <p className="text-gray-600 dark:text-gray-400">Your saved items</p>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">Your wishlist is empty</h1>
-          <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            Save items you love to your wishlist and never lose track of them again.
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-gray-700 text-center">
+          <Heart className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Your wishlist is empty</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            Start adding items you love to keep track of them
           </p>
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
           >
-            <Heart className="h-4 w-4" />
-            Start Wishlist
+            <ShoppingBag className="w-4 h-4" />
+            Start Shopping
           </Link>
         </div>
       </div>
@@ -197,236 +142,343 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-              My Wishlist ({sortedItems.length})
-            </h1>
-            <p className="text-gray-600">Your saved fashion favorites</p>
+      <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/account"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors lg:hidden"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
+              <p className="text-gray-600 dark:text-gray-400">
+                {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'} • 
+                ₹{calculateTotalValue().toLocaleString()} total value
+              </p>
+            </div>
           </div>
           
           <div className="flex items-center gap-3">
-            {selectedItems.length > 0 && (
+            <button className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors">
+              <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            </button>
+            {wishlistItems.length > 0 && (
               <button
-                onClick={handleBulkRemove}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                onClick={clearWishlist}
+                className="p-3 bg-red-100 dark:bg-red-900/20 hover:bg-red-200 dark:hover:bg-red-900/30 rounded-xl transition-colors"
               >
-                <Trash2 className="h-4 w-4" />
-                Remove Selected ({selectedItems.length})
+                <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
               </button>
             )}
-            
-            <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-              <Share2 className="h-4 w-4" />
-              Share List
-            </button>
           </div>
         </div>
 
-        {/* Filters and Controls */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search your wishlist..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-            </div>
-
-            {/* Controls */}
-            <div className="flex items-center gap-3">
-              {/* Sort */}
-              <div className="relative">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-primary focus:border-transparent"
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="oldest">Oldest First</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                  <option value="discount">Best Discount</option>
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              </div>
-
-              {/* View Mode */}
-              <div className="flex bg-gray-100 rounded-lg p-1">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : ''}`}
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-white shadow-sm' : ''}`}
-                >
-                  <List className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
+        {/* Search and Controls */}
+        <div className="flex flex-col lg:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search your wishlist..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm touch-manipulation"
+            />
           </div>
-
-          {/* Category Filters */}
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <div className="flex flex-wrap gap-2">
-              {categories.map(category => (
-                <button
-                  key={category.id}
-                  onClick={() => setFilterCategory(category.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    filterCategory === category.id
-                      ? 'bg-pink-100 text-pink-700 border border-pink-200'
-                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {category.label}
-                  <span className={`px-2 py-0.5 rounded-full text-xs ${
-                    filterCategory === category.id ? 'bg-pink-200' : 'bg-gray-200'
-                  }`}>
-                    {category.count}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Bulk Actions */}
-          {sortedItems.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-4">
+          
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-1 border border-gray-200 dark:border-gray-700 rounded-full p-1">
               <button
-                onClick={handleSelectAll}
-                className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded-full transition-colors ${viewMode === 'grid' ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-gray-600 dark:text-gray-400'}`}
               >
-                <input
-                  type="checkbox"
-                  checked={selectedItems.length === sortedItems.length}
-                  onChange={handleSelectAll}
-                  className="rounded"
-                />
-                Select All
+                <Grid3X3 className="h-4 w-4" />
               </button>
-              {selectedItems.length > 0 && (
-                <span className="text-sm text-gray-600">
-                  {selectedItems.length} item{selectedItems.length > 1 ? 's' : ''} selected
-                </span>
-              )}
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded-full transition-colors ${viewMode === 'list' ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-gray-600 dark:text-gray-400'}`}
+              >
+                <List className="h-4 w-4" />
+              </button>
             </div>
-          )}
+            
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-4 py-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm min-h-[48px] touch-manipulation"
+            >
+              <option value="newest">Newest First</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name">Name A-Z</option>
+            </select>
+          </div>
         </div>
+
+        {/* Bulk Actions */}
+        {selectedItems.length > 0 && (
+          <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                {selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''} selected
+              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleAddAllToCart}
+                  className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors text-sm"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  Add to Cart
+                </button>
+                <button
+                  onClick={handleRemoveSelected}
+                  className="flex items-center gap-2 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium text-sm"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Items Display */}
-      {sortedItems.length === 0 ? (
-        <div className="text-center py-12 bg-white border border-gray-200 rounded-xl">
-          <Search className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No items found</h3>
-          <p className="text-gray-500">Try adjusting your search or filters</p>
-        </div>
-      ) : (
-        <div className={viewMode === 'grid'
-          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'
-          : 'space-y-6'
-        }>
-          {sortedItems.map(item => (
-            <div key={item.id} className={`bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 group ${
-              viewMode === 'list' ? 'flex gap-6 p-6' : 'p-5'
+      {/* Select All */}
+      {filteredItems.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg border border-gray-200 dark:border-gray-700">
+          <button
+            onClick={handleSelectAll}
+            className="flex items-center gap-3 w-full text-left"
+          >
+            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+              selectedItems.length === filteredItems.length
+                ? 'bg-black dark:bg-white border-black dark:border-white'
+                : 'border-gray-300 dark:border-gray-600'
             }`}>
-              {/* Selection Checkbox */}
-              <div className="absolute top-4 left-4 z-10">
-                <input
-                  type="checkbox"
-                  checked={selectedItems.includes(item.id)}
-                  onChange={() => handleSelectItem(item.id)}
-                  className="rounded"
-                />
-              </div>
+              {selectedItems.length === filteredItems.length && (
+                <svg className="w-3 h-3 text-white dark:text-black" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              )}
+            </div>
+            <span className="font-medium text-gray-900 dark:text-white">
+              {selectedItems.length === filteredItems.length ? 'Deselect All' : 'Select All'}
+            </span>
+          </button>
+        </div>
+      )}
 
-              {/* Image */}
-              <div className={`relative ${viewMode === 'list' ? 'w-40 h-40 flex-shrink-0' : 'aspect-[3/4] mb-5'}`}>
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-                {!item.inStock && (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-                    <span className="text-white font-medium text-sm">Out of Stock</span>
+      {/* Items Grid/List */}
+      <div className={`${
+        viewMode === 'grid' 
+          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' 
+          : 'space-y-4'
+      }`}>
+        {filteredItems.map((item) => {
+          const isSelected = selectedItems.find(p => p.id === item.id);
+          
+          if (viewMode === 'list') {
+            return (
+              <div
+                key={item.id}
+                className={`bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border transition-all duration-200 hover:shadow-2xl ${
+                  isSelected 
+                    ? 'border-black dark:border-white ring-2 ring-black/20 dark:ring-white/20' 
+                    : 'border-gray-200 dark:border-gray-700'
+                }`}
+              >
+                <div className="flex items-center gap-6">
+                  <button
+                    onClick={() => handleSelectItem(item)}
+                    className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                      isSelected
+                        ? 'bg-black dark:bg-white border-black dark:border-white'
+                        : 'border-gray-300 dark:border-gray-600'
+                    }`}
+                  >
+                    {isSelected && (
+                      <svg className="w-3 h-3 text-white dark:text-black" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+
+                  <Link href={`/products/${item.id}`} className="flex-shrink-0">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-24 h-24 object-cover rounded-2xl border border-gray-200 dark:border-gray-600"
+                    />
+                  </Link>
+
+                  <div className="flex-1 min-w-0">
+                    <Link href={`/products/${item.id}`}>
+                      <h3 className="font-semibold text-gray-900 dark:text-white text-lg mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        {item.name}
+                      </h3>
+                    </Link>
+                    
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 fill-current text-yellow-400" />
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{item.rating || 4.5}</span>
+                      </div>
+                      {item.originalPrice && item.originalPrice > item.price && (
+                        <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
+                          <TrendingDown className="w-4 h-4" />
+                          <span className="text-sm font-medium">
+                            {Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}% off
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                          ₹{item.price.toLocaleString()}
+                        </span>
+                        {item.originalPrice && item.originalPrice > item.price && (
+                          <span className="ml-2 text-sm text-gray-500 dark:text-gray-400 line-through">
+                            ₹{item.originalPrice.toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => handleAddToCart(item)}
+                          className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+                        >
+                          <ShoppingBag className="w-4 h-4" />
+                          Add to Cart
+                        </button>
+                        <button
+                          onClick={() => removeFromWishlist(item.id)}
+                          className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                )}
-                <div className="absolute top-2 right-2 flex gap-2">
-                  {item.discount > 0 && (
-                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                      -{item.discount}%
-                    </span>
-                  )}
                 </div>
               </div>
+            );
+          }
 
-              {/* Content */}
-              <div className={`flex-1 ${viewMode === 'list' ? 'flex flex-col justify-between' : ''}`}>
-                <div>
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="font-semibold text-gray-900 text-base line-clamp-2 pr-2">{item.name}</h3>
-                    <button
-                      onClick={() => removeFromWishlist(item.id)}
-                      className="text-gray-400 hover:text-red-500 transition-colors p-1 flex-shrink-0"
-                    >
-                      <Heart className="h-5 w-5 fill-current text-red-500" />
-                    </button>
+          return (
+            <div
+              key={item.id}
+              className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl border transition-all duration-200 hover:shadow-2xl hover:-translate-y-1 ${
+                isSelected 
+                  ? 'border-black dark:border-white ring-2 ring-black/20 dark:ring-white/20' 
+                  : 'border-gray-200 dark:border-gray-700'
+              }`}
+            >
+              <div className="relative">
+                <button
+                  onClick={() => handleSelectItem(item)}
+                  className={`absolute top-4 left-4 z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors backdrop-blur-sm ${
+                    isSelected
+                      ? 'bg-black dark:bg-white border-black dark:border-white'
+                      : 'bg-white/80 dark:bg-gray-800/80 border-gray-300 dark:border-gray-600'
+                  }`}
+                >
+                  {isSelected && (
+                    <svg className="w-3 h-3 text-white dark:text-black" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => removeFromWishlist(item.id)}
+                  className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group"
+                >
+                  <Heart className="w-5 h-5 text-red-500 fill-current group-hover:scale-110 transition-transform" />
+                </button>
+
+                <Link href={`/products/${item.id}`}>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </Link>
+
+                {item.originalPrice && item.originalPrice > item.price && (
+                  <div className="absolute bottom-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    {Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}% OFF
                   </div>
+                )}
+              </div>
 
-                  <div className="text-sm text-gray-500 mb-3 font-medium">{item.brand}</div>
+              <div className="p-6">
+                <Link href={`/products/${item.id}`}>
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-lg mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-2">
+                    {item.name}
+                  </h3>
+                </Link>
 
-                  {/* Rating */}
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 fill-current text-yellow-400" />
-                      <span className="text-sm font-medium text-gray-700 ml-1">{item.rating}</span>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-current text-yellow-400" />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{item.rating || 4.5}</span>
+                  </div>
+                  {item.addedAt && (
+                    <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                      <Clock className="w-3 h-3" />
+                      <span className="text-xs">
+                        Added {new Date(item.addedAt).toLocaleDateString()}
+                      </span>
                     </div>
-                    <span className="text-sm text-gray-500">({item.reviewCount} reviews)</span>
-                  </div>
+                  )}
+                </div>
 
-                  {/* Price */}
-                  <div className="flex items-center gap-2 mb-5">
-                    <span className="text-xl font-bold text-gray-900">₹{item.price}</span>
-                    {item.originalPrice > item.price && (
-                      <span className="text-base text-gray-500 line-through">₹{item.originalPrice}</span>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <span className="text-xl font-bold text-gray-900 dark:text-white">
+                      ₹{item.price.toLocaleString()}
+                    </span>
+                    {item.originalPrice && item.originalPrice > item.price && (
+                      <span className="ml-2 text-sm text-gray-500 dark:text-gray-400 line-through">
+                        ₹{item.originalPrice.toLocaleString()}
+                      </span>
                     )}
                   </div>
                 </div>
 
-                {/* Actions */}
-                <div className={`flex gap-3 ${viewMode === 'list' ? 'mt-6' : ''}`}>
-                  <button
-                    onClick={() => handleAddToCart(item)}
-                    disabled={!item.inStock}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-sm font-medium"
-                  >
-                    <ShoppingCart className="h-4 w-4" />
-                    {item.inStock ? 'Add to Cart' : 'Out of Stock'}
-                  </button>
-                  <Link
-                    href={`/products/${item.id}`}
-                    className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Link>
-                </div>
+                <button
+                  onClick={() => handleAddToCart(item)}
+                  className="w-full flex items-center justify-center gap-2 bg-black dark:bg-white text-white dark:text-black py-3 px-4 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  Add to Cart
+                </button>
               </div>
             </div>
-          ))}
+          );
+        })}
+      </div>
+
+      {filteredItems.length === 0 && searchQuery && (
+        <div className="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-gray-700 text-center">
+          <Search className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No items found</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            Try adjusting your search query
+          </p>
+          <button
+            onClick={() => setSearchQuery('')}
+            className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+          >
+            Clear Search
+          </button>
         </div>
       )}
     </div>

@@ -546,3 +546,56 @@
 .dark .text-shadow-premium {
   text-shadow: 0 2px 4px rgba(255,255,255,0.1);
 }
+
+/* Mobile Filter Drawer Animations */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Smooth scale animation for active states */
+.active-scale {
+  transform: scale(0.98);
+  transition: transform 0.1s ease-out;
+}
+
+/* Enhanced backdrop blur for modern feel */
+.backdrop-blur-elegant {
+  backdrop-filter: blur(8px) saturate(150%);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
+}

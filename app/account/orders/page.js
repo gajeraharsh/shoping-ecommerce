@@ -1,373 +1,395 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { 
-  Package, 
-  Search, 
-  Filter, 
-  Calendar,
-  Eye,
-  Download,
-  RotateCcw,
+import {
+  Package,
   Truck,
   CheckCircle,
   Clock,
-  XCircle,
-  ChevronDown,
-  Star
+  AlertCircle,
+  Search,
+  Filter,
+  Calendar,
+  MapPin,
+  Star,
+  Download,
+  RefreshCw,
+  ChevronRight,
+  ShoppingBag,
+  Eye,
+  ArrowLeft
 } from 'lucide-react';
 
 export default function OrdersPage() {
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [orders, setOrders] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('newest');
-  const [showFilters, setShowFilters] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
 
-  // Mock orders data
-  const orders = [
-    {
-      id: 'ORD-2024-001',
-      date: '2024-01-15',
-      status: 'delivered',
-      total: 2499,
-      items: [
+  useEffect(() => {
+    // Mock orders data
+    setTimeout(() => {
+      const mockOrders = [
         {
-          id: 1,
-          name: 'Floral Summer Dress',
-          image: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=300',
-          price: 1899,
-          quantity: 1,
-          size: 'M',
-          color: 'Blue'
+          id: 'ORD-2024-001',
+          date: '2024-01-15',
+          status: 'delivered',
+          total: 2499,
+          items: 2,
+          deliveryDate: '2024-01-18',
+          address: 'Home - 123 Main Street, Mumbai',
+          items_detail: [
+            { name: 'Elegant Black Dress', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400', price: 1299, quantity: 1 },
+            { name: 'Designer Handbag', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400', price: 1200, quantity: 1 }
+          ]
         },
         {
-          id: 2,
-          name: 'Cotton Casual Shirt',
-          image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=300',
-          price: 600,
-          quantity: 1,
-          size: 'L',
-          color: 'White'
-        }
-      ],
-      deliveryDate: '2024-01-18',
-      canReturn: true,
-      canReview: true
-    },
-    {
-      id: 'ORD-2024-002',
-      date: '2024-01-12',
-      status: 'shipped',
-      total: 1899,
-      items: [
-        {
-          id: 3,
-          name: 'Designer Kurta Set',
-          image: 'https://images.pexels.com/photos/8674628/pexels-photo-8674628.jpeg?auto=compress&cs=tinysrgb&w=300',
-          price: 1899,
-          quantity: 1,
-          size: 'XL',
-          color: 'Navy'
-        }
-      ],
-      expectedDelivery: '2024-01-16',
-      trackingNumber: 'TRK123456789'
-    },
-    {
-      id: 'ORD-2024-003',
-      date: '2024-01-10',
-      status: 'processing',
-      total: 3299,
-      items: [
-        {
-          id: 4,
-          name: 'Premium Silk Saree',
-          image: 'https://images.pexels.com/photos/9558618/pexels-photo-9558618.jpeg?auto=compress&cs=tinysrgb&w=300',
-          price: 2999,
-          quantity: 1,
-          size: 'Free Size',
-          color: 'Gold'
+          id: 'ORD-2024-002', 
+          date: '2024-01-12',
+          status: 'shipped',
+          total: 1899,
+          items: 1,
+          deliveryDate: '2024-01-16',
+          address: 'Office - 456 Business Park, Delhi',
+          items_detail: [
+            { name: 'Casual Summer Top', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400', price: 1899, quantity: 1 }
+          ]
         },
         {
-          id: 5,
-          name: 'Matching Blouse',
-          image: 'https://images.pexels.com/photos/7679659/pexels-photo-7679659.jpeg?auto=compress&cs=tinysrgb&w=300',
-          price: 300,
-          quantity: 1,
-          size: 'M',
-          color: 'Gold'
-        }
-      ],
-      canCancel: true
-    },
-    {
-      id: 'ORD-2024-004',
-      date: '2024-01-08',
-      status: 'cancelled',
-      total: 1299,
-      items: [
+          id: 'ORD-2024-003',
+          date: '2024-01-08',
+          status: 'processing',
+          total: 3299,
+          items: 3,
+          deliveryDate: '2024-01-20',
+          address: 'Home - 123 Main Street, Mumbai',
+          items_detail: [
+            { name: 'Designer Jacket', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400', price: 2299, quantity: 1 },
+            { name: 'Cotton T-Shirt', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400', price: 599, quantity: 1 },
+            { name: 'Denim Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400', price: 1299, quantity: 1 }
+          ]
+        },
         {
-          id: 6,
-          name: 'Denim Jacket',
-          image: 'https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg?auto=compress&cs=tinysrgb&w=300',
-          price: 1299,
-          quantity: 1,
-          size: 'S',
-          color: 'Blue'
+          id: 'ORD-2024-004',
+          date: '2024-01-05',
+          status: 'cancelled',
+          total: 999,
+          items: 1,
+          deliveryDate: null,
+          address: 'Home - 123 Main Street, Mumbai',
+          items_detail: [
+            { name: 'Sports Shoes', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400', price: 999, quantity: 1 }
+          ]
+        },
+        {
+          id: 'ORD-2024-005',
+          date: '2024-01-02',
+          status: 'delivered',
+          total: 1599,
+          items: 2,
+          deliveryDate: '2024-01-05',
+          address: 'Home - 123 Main Street, Mumbai',
+          items_detail: [
+            { name: 'Winter Scarf', image: 'https://images.unsplash.com/photo-1520975954732-35dd22299614?w=400', price: 799, quantity: 1 },
+            { name: 'Woolen Gloves', image: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?w=400', price: 800, quantity: 1 }
+          ]
         }
-      ],
-      cancelledDate: '2024-01-09'
+      ];
+      setOrders(mockOrders);
+      setFilteredOrders(mockOrders);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    let filtered = orders;
+
+    // Filter by status
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(order => order.status === statusFilter);
     }
-  ];
 
-  const statusConfig = {
-    processing: {
-      label: 'Processing',
-      color: 'bg-yellow-100 text-yellow-800',
-      icon: Clock
-    },
-    shipped: {
-      label: 'Shipped',
-      color: 'bg-blue-100 text-blue-800',
-      icon: Truck
-    },
-    delivered: {
-      label: 'Delivered',
-      color: 'bg-green-100 text-green-800',
-      icon: CheckCircle
-    },
-    cancelled: {
-      label: 'Cancelled',
-      color: 'bg-red-100 text-red-800',
-      icon: XCircle
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter(order =>
+        order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order.items_detail.some(item => 
+          item.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+
+    setFilteredOrders(filtered);
+  }, [orders, statusFilter, searchQuery]);
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'delivered':
+        return <CheckCircle className="w-5 h-5 text-green-500" />;
+      case 'shipped':
+        return <Truck className="w-5 h-5 text-blue-500" />;
+      case 'processing':
+        return <Clock className="w-5 h-5 text-orange-500" />;
+      case 'cancelled':
+        return <AlertCircle className="w-5 h-5 text-red-500" />;
+      default:
+        return <Package className="w-5 h-5 text-gray-500" />;
     }
   };
 
-  const filterOptions = [
-    { id: 'all', label: 'All Orders', count: orders.length },
-    { id: 'processing', label: 'Processing', count: orders.filter(o => o.status === 'processing').length },
-    { id: 'shipped', label: 'Shipped', count: orders.filter(o => o.status === 'shipped').length },
-    { id: 'delivered', label: 'Delivered', count: orders.filter(o => o.status === 'delivered').length },
-    { id: 'cancelled', label: 'Cancelled', count: orders.filter(o => o.status === 'cancelled').length }
-  ];
-
-  const filteredOrders = orders.filter(order => {
-    if (activeFilter !== 'all' && order.status !== activeFilter) return false;
-    if (searchQuery && !order.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
-
-  const sortedOrders = [...filteredOrders].sort((a, b) => {
-    if (sortBy === 'newest') return new Date(b.date) - new Date(a.date);
-    if (sortBy === 'oldest') return new Date(a.date) - new Date(b.date);
-    if (sortBy === 'amount-high') return b.total - a.total;
-    if (sortBy === 'amount-low') return a.total - b.total;
-    return 0;
-  });
-
-  const getOrderStatusIcon = (status) => {
-    const config = statusConfig[status];
-    const Icon = config.icon;
-    return <Icon className="h-4 w-4" />;
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'delivered':
+        return 'text-green-600 bg-green-50 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800';
+      case 'shipped':
+        return 'text-blue-600 bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800';
+      case 'processing':
+        return 'text-orange-600 bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400 dark:border-orange-800';
+      case 'cancelled':
+        return 'text-red-600 bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800';
+      default:
+        return 'text-gray-600 bg-gray-50 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700';
+    }
   };
+
+  const statusCounts = {
+    all: orders.length,
+    processing: orders.filter(o => o.status === 'processing').length,
+    shipped: orders.filter(o => o.status === 'shipped').length,
+    delivered: orders.filter(o => o.status === 'delivered').length,
+    cancelled: orders.filter(o => o.status === 'cancelled').length
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+            <div className="space-y-3">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-20 bg-gray-100 dark:bg-gray-700 rounded-2xl"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 overflow-x-hidden">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">My Orders</h1>
-        <p className="text-sm sm:text-base text-gray-600">Track and manage all your fashion purchases</p>
-      </div>
-
-      {/* Filters and Search */}
-      <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 mb-4 sm:mb-6">
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center sm:justify-between">
-          {/* Search */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search orders by ID..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
-            />
-          </div>
-
-          {/* Sort and Filter Controls */}
-          <div className="flex gap-2 sm:gap-3">
-            <div className="relative">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
-              >
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-                <option value="amount-high">Amount: High to Low</option>
-                <option value="amount-low">Amount: Low to High</option>
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-            </div>
-
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors sm:hidden text-sm"
+      <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/account"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors lg:hidden"
             >
-              <Filter className="h-4 w-4" />
-              Filters
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Orders</h1>
+              <p className="text-gray-600 dark:text-gray-400">Track and manage your purchases</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <button className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors">
+              <Download className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            </button>
+            <button 
+              onClick={() => setLoading(true)}
+              className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors"
+            >
+              <RefreshCw className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             </button>
           </div>
         </div>
 
-        {/* Status Filters */}
-        <div className={`mt-4 ${showFilters ? 'block' : 'hidden sm:block'}`}>
-          <div className="flex flex-wrap gap-2">
-            {filterOptions.map(option => (
-              <button
-                key={option.id}
-                onClick={() => setActiveFilter(option.id)}
-                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
-                  activeFilter === option.id
-                    ? 'bg-pink-100 text-pink-700 border border-pink-200'
-                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                {option.label}
-                <span className={`px-2 py-0.5 rounded-full text-xs ${
-                  activeFilter === option.id ? 'bg-pink-200' : 'bg-gray-200'
-                }`}>
-                  {option.count}
-                </span>
-              </button>
-            ))}
+        {/* Search and Filters */}
+        <div className="space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search orders by ID or product name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-base touch-manipulation min-h-[56px]"
+            />
+          </div>
+
+          {/* Filter Tabs */}
+          <div className="relative">
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory -mx-2 px-2">
+              {Object.entries(statusCounts).map(([status, count]) => (
+                <button
+                  key={status}
+                  onClick={() => setStatusFilter(status)}
+                  className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold text-sm whitespace-nowrap transition-all snap-start flex-shrink-0 min-w-max touch-manipulation min-h-[48px] ${
+                    statusFilter === status
+                      ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg scale-105'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 active:scale-95'
+                  }`}
+                >
+                  <span className="capitalize">{status === 'all' ? 'All' : status}</span>
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                    statusFilter === status
+                      ? 'bg-white/25 dark:bg-black/25 text-white dark:text-black'
+                      : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Scroll Indicator */}
+            <div className="absolute right-0 top-0 bottom-2 w-6 bg-gradient-to-l from-white dark:from-gray-800 to-transparent pointer-events-none sm:hidden" />
           </div>
         </div>
       </div>
 
       {/* Orders List */}
-      <div className="space-y-4 sm:space-y-6">
-        {sortedOrders.length === 0 ? (
-          <div className="text-center py-8 sm:py-12 bg-white border border-gray-200 rounded-lg sm:rounded-xl px-4">
-            <Package className="h-12 w-12 sm:h-16 sm:w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No orders found</h3>
-            <p className="text-sm sm:text-base text-gray-500 mb-6">
-              {searchQuery ? 'Try adjusting your search terms' : 'You haven\'t placed any orders yet'}
+      <div className="space-y-4">
+        {filteredOrders.length === 0 ? (
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-gray-700 text-center">
+            <Package className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No orders found</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              {searchQuery || statusFilter !== 'all' 
+                ? 'Try adjusting your search or filters'
+                : 'Start shopping to see your orders here'
+              }
             </p>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm sm:text-base"
+              className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
             >
-              <Package className="h-4 w-4" />
+              <ShoppingBag className="w-4 h-4" />
               Start Shopping
             </Link>
           </div>
         ) : (
-          sortedOrders.map(order => {
-            const currentStatusConfig = statusConfig[order.status] || statusConfig.processing;
-            const StatusIcon = currentStatusConfig.icon;
-
-            return (
-              <div key={order.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-                {/* Order Header */}
-                <div className="p-6 border-b border-gray-100">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className="text-sm text-gray-500">
-                        Order #{order.id}
-                      </div>
-                      <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${currentStatusConfig.color}`}>
-                        <StatusIcon className="h-4 w-4" />
-                        {currentStatusConfig.label}
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 text-sm text-gray-500">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        {new Date(order.date).toLocaleDateString()}
-                      </div>
-                      <div className="text-lg font-semibold text-gray-900">
-                        ₹{order.total}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Order Items */}
-                <div className="p-6">
-                  <div className="space-y-4">
-                    {order.items.map(item => (
-                      <div key={item.id} className="flex gap-4">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-16 h-16 object-cover rounded-lg border border-gray-200"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-gray-900 truncate">{item.name}</h4>
-                          <div className="text-sm text-gray-500">
-                            {item.size} | {item.color} | Qty: {item.quantity}
-                          </div>
-                          <div className="text-sm font-medium text-gray-900">₹{item.price}</div>
+          filteredOrders.map((order) => (
+            <div
+              key={order.id}
+              className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-2xl transition-shadow"
+            >
+              {/* Order Header */}
+              <div className="p-6 sm:p-8 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    {getStatusIcon(order.status)}
+                    <div>
+                      <h3 className="font-bold text-gray-900 dark:text-white text-lg">{order.id}</h3>
+                      <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {new Date(order.date).toLocaleDateString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric'
+                          })}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Package className="w-4 h-4" />
+                          {order.items} {order.items === 1 ? 'item' : 'items'}
                         </div>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* Order Actions */}
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-gray-900 dark:text-white">₹{order.total.toLocaleString()}</div>
+                      <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}>
+                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      </span>
+                    </div>
                     <Link
                       href={`/account/orders/${order.id}`}
-                      className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm"
+                      className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors"
                     >
-                      <Eye className="h-4 w-4" />
-                      View Details
+                      <Eye className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                     </Link>
-
-                    {order.trackingNumber && (
-                      <Link
-                        href={`/account/tracking?order=${order.id}`}
-                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
-                      >
-                        <Truck className="h-4 w-4" />
-                        Track Order
-                      </Link>
-                    )}
-
-                    {order.canReturn && (
-                      <button className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm">
-                        <RotateCcw className="h-4 w-4" />
-                        Return
-                      </button>
-                    )}
-
-                    {order.canReview && (
-                      <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm">
-                        <Star className="h-4 w-4" />
-                        Review
-                      </button>
-                    )}
-
-                    {order.canCancel && (
-                      <button className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
-                        <XCircle className="h-4 w-4" />
-                        Cancel
-                      </button>
-                    )}
-
-                    <button className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm">
-                      <Download className="h-4 w-4" />
-                      Invoice
-                    </button>
                   </div>
                 </div>
+
+                {order.deliveryDate && (
+                  <div className="mt-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
+                    <MapPin className="w-4 h-4" />
+                    <span>
+                      {order.status === 'delivered' 
+                        ? `Delivered on ${new Date(order.deliveryDate).toLocaleDateString('en-IN')}` 
+                        : `Expected delivery: ${new Date(order.deliveryDate).toLocaleDateString('en-IN')}`
+                      }
+                    </span>
+                  </div>
+                )}
               </div>
-            );
-          })
+
+              {/* Order Items */}
+              <div className="p-6 sm:p-8">
+                <div className="space-y-4">
+                  {order.items_detail.map((item, index) => (
+                    <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-16 h-16 rounded-xl object-cover border border-gray-200 dark:border-gray-600"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate">
+                          {item.name}
+                        </h4>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            Qty: {item.quantity}
+                          </span>
+                          <span className="font-bold text-gray-900 dark:text-white">
+                            ₹{item.price.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                  <Link
+                    href={`/account/orders/${order.id}`}
+                    className="flex-1 flex items-center justify-center gap-2 bg-black dark:bg-white text-white dark:text-black py-3 px-4 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+                  >
+                    <Eye className="w-4 h-4" />
+                    View Details
+                  </Link>
+
+                  {order.status === 'delivered' && (
+                    <button className="flex-1 flex items-center justify-center gap-2 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <Star className="w-4 h-4" />
+                      Rate & Review
+                    </button>
+                  )}
+
+                  {(order.status === 'shipped' || order.status === 'processing') && (
+                    <Link
+                      href={`/account/tracking?orderId=${order.id}`}
+                      className="flex-1 flex items-center justify-center gap-2 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <Truck className="w-4 h-4" />
+                      Track Order
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
         )}
       </div>
     </div>

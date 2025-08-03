@@ -144,7 +144,7 @@ export default function Header() {
             <Link href="/wishlist" className="relative w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center" style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
               <Heart className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px]">
+                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
                   {wishlistCount > 99 ? '99+' : wishlistCount}
                 </span>
               )}
@@ -154,7 +154,7 @@ export default function Header() {
             <Link href="/cart" className="relative w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center" style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
               <ShoppingBag className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px]">
+                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
@@ -240,7 +240,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 py-4 safe-area-bottom">
+          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 py-4 safe-area-bottom animate-fade-in">
             <div className="flex flex-col space-y-1">
               {navigation.map((item) => (
                 <Link
