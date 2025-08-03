@@ -1,8 +1,8 @@
 import { Instagram, Heart, MessageCircle, ExternalLink } from 'lucide-react';
+import { useMemo } from 'react';
 
 export default function InstagramFeed() {
-  // Mock Instagram posts data
-  const instagramPosts = [
+  const instagramPosts = useMemo(() => [
     {
       id: 1,
       image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop',
@@ -59,7 +59,7 @@ export default function InstagramFeed() {
       comments: 134,
       caption: 'Casual sophistication for everyday moments 🌸 #CasualChic'
     }
-  ];
+  ], []);
 
   const formatNumber = (num) => {
     if (num >= 1000) {
@@ -100,16 +100,18 @@ export default function InstagramFeed() {
               target="_blank"
               rel="noopener noreferrer"
               className="group relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-xl overflow-hidden block"
+              style={{ transform: 'translateZ(0)' }}
             >
               <img
                 src={post.image}
                 alt="Instagram post"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                style={{ transform: 'translateZ(0)' }}
               />
               
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-300 flex items-center justify-center">
-                <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform scale-75 group-hover:scale-100">
+                <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform scale-90 group-hover:scale-100">
                   <div className="flex items-center justify-center gap-6 mb-3">
                     <div className="flex items-center gap-2">
                       <Heart className="h-5 w-5 fill-white" />

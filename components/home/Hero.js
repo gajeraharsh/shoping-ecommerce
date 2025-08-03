@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -25,7 +25,7 @@ export default function Hero() {
     }, 800);
   }, []);
 
-  const heroSlides = [
+  const heroSlides = useMemo(() => [
     {
       id: 1,
       title: "Autumn Collection",
@@ -53,7 +53,49 @@ export default function Hero() {
       cta: "Shop Now",
       link: "/products?category=casual"
     }
-  ];
+  ], []);
+
+  const categories = useMemo(() => [
+    {
+      title: "New Arrivals",
+      description: "Latest trends and seasonal favorites",
+      image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
+      link: "/products?sort=newest"
+    },
+    {
+      title: "Bestsellers",
+      description: "Customer favorites and top-rated pieces",
+      image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
+      link: "/products?sort=popular"
+    },
+    {
+      title: "Sale",
+      description: "Limited time offers on premium pieces",
+      image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1000&auto=format&fit=crop",
+      link: "/products?sale=true"
+    }
+  ], []);
+
+  const testimonials = useMemo(() => [
+    {
+      quote: "Absolutely stunning quality and the perfect fit. The attention to detail is remarkable.",
+      author: "Sarah Chen",
+      role: "Fashion Enthusiast",
+      rating: 5
+    },
+    {
+      quote: "Finally found a brand that understands elegance. Every piece feels like it was made just for me.",
+      author: "Priya Sharma",
+      role: "Working Professional",
+      rating: 5
+    },
+    {
+      quote: "The craftsmanship is exceptional. These pieces have become staples in my wardrobe.",
+      author: "Emma Thompson",
+      role: "Style Blogger",
+      rating: 5
+    }
+  ], []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -69,13 +111,14 @@ export default function Hero() {
           pagination={{
             clickable: true,
             bulletClass: 'swiper-pagination-bullet !bg-white/40 !w-2 !h-2 !mx-1.5 !border !border-white/20',
-          bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !w-12 !h-2 !rounded-full !border-white',
-          renderBullet: function (index, className) {
-            return '<span class="' + className + '"></span>';
-          },
+            bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !w-12 !h-2 !rounded-full !border-white',
+            renderBullet: function (index, className) {
+              return '<span class="' + className + '"></span>';
+            },
           }}
           loop={true}
           className="h-full"
+          style={{ willChange: 'auto' }}
         >
           {heroSlides.map((slide) => (
             <SwiperSlide key={slide.id}>
@@ -86,6 +129,7 @@ export default function Hero() {
                   src={slide.image}
                   alt={slide.title}
                   className="w-full h-full object-cover"
+                  style={{ transform: 'translateZ(0)' }}
                 />
                 
                 <div className="absolute inset-0 z-20 flex items-center safe-area-bottom">
@@ -109,15 +153,14 @@ export default function Hero() {
                         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                           <Link
                             href={slide.link}
-                            className="relative inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium hover:bg-white/20 hover:border-white/30 transition-all duration-500 group touch-manipulation min-h-[48px] text-sm sm:text-base backdrop-blur-elegant overflow-hidden"
+                            className="relative inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium hover:bg-white/20 hover:border-white/30 transition-colors duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base overflow-hidden"
                           >
                             <span className="relative z-10">{slide.cta}</span>
                             <ArrowRight className="ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300 relative z-10" />
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                           </Link>
                           <Link
                             href="/about"
-                            className="inline-flex items-center text-white/80 hover:text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium border border-white/10 hover:border-white/30 transition-all duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
+                            className="inline-flex items-center text-white/80 hover:text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium border border-white/10 hover:border-white/30 transition-colors duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
                           >
                             <span>Learn More</span>
                             <ArrowRight className="ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
@@ -168,42 +211,25 @@ export default function Hero() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {[
-              {
-                title: "New Arrivals",
-                description: "Latest trends and seasonal favorites",
-                image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
-                link: "/products?sort=newest"
-              },
-              {
-                title: "Bestsellers",
-                description: "Customer favorites and top-rated pieces",
-                image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
-                link: "/products?sort=popular"
-              },
-              {
-                title: "Sale",
-                description: "Limited time offers on premium pieces",
-                image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1000&auto=format&fit=crop",
-                link: "/products?sale=true"
-              }
-            ].map((category, index) => (
+            {categories.map((category, index) => (
               <Link
                 key={index}
                 href={category.link}
-                className="group relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/3] block touch-manipulation hover-luxury shadow-luxury"
+                className="group relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/3] block touch-manipulation shadow-sm"
+                style={{ transform: 'translateZ(0)' }}
               >
                 <img
                   src={category.image}
                   alt={category.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  style={{ transform: 'translateZ(0)' }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/70 transition-all duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/70 transition-colors duration-300"></div>
                 <div className="absolute inset-0 p-6 sm:p-8 lg:p-10 flex flex-col justify-end">
-                  <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-white mb-3 heading-luxury">{category.title}</h3>
-                    <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base text-elegant opacity-90 group-hover:opacity-100 transition-opacity">{category.description}</p>
-                    <div className="inline-flex items-center text-white/90 group-hover:text-white transition-all duration-300 text-sm sm:text-base">
+                  <div className="transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
+                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-white mb-3">{category.title}</h3>
+                    <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base opacity-90 group-hover:opacity-100 transition-opacity duration-300">{category.description}</p>
+                    <div className="inline-flex items-center text-white/90 group-hover:text-white transition-colors duration-300 text-sm sm:text-base">
                       <span className="font-medium">Explore</span>
                       <div className="ml-3 w-6 h-6 rounded-full border border-white/30 group-hover:border-white flex items-center justify-center transition-all duration-300 group-hover:bg-white/10">
                         <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform duration-300" />
@@ -244,10 +270,10 @@ export default function Hero() {
           <div className="text-center px-4 sm:px-0">
             <Link
               href="/products"
-              className="inline-flex items-center bg-black dark:bg-white text-white dark:text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors group touch-manipulation min-h-[48px] text-sm sm:text-base"
+              className="inline-flex items-center bg-black dark:bg-white text-white dark:text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
             >
               View All Products
-              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
           </div>
         </div>
@@ -266,37 +292,18 @@ export default function Hero() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {[
-              {
-                quote: "Absolutely stunning quality and the perfect fit. The attention to detail is remarkable.",
-                author: "Sarah Chen",
-                role: "Fashion Enthusiast",
-                rating: 5
-              },
-              {
-                quote: "Finally found a brand that understands elegance. Every piece feels like it was made just for me.",
-                author: "Priya Sharma",
-                role: "Working Professional",
-                rating: 5
-              },
-              {
-                quote: "The craftsmanship is exceptional. These pieces have become staples in my wardrobe.",
-                author: "Emma Thompson",
-                role: "Style Blogger",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <div key={index} className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm p-8 sm:p-10 rounded-2xl sm:rounded-3xl shadow-luxury border border-gray-100/50 dark:border-gray-800/50 hover-luxury group">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm p-8 sm:p-10 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100/50 dark:border-gray-800/50 group">
                 <div className="flex items-center mb-6">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
                     <Star key={i} className="w-5 h-5 text-amber-400 fill-current mr-1 opacity-90" />
                   ))}
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 text-lg sm:text-xl leading-relaxed text-elegant italic">
+                <p className="text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 text-lg sm:text-xl leading-relaxed italic">
                   "{testimonial.quote}"
                 </p>
                 <div className="space-y-1">
-                  <p className="font-medium text-gray-900 dark:text-white text-base sm:text-lg heading-luxury">{testimonial.author}</p>
+                  <p className="font-medium text-gray-900 dark:text-white text-base sm:text-lg">{testimonial.author}</p>
                   <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base tracking-wide">{testimonial.role}</p>
                 </div>
               </div>
