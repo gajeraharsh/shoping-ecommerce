@@ -222,7 +222,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-primary text-white py-3 sm:py-4 px-4 rounded-lg hover:bg-primary/90 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base"
+        className="w-full bg-primary text-white py-4 px-4 rounded-xl hover:bg-primary/90 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl"
       >
         {loading ? 'Processing...' : 'Place Order'}
       </button>
