@@ -68,8 +68,11 @@ export default function Hero() {
           }}
           pagination={{
             clickable: true,
-            bulletClass: 'swiper-pagination-bullet !bg-white/50 !w-2 !h-2 !mx-1',
-            bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !w-8 !h-2 !rounded-full',
+            bulletClass: 'swiper-pagination-bullet !bg-white/40 !w-2 !h-2 !mx-1.5 !border !border-white/20',
+          bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !w-12 !h-2 !rounded-full !border-white',
+          renderBullet: function (index, className) {
+            return '<span class="' + className + '"></span>';
+          },
           }}
           loop={true}
           className="h-full"
@@ -77,7 +80,8 @@ export default function Hero() {
           {heroSlides.map((slide) => (
             <SwiperSlide key={slide.id}>
               <div className="relative h-full">
-                <div className="absolute inset-0 bg-black/30 z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent z-10"></div>
                 <img
                   src={slide.image}
                   alt={slide.title}
@@ -87,23 +91,38 @@ export default function Hero() {
                 <div className="absolute inset-0 z-20 flex items-center safe-area-bottom">
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                     <div className="max-w-2xl text-center sm:text-left">
-                      <p className="text-white/90 text-xs sm:text-sm font-medium tracking-[0.1em] uppercase mb-3 sm:mb-4">
-                        {slide.subtitle}
-                      </p>
-                      <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-[1.1] px-2 sm:px-0">
-                        {slide.title}
+                      <div className="space-y-1 mb-6 sm:mb-8">
+                        <p className="text-white/70 text-xs sm:text-sm font-light tracking-[0.2em] uppercase opacity-90">
+                          {slide.subtitle}
+                        </p>
+                        <div className="w-12 h-px bg-white/30 mt-2"></div>
+                      </div>
+                      <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-white mb-6 sm:mb-8 leading-[0.9] tracking-[-0.02em] px-2 sm:px-0">
+                        <span className="font-extralight italic text-white/90">{slide.title.split(' ')[0]}</span>
+                        <br />
+                        <span className="font-bold">{slide.title.split(' ').slice(1).join(' ')}</span>
                       </h1>
-                      <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed max-w-lg mx-auto sm:mx-0 px-2 sm:px-0">
+                      <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-white/80 mb-8 sm:mb-12 leading-relaxed max-w-2xl mx-auto sm:mx-0 px-2 sm:px-0 font-light">
                         {slide.description}
                       </p>
                       <div className="px-2 sm:px-0">
-                        <Link
-                          href={slide.link}
-                          className="inline-flex items-center bg-white text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
-                        >
-                          {slide.cta}
-                          <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                          <Link
+                            href={slide.link}
+                            className="relative inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium hover:bg-white/20 hover:border-white/30 transition-all duration-500 group touch-manipulation min-h-[48px] text-sm sm:text-base backdrop-blur-elegant overflow-hidden"
+                          >
+                            <span className="relative z-10">{slide.cta}</span>
+                            <ArrowRight className="ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300 relative z-10" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                          </Link>
+                          <Link
+                            href="/about"
+                            className="inline-flex items-center text-white/80 hover:text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium border border-white/10 hover:border-white/30 transition-all duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
+                          >
+                            <span>Learn More</span>
+                            <ArrowRight className="ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
