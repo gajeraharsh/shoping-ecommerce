@@ -41,6 +41,38 @@ export default function Header() {
     }
   }, [isProfileDropdownOpen]);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = 'var(--scrollbar-width, 0px)';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '0px';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '0px';
+    };
+  }, [isMenuOpen]);
+
+  // Handle escape key for mobile menu
+  useEffect(() => {
+    function handleEscapeKey(event) {
+      if (event.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener('keydown', handleEscapeKey);
+      return () => {
+        document.removeEventListener('keydown', handleEscapeKey);
+      };
+    }
+  }, [isMenuOpen]);
+
   const handleSearch = (searchTerm) => {
     router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
   };
@@ -227,8 +259,11 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center"
+              className="lg:hidden w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-all duration-200 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center hover:scale-105 active:scale-95"
               style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
+              aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             >
               {isMenuOpen ?
                 <X className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} /> :
@@ -238,62 +273,175 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 py-4 safe-area-bottom animate-fade-in">
-            <div className="flex flex-col space-y-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base font-medium transition-colors touch-manipulation min-h-[44px] flex items-center"
-                >
-                  {item.name}
-                </Link>
-              ))}
+          <div className="lg:hidden fixed inset-0 z-50">
+            {/* Background Overlay */}
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-out"
+              onClick={() => setIsMenuOpen(false)}
+            />
 
-              {/* Mobile User Links */}
-              <div className="border-t border-gray-100 dark:border-gray-800 pt-4 mt-4">
-                {user ? (
-                  <>
-                    <Link
-                      href="/account"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base flex items-center gap-3 font-medium transition-colors touch-manipulation min-h-[44px]"
-                    >
-                      <User className="h-5 w-5" />
-                      My Account
-                    </Link>
+            {/* Sidebar */}
+            <div
+              className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-all duration-300 ease-out translate-x-0 animate-in slide-in-from-right-full"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mobile-menu-title"
+            >
+              {/* Sidebar Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black px-3 py-2 rounded-xl font-bold text-lg tracking-tight">
+                    M
+                  </div>
+                  <span id="mobile-menu-title" className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
+                    {BRAND.name}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="w-10 h-10 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-all duration-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center hover:scale-105 active:scale-95"
+                  aria-label="Close navigation menu"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Sidebar Content */}
+              <div className="flex flex-col h-full overflow-y-auto">
+                {/* Navigation Links */}
+                <nav id="mobile-navigation" className="flex-1 px-6 py-6" aria-label="Main navigation">
+                  <div className="space-y-2">
+                    {navigation.map((item, index) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={`group flex items-center px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl text-base font-medium transition-all duration-200 touch-manipulation transform hover:scale-[0.98] ${
+                          isMenuOpen ? 'animate-in slide-in-from-right-5 fade-in' : ''
+                        }`}
+                        style={{
+                          animationDelay: `${(index + 1) * 100}ms`,
+                          animationFillMode: 'both'
+                        }}
+                      >
+                        <span className="relative">
+                          {item.name}
+                          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 px-4">Quick Actions</h3>
+                    <div className="space-y-2">
+                      <Link
+                        href="/wishlist"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-200"
+                      >
+                        <Heart className="h-5 w-5" />
+                        <span>Wishlist</span>
+                        {wishlistCount > 0 && (
+                          <span className="ml-auto bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 text-xs px-2 py-1 rounded-full font-medium">
+                            {wishlistCount}
+                          </span>
+                        )}
+                      </Link>
+                      <Link
+                        href="/cart"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-200"
+                      >
+                        <ShoppingBag className="h-5 w-5" />
+                        <span>Cart</span>
+                        {cartCount > 0 && (
+                          <span className="ml-auto bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 text-xs px-2 py-1 rounded-full font-medium">
+                            {cartCount}
+                          </span>
+                        )}
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* User Section */}
+                  <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
+                    {user ? (
+                      <>
+                        <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-xl mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                              {user.email?.[0]?.toUpperCase() || 'U'}
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">Welcome back!</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[200px]">{user.email}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Link
+                            href="/account"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-200"
+                          >
+                            <User className="h-5 w-5" />
+                            <span>My Account</span>
+                          </Link>
+                          <Link
+                            href="/account/orders"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-200"
+                          >
+                            <ShoppingBag className="h-5 w-5" />
+                            <span>Order History</span>
+                          </Link>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="space-y-3">
+                        <Link
+                          href="/auth/login"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl text-base font-medium transition-all duration-200 hover:bg-gray-800 dark:hover:bg-gray-100"
+                        >
+                          <User className="h-5 w-5" />
+                          Sign in
+                        </Link>
+                        <Link
+                          href="/auth/register"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-base font-medium transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                        >
+                          Create account
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </nav>
+
+                {/* Sidebar Footer */}
+                <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  {user && (
                     <button
                       onClick={() => {
                         logout();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full text-left px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base font-medium transition-colors touch-manipulation min-h-[44px]"
+                      className="w-full px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl text-base font-medium transition-all duration-200"
                     >
                       Sign out
                     </button>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      href="/auth/login"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base flex items-center gap-3 font-medium transition-colors touch-manipulation min-h-[44px]"
-                    >
-                      <User className="h-5 w-5" />
-                      Sign in
-                    </Link>
-                    <Link
-                      href="/auth/register"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base font-medium transition-colors touch-manipulation min-h-[44px]"
-                    >
-                      Create account
-                    </Link>
-                  </>
-                )}
+                  )}
+                  <div className="text-center mt-4">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      © 2024 {BRAND.name}. All rights reserved.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
