@@ -177,10 +177,7 @@ export default function Header() {
               )}
             </Link>
 
-            {/* Dark Mode Toggle */}
-            <div className="hidden sm:block">
-              <DarkModeToggle />
-            </div>
+
 
             {/* User Account */}
             <div className="relative hidden sm:block" ref={profileDropdownRef}>
