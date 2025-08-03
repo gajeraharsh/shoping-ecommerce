@@ -160,21 +160,57 @@ export default function ProductsPage() {
         <div className="flex gap-8">
           {/* Mobile Filters Overlay */}
           {showFilters && (
-            <div className="lg:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setShowFilters(false)}>
-              <div className="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white dark:bg-gray-900 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="lg:hidden fixed inset-0 z-50">
+              {/* Backdrop with fade animation */}
+              <div
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-out"
+                style={{
+                  animation: showFilters ? 'fadeIn 0.3s ease-out' : 'fadeOut 0.3s ease-out'
+                }}
+                onClick={() => setShowFilters(false)}
+              />
+
+              {/* Drawer with slide animation */}
+              <div
+                className="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transition-transform duration-300 ease-out transform"
+                style={{
+                  animation: showFilters ? 'slideInLeft 0.3s ease-out' : 'slideOutLeft 0.3s ease-out'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header with enhanced styling */}
+                <div className="relative p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Filters</h2>
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Filters</h2>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Refine your search</p>
+                    </div>
                     <button
                       onClick={() => setShowFilters(false)}
-                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full touch-manipulation"
+                      className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 touch-manipulation group"
                     >
-                      <X className="w-5 h-5" />
+                      <X className="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors" />
                     </button>
                   </div>
+                  {/* Decorative line */}
+                  <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent" />
                 </div>
-                <div className="p-4 sm:p-6">
-                  <ProductFilters filters={filters} onFilterChange={handleFilterChange} />
+
+                {/* Scrollable content with enhanced padding */}
+                <div className="overflow-y-auto h-[calc(100vh-120px)] bg-gray-50/30 dark:bg-gray-800/30">
+                  <div className="p-6">
+                    <ProductFilters filters={filters} onFilterChange={handleFilterChange} />
+                  </div>
+                </div>
+
+                {/* Apply button at bottom */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg">
+                  <button
+                    onClick={() => setShowFilters(false)}
+                    className="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-xl font-semibold text-base transition-all duration-200 hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-98 touch-manipulation shadow-lg"
+                  >
+                    Apply Filters ({filteredProducts.length} items)
+                  </button>
                 </div>
               </div>
             </div>
