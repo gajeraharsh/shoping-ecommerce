@@ -296,32 +296,32 @@ export default function OrderTrackingPage() {
                 const isLast = index === trackingData.timeline.length - 1;
                 
                 return (
-                  <div key={index} className="relative flex gap-6 pb-8">
+                  <div key={index} className="relative flex gap-4 sm:gap-6 pb-6 sm:pb-8">
                     {/* Timeline Line */}
                     {!isLast && (
-                      <div className={`absolute left-6 top-12 w-0.5 h-full ${
+                      <div className={`absolute left-5 sm:left-6 top-10 sm:top-12 w-0.5 h-full ${
                         step.completed ? 'bg-green-500' : 'bg-gray-200 dark:bg-gray-700'
                       }`} />
                     )}
-                    
+
                     {/* Timeline Dot */}
-                    <div className={`relative z-10 w-12 h-12 rounded-full flex items-center justify-center border-4 ${
-                      step.completed 
-                        ? 'bg-green-500 border-green-200 dark:border-green-800' 
+                    <div className={`relative z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center border-3 sm:border-4 flex-shrink-0 ${
+                      step.completed
+                        ? 'bg-green-500 border-green-200 dark:border-green-800'
                         : step.isCurrent
                         ? 'bg-blue-500 border-blue-200 dark:border-blue-800 animate-pulse'
                         : 'bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600'
                     }`}>
-                      <Icon className={`w-5 h-5 ${
+                      <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${
                         step.completed || step.isCurrent ? 'text-white' : 'text-gray-400'
                       }`} />
                     </div>
 
                     {/* Timeline Content */}
                     <div className="flex-1 min-w-0">
-                      <div className={`font-semibold text-lg mb-2 ${
-                        step.completed || step.isCurrent 
-                          ? 'text-gray-900 dark:text-white' 
+                      <div className={`font-semibold text-base sm:text-lg mb-2 ${
+                        step.completed || step.isCurrent
+                          ? 'text-gray-900 dark:text-white'
                           : 'text-gray-400 dark:text-gray-500'
                       }`}>
                         {step.status}
@@ -331,9 +331,9 @@ export default function OrderTrackingPage() {
                           </span>
                         )}
                       </div>
-                      <p className={`text-sm mb-2 ${
-                        step.completed || step.isCurrent 
-                          ? 'text-gray-600 dark:text-gray-400' 
+                      <p className={`text-sm mb-2 leading-relaxed ${
+                        step.completed || step.isCurrent
+                          ? 'text-gray-600 dark:text-gray-400'
                           : 'text-gray-400 dark:text-gray-500'
                       }`}>
                         {step.description}
