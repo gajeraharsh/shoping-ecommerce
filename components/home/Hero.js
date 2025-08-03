@@ -191,20 +191,24 @@ export default function Hero() {
               <Link
                 key={index}
                 href={category.link}
-                className="group relative overflow-hidden rounded-xl sm:rounded-2xl aspect-[4/3] block touch-manipulation"
+                className="group relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/3] block touch-manipulation hover-luxury shadow-luxury"
               >
                 <img
                   src={category.image}
                   alt={category.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
-                <div className="absolute inset-0 p-4 sm:p-6 lg:p-8 flex flex-col justify-end">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{category.title}</h3>
-                  <p className="text-white/90 mb-3 sm:mb-4 text-sm sm:text-base">{category.description}</p>
-                  <div className="inline-flex items-center text-white group-hover:text-white transition-colors text-sm sm:text-base">
-                    <span className="font-medium">Explore</span>
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/70 transition-all duration-500"></div>
+                <div className="absolute inset-0 p-6 sm:p-8 lg:p-10 flex flex-col justify-end">
+                  <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-white mb-3 heading-luxury">{category.title}</h3>
+                    <p className="text-white/80 mb-4 sm:mb-6 text-sm sm:text-base text-elegant opacity-90 group-hover:opacity-100 transition-opacity">{category.description}</p>
+                    <div className="inline-flex items-center text-white/90 group-hover:text-white transition-all duration-300 text-sm sm:text-base">
+                      <span className="font-medium">Explore</span>
+                      <div className="ml-3 w-6 h-6 rounded-full border border-white/30 group-hover:border-white flex items-center justify-center transition-all duration-300 group-hover:bg-white/10">
+                        <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform duration-300" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Link>
