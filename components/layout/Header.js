@@ -41,6 +41,22 @@ export default function Header() {
     }
   }, [isProfileDropdownOpen]);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = 'var(--scrollbar-width, 0px)';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '0px';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '0px';
+    };
+  }, [isMenuOpen]);
+
   const handleSearch = (searchTerm) => {
     router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
   };
