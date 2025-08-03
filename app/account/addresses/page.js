@@ -237,8 +237,8 @@ export default function AddressesPage() {
               Add your first delivery address to speed up checkout
             </p>
             <button
-              onClick={() => setShowAddForm(true)}
-              className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+              onClick={() => setShowAddModal(true)}
+              className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             >
               <Plus className="w-4 h-4" />
               Add Address
