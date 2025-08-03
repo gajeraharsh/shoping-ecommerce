@@ -83,33 +83,33 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
       />
 
       {/* Search Modal Container */}
-      <div className="flex items-start justify-center pt-20 min-h-full">
+      <div className="flex items-start justify-center pt-4 sm:pt-20 min-h-full px-2 sm:px-4 safe-area-top">
         {/* Search Modal */}
-        <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+        <div className="relative bg-white dark:bg-gray-900 rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
         {/* Search Input */}
-        <div className="flex items-center gap-4 p-6 border-b">
-          <Search className="h-6 w-6 text-gray-400" />
+        <div className="flex items-center gap-3 sm:gap-4 p-4 sm:p-6 border-b">
+          <Search className="h-5 w-5 sm:h-6 sm:w-6 text-gray-400" />
           <input
             ref={inputRef}
             type="text"
-            placeholder="Search for products, categories, or brands..."
+            placeholder="Search products..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="flex-1 text-lg outline-none"
+            className="flex-1 text-base sm:text-lg outline-none touch-manipulation"
           />
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
-            <X className="h-5 w-5 text-gray-400" />
+            <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
           </button>
         </div>
 
-        <div className="max-h-96 overflow-y-auto">
+        <div className="max-h-80 sm:max-h-96 overflow-y-auto">
           {/* Product Suggestions */}
           {suggestions.length > 0 && (
-            <div className="p-4">
+            <div className="p-3 sm:p-4">
               <h3 className="text-sm font-medium text-gray-900 mb-3">Products</h3>
               <div className="space-y-2">
                 {suggestions.map(product => (
@@ -117,18 +117,18 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
                     key={product.id}
                     href={`/products/${product.id}`}
                     onClick={onClose}
-                    className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors"
+                    className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors touch-manipulation min-h-[60px]"
                   >
                     <img
                       src={product.images[0]}
                       alt={product.name}
-                      className="w-12 h-12 object-cover rounded-lg"
+                      className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg flex-shrink-0"
                     />
-                    <div className="flex-1">
-                      <div className="font-medium text-gray-900">{product.name}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-gray-900 text-sm sm:text-base truncate">{product.name}</div>
                       <div className="text-sm text-gray-500">₹{product.price}</div>
                     </div>
-                    <div className="text-sm text-gray-400 capitalize">{product.category}</div>
+                    <div className="text-xs sm:text-sm text-gray-400 capitalize hidden sm:block">{product.category}</div>
                   </Link>
                 ))}
               </div>
@@ -137,7 +137,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
 
           {/* Recent Searches */}
           {query.length === 0 && recentSearches.length > 0 && (
-            <div className="p-4 border-b">
+            <div className="p-3 sm:p-4 border-b">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-medium text-gray-900 flex items-center gap-2">
                   <Clock className="h-4 w-4" />
@@ -145,7 +145,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
                 </h3>
                 <button
                   onClick={clearRecentSearches}
-                  className="text-xs text-gray-500 hover:text-gray-700"
+                  className="text-xs text-gray-500 hover:text-gray-700 touch-manipulation min-h-[44px] flex items-center"
                 >
                   Clear all
                 </button>
@@ -155,7 +155,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
                   <button
                     key={index}
                     onClick={() => handleSearch(search)}
-                    className="block w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors text-gray-700"
+                    className="block w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors text-gray-700 touch-manipulation min-h-[44px] flex items-center"
                   >
                     {search}
                   </button>
@@ -166,7 +166,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
 
           {/* Trending Searches */}
           {query.length === 0 && (
-            <div className="p-4">
+            <div className="p-3 sm:p-4">
               <h3 className="text-sm font-medium text-gray-900 mb-3 flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />
                 Trending Searches
@@ -176,7 +176,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
                   <button
                     key={index}
                     onClick={() => handleSearch(trend)}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
+                    className="inline-flex items-center gap-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors touch-manipulation min-h-[44px]"
                   >
                     <Tag className="h-3 w-3" />
                     {trend}
@@ -200,26 +200,26 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
 
         {/* Quick Actions */}
         {query.length === 0 && (
-          <div className="p-4 bg-gray-50 border-t">
+          <div className="p-3 sm:p-4 bg-gray-50 border-t safe-area-bottom">
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/products?category=kurtis"
                 onClick={onClose}
-                className="px-3 py-1.5 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 py-3 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors touch-manipulation min-h-[44px] flex items-center"
               >
                 Browse Kurtis
               </Link>
               <Link
                 href="/products?category=dresses"
                 onClick={onClose}
-                className="px-3 py-1.5 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 py-3 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors touch-manipulation min-h-[44px] flex items-center"
               >
                 Browse Dresses
               </Link>
               <Link
                 href="/products?category=ethnic"
                 onClick={onClose}
-                className="px-3 py-1.5 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 py-3 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors touch-manipulation min-h-[44px] flex items-center"
               >
                 Ethnic Wear
               </Link>
