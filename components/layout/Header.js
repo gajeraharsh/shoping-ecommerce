@@ -237,8 +237,12 @@ export default function Header() {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center"
+              style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
             >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMenuOpen ?
+                <X className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} /> :
+                <Menu className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
+              }
             </button>
           </div>
         </div>
