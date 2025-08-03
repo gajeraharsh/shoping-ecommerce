@@ -15,7 +15,7 @@ const BreadcrumbList = React.forwardRef((props, ref) => {
     <ol
       ref={ref}
       className={cn(
-        "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5",
+        "flex flex-wrap items-center gap-1 sm:gap-1.5 break-words text-xs sm:text-sm text-muted-foreground lg:gap-2.5 overflow-x-auto scrollbar-hide pb-1",
         className
       )}
       {...rest}
@@ -29,7 +29,7 @@ const BreadcrumbItem = React.forwardRef((props, ref) => {
   return (
     <li
       ref={ref}
-      className={cn("inline-flex items-center gap-1.5", className)}
+      className={cn("inline-flex items-center gap-1 sm:gap-1.5 flex-shrink-0 touch-manipulation min-h-[44px]", className)}
       {...rest}
     />
   );
@@ -43,7 +43,7 @@ const BreadcrumbLink = React.forwardRef((props, ref) => {
   return (
     <Comp
       ref={ref}
-      className={cn("transition-colors hover:text-foreground", className)}
+      className={cn("transition-colors hover:text-foreground touch-manipulation py-2 px-1 rounded flex items-center min-h-[44px]", className)}
       {...rest}
     />
   );
@@ -58,7 +58,7 @@ const BreadcrumbPage = React.forwardRef((props, ref) => {
       role="link"
       aria-disabled="true"
       aria-current="page"
-      className={cn("font-normal text-foreground", className)}
+      className={cn("font-normal text-foreground py-2 px-1 min-h-[44px] flex items-center", className)}
       {...rest}
     />
   );
@@ -71,7 +71,7 @@ const BreadcrumbSeparator = (props) => {
     <li
       role="presentation"
       aria-hidden="true"
-      className={cn("[&>svg]:size-3.5", className)}
+      className={cn("[&>svg]:size-3 sm:[&>svg]:size-3.5 flex items-center min-h-[44px] flex-shrink-0", className)}
       {...rest}
     >
       {children ?? <ChevronRight />}
@@ -86,10 +86,10 @@ const BreadcrumbEllipsis = (props) => {
     <span
       role="presentation"
       aria-hidden="true"
-      className={cn("flex h-9 w-9 items-center justify-center", className)}
+      className={cn("flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center min-h-[44px] min-w-[44px] touch-manipulation", className)}
       {...rest}
     >
-      <MoreHorizontal className="h-4 w-4" />
+      <MoreHorizontal className="h-3 w-3 sm:h-4 sm:w-4" />
       <span className="sr-only">More</span>
     </span>
   );
