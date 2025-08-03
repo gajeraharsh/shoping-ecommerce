@@ -204,8 +204,19 @@ export default function AccountLayout({ children }) {
           {/* Mobile Sidebar Overlay */}
           {sidebarOpen && (
             <div className="lg:hidden fixed inset-0 z-50 flex">
-              <div className="fixed inset-0 bg-black bg-opacity-50" onClick={closeSidebar} />
-              <div className="relative flex flex-col w-80 max-w-[85vw] bg-white dark:bg-gray-800 shadow-xl overflow-y-auto">
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-out backdrop-blur-sm"
+                style={{
+                  animation: sidebarOpen ? 'fadeIn 0.3s ease-out' : 'fadeOut 0.3s ease-out'
+                }}
+                onClick={closeSidebar}
+              />
+              <div
+                className="relative flex flex-col w-80 max-w-[85vw] bg-white dark:bg-gray-800 shadow-xl overflow-y-auto transition-transform duration-300 ease-out"
+                style={{
+                  animation: sidebarOpen ? 'slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'slideOutLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+              >
                 {/* Header */}
                 <div className="bg-black dark:bg-white text-white dark:text-black p-6">
                   <div className="flex items-center justify-between mb-4">
