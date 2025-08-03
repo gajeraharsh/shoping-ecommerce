@@ -309,10 +309,12 @@ export default function Header() {
                         key={item.name}
                         href={item.href}
                         onClick={() => setIsMenuOpen(false)}
-                        className="group flex items-center px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl text-base font-medium transition-all duration-200 touch-manipulation transform hover:scale-[0.98]"
+                        className={`group flex items-center px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl text-base font-medium transition-all duration-200 touch-manipulation transform hover:scale-[0.98] ${
+                          isMenuOpen ? 'animate-in slide-in-from-right-5 fade-in' : ''
+                        }`}
                         style={{
-                          animationDelay: `${index * 50}ms`,
-                          animation: isMenuOpen ? 'slideInRight 0.3s ease-out forwards' : ''
+                          animationDelay: `${(index + 1) * 100}ms`,
+                          animationFillMode: 'both'
                         }}
                       >
                         <span className="relative">
