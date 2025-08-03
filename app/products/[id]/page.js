@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 import ProductImageGallery from '@/components/products/ProductImageGallery';
 import ProductInfo from '@/components/products/ProductInfo';
 import ProductTabs from '@/components/products/ProductTabs';
@@ -71,7 +71,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  const breadcrumbs = [
+  const breadcrumbItems = [
     { name: 'Home', href: '/' },
     { name: 'Products', href: '/products' },
     { name: product.category.charAt(0).toUpperCase() + product.category.slice(1), href: `/products?category=${product.category}` },
@@ -83,35 +83,8 @@ export default function ProductDetailPage() {
       <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {/* Breadcrumbs - Properly Aligned Flat Structure */}
-        <nav className="mb-6 sm:mb-8" aria-label="Breadcrumb">
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
-            {breadcrumbs.map((breadcrumb, index) => (
-              <>
-                {index > 0 && (
-                  <ChevronRight key={`separator-${index}`} className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                )}
-                {breadcrumb.current ? (
-                  <span 
-                    key={breadcrumb.name}
-                    className="text-gray-500 dark:text-gray-400 text-sm font-medium max-w-[120px] sm:max-w-[180px] md:max-w-[240px] truncate flex-shrink-0" 
-                    title={breadcrumb.name}
-                  >
-                    {breadcrumb.name}
-                  </span>
-                ) : (
-                  <Link
-                    key={breadcrumb.name}
-                    href={breadcrumb.href}
-                    className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white text-sm transition-colors whitespace-nowrap flex-shrink-0"
-                  >
-                    {breadcrumb.name}
-                  </Link>
-                )}
-              </>
-            ))}
-          </div>
-        </nav>
+        {/* New Breadcrumb Component */}
+        <Breadcrumb items={breadcrumbItems} />
 
         {/* Product Details */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 sm:mb-16">
