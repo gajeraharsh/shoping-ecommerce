@@ -280,20 +280,26 @@ export default function Header() {
             />
 
             {/* Sidebar */}
-            <div className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-all duration-300 ease-out translate-x-0 animate-in slide-in-from-right-full">
+            <div
+              className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-all duration-300 ease-out translate-x-0 animate-in slide-in-from-right-full"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mobile-menu-title"
+            >
               {/* Sidebar Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center space-x-3">
                   <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black px-3 py-2 rounded-xl font-bold text-lg tracking-tight">
                     M
                   </div>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
+                  <span id="mobile-menu-title" className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
                     {BRAND.name}
                   </span>
                 </div>
                 <button
                   onClick={() => setIsMenuOpen(false)}
-                  className="w-10 h-10 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center"
+                  className="w-10 h-10 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-all duration-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center hover:scale-105 active:scale-95"
+                  aria-label="Close navigation menu"
                 >
                   <X className="h-5 w-5" />
                 </button>
