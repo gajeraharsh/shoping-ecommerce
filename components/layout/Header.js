@@ -139,7 +139,7 @@ export default function Header() {
             {/* Mobile Search */}
             <button
               onClick={() => setShowAdvancedSearch(true)}
-              className="lg:hidden p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="lg:hidden p-2.5 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
               <Search className="h-5 w-5 sm:h-5 sm:w-5" />
             </button>
@@ -147,7 +147,7 @@ export default function Header() {
 
 
             {/* Wishlist */}
-            <Link href="/wishlist" className="relative p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center">
+            <Link href="/wishlist" className="relative p-2.5 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center">
               <Heart className="h-5 w-5 sm:h-5 sm:w-5" />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
@@ -157,7 +157,7 @@ export default function Header() {
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center">
+            <Link href="/cart" className="relative p-2.5 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center">
               <ShoppingBag className="h-5 w-5 sm:h-5 sm:w-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
@@ -172,7 +172,7 @@ export default function Header() {
             <div className="relative hidden sm:block" ref={profileDropdownRef}>
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-2.5 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
               >
                 <User className="h-5 w-5 sm:h-5 sm:w-5" />
               </button>
@@ -234,7 +234,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="lg:hidden p-2.5 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
               {isMenuOpen ? <X className="h-5 w-5 sm:h-5 sm:w-5" /> : <Menu className="h-5 w-5 sm:h-5 sm:w-5" />}
             </button>
