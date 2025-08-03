@@ -26,17 +26,7 @@ export default function AddressesPage() {
   const [editingAddress, setEditingAddress] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [newAddress, setNewAddress] = useState({
-    type: 'home',
-    name: '',
-    phone: '',
-    street: '',
-    landmark: '',
-    city: '',
-    state: '',
-    pincode: '',
-    isDefault: false
-  });
+
 
   useEffect(() => {
     // Mock addresses data
