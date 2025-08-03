@@ -89,11 +89,9 @@ export default function AddressesPage() {
     { value: 'other', label: 'Other', icon: MapPin }
   ];
 
-  const handleAddAddress = (e) => {
-    e.preventDefault();
-    
+  const handleAddAddress = async (addressData) => {
     const address = {
-      ...newAddress,
+      ...addressData,
       id: Date.now()
     };
 
@@ -102,50 +100,36 @@ export default function AddressesPage() {
     }
 
     setAddresses(prev => [...prev, address]);
-    setNewAddress({
-      type: 'home',
-      name: '',
-      phone: '',
-      street: '',
-      landmark: '',
-      city: '',
-      state: '',
-      pincode: '',
-      isDefault: false
-    });
-    setShowAddForm(false);
   };
 
   const handleEditAddress = (address) => {
     setEditingAddress(address);
-    setNewAddress(address);
-    setShowAddForm(true);
+    setShowAddModal(true);
   };
 
-  const handleUpdateAddress = (e) => {
-    e.preventDefault();
-    
-    if (newAddress.isDefault) {
+  const handleUpdateAddress = async (addressData) => {
+    if (addressData.isDefault) {
       setAddresses(prev => prev.map(addr => ({ ...addr, isDefault: false })));
     }
 
-    setAddresses(prev => prev.map(addr => 
-      addr.id === editingAddress.id ? newAddress : addr
+    setAddresses(prev => prev.map(addr =>
+      addr.id === editingAddress.id ? { ...addressData, id: editingAddress.id } : addr
     ));
-    
+
     setEditingAddress(null);
-    setNewAddress({
-      type: 'home',
-      name: '',
-      phone: '',
-      street: '',
-      landmark: '',
-      city: '',
-      state: '',
-      pincode: '',
-      isDefault: false
-    });
-    setShowAddForm(false);
+  };
+
+  const handleModalSubmit = async (addressData) => {
+    if (editingAddress) {
+      await handleUpdateAddress(addressData);
+    } else {
+      await handleAddAddress(addressData);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowAddModal(false);
+    setEditingAddress(null);
   };
 
   const handleDeleteAddress = (id) => {
