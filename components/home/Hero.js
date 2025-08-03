@@ -87,19 +87,19 @@ export default function Hero() {
                 <div className="absolute inset-0 z-20 flex items-center safe-area-bottom">
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                     <div className="max-w-2xl text-center sm:text-left">
-                      <p className="text-white/90 text-xs sm:text-sm font-medium tracking-wider uppercase mb-3 sm:mb-4">
+                      <p className="text-white/90 text-xs sm:text-sm font-medium tracking-[0.1em] uppercase mb-3 sm:mb-4">
                         {slide.subtitle}
                       </p>
-                      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-4 sm:px-0">
+                      <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-[1.1] px-2 sm:px-0">
                         {slide.title}
                       </h1>
-                      <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed max-w-lg mx-auto sm:mx-0 px-4 sm:px-0">
+                      <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed max-w-lg mx-auto sm:mx-0 px-2 sm:px-0">
                         {slide.description}
                       </p>
-                      <div className="px-4 sm:px-0">
+                      <div className="px-2 sm:px-0">
                         <Link
                           href={slide.link}
-                          className="inline-flex items-center bg-white text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 group touch-manipulation min-h-[44px]"
+                          className="inline-flex items-center bg-white text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
                         >
                           {slide.cta}
                           <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
@@ -116,12 +116,18 @@ export default function Hero() {
         {/* Custom Pagination Styles */}
         <style jsx global>{`
           .swiper-pagination {
-            bottom: 40px !important;
-            left: 48px !important;
+            bottom: 60px !important;
+            left: 20px !important;
             width: auto !important;
             text-align: left !important;
           }
-          @media (max-width: 768px) {
+          @media (min-width: 640px) {
+            .swiper-pagination {
+              left: 48px !important;
+              bottom: 40px !important;
+            }
+          }
+          @media (max-width: 374px) {
             .swiper-pagination {
               left: 16px !important;
               bottom: 80px !important;
@@ -131,18 +137,18 @@ export default function Hero() {
       </section>
 
       {/* Featured Categories */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4 sm:px-0">
               Discover Our Collections
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4 sm:px-0">
               Curated selections that define modern elegance and timeless sophistication
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {[
               {
                 title: "New Arrivals",
@@ -166,7 +172,7 @@ export default function Hero() {
               <Link
                 key={index}
                 href={category.link}
-                className="group relative overflow-hidden rounded-2xl aspect-[4/3] block"
+                className="group relative overflow-hidden rounded-xl sm:rounded-2xl aspect-[4/3] block touch-manipulation"
               >
                 <img
                   src={category.image}
@@ -174,10 +180,10 @@ export default function Hero() {
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
-                <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                  <h3 className="text-2xl font-bold text-white mb-2">{category.title}</h3>
-                  <p className="text-white/90 mb-4">{category.description}</p>
-                  <div className="inline-flex items-center text-white group-hover:text-white transition-colors">
+                <div className="absolute inset-0 p-4 sm:p-6 lg:p-8 flex flex-col justify-end">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{category.title}</h3>
+                  <p className="text-white/90 mb-3 sm:mb-4 text-sm sm:text-base">{category.description}</p>
+                  <div className="inline-flex items-center text-white group-hover:text-white transition-colors text-sm sm:text-base">
                     <span className="font-medium">Explore</span>
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -189,18 +195,18 @@ export default function Hero() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-20 bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+      <section className="py-12 sm:py-16 lg:py-20 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4 sm:px-0">
               Featured This Week
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4 sm:px-0">
               Handpicked favorites that showcase exceptional craftsmanship and design
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
             {loading ? (
               Array.from({ length: 4 }).map((_, index) => (
                 <ProductSkeleton key={index} />
@@ -212,31 +218,31 @@ export default function Hero() {
             )}
           </div>
 
-          <div className="text-center">
+          <div className="text-center px-4 sm:px-0">
             <Link
               href="/products"
-              className="inline-flex items-center bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors group"
+              className="inline-flex items-center bg-black dark:bg-white text-white dark:text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors group touch-manipulation min-h-[48px] text-sm sm:text-base"
             >
               View All Products
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4 sm:px-0">
               What Our Customers Say
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 px-4 sm:px-0">
               Hear from women who've found their perfect style
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {[
               {
                 quote: "Absolutely stunning quality and the perfect fit. The attention to detail is remarkable.",
@@ -257,18 +263,18 @@ export default function Hero() {
                 rating: 5
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm">
+              <div key={index} className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-xl sm:rounded-2xl shadow-sm">
                 <div className="flex items-center mb-4">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg leading-relaxed">
+                <p className="text-gray-700 dark:text-gray-300 mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed">
                   "{testimonial.quote}"
                 </p>
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-white">{testimonial.author}</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm">{testimonial.role}</p>
+                  <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">{testimonial.author}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{testimonial.role}</p>
                 </div>
               </div>
             ))}
