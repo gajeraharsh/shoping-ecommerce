@@ -83,7 +83,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
       />
 
       {/* Search Modal Container */}
-      <div className="flex items-start justify-center pt-4 sm:pt-20 min-h-full px-2 sm:px-4 safe-area-top">
+      <div className="flex items-center justify-center min-h-full px-2 sm:px-4 py-4 sm:py-20 safe-area-top safe-area-bottom">
         {/* Search Modal */}
         <div className="relative bg-white dark:bg-gray-900 rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
         {/* Search Input */}

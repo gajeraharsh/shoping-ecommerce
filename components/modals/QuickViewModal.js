@@ -103,7 +103,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in safe-area-top safe-area-bottom"
       role="dialog"
       aria-modal="true"
       aria-labelledby="quickview-title"
@@ -116,7 +116,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
       {/* Modal Container */}
       <div
-        className="relative bg-white dark:bg-gray-900 rounded-2xl sm:rounded-3xl shadow-2xl max-w-6xl w-full mx-2 sm:mx-4 max-h-[95vh] overflow-hidden border border-gray-100 dark:border-gray-800 animate-slide-up safe-area-top safe-area-bottom"
+        className="relative bg-white dark:bg-gray-900 rounded-2xl sm:rounded-3xl shadow-2xl max-w-6xl w-full mx-2 sm:mx-4 max-h-[90vh] sm:max-h-[95vh] overflow-hidden border border-gray-100 dark:border-gray-800 animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Premium Header */}

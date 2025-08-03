@@ -141,14 +141,14 @@ export default function Header() {
               onClick={() => setShowAdvancedSearch(true)}
               className="lg:hidden p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
-              <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Search className="h-5 w-5 sm:h-5 sm:w-5" />
             </button>
 
 
 
             {/* Wishlist */}
             <Link href="/wishlist" className="relative p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center">
-              <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Heart className="h-5 w-5 sm:h-5 sm:w-5" />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
                   {wishlistCount > 99 ? '99+' : wishlistCount}
@@ -158,7 +158,7 @@ export default function Header() {
 
             {/* Cart */}
             <Link href="/cart" className="relative p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center">
-              <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
+              <ShoppingBag className="h-5 w-5 sm:h-5 sm:w-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
                   {cartCount > 99 ? '99+' : cartCount}
@@ -174,7 +174,7 @@ export default function Header() {
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                 className="p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
               >
-                <User className="h-4 w-4 sm:h-5 sm:w-5" />
+                <User className="h-5 w-5 sm:h-5 sm:w-5" />
               </button>
               <div className={`absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg transition-all duration-200 z-50 ${
                 isProfileDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'
@@ -236,7 +236,7 @@ export default function Header() {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-2 sm:p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
-              {isMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
+              {isMenuOpen ? <X className="h-5 w-5 sm:h-5 sm:w-5" /> : <Menu className="h-5 w-5 sm:h-5 sm:w-5" />}
             </button>
           </div>
         </div>
