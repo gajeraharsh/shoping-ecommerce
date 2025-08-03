@@ -10,7 +10,7 @@ import { useComparison } from '@/contexts/ComparisonContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
 import ProductComparison from '@/components/products/ProductComparison';
-import DarkModeToggle from '@/components/ui/DarkModeToggle';
+
 import { BRAND } from '@/lib/brand';
 
 export default function Header() {
@@ -66,7 +66,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white/95 dark:bg-gray-900/95 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-all duration-300">
+    <header className="bg-white/95 dark:bg-gray-900/95 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-all duration-300 safe-area-top">
       {/* Top Bar */}
       <div className="border-b border-gray-50 dark:border-gray-800 py-2 hidden lg:block">
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
@@ -88,17 +88,17 @@ export default function Header() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 lg:px-6">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 flex-shrink-0 group">
+          <Link href="/" className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0 group">
             <div className="relative">
-              <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black px-4 py-2 rounded-xl font-bold text-xl tracking-tight shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+              <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl font-bold text-lg sm:text-xl tracking-tight shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                 M
               </div>
               <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 rounded-xl opacity-0 group-hover:opacity-30 blur-sm transition-all duration-300"></div>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-black dark:group-hover:text-white transition-colors">
+              <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-black dark:group-hover:text-white transition-colors">
                 {BRAND.name}
               </span>
             </div>
@@ -135,60 +135,48 @@ export default function Header() {
           </div>
 
           {/* Action Icons */}
-          <div className="flex items-center space-x-1 flex-shrink-0">
+          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
             {/* Mobile Search */}
             <button
               onClick={() => setShowAdvancedSearch(true)}
-              className="lg:hidden p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="lg:hidden w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center"
+              style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
             >
-              <Search className="h-5 w-5" />
+              <Search className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
             </button>
 
-            {/* Comparison */}
-            <button
-              onClick={() => setShowComparison(true)}
-              className="relative p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800"
-            >
-              <GitCompare className="h-5 w-5" />
-              {comparisonCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px]">
-                  {comparisonCount}
-                </span>
-              )}
-            </button>
+
 
             {/* Wishlist */}
-            <Link href="/wishlist" className="relative p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800">
-              <Heart className="h-5 w-5" />
+            <Link href="/wishlist" className="relative w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center" style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
+              <Heart className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px]">
+                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
                   {wishlistCount > 99 ? '99+' : wishlistCount}
                 </span>
               )}
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800">
-              <ShoppingBag className="h-5 w-5" />
+            <Link href="/cart" className="relative w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center" style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
+              <ShoppingBag className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px]">
+                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
             </Link>
 
-            {/* Dark Mode Toggle */}
-            <div className="hidden sm:block">
-              <DarkModeToggle />
-            </div>
+
 
             {/* User Account */}
             <div className="relative hidden sm:block" ref={profileDropdownRef}>
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800"
+                className="w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center"
+                style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
               >
-                <User className="h-5 w-5" />
+                <User className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               </button>
               <div className={`absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg transition-all duration-200 z-50 ${
                 isProfileDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'
@@ -248,23 +236,27 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="lg:hidden w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center"
+              style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
             >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMenuOpen ?
+                <X className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} /> :
+                <Menu className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
+              }
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 py-4">
+          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 py-4 safe-area-bottom">
             <div className="flex flex-col space-y-1">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-sm font-medium transition-colors"
+                  className="px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base font-medium transition-colors touch-manipulation min-h-[44px] flex items-center"
                 >
                   {item.name}
                 </Link>
@@ -277,9 +269,9 @@ export default function Header() {
                     <Link
                       href="/account"
                       onClick={() => setIsMenuOpen(false)}
-                      className="px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-sm flex items-center gap-2 font-medium transition-colors"
+                      className="px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base flex items-center gap-3 font-medium transition-colors touch-manipulation min-h-[44px]"
                     >
-                      <User className="h-4 w-4" />
+                      <User className="h-5 w-5" />
                       My Account
                     </Link>
                     <button
@@ -287,7 +279,7 @@ export default function Header() {
                         logout();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-sm font-medium transition-colors"
+                      className="w-full text-left px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base font-medium transition-colors touch-manipulation min-h-[44px]"
                     >
                       Sign out
                     </button>
@@ -297,15 +289,15 @@ export default function Header() {
                     <Link
                       href="/auth/login"
                       onClick={() => setIsMenuOpen(false)}
-                      className="px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-sm flex items-center gap-2 font-medium transition-colors"
+                      className="px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base flex items-center gap-3 font-medium transition-colors touch-manipulation min-h-[44px]"
                     >
-                      <User className="h-4 w-4" />
+                      <User className="h-5 w-5" />
                       Sign in
                     </Link>
                     <Link
                       href="/auth/register"
                       onClick={() => setIsMenuOpen(false)}
-                      className="px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-sm font-medium transition-colors"
+                      className="px-4 py-4 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-base font-medium transition-colors touch-manipulation min-h-[44px]"
                     >
                       Create account
                     </Link>

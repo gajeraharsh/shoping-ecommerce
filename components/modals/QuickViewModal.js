@@ -103,7 +103,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in safe-area-top safe-area-bottom"
       role="dialog"
       aria-modal="true"
       aria-labelledby="quickview-title"
@@ -116,11 +116,11 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
       {/* Modal Container */}
       <div
-        className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl max-w-6xl w-full mx-4 max-h-[95vh] overflow-hidden border border-gray-100 dark:border-gray-800 animate-slide-up"
+        className="relative bg-white dark:bg-gray-900 rounded-2xl sm:rounded-3xl shadow-2xl max-w-6xl w-full mx-2 sm:mx-4 max-h-[90vh] sm:max-h-[95vh] overflow-hidden border border-gray-100 dark:border-gray-800 animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Premium Header */}
-        <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-white/95 to-gray-50/95 dark:from-gray-900/95 dark:to-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800 p-6">
+        <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-white/95 to-gray-50/95 dark:from-gray-900/95 dark:to-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800 p-3 sm:p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-gradient-to-br from-black to-gray-800 dark:from-white dark:to-gray-200 text-white dark:text-black px-3 py-1.5 rounded-lg font-bold text-sm tracking-wide">
@@ -147,7 +147,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-0 pt-20" style={{ height: 'calc(95vh - 5rem)' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-0 pt-16 sm:pt-20" style={{ height: 'calc(95vh - 4rem)' }}>
           {/* Enhanced Image Gallery */}
           <div className="relative bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 overflow-hidden">
             <div className="aspect-square relative overflow-hidden group">
@@ -201,15 +201,15 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
             
             {/* Enhanced Image Thumbnails */}
             {product.images.length > 1 && (
-              <div className="p-6 bg-white dark:bg-gray-900">
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+              <div className="p-3 sm:p-6 bg-white dark:bg-gray-900">
+                <div className="flex gap-2 sm:gap-3 overflow-x-auto scrollbar-hide">
                   {product.images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => handleImageChange(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
-                        selectedImageIndex === index 
-                          ? 'border-black dark:border-white shadow-lg scale-105' 
+                      className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 touch-manipulation ${
+                        selectedImageIndex === index
+                          ? 'border-black dark:border-white shadow-lg scale-105'
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
                       }`}
                     >
@@ -226,7 +226,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
           </div>
 
           {/* Enhanced Product Details */}
-          <div className="p-8 overflow-y-auto bg-white dark:bg-gray-900 max-h-full">
+          <div className="p-4 sm:p-6 lg:p-8 overflow-y-auto bg-white dark:bg-gray-900 max-h-full">
             {/* Product Header */}
             <div className="mb-8">
               <h2 id="quickview-title" className="heading-md text-gray-900 dark:text-white mb-4 text-shadow-premium">
@@ -272,22 +272,22 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
             </div>
 
             {/* Enhanced Size Selection */}
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide">Size</h4>
-                <button 
+                <button
                   onClick={() => setShowSizeGuide(!showSizeGuide)}
-                  className="text-sm text-black dark:text-white underline hover:no-underline font-medium"
+                  className="text-sm text-black dark:text-white underline hover:no-underline font-medium touch-manipulation min-h-[44px] flex items-center"
                 >
                   Size Guide
                 </button>
               </div>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-4 gap-2 sm:gap-3">
                 {product.sizes.map((size) => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`aspect-square flex items-center justify-center border-2 rounded-xl text-sm font-bold transition-all duration-300 hover:scale-105 ${
+                    className={`aspect-square flex items-center justify-center border-2 rounded-xl text-sm font-bold transition-all duration-300 hover:scale-105 touch-manipulation min-h-[44px] ${
                       selectedSize === size
                         ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black shadow-lg'
                         : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white'
@@ -300,14 +300,14 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
             </div>
 
             {/* Enhanced Color Selection */}
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
               <h4 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide mb-4">Color</h4>
-              <div className="flex gap-3">
+              <div className="flex gap-2 sm:gap-3 flex-wrap">
                 {product.colors.map((color) => (
                   <button
                     key={color}
                     onClick={() => setSelectedColor(color)}
-                    className={`w-12 h-12 rounded-full border-4 transition-all duration-300 hover:scale-110 ${
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border-4 transition-all duration-300 hover:scale-110 touch-manipulation min-h-[44px] min-w-[44px] ${
                       selectedColor === color
                         ? 'border-black dark:border-white shadow-lg'
                         : 'border-gray-300 dark:border-gray-600 hover:border-gray-500'
@@ -326,22 +326,22 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
             </div>
 
             {/* Enhanced Quantity Selector */}
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
               <h4 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide mb-4">Quantity</h4>
               <div className="flex items-center border-2 border-gray-300 dark:border-gray-600 rounded-xl w-fit overflow-hidden">
                 <button
                   onClick={() => handleQuantityChange(-1)}
-                  className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+                  className="p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
                   disabled={quantity <= 1}
                 >
                   <Minus className="h-4 w-4" />
                 </button>
-                <span className="px-6 py-4 text-center min-w-[80px] font-bold border-x-2 border-gray-300 dark:border-gray-600">
+                <span className="px-4 sm:px-6 py-3 sm:py-4 text-center min-w-[60px] sm:min-w-[80px] font-bold border-x-2 border-gray-300 dark:border-gray-600">
                   {quantity}
                 </span>
                 <button
                   onClick={() => handleQuantityChange(1)}
-                  className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+                  className="p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
                   disabled={quantity >= 10}
                 >
                   <Plus className="h-4 w-4" />
@@ -351,21 +351,21 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
             </div>
 
             {/* Enhanced Action Buttons */}
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
               <button
                 onClick={handleAddToCart}
-                className="w-full btn-primary btn-premium mb-4 h-14 text-lg font-bold tracking-wide flex items-center justify-center gap-3 group"
+                className="w-full btn-primary btn-premium mb-4 h-12 sm:h-14 text-base sm:text-lg font-bold tracking-wide flex items-center justify-center gap-3 group touch-manipulation"
               >
                 <ShoppingBag className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                Add to Cart - ₹{(product.price * quantity).toLocaleString()}
+                <span className="truncate">Add to Cart - ₹{(product.price * quantity).toLocaleString()}</span>
               </button>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <button className="btn-outline h-12 text-sm font-bold flex items-center justify-center gap-2">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button className="btn-outline h-12 text-sm font-bold flex items-center justify-center gap-2 touch-manipulation">
                   <Zap className="h-4 w-4" />
                   Buy Now
                 </button>
-                <button className="btn-secondary h-12 text-sm font-bold flex items-center justify-center gap-2">
+                <button className="btn-secondary h-12 text-sm font-bold flex items-center justify-center gap-2 touch-manipulation">
                   <Clock className="h-4 w-4" />
                   Save for Later
                 </button>
