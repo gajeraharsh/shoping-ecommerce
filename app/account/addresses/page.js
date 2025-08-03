@@ -22,7 +22,7 @@ import {
 
 export default function AddressesPage() {
   const [addresses, setAddresses] = useState([]);
-  const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
   const [loading, setLoading] = useState(true);
 
