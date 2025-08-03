@@ -8,6 +8,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 import { BRAND } from '@/lib/brand';
 
