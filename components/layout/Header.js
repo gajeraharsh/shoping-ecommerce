@@ -144,18 +144,7 @@ export default function Header() {
               <Search className="h-5 w-5" />
             </button>
 
-            {/* Comparison */}
-            <button
-              onClick={() => setShowComparison(true)}
-              className="relative p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800"
-            >
-              <GitCompare className="h-5 w-5" />
-              {comparisonCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px]">
-                  {comparisonCount}
-                </span>
-              )}
-            </button>
+
 
             {/* Wishlist */}
             <Link href="/wishlist" className="relative p-3 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800">
