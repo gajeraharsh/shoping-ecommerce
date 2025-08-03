@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Heart, Star, ShoppingBag, GitCompare } from 'lucide-react';
+import { Heart, Star, ShoppingBag } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
-import { useComparison } from '@/contexts/ComparisonContext';
 import { useToast } from '@/hooks/useToast';
 
 export default function ProductCard({ product }) {
@@ -14,11 +13,9 @@ export default function ProductCard({ product }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
-  const { addToComparison, removeFromComparison, isInComparison, canAddMore } = useComparison();
   const { showToast } = useToast();
   
   const inWishlist = isInWishlist(product.id);
-  const inComparison = isInComparison(product.id);
 
   // Image cycling effect on hover
   useEffect(() => {
@@ -54,22 +51,6 @@ export default function ProductCard({ product }) {
     showToast('Added to cart', 'success');
   };
 
-  const handleComparisonToggle = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (inComparison) {
-      removeFromComparison(product.id);
-      showToast('Removed from comparison', 'info');
-    } else {
-      if (canAddMore()) {
-        addToComparison(product);
-        showToast('Added to comparison', 'success');
-      } else {
-        showToast('Maximum 4 products can be compared', 'error');
-      }
-    }
-  };
-
   return (
     <div
       className="group relative bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300 hover:shadow-lg rounded-xl border border-gray-100 dark:border-gray-800"
@@ -97,8 +78,8 @@ export default function ProductCard({ product }) {
             </div>
           )}
 
-          {/* Action Buttons - Always visible on mobile, hover on desktop */}
-          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex flex-col gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
+          {/* Wishlist Button - Always visible on mobile, hover on desktop */}
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
             <button
               onClick={handleWishlistToggle}
               className={`w-11 h-11 rounded-full transition-all flex items-center justify-center shadow-md ${
@@ -110,19 +91,6 @@ export default function ProductCard({ product }) {
               style={{ margin: 0, padding: 0, border: 'none' }}
             >
               <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
-            </button>
-
-            <button
-              onClick={handleComparisonToggle}
-              className={`w-11 h-11 rounded-full transition-all flex items-center justify-center shadow-md ${
-                inComparison
-                  ? 'bg-blue-50 text-blue-500'
-                  : 'bg-white/90 text-gray-600 hover:text-blue-500'
-              }`}
-              title={inComparison ? 'Remove from comparison' : 'Add to comparison'}
-              style={{ margin: 0, padding: 0, border: 'none' }}
-            >
-              <GitCompare className={`h-5 w-5 ${inComparison ? 'fill-current' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
             </button>
           </div>
 
