@@ -286,18 +286,18 @@ export default function Hero() {
                 rating: 5
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-xl sm:rounded-2xl shadow-sm">
-                <div className="flex items-center mb-4">
+              <div key={index} className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm p-8 sm:p-10 rounded-2xl sm:rounded-3xl shadow-luxury border border-gray-100/50 dark:border-gray-800/50 hover-luxury group">
+                <div className="flex items-center mb-6">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
+                    <Star key={i} className="w-5 h-5 text-amber-400 fill-current mr-1 opacity-90" />
                   ))}
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed">
+                <p className="text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 text-lg sm:text-xl leading-relaxed text-elegant italic">
                   "{testimonial.quote}"
                 </p>
-                <div>
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">{testimonial.author}</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{testimonial.role}</p>
+                <div className="space-y-1">
+                  <p className="font-medium text-gray-900 dark:text-white text-base sm:text-lg heading-luxury">{testimonial.author}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base tracking-wide">{testimonial.role}</p>
                 </div>
               </div>
             ))}
