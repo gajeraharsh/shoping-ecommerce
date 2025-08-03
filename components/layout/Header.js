@@ -311,7 +311,7 @@ export default function Header() {
               {/* Sidebar Content */}
               <div className="flex flex-col h-full overflow-y-auto">
                 {/* Navigation Links */}
-                <div className="flex-1 px-6 py-6">
+                <nav id="mobile-navigation" className="flex-1 px-6 py-6" aria-label="Main navigation">
                   <div className="space-y-2">
                     {navigation.map((item, index) => (
                       <Link
@@ -421,7 +421,7 @@ export default function Header() {
                       </div>
                     )}
                   </div>
-                </div>
+                </nav>
 
                 {/* Sidebar Footer */}
                 <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
