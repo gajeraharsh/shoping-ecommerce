@@ -38,15 +38,9 @@ export default function RootLayout({ children }) {
       <head>
         <script dangerouslySetInnerHTML={{
           __html: `
-            // Ensure light theme by default
-            if (!localStorage.getItem('theme')) {
-              localStorage.setItem('theme', 'light');
-              document.documentElement.classList.remove('dark');
-            } else if (localStorage.getItem('theme') === 'light') {
-              document.documentElement.classList.remove('dark');
-            } else {
-              document.documentElement.classList.add('dark');
-            }
+            // Force light theme by default
+            localStorage.setItem('theme', 'light');
+            document.documentElement.classList.remove('dark');
           `
         }} />
       </head>
