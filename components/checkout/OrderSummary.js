@@ -137,20 +137,20 @@ export default function OrderSummary() {
             </div>
           </div>
         ) : (
-          <div className="space-y-2">
-            <div className="flex gap-2">
+          <div className="space-y-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <input
                 type="text"
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
                 placeholder="Enter coupon code"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent min-h-[48px] touch-manipulation"
                 onKeyPress={(e) => e.key === 'Enter' && applyCoupon()}
               />
               <button
                 onClick={applyCoupon}
                 disabled={isApplying || !couponCode.trim()}
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm disabled:opacity-50"
+                className="px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors text-sm font-semibold disabled:opacity-50 min-h-[48px] sm:min-w-[100px] touch-manipulation whitespace-nowrap"
               >
                 {isApplying ? 'Applying...' : 'Apply'}
               </button>
