@@ -163,9 +163,9 @@ export default function ProductsPage() {
             <div className="lg:hidden fixed inset-0 z-50">
               {/* Backdrop with fade animation */}
               <div
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-out"
+                className="fixed inset-0 bg-black/60 backdrop-blur-elegant transition-all duration-300 ease-out"
                 style={{
-                  animation: showFilters ? 'fadeIn 0.3s ease-out' : 'fadeOut 0.3s ease-out'
+                  animation: showFilters ? 'fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'fadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
                 onClick={() => setShowFilters(false)}
               />
