@@ -174,7 +174,7 @@ export default function ProductsPage() {
               <div
                 className="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transition-transform duration-300 ease-out transform"
                 style={{
-                  animation: showFilters ? 'slideInLeft 0.3s ease-out' : 'slideOutLeft 0.3s ease-out'
+                  animation: showFilters ? 'slideInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1)' : 'slideOutLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
