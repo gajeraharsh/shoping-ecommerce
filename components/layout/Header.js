@@ -240,7 +240,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 py-4 safe-area-bottom">
+          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 py-4 safe-area-bottom animate-fade-in">
             <div className="flex flex-col space-y-1">
               {navigation.map((item) => (
                 <Link
