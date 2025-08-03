@@ -395,12 +395,12 @@ export default function OrderTrackingPage() {
                   {trackingData.courierPhone}
                 </div>
                 
-                <div className="flex gap-2 pt-3">
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-500 text-white py-2 px-4 rounded-xl font-semibold hover:bg-green-600 transition-colors text-sm">
+                <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-500 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-600 transition-colors text-sm min-h-[48px] touch-manipulation">
                     <Phone className="w-4 h-4" />
                     Call
                   </button>
-                  <button className="flex-1 flex items-center justify-center gap-2 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm">
+                  <button className="flex-1 flex items-center justify-center gap-2 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm min-h-[48px] touch-manipulation">
                     <MessageCircle className="w-4 h-4" />
                     Chat
                   </button>
