@@ -144,13 +144,13 @@ export default function OrderSummary() {
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
                 placeholder="Enter coupon code"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent min-h-[48px] touch-manipulation"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-black focus:border-transparent min-h-[48px] touch-manipulation"
                 onKeyPress={(e) => e.key === 'Enter' && applyCoupon()}
               />
               <button
                 onClick={applyCoupon}
                 disabled={isApplying || !couponCode.trim()}
-                className="px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors text-sm font-semibold disabled:opacity-50 min-h-[48px] sm:min-w-[100px] touch-manipulation whitespace-nowrap"
+                className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors text-sm font-semibold disabled:opacity-50 min-h-[48px] sm:min-w-[100px] touch-manipulation whitespace-nowrap"
               >
                 {isApplying ? 'Applying...' : 'Apply'}
               </button>
