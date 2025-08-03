@@ -45,7 +45,7 @@ export default function Home() {
                     <p className="text-sm text-gray-600 dark:text-gray-400">Happy Customers</p>
                   </div>
                 </div>
-                <a href="/about" className="inline-flex items-center border border-black/20 dark:border-white/20 text-black dark:text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium hover:border-black dark:hover:border-white hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500 text-sm sm:text-base touch-manipulation min-h-[48px] group">
+                <a href="/about" className="inline-flex items-center border border-black/20 dark:border-white/20 text-black dark:text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium hover:border-black dark:hover:border-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-300 text-sm sm:text-base touch-manipulation min-h-[48px] group">
                   <span>Our Story</span>
                   <div className="ml-3 w-4 h-4 rounded-full border border-current opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </a>
@@ -57,6 +57,7 @@ export default function Home() {
                     src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2340&auto=format&fit=crop"
                     alt="Fashion atelier"
                     className="w-full h-80 sm:h-96 lg:h-[650px] object-cover rounded-2xl shadow-2xl"
+                    style={{ transform: 'translateZ(0)' }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl"></div>
                   <div className="absolute bottom-6 left-6 right-6">
@@ -128,19 +129,21 @@ export default function Home() {
                   key={index}
                   href={collection.link}
                   className="group relative overflow-hidden rounded-xl sm:rounded-2xl aspect-[4/5] block touch-manipulation"
+                  style={{ transform: 'translateZ(0)' }}
                 >
                   <img
                     src={collection.image}
                     alt={collection.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    style={{ transform: 'translateZ(0)' }}
                   />
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
                   <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end">
                     <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{collection.title}</h3>
                     <p className="text-white/90 mb-3 sm:mb-4 text-sm sm:text-base">{collection.description}</p>
                     <div className="inline-flex items-center text-white group-hover:text-white transition-colors text-sm sm:text-base">
                       <span className="font-medium">Explore Collection</span>
-                      <svg className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </div>
@@ -188,7 +191,7 @@ export default function Home() {
                     placeholder="Enter your email address"
                     className="flex-1 px-6 py-4 sm:px-8 sm:py-5 rounded-full text-black bg-white/95 backdrop-blur-sm border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white text-sm sm:text-base min-h-[48px] touch-manipulation font-medium placeholder:text-gray-500"
                   />
-                  <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white dark:text-black px-8 py-4 sm:px-10 sm:py-5 rounded-full font-medium hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-sm sm:text-base min-h-[48px] touch-manipulation group">
+                  <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white dark:text-black px-8 py-4 sm:px-10 sm:py-5 rounded-full font-medium hover:bg-white/20 hover:border-white/30 transition-colors duration-300 text-sm sm:text-base min-h-[48px] touch-manipulation group">
                     <span>Subscribe</span>
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300 inline" />
                   </button>
