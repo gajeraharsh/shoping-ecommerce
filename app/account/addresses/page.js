@@ -196,8 +196,8 @@ export default function AddressesPage() {
           </div>
           
           <button
-            onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-3 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-3 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200"
           >
             <Plus className="w-5 h-5" />
             <span className="hidden sm:inline">Add Address</span>
