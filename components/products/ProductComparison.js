@@ -68,8 +68,8 @@ export default function ProductComparison({ isOpen, onClose, compareProducts, on
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm overflow-y-auto">
-      <div className="min-h-full p-4 flex items-start justify-center pt-8">
+    <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm overflow-y-auto safe-area-top safe-area-bottom">
+      <div className="min-h-full p-4 flex items-center justify-center py-8">
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-7xl">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">

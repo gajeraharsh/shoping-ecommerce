@@ -82,7 +82,7 @@ export default function SizeGuideModal({ isOpen, onClose, category = 'general' }
 
   return (
     <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm" onClick={onClose}>
-      <div className="flex items-center justify-center min-h-full p-4">
+      <div className="flex items-center justify-center min-h-full p-4 safe-area-top safe-area-bottom">
         <div 
           className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
           onClick={(e) => e.stopPropagation()}
