@@ -35,6 +35,21 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            // Ensure light theme by default
+            if (!localStorage.getItem('theme')) {
+              localStorage.setItem('theme', 'light');
+              document.documentElement.classList.remove('dark');
+            } else if (localStorage.getItem('theme') === 'light') {
+              document.documentElement.classList.remove('dark');
+            } else {
+              document.documentElement.classList.add('dark');
+            }
+          `
+        }} />
+      </head>
       <body className={`${inter.className} transition-colors overflow-x-hidden`}>
         <AuthProvider>
           <CartProvider>
