@@ -264,7 +264,7 @@ export default function Header() {
             />
 
             {/* Sidebar */}
-            <div className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-out translate-x-0">
+            <div className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-all duration-300 ease-out translate-x-0 animate-in slide-in-from-right-full">
               {/* Sidebar Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center space-x-3">
