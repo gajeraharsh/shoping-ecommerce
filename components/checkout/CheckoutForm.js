@@ -34,7 +34,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       {/* Contact Information */}
       <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
-          <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+          <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
           <h3 className="text-base sm:text-lg font-semibold">Contact Information</h3>
         </div>
         
@@ -48,7 +48,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
               required
             />
           </div>
@@ -61,7 +61,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
               required
             />
           </div>
@@ -71,7 +71,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       {/* Shipping Address */}
       <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
-          <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+          <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
           <h3 className="text-base sm:text-lg font-semibold">Shipping Address</h3>
         </div>
         
@@ -86,7 +86,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
@@ -99,7 +99,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
@@ -115,7 +115,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
               value={formData.address}
               onChange={handleChange}
               placeholder="Street address, apartment, suite, etc."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
               required
             />
           </div>
@@ -130,7 +130,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
@@ -143,7 +143,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="state"
                 value={formData.state}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
@@ -156,7 +156,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 name="zipCode"
                 value={formData.zipCode}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm min-h-[48px] touch-manipulation"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm min-h-[48px] touch-manipulation"
                 required
               />
             </div>
@@ -167,7 +167,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       {/* Payment Method */}
       <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
-          <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+          <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
           <h3 className="text-base sm:text-lg font-semibold">Payment Method</h3>
         </div>
         
@@ -222,7 +222,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-primary text-white py-4 px-4 rounded-xl hover:bg-primary/90 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl"
+        className="w-full bg-black text-white py-4 px-4 rounded-xl hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl"
       >
         {loading ? 'Processing...' : 'Place Order'}
       </button>
