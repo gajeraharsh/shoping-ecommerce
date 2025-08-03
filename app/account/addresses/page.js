@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AddAddressModal from '@/components/modals/AddAddressModal';
 import {
   MapPin,
   Plus,
