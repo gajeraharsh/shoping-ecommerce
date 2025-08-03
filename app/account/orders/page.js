@@ -210,39 +210,46 @@ export default function OrdersPage() {
         </div>
 
         {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
+        <div className="space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
               placeholder="Search orders by ID or product name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm touch-manipulation"
+              className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-base touch-manipulation min-h-[56px]"
             />
           </div>
-          
-          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
-            {Object.entries(statusCounts).map(([status, count]) => (
-              <button
-                key={status}
-                onClick={() => setStatusFilter(status)}
-                className={`flex items-center gap-2 px-4 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all ${
-                  statusFilter === status
-                    ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                <span className="capitalize">{status === 'all' ? 'All' : status}</span>
-                <span className={`px-2 py-0.5 rounded-full text-xs ${
-                  statusFilter === status 
-                    ? 'bg-white/20 dark:bg-black/20' 
-                    : 'bg-gray-200 dark:bg-gray-600'
-                }`}>
-                  {count}
-                </span>
-              </button>
-            ))}
+
+          {/* Filter Tabs */}
+          <div className="relative">
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory -mx-2 px-2">
+              {Object.entries(statusCounts).map(([status, count]) => (
+                <button
+                  key={status}
+                  onClick={() => setStatusFilter(status)}
+                  className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold text-sm whitespace-nowrap transition-all snap-start flex-shrink-0 min-w-max touch-manipulation min-h-[48px] ${
+                    statusFilter === status
+                      ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg scale-105'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 active:scale-95'
+                  }`}
+                >
+                  <span className="capitalize">{status === 'all' ? 'All' : status}</span>
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                    statusFilter === status
+                      ? 'bg-white/25 dark:bg-black/25 text-white dark:text-black'
+                      : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Scroll Indicator */}
+            <div className="absolute right-0 top-0 bottom-2 w-6 bg-gradient-to-l from-white dark:from-gray-800 to-transparent pointer-events-none sm:hidden" />
           </div>
         </div>
       </div>
