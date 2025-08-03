@@ -3,13 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, Heart, ShoppingBag, User, Menu, X, Shield, GitCompare } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, Menu, X, Shield } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
-import { useComparison } from '@/contexts/ComparisonContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
-import ProductComparison from '@/components/products/ProductComparison';
 
 import { BRAND } from '@/lib/brand';
 
@@ -18,17 +16,14 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const [showComparison, setShowComparison] = useState(false);
   const { getCartItemsCount } = useCart();
   const { wishlistItems } = useWishlist();
-  const { getComparisonCount, compareProducts, removeFromComparison } = useComparison();
   const { user, logout } = useAuth();
   const router = useRouter();
   const profileDropdownRef = useRef(null);
 
   const cartCount = getCartItemsCount();
   const wishlistCount = wishlistItems.length;
-  const comparisonCount = getComparisonCount();
 
   // Handle click outside for profile dropdown
   useEffect(() => {
@@ -145,8 +140,6 @@ export default function Header() {
               <Search className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
             </button>
 
-
-
             {/* Wishlist */}
             <Link href="/wishlist" className="relative w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center" style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
               <Heart className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
@@ -167,9 +160,7 @@ export default function Header() {
               )}
             </Link>
 
-
-
-            {/* User Account - Now visible on mobile */}
+            {/* User Account */}
             <div className="relative" ref={profileDropdownRef}>
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
@@ -314,14 +305,6 @@ export default function Header() {
         isOpen={showAdvancedSearch}
         onClose={() => setShowAdvancedSearch(false)}
         onSearch={handleSearch}
-      />
-
-      {/* Product Comparison Modal */}
-      <ProductComparison
-        isOpen={showComparison}
-        onClose={() => setShowComparison(false)}
-        compareProducts={compareProducts}
-        onRemoveProduct={removeFromComparison}
       />
     </header>
   );
