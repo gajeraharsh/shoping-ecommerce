@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Ruler, Users, AlertTriangle } from 'lucide-react';
 
 export default function SizeGuidePage() {
@@ -46,7 +44,6 @@ export default function SizeGuidePage() {
 
   return (
     <div className="min-h-screen">
-      <Header />
       
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
@@ -282,7 +279,6 @@ export default function SizeGuidePage() {
         </div>
       </div>
       
-      <Footer />
     </div>
   );
 }

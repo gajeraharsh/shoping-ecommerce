@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   User,
@@ -154,7 +152,6 @@ export default function AccountLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header />
       
       {/* Mobile Header */}
       <div className="lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-16 z-40">
@@ -347,7 +344,6 @@ export default function AccountLayout({ children }) {
         </div>
       </div>
 
-      <Footer />
     </div>
   );
 }

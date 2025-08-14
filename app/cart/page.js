@@ -1,7 +1,5 @@
 'use client';
 
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import CartItems from '@/components/cart/CartItems';
 import CartSummary from '@/components/cart/CartSummary';
 import { useCart } from '@/contexts/CartContext';
@@ -13,7 +11,6 @@ export default function CartPage() {
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <Header />
         <div className="container-fluid section-padding">
           <div className="text-center py-20">
             <div className="text-6xl mb-6">🛒</div>
@@ -26,14 +23,12 @@ export default function CartPage() {
             </Link>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header />
       <div className="container-fluid section-padding-sm">
         <div className="mb-8">
           <h1 className="heading-lg text-gray-900 dark:text-white mb-2">Shopping Cart</h1>
@@ -51,7 +46,6 @@ export default function CartPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

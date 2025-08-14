@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Heart, Award, Truck, Shield, Users, Star } from 'lucide-react';
 
 export default function AboutPage() {
@@ -57,8 +55,6 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header />
-
       <div className="container-fluid section-padding">
         {/* Hero Section */}
         <div className="text-center mb-16">
@@ -188,8 +184,6 @@ export default function AboutPage() {
           </a>
         </div>
       </div>
-      
-      <Footer />
     </div>
   );
 }

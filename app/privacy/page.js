@@ -1,11 +1,8 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Shield, Eye, Lock, Users } from 'lucide-react';
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen">
-      <Header />
       
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
@@ -263,8 +260,6 @@ export default function PrivacyPage() {
           </div>
         </div>
       </div>
-      
-      <Footer />
     </div>
   );
 }

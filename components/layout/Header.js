@@ -3,13 +3,14 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, Heart, ShoppingBag, User, Menu, X, Shield } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, Menu, X, Shield, ChevronDown } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
 
 import { BRAND } from '@/lib/brand';
+import { CATEGORY_TREE } from '@/lib/categories';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,6 +22,9 @@ export default function Header() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const profileDropdownRef = useRef(null);
+  const categoriesRef = useRef(null);
+  const panelRef = useRef(null);
+  const hoverBridgeRef = useRef(null);
 
   const cartCount = getCartItemsCount();
   const wishlistCount = wishlistItems.length;
@@ -84,7 +88,6 @@ export default function Header() {
   };
 
   const navigation = [
-    { name: 'Home', href: '/' },
     { name: 'Collections', href: '/products' },
     { name: 'New Arrivals', href: '/products?sort=newest' },
     { name: 'Blog', href: '/blog' },
@@ -92,8 +95,73 @@ export default function Header() {
     { name: 'About', href: '/about' }
   ];
 
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [isCategoriesPinned, setIsCategoriesPinned] = useState(false); // kept for compatibility but no longer used to pin
+  const closeTimer = useRef(null);
+
+  // Close categories on outside click or Escape (must be after state declarations)
+  useEffect(() => {
+    function handleDocClick(e) {
+      if (!isCategoriesOpen) return;
+      const target = e.target;
+      // Treat clicks on the hover bridge as outside to allow closing
+      if (hoverBridgeRef.current && hoverBridgeRef.current.contains(target)) {
+        setIsCategoriesPinned(false);
+        setIsCategoriesOpen(false);
+        return;
+      }
+      // Only keep open for clicks inside the panel itself
+      if (panelRef.current?.contains(target)) return;
+      setIsCategoriesPinned(false);
+      setIsCategoriesOpen(false);
+    }
+    function handleEsc(e) {
+      if (e.key === 'Escape' && isCategoriesOpen) {
+        setIsCategoriesPinned(false);
+        setIsCategoriesOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleDocClick);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleDocClick);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [isCategoriesOpen]);
+
+  const openCategories = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setIsCategoriesOpen(true);
+  };
+
+  const scheduleCloseCategories = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => {
+      setIsCategoriesOpen(false);
+    }, 300);
+  };
+
+  const handleMouseLeave = (e) => {
+    const next = e.relatedTarget;
+    if (!next) return scheduleCloseCategories();
+    if (
+      categoriesRef.current?.contains(next) ||
+      panelRef.current?.contains(next)
+    ) {
+      // moving within menu; keep open
+      return;
+    }
+    scheduleCloseCategories();
+  };
+
+  const handleMouseEnter = () => openCategories();
+  const [mobileCatOpen, setMobileCatOpen] = useState({ top: null, sub: null });
+
   return (
-    <header className="bg-white/95 dark:bg-gray-900/95 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-all duration-300 safe-area-top">
+    <header className="bg-white/95 dark:bg-gray-900/95 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-all duration-300 safe-area-top relative">
       {/* Top Bar */}
       <div className="border-b border-gray-50 dark:border-gray-800 py-2 hidden lg:block">
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
@@ -133,6 +201,73 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8 ml-12">
+            {/* Categories Trigger */}
+            <div
+              className="relative"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              ref={categoriesRef}
+            >
+              <button
+                className="flex items-center gap-1 text-gray-900 dark:text-white font-semibold tracking-tight hover:opacity-90"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsCategoriesOpen((prev) => !prev);
+                }}
+                aria-expanded={isCategoriesOpen}
+              >
+                Categories <ChevronDown className={`h-4 w-4 transition-transform ${isCategoriesOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isCategoriesOpen && (
+                <>
+                  {/* Hover bridge to prevent flicker when moving from trigger to panel */}
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 top-full -mt-px w-[92vw] max-w-[80rem] h-6 z-[70]"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
+                    ref={hoverBridgeRef}
+                  />
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 top-full -mt-px w-[92vw] max-w-[80rem] bg-white/95 backdrop-blur-sm dark:bg-gray-900/95 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 z-[70] max-h-[70vh] overflow-y-auto"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    ref={panelRef}
+                  >
+                  {CATEGORY_TREE.map((top, idx) => (
+                    <div key={top.slug} className={`min-w-0 px-2 ${idx !== 0 ? 'lg:border-l border-gray-100 dark:border-gray-800' : ''}`}>
+                      <Link href={`/products?category=${top.slug}`} className="block text-base font-semibold text-gray-900 dark:text-white mb-4 hover:text-black dark:hover:text-white" onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}>
+                        {top.name}
+                      </Link>
+                      <div className="space-y-5">
+                        {top.children?.map((sub) => (
+                          <div key={sub.slug}>
+                            <Link href={`/products?category=${top.slug}&sub=${sub.slug}`} className="block text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 hover:text-gray-700 dark:hover:text-gray-300" onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}>
+                              {sub.name}
+                            </Link>
+                            <div className="flex flex-wrap gap-2.5">
+                              {sub.children?.map((leaf) => (
+                                <Link
+                                  key={leaf.slug}
+                                  href={`/products?category=${top.slug}&sub=${sub.slug}&type=${leaf.slug}`}
+                                  className="text-[13px] text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-100 dark:border-gray-700 rounded-lg px-3 py-1.5 transition-colors"
+                                  onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
+                                >
+                                  {leaf.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  </div>
+                </>
+              )}
+            </div>
+
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -310,6 +445,55 @@ export default function Header() {
 
               {/* Sidebar Content */}
               <div className="flex flex-col h-full overflow-y-auto">
+                {/* Categories (Mobile Accordion) */}
+                <div className="px-6 py-6 border-b border-gray-100 dark:border-gray-800">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Shop by Category</h3>
+                  <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                    {CATEGORY_TREE.map((top, i) => (
+                      <div key={top.slug} className="py-2">
+                        <button
+                          className="w-full flex items-center justify-between py-2 text-gray-700 dark:text-gray-300"
+                          onClick={() => setMobileCatOpen((prev) => ({ top: prev.top === i ? null : i, sub: null }))}
+                          aria-expanded={mobileCatOpen.top === i}
+                        >
+                          <span className="font-medium">{top.name}</span>
+                          <ChevronDown className={`h-4 w-4 transition-transform ${mobileCatOpen.top === i ? 'rotate-180' : ''}`} />
+                        </button>
+                        {mobileCatOpen.top === i && (
+                          <div className="pl-3">
+                            {top.children?.map((sub) => (
+                              <div key={sub.slug} className="py-1">
+                                <button
+                                  className="w-full flex items-center justify-between py-2 text-sm text-gray-600 dark:text-gray-400"
+                                  onClick={() => setMobileCatOpen((prev) => ({ ...prev, sub: prev.sub === sub.slug ? null : sub.slug }))}
+                                  aria-expanded={mobileCatOpen.sub === sub.slug}
+                                >
+                                  <span className="uppercase tracking-wide">{sub.name}</span>
+                                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileCatOpen.sub === sub.slug ? 'rotate-180' : ''}`} />
+                                </button>
+                                {mobileCatOpen.sub === sub.slug && (
+                                  <div className="pl-3 pb-2 flex flex-wrap gap-2">
+                                    {sub.children?.map((leaf) => (
+                                      <Link
+                                        key={leaf.slug}
+                                        href={`/products?category=${top.slug}&sub=${sub.slug}&type=${leaf.slug}`}
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="text-sm text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg px-2.5 py-1"
+                                      >
+                                        {leaf.name}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Navigation Links */}
                 <nav id="mobile-navigation" className="flex-1 px-6 py-6" aria-label="Main navigation">
                   <div className="space-y-2">

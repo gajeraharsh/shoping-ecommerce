@@ -1,11 +1,8 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
 
 export default function NotFound() {
   return (
     <div className="min-h-screen">
-      <Header />
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
           <div className="text-9xl font-bold text-gray-300 mb-4">404</div>
@@ -29,7 +26,6 @@ export default function NotFound() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

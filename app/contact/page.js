@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 
 export default function ContactPage() {
@@ -35,8 +33,6 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header />
-
       <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-full overflow-x-hidden">
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12 px-4">
@@ -215,8 +211,6 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
-      
-      <Footer />
     </div>
   );
 }

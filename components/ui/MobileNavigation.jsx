@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Home, Search, Heart, ShoppingBag, User, Menu } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, Menu } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -41,12 +41,6 @@ export default function MobileNavigation() {
   }, []);
 
   const navigationItems = [
-    {
-      icon: Home,
-      label: 'Home',
-      href: '/',
-      count: null
-    },
     {
       icon: Search,
       label: 'Search',

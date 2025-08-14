@@ -5,6 +5,9 @@ import { WishlistProvider } from '@/contexts/WishlistContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { RecentlyViewedProvider } from '@/contexts/RecentlyViewedContext';
 import { Toaster } from '@/components/ui/toaster';
+import { ThemeProvider } from '@/components/theme-provider';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -13,7 +16,9 @@ export const metadata = {
   title: 'Modave - Premium Fashion & Style',
   description: 'Discover exceptional fashion pieces that blend timeless style with contemporary flair. Curated collections for the modern woman.',
   keywords: 'fashion, women clothing, premium fashion, elegant dresses, luxury fashion, online shopping, style, modave',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+  icons: {
+    icon: '/favicon.svg',
+  },
   robots: 'index, follow',
   author: 'Modave Fashion',
   openGraph: {
@@ -33,29 +38,32 @@ export const metadata = {
   },
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
-      <head>
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            // Force light theme by default
-            localStorage.setItem('theme', 'light');
-            document.documentElement.classList.remove('dark');
-          `
-        }} />
-      </head>
-      <body className={`${inter.className} transition-colors overflow-x-hidden`}>
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <RecentlyViewedProvider>
-                {children}
-                <Toaster />
-              </RecentlyViewedProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
+      <head></head>
+      <body className={`${inter.className} transition-colors overflow-x-hidden min-h-screen antialiased`}>
+        <ThemeProvider>
+          <AuthProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <RecentlyViewedProvider>
+                  <Header />
+                  {children}
+                  <Footer />
+                  <Toaster />
+                </RecentlyViewedProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
