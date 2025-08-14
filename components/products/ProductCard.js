@@ -53,7 +53,7 @@ export default function ProductCard({ product }) {
 
   return (
     <div
-      className="group relative bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300 hover:shadow-lg rounded-xl border border-gray-100 dark:border-gray-800"
+      className="group relative card-minimal overflow-hidden transition-all duration-300 hover:shadow-lg"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -73,7 +73,7 @@ export default function ProductCard({ product }) {
           
           {/* Discount Badge */}
           {product.discount && (
-            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-black text-white px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm font-medium rounded-lg">
+            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-accent text-accent-foreground px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm font-medium rounded-lg shadow">
               -{product.discount}%
             </div>
           )}
@@ -82,15 +82,15 @@ export default function ProductCard({ product }) {
           <div className="absolute top-3 right-3 sm:top-4 sm:right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
             <button
               onClick={handleWishlistToggle}
-              className={`w-11 h-11 rounded-full transition-all flex items-center justify-center shadow-md ${
+              className={`w-11 h-11 rounded-full transition-all flex items-center justify-center shadow-md border ${
                 inWishlist
-                  ? 'bg-red-50 text-red-500'
-                  : 'bg-white/90 text-gray-600 hover:text-red-500'
+                  ? 'bg-accent/10 text-accent border-accent'
+                  : 'bg-white/90 text-gray-600 hover:text-accent border-transparent'
               }`}
               title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
               style={{ margin: 0, padding: 0, border: 'none' }}
             >
-              <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
+              <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current text-accent' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
             </button>
           </div>
 
@@ -98,7 +98,7 @@ export default function ProductCard({ product }) {
           <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform translate-y-0 sm:translate-y-2 sm:group-hover:translate-y-0">
             <button
               onClick={handleQuickAdd}
-              className="w-full bg-black text-white py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors rounded-lg touch-manipulation min-h-[48px] flex items-center justify-center shadow-md"
+              className="w-full btn-primary py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium transition-colors rounded-lg touch-manipulation min-h-[48px] flex items-center justify-center shadow-md"
               style={{ margin: 0, border: 'none' }}
             >
               <ShoppingBag className="h-4 w-4 mr-2" style={{ margin: 0, padding: 0, display: 'block' }} />
@@ -111,7 +111,7 @@ export default function ProductCard({ product }) {
       {/* Product Info */}
       <div className="p-4">
         <Link href={`/products/${product.id}`}>
-          <h3 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors leading-tight">
+          <h3 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 hover:text-accent transition-colors leading-tight">
             {product.name}
           </h3>
         </Link>
@@ -122,7 +122,7 @@ export default function ProductCard({ product }) {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`h-4 w-4 ${i < Math.round(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`}
+                className={`h-4 w-4 ${i < Math.round(product.rating) ? 'fill-current text-accent' : 'text-gray-300 dark:text-gray-600'}`}
               />
             ))}
             <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">{Number(product.rating).toFixed(1)}</span>
