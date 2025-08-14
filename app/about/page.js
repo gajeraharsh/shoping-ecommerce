@@ -1,6 +1,17 @@
+'use client';
+
 import { Heart, Award, Truck, Shield, Users, Star } from 'lucide-react';
+import PageHero from '@/components/common/PageHero';
+import SectionHeading from '@/components/common/SectionHeading';
+import GlassCard from '@/components/common/GlassCard';
+import useRevealOnScroll from '@/hooks/useRevealOnScroll';
 
 export default function AboutPage() {
+  const storyRef = useRevealOnScroll();
+  const valuesRef = useRevealOnScroll();
+  const journeyRef = useRevealOnScroll();
+  const teamRef = useRevealOnScroll();
+
   const values = [
     {
       icon: Heart,
@@ -55,22 +66,23 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Page Hero with brand aesthetic */}
+      <PageHero
+        title="About Modave"
+        eyebrow="Our Story"
+        description="We're more than a fashion retailer. We're your style companion, helping you express your unique personality with carefully curated, high‑quality pieces."
+        image="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=2340&auto=format&fit=crop"
+        align="center"
+        ctas={[{ label: 'Shop Collections', href: '/products' }, { label: 'Contact Us', href: '/contact', variant: 'outline' }]}
+      />
+
       <div className="container-fluid section-padding">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="heading-xl text-gray-900 dark:text-white mb-6">About Modave</h1>
-          <p className="body-lg text-fade max-w-3xl mx-auto">
-            We're more than just a fashion retailer. We're your style companion, 
-            dedicated to helping you express your unique personality through carefully curated, 
-            high-quality fashion pieces.
-          </p>
-        </div>
 
         {/* Story Section */}
-        <div className="mb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="mb-16" ref={storyRef}>
+          <SectionHeading title="Our Story" align="left" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             <div>
-              <h2 className="heading-lg text-gray-900 dark:text-white mb-6">Our Story</h2>
               <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                 <p>
                   Founded in 2018, Modave started with a simple belief: that everyone deserves 
@@ -88,57 +100,55 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-            <div className="relative">
-              <div className="card-minimal p-8 text-center">
-                <div className="space-y-6">
-                  <div>
-                    <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">1M+</div>
-                    <div className="text-gray-600 dark:text-gray-400">Happy Customers</div>
-                  </div>
-                  <div>
-                    <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">50+</div>
-                    <div className="text-gray-600 dark:text-gray-400">Countries Served</div>
-                  </div>
-                  <div>
-                    <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">10K+</div>
-                    <div className="text-gray-600 dark:text-gray-400">Products Available</div>
-                  </div>
+            <GlassCard className="p-8 text-center">
+              <div className="space-y-6">
+                <div>
+                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">1M+</div>
+                  <div className="text-gray-600 dark:text-gray-400">Happy Customers</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">50+</div>
+                  <div className="text-gray-600 dark:text-gray-400">Countries Served</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">10K+</div>
+                  <div className="text-gray-600 dark:text-gray-400">Products Available</div>
                 </div>
               </div>
-            </div>
+            </GlassCard>
           </div>
         </div>
 
         {/* Values Section */}
-        <div className="mb-16">
-          <h2 className="heading-lg text-center text-gray-900 dark:text-white mb-12">Our Values</h2>
+        <div className="mb-16" ref={valuesRef}>
+          <SectionHeading title="Our Values" align="center" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
-              <div key={index} className="text-center">
-                <div className="bg-gray-50 dark:bg-gray-800 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <GlassCard key={index} className="text-center p-6">
+                <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4 bg-gray-50/60 dark:bg-gray-800/60">
                   <value.icon className="h-8 w-8 text-gray-700 dark:text-gray-300" />
                 </div>
-                <h3 className="heading-sm text-gray-900 dark:text-white mb-3">{value.title}</h3>
+                <h3 className="heading-sm text-gray-900 dark:text-white mb-2">{value.title}</h3>
                 <p className="body-base text-fade">{value.description}</p>
-              </div>
+              </GlassCard>
             ))}
           </div>
         </div>
 
         {/* Timeline Section */}
-        <div className="mb-16">
-          <h2 className="heading-lg text-center text-gray-900 dark:text-white mb-12">Our Journey</h2>
+        <div className="mb-16" ref={journeyRef}>
+          <SectionHeading title="Our Journey" />
           <div className="max-w-4xl mx-auto">
             <div className="relative">
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gray-200 dark:bg-gray-700"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gray-200/70 dark:bg-gray-700/70"></div>
               {milestones.map((milestone, index) => (
                 <div key={index} className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
                   <div className={`w-full max-w-md ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
-                    <div className="card-minimal p-6">
+                    <GlassCard className="p-6">
                       <div className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{milestone.year}</div>
                       <h3 className="heading-sm text-gray-900 dark:text-white mb-2">{milestone.title}</h3>
                       <p className="body-base text-fade">{milestone.description}</p>
-                    </div>
+                    </GlassCard>
                   </div>
                   <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gray-900 dark:bg-white rounded-full border-4 border-white dark:border-gray-900"></div>
                 </div>
@@ -148,18 +158,18 @@ export default function AboutPage() {
         </div>
 
         {/* Team Section */}
-        <div className="mb-16">
-          <h2 className="heading-lg text-center text-gray-900 dark:text-white mb-12">Meet Our Team</h2>
+        <div className="mb-16" ref={teamRef}>
+          <SectionHeading title="Meet Our Team" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {team.map((member, index) => (
-              <div key={index} className="text-center">
-                <div className="w-48 h-48 bg-gray-100 dark:bg-gray-800 rounded-full mx-auto mb-6 overflow-hidden flex items-center justify-center">
-                  <div className="text-6xl">👤</div>
+              <GlassCard key={index} className="text-center p-6">
+                <div className="w-40 h-40 sm:w-48 sm:h-48 bg-gray-100 dark:bg-gray-800 rounded-full mx-auto mb-6 overflow-hidden flex items-center justify-center">
+                  <div className="text-5xl sm:text-6xl">👤</div>
                 </div>
                 <h3 className="heading-sm text-gray-900 dark:text-white mb-2">{member.name}</h3>
                 <div className="text-gray-700 dark:text-gray-300 font-medium mb-3">{member.role}</div>
                 <p className="body-base text-fade">{member.description}</p>
-              </div>
+              </GlassCard>
             ))}
           </div>
         </div>

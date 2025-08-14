@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, X, Clock, TrendingUp, Tag } from 'lucide-react';
 import { mockProducts } from '@/utils/mockData';
 import Link from 'next/link';
@@ -13,12 +14,32 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
     'Floral Kurti', 'Maxi Dress', 'Crop Top', 'Ethnic Wear', 'Designer Collection'
   ]);
   const inputRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isOpen]);
+
+  // Mount flag for portals and body scroll lock when open
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      const prevPadding = document.body.style.paddingRight;
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = 'var(--scrollbar-width, 0px)';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+        document.body.style.paddingRight = prevPadding;
+      };
+    }
+  }, [isOpen, mounted]);
 
   useEffect(() => {
     // Load recent searches from localStorage
@@ -71,10 +92,10 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
     localStorage.removeItem('recentSearches');
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 z-[60]">
+  const modal = (
+    <div className="fixed inset-0 z-[100]">
       {/* Full Page Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-md"
@@ -83,7 +104,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
       />
 
       {/* Search Modal Container */}
-      <div className="flex items-center justify-center min-h-full px-2 sm:px-4 py-4 sm:py-20 safe-area-top safe-area-bottom">
+      <div className="flex items-center justify-center min-h-full px-2 sm:px-4 py-4 sm:py-20 safe-area-top safe-area-bottom" role="dialog" aria-modal="true">
         {/* Search Modal */}
         <div className="relative bg-white dark:bg-gray-900 rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
         {/* Search Input */}
@@ -230,4 +251,6 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

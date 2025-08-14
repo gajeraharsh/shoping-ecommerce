@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight, Shield, Award } from 'lucide-react';
 import { BRAND, getSocialLinks, getContactInfo, getTrustIndicators } from '@/lib/brand';
+import PaymentLogos from '@/components/common/PaymentLogos';
 
 export default function Footer() {
+  const socials = getSocialLinks();
   return (
     <footer className="bg-gray-900 dark:bg-black text-white">
       {/* Newsletter Section */}
@@ -57,13 +59,13 @@ export default function Footer() {
               </div>
             </div>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors w-11 h-11 rounded-full hover:bg-gray-800 flex items-center justify-center touch-manipulation">
+              <a href={socials.instagram} aria-label="Instagram" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors w-11 h-11 rounded-full hover:bg-gray-800 flex items-center justify-center touch-manipulation">
                 <Instagram className="h-5 w-5 sm:h-6 sm:w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors w-11 h-11 rounded-full hover:bg-gray-800 flex items-center justify-center touch-manipulation">
+              <a href={socials.facebook} aria-label="Facebook" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors w-11 h-11 rounded-full hover:bg-gray-800 flex items-center justify-center touch-manipulation">
                 <Facebook className="h-5 w-5 sm:h-6 sm:w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors w-11 h-11 rounded-full hover:bg-gray-800 flex items-center justify-center touch-manipulation">
+              <a href={socials.twitter} aria-label="Twitter" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors w-11 h-11 rounded-full hover:bg-gray-800 flex items-center justify-center touch-manipulation">
                 <Twitter className="h-5 w-5 sm:h-6 sm:w-6" />
               </a>
             </div>
@@ -161,6 +163,16 @@ export default function Footer() {
               Better Business Bureau A+ Rating
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Payment Methods */}
+      <div className="border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="flex items-center justify-center mb-4">
+            <h4 className="text-sm sm:text-base font-semibold text-white">We Accept</h4>
+          </div>
+          <PaymentLogos />
         </div>
       </div>
 

@@ -8,6 +8,9 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import TrustBar from '@/components/common/TrustBar';
+import CookieConsent from '@/components/common/CookieConsent';
+import StructuredData from '@/components/seo/StructuredData';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -48,7 +51,9 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
-      <head></head>
+      <head>
+        <StructuredData />
+      </head>
       <body className={`${inter.className} transition-colors overflow-x-hidden min-h-screen antialiased`}>
         <ThemeProvider>
           <AuthProvider>
@@ -56,9 +61,11 @@ export default function RootLayout({ children }) {
               <WishlistProvider>
                 <RecentlyViewedProvider>
                   <Header />
+                  <TrustBar />
                   {children}
                   <Footer />
                   <Toaster />
+                  <CookieConsent />
                 </RecentlyViewedProvider>
               </WishlistProvider>
             </CartProvider>

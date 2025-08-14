@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield, Leaf, Clock, MapPin, Package } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield, ShieldCheck, CreditCard, Lock, Leaf, Clock, MapPin, Package } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/useToast';
@@ -125,6 +125,19 @@ export default function ProductInfo({ product }) {
         )}
       </div>
 
+      {/* Mini trust line near price */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+        <span className="inline-flex items-center gap-1">
+          <Lock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Secure payment
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <Truck className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Free delivery over ₹999
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Easy returns
+        </span>
+      </div>
+
       {/* Stock Status */}
       <div className="flex items-center gap-2">
         <div className={`w-3 h-3 rounded-full ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
@@ -219,7 +232,20 @@ export default function ProductInfo({ product }) {
           <Heart className={`h-6 w-6 sm:h-5 sm:w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
         </button>
         </div>
-        
+
+        {/* Micro trust copy under CTA */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+          <span className="inline-flex items-center gap-1">
+            <Lock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Secure checkout
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <Truck className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Fast delivery
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Easy returns
+          </span>
+        </div>
+
         <button
           onClick={handleBuyNow}
           disabled={product.stock === 0}
@@ -227,6 +253,31 @@ export default function ProductInfo({ product }) {
         >
           Buy Now - Fast Checkout
         </button>
+      </div>
+
+      {/* Trust Strip: Responsive and compact */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-4">
+        <div className="flex items-center gap-3">
+          <ShieldCheck className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-gray-900 dark:text-white truncate">Secure Payments</div>
+            <div className="text-xs text-gray-600 dark:text-gray-300 truncate">SSL & PCI compliant</div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <CreditCard className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-gray-900 dark:text-white truncate">All Major Methods</div>
+            <div className="text-xs text-gray-600 dark:text-gray-300 truncate">UPI, Cards, NetBanking, COD</div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Lock className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-gray-900 dark:text-white truncate">Easy Returns</div>
+            <div className="text-xs text-gray-600 dark:text-gray-300 truncate">7–30 days policy</div>
+          </div>
+        </div>
       </div>
 
       {/* Delivery Information */}

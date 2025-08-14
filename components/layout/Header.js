@@ -14,6 +14,7 @@ import { CATEGORY_TREE } from '@/lib/categories';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -60,6 +61,17 @@ export default function Header() {
       document.body.style.paddingRight = '0px';
     };
   }, [isMenuOpen]);
+
+  // Detect scroll to apply compact header styling
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY || document.documentElement.scrollTop;
+      setIsScrolled(y > 8);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // Handle escape key for mobile menu
   useEffect(() => {
@@ -161,9 +173,13 @@ export default function Header() {
   const [mobileCatOpen, setMobileCatOpen] = useState({ top: null, sub: null });
 
   return (
-    <header className="bg-white/95 dark:bg-gray-900/95 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 transition-all duration-300 safe-area-top relative">
+    <header
+      className={`sticky top-0 z-50 safe-area-top relative transition-all duration-300
+        ${isScrolled ? 'bg-white dark:bg-gray-900 border-b border-gray-200/60 dark:border-gray-800/60 shadow-lg shadow-black/5' : 'bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800'}
+      `}
+    >
       {/* Top Bar */}
-      <div className="border-b border-gray-50 dark:border-gray-800 py-2 hidden lg:block">
+      <div className={`hidden lg:block transition-all duration-300 ${isScrolled ? 'py-1' : 'py-2'} border-b border-gray-50 dark:border-gray-800`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
           <div className="flex items-center space-x-6">
             <div className="flex items-center gap-1">
@@ -183,24 +199,28 @@ export default function Header() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 lg:px-6">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-14 sm:h-16' : 'h-16 sm:h-20'}`}>
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 flex-shrink-0 group">
             <div className="relative">
-              <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black px-2.5 py-1.5 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-xl font-bold text-base sm:text-lg md:text-xl tracking-tight shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+              <div className={`bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black rounded-xl font-bold tracking-tight shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105
+                ${isScrolled ? 'px-2.5 py-1.5 text-base sm:text-base md:text-lg' : 'px-2.5 py-1.5 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-base sm:text-lg md:text-xl'}
+              `}>
                 M
               </div>
               <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 rounded-xl opacity-0 group-hover:opacity-30 blur-sm transition-all duration-300"></div>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-black dark:group-hover:text-white transition-colors">
+              <span className={`font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-black dark:group-hover:text-white transition-colors
+                ${isScrolled ? 'text-sm sm:text-base md:text-lg' : 'text-sm sm:text-base md:text-lg lg:text-xl'}
+              `}>
                 {BRAND.name}
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8 ml-12">
+          <nav className={`hidden lg:flex items-center space-x-8 ml-12 transition-all duration-300`}>
             {/* Categories Trigger */}
             <div
               className="relative"
@@ -230,7 +250,8 @@ export default function Header() {
                     ref={hoverBridgeRef}
                   />
                   <div
-                    className="absolute left-1/2 -translate-x-1/2 top-full -mt-px w-[92vw] max-w-[80rem] bg-white/95 backdrop-blur-sm dark:bg-gray-900/95 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 z-[70] max-h-[70vh] overflow-y-auto"
+                    className={`absolute left-1/2 -translate-x-1/2 top-full -mt-px w-[92vw] max-w-[80rem] bg-white dark:bg-gray-900
+                      border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 z-[200] max-h-[70vh] overflow-y-auto`}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     ref={panelRef}
@@ -281,7 +302,7 @@ export default function Header() {
           </nav>
 
           {/* Search Bar */}
-          <div className="hidden lg:flex items-center flex-1 max-w-md mx-8">
+          <div className={`hidden lg:flex items-center flex-1 mx-8 transition-all duration-300 ${isScrolled ? 'max-w-sm' : 'max-w-md'}`}>
             <div className="relative w-full">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <input
@@ -291,7 +312,9 @@ export default function Header() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleSearchKeyPress}
                 onFocus={() => setShowAdvancedSearch(true)}
-                className="w-full pl-12 pr-4 py-3 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm transition-all duration-300"
+                className={`w-full pl-12 pr-4 rounded-full focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm transition-all duration-300 border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white
+                  ${isScrolled ? 'py-2.5 border-gray-200/70' : 'py-3 border-gray-200'}
+                `}
               />
             </div>
           </div>
@@ -301,14 +324,16 @@ export default function Header() {
             {/* Mobile Search */}
             <button
               onClick={() => setShowAdvancedSearch(true)}
-              className="lg:hidden w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center"
+              className={`lg:hidden text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center
+                ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}
+              `}
               style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
             >
               <Search className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
             </button>
 
             {/* Wishlist */}
-            <Link href="/wishlist" className="relative w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center" style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
+            <Link href="/wishlist" className={`relative text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`} style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
               <Heart className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
@@ -318,7 +343,7 @@ export default function Header() {
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center" style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
+            <Link href="/cart" className={`relative text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`} style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
               <ShoppingBag className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
@@ -331,7 +356,7 @@ export default function Header() {
             <div className="relative" ref={profileDropdownRef}>
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center"
+                className={`text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
                 style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
               >
                 <User className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
@@ -394,7 +419,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden w-11 h-11 sm:w-12 sm:h-12 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-all duration-200 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center justify-center hover:scale-105 active:scale-95"
+              className={`lg:hidden text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-all duration-200 rounded-full touch-manipulation flex items-center justify-center hover:scale-105 active:scale-95 ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
               style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation"

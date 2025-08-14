@@ -213,7 +213,7 @@ export default function ProductsPage() {
 
           {/* Desktop Filters */}
           <div className="hidden lg:block w-64 flex-shrink-0">
-            <div className="sticky top-24">
+            <div>
               <ProductFilters filters={filters} onFilterChange={handleFilterChange} />
             </div>
           </div>

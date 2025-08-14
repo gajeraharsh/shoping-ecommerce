@@ -119,8 +119,13 @@ export default function ProductCard({ product }) {
         {/* Rating */}
         <div className="flex items-center gap-2 mb-3">
           <div className="flex items-center">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm text-gray-600 dark:text-gray-400 ml-1">{product.rating}</span>
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`h-4 w-4 ${i < Math.round(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`}
+              />
+            ))}
+            <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">{Number(product.rating).toFixed(1)}</span>
           </div>
           <span className="text-xs sm:text-sm text-gray-400">({product.reviews} reviews)</span>
         </div>
