@@ -11,7 +11,7 @@ export default function CartPage() {
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="container-fluid section-padding">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
           <div className="text-center py-20">
             <div className="text-6xl mb-6">🛒</div>
             <h1 className="heading-lg text-gray-900 dark:text-white mb-4">Your cart is empty</h1>
@@ -29,7 +29,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <div className="container-fluid section-padding-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <div className="mb-8">
           <h1 className="heading-lg text-gray-900 dark:text-white mb-2">Shopping Cart</h1>
           <p className="body-base text-fade">
