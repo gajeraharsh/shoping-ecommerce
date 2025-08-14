@@ -1,11 +1,8 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { FileText, Scale, Shield, AlertTriangle } from 'lucide-react';
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen">
-      <Header />
       
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
@@ -312,7 +309,6 @@ export default function TermsPage() {
         </div>
       </div>
       
-      <Footer />
     </div>
   );
 }

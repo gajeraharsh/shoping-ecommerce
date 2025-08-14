@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import ProductCard from '@/components/products/ProductCard';
 import ProductFilters from '@/components/products/ProductFilters';
 import ProductSkeleton from '@/components/products/ProductSkeleton';
@@ -76,7 +74,6 @@ export default function ProductsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="flex gap-8">
             <div className="hidden lg:block w-64">
@@ -91,14 +88,12 @@ export default function ProductsPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header />
       
       {/* Hero Section */}
       <section className="bg-gray-50 dark:bg-gray-800 py-12 sm:py-16">
@@ -218,7 +213,7 @@ export default function ProductsPage() {
 
           {/* Desktop Filters */}
           <div className="hidden lg:block w-64 flex-shrink-0">
-            <div className="sticky top-24">
+            <div>
               <ProductFilters filters={filters} onFilterChange={handleFilterChange} />
             </div>
           </div>
@@ -248,7 +243,6 @@ export default function ProductsPage() {
         </div>
       </div>
       
-      <Footer />
     </div>
   );
 }

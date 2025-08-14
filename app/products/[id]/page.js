@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import ProductImageGallery from '@/components/products/ProductImageGallery';
 import ProductInfo from '@/components/products/ProductInfo';
@@ -30,7 +28,6 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* Breadcrumb Skeleton */}
           <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 w-64 rounded mb-6 sm:mb-8"></div>
@@ -46,7 +43,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -54,7 +50,6 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
           <div className="text-6xl mb-4">🔍</div>
           <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Product Not Found</h1>
@@ -66,7 +61,6 @@ export default function ProductDetailPage() {
             Browse All Products
           </Link>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -80,7 +74,6 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* New Breadcrumb Component */}
@@ -102,7 +95,6 @@ export default function ProductDetailPage() {
         <RecentlyViewed currentProductId={product.id} />
       </div>
       
-      <Footer />
     </div>
   );
 }

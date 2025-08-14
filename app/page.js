@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { ArrowRight } from 'lucide-react';
 import Hero from '@/components/home/Hero';
 import InstagramFeed from '@/components/social/InstagramFeed';
@@ -10,7 +8,6 @@ import SimpleTestimonials from '@/components/ui/SimpleTestimonials';
 export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header />
       <main>
         <Hero />
         
@@ -201,7 +198,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

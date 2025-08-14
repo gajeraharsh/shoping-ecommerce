@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import BlogCard from '@/components/blog/BlogCard';
 import BlogHero from '@/components/blog/BlogHero';
 import BlogCategories from '@/components/blog/BlogCategories';
@@ -122,7 +120,6 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header />
       
       <BlogHero />
       
@@ -239,7 +236,6 @@ export default function BlogPage() {
       {/* Instagram Feed Section */}
       <InstagramFeed />
       
-      <Footer />
     </div>
   );
 }

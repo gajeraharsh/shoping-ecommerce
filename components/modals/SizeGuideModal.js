@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Ruler, Info } from 'lucide-react';
 
 export default function SizeGuideModal({ isOpen, onClose, category = 'general' }) {
@@ -80,12 +81,13 @@ export default function SizeGuideModal({ isOpen, onClose, category = 'general' }
     }
   ];
 
-  return (
-    <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm" onClick={onClose}>
+  return createPortal(
+    <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm" onClick={onClose}>
       <div className="flex items-center justify-center min-h-full p-4 safe-area-top safe-area-bottom">
-        <div 
-          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+        <div
+          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
           onClick={(e) => e.stopPropagation()}
+          role="dialog" aria-modal="true"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
@@ -130,7 +132,7 @@ export default function SizeGuideModal({ isOpen, onClose, category = 'general' }
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-y-auto max-h-[60vh]">
+          <div className="p-6 flex-1 min-h-0 overflow-y-auto">
             {activeTab === 'size-chart' && (
               <div>
                 <div className="mb-6">
@@ -260,6 +262,7 @@ export default function SizeGuideModal({ isOpen, onClose, category = 'general' }
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Truck, Clock, MapPin, Package } from 'lucide-react';
 
 export default function ShippingPage() {
@@ -45,9 +43,8 @@ export default function ShippingPage() {
 
   return (
     <div className="min-h-screen">
-      <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Shipping Information</h1>
@@ -210,7 +207,6 @@ export default function ShippingPage() {
         </div>
       </div>
       
-      <Footer />
     </div>
   );
 }

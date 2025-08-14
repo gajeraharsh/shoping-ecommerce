@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import BlogCard from '@/components/blog/BlogCard';
 import BlogImage, { AuthorAvatar } from '@/components/blog/BlogImage';
 import { Calendar, Clock, User, Heart, MessageCircle, Share2, BookOpen, Tag, ArrowLeft } from 'lucide-react';
@@ -77,13 +75,12 @@ export default function BlogPostPage({ params }) {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header />
       
       {/* Back to Blog Button */}
       <div className="container mx-auto px-4 pt-8">
         <a 
           href="/blog"
-          className="inline-flex items-center gap-2 text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 transition-colors group"
+          className="inline-flex items-center gap-2 text-gray-900 dark:text-white hover:text-black dark:hover:text-gray-200 transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
           Back to All Stories
@@ -91,11 +88,11 @@ export default function BlogPostPage({ params }) {
       </div>
 
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 py-16 mt-4">
+      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 py-16 mt-4">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             {/* Category */}
-            <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+            <div className="inline-flex items-center gap-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-full text-sm font-semibold mb-6">
               <Tag className="w-4 h-4" />
               {blogPost.category}
             </div>
@@ -177,7 +174,7 @@ export default function BlogPostPage({ params }) {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
             {/* Main Content */}
             <div className="lg:col-span-3">
-              <article className="prose prose-lg prose-pink dark:prose-invert max-w-none">
+              <article className="prose prose-lg dark:prose-invert max-w-none">
                 <div 
                   dangerouslySetInnerHTML={{ __html: blogPost.content }}
                   className="leading-relaxed text-gray-700 dark:text-gray-300"
@@ -193,7 +190,7 @@ export default function BlogPostPage({ params }) {
                   {blogPost.tags.map(tag => (
                     <span 
                       key={tag}
-                      className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-200 dark:hover:bg-pink-900/50 transition-colors cursor-pointer"
+                      className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                     >
                       #{tag}
                     </span>
@@ -202,7 +199,7 @@ export default function BlogPostPage({ params }) {
               </div>
               
               {/* Author Bio */}
-              <div className="mt-12 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-8">
+              <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-8">
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                   About the Author
                 </h3>
@@ -245,7 +242,7 @@ export default function BlogPostPage({ params }) {
                       </svg>
                       Facebook
                     </button>
-                    <button className="flex items-center gap-3 w-full p-3 rounded-lg bg-pink-50 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/50 transition-colors">
+                    <button className="flex items-center gap-3 w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.758-1.378l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.624 0 11.99-5.367 11.99-11.987C24.007 5.367 18.641.001 12.017.001z"/>
                       </svg>
@@ -255,11 +252,11 @@ export default function BlogPostPage({ params }) {
                 </div>
 
                 {/* Newsletter signup */}
-                <div className="bg-gradient-to-br from-pink-600 to-purple-600 rounded-2xl p-6 text-white">
+                <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-6 text-white">
                   <h3 className="text-lg font-bold mb-2">
                     Never Miss a Story
                   </h3>
-                  <p className="text-pink-100 text-sm mb-4">
+                  <p className="text-gray-200 text-sm mb-4">
                     Get the latest fashion tips and trends delivered to your inbox
                   </p>
                   <form className="space-y-3">
@@ -268,7 +265,7 @@ export default function BlogPostPage({ params }) {
                       placeholder="Your email address"
                       className="w-full px-4 py-2 rounded-lg text-gray-900 bg-white/90 focus:bg-white focus:outline-none focus:ring-2 focus:ring-white/50"
                     />
-                    <button className="w-full bg-white text-pink-600 py-2 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                    <button className="w-full bg-white text-gray-900 py-2 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
                       Subscribe
                     </button>
                   </form>
@@ -294,8 +291,6 @@ export default function BlogPostPage({ params }) {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

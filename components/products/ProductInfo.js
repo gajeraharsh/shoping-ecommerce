@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield, Leaf, Clock, MapPin, Package } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield, ShieldCheck, CreditCard, Lock, Leaf, Clock, MapPin, Package } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/useToast';
@@ -125,6 +125,19 @@ export default function ProductInfo({ product }) {
         )}
       </div>
 
+      {/* Mini trust line near price */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+        <span className="inline-flex items-center gap-1">
+          <Lock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Secure payment
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <Truck className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Free delivery over ₹999
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Easy returns
+        </span>
+      </div>
+
       {/* Stock Status */}
       <div className="flex items-center gap-2">
         <div className={`w-3 h-3 rounded-full ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
@@ -139,7 +152,7 @@ export default function ProductInfo({ product }) {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Size</h3>
           <button
             onClick={() => setShowSizeGuide(true)}
-            className="text-sm text-black dark:text-white font-medium underline hover:no-underline"
+            className="text-sm text-accent font-medium underline hover:no-underline"
           >
             Size Guide
           </button>
@@ -151,8 +164,8 @@ export default function ProductInfo({ product }) {
               onClick={() => setSelectedSize(size)}
               className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
                 selectedSize === size
-                  ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white bg-white dark:bg-gray-800'
+                  ? 'bg-accent text-accent-foreground border-accent'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
               }`}
             >
               {size}
@@ -171,8 +184,8 @@ export default function ProductInfo({ product }) {
               onClick={() => setSelectedColor(color)}
               className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
                 selectedColor === color
-                  ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white bg-white dark:bg-gray-800'
+                  ? 'bg-accent text-accent-foreground border-accent'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
               }`}
             >
               {color}
@@ -207,26 +220,64 @@ export default function ProductInfo({ product }) {
           <button
           onClick={handleAddToCart}
           disabled={product.stock === 0}
-          className="flex-1 bg-black dark:bg-white text-white dark:text-black py-4 px-6 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[48px]"
+          className="flex-1 btn-primary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[48px]"
         >
           <ShoppingBag className="h-5 w-5 sm:h-5 sm:w-5" />
           <span className="text-sm sm:text-base">Add to Cart</span>
         </button>
         <button
           onClick={handleWishlistToggle}
-          className="px-4 sm:px-6 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors touch-manipulation min-h-[48px] min-w-[48px]"
+          className="px-4 sm:px-6 py-4 border border-accent text-accent bg-white dark:bg-gray-900 rounded-lg hover:bg-accent/5 transition-colors touch-manipulation min-h-[48px] min-w-[48px]"
         >
           <Heart className={`h-6 w-6 sm:h-5 sm:w-5 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
         </button>
         </div>
-        
+
+        {/* Micro trust copy under CTA */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+          <span className="inline-flex items-center gap-1">
+            <Lock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Secure checkout
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <Truck className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Fast delivery
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-800 dark:text-gray-200" /> Easy returns
+          </span>
+        </div>
+
         <button
           onClick={handleBuyNow}
           disabled={product.stock === 0}
-          className="w-full bg-gradient-to-r from-gray-900 to-black dark:from-gray-100 dark:to-white text-white dark:text-black py-4 px-6 rounded-lg hover:from-black hover:to-gray-900 dark:hover:from-white dark:hover:to-gray-100 transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[48px] text-sm sm:text-base"
+          className="w-full btn-outline disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[48px] text-sm sm:text-base"
         >
           Buy Now - Fast Checkout
         </button>
+      </div>
+
+      {/* Trust Strip: Responsive and compact */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-4">
+        <div className="flex items-center gap-3">
+          <ShieldCheck className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-gray-900 dark:text-white truncate">Secure Payments</div>
+            <div className="text-xs text-gray-600 dark:text-gray-300 truncate">SSL & PCI compliant</div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <CreditCard className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-gray-900 dark:text-white truncate">All Major Methods</div>
+            <div className="text-xs text-gray-600 dark:text-gray-300 truncate">UPI, Cards, NetBanking, COD</div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Lock className="h-5 w-5 text-black dark:text-white flex-shrink-0" />
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-gray-900 dark:text-white truncate">Easy Returns</div>
+            <div className="text-xs text-gray-600 dark:text-gray-300 truncate">7–30 days policy</div>
+          </div>
+        </div>
       </div>
 
       {/* Delivery Information */}
