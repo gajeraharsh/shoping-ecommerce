@@ -296,7 +296,7 @@ export default function Header() {
                 className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium tracking-tight relative group"
               >
                 {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full"></span>
               </Link>
             ))}
           </nav>
@@ -312,7 +312,7 @@ export default function Header() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleSearchKeyPress}
                 onFocus={() => setShowAdvancedSearch(true)}
-                className={`w-full pl-12 pr-4 rounded-full focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent text-sm transition-all duration-300 border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white
+                className={`w-full pl-12 pr-4 rounded-full focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-sm transition-all duration-300 border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white
                   ${isScrolled ? 'py-2.5 border-gray-200/70' : 'py-3 border-gray-200'}
                 `}
               />
@@ -336,7 +336,7 @@ export default function Header() {
             <Link href="/wishlist" className={`relative text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`} style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
               <Heart className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
+                <span className="absolute -top-0.5 -right-0.5 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
                   {wishlistCount > 99 ? '99+' : wishlistCount}
                 </span>
               )}
@@ -346,7 +346,7 @@ export default function Header() {
             <Link href="/cart" className={`relative text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`} style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
               <ShoppingBag className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
+                <span className="absolute -top-0.5 -right-0.5 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
