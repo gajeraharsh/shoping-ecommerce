@@ -6,9 +6,10 @@ export const ENDPOINTS = {
     LOGOUT: '/auth/logout',
   },
   CATEGORY: {
-    LIST: '/categories',
-    CREATE: '/categories',
-    DETAILS: (id) => `/categories/${id}`,
+    // Medusa Store API for product categories
+    LIST: '/product-categories',
+    CREATE: '/product-categories',
+    DETAILS: (idOrHandle) => `/product-categories/${idOrHandle}`,
   },
   PRODUCT: {
     LIST: '/products',

@@ -4,9 +4,15 @@ import { notify } from '@/utils/notify'
 
 export function createApiClient() {
   const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.example.com',
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:9000/store',
     timeout: 15000,
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      // Medusa Store publishable key (prefer env, fallback to provided key)
+      'x-publishable-api-key':
+        process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ||
+        'pk_ce129f623f74ba7f36e262b28c48bbaf50f78600aa57da103da801d8758fa4cb',
+    },
   })
 
   // Request

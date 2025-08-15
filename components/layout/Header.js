@@ -11,6 +11,7 @@ import AdvancedSearch from '@/components/search/AdvancedSearch';
 
 import { BRAND } from '@/lib/brand';
 import { CATEGORY_TREE } from '@/lib/categories';
+import { useSelector } from 'react-redux';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -112,6 +113,7 @@ export default function Header() {
   const closeTimer = useRef(null);
   const [categoriesTop, setCategoriesTop] = useState(0);
   const [categoriesRight, setCategoriesRight] = useState(0);
+  const categoryTree = useSelector((state) => state.category?.items || []);
 
   const updateCategoriesTop = () => {
     const el = categoriesRef.current;
@@ -196,6 +198,8 @@ export default function Header() {
       window.removeEventListener('resize', handler);
     };
   }, [isCategoriesOpen]);
+
+  // Categories are now preloaded at app init via Providers->InitBoot dispatching fetchCategoryTree
 
   return (
     <header
@@ -284,7 +288,7 @@ export default function Header() {
                     onMouseLeave={handleMouseLeave}
                     ref={panelRef}
                   >
-                  {CATEGORY_TREE.map((top, idx) => (
+                  {(categoryTree.length ? categoryTree : CATEGORY_TREE).map((top, idx) => (
                     <div key={top.slug} className={`min-w-0 px-2 ${idx !== 0 ? 'lg:border-l border-gray-100 dark:border-gray-800' : ''}`}>
                       <Link href={`/products?category=${top.slug}`} className="block text-base font-semibold text-gray-900 dark:text-white mb-4 hover:text-black dark:hover:text-white" onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}>
                         {top.name}
