@@ -12,7 +12,7 @@ export default function InstagramReelsFeed() {
     {
       id: 1,
       type: 'video',
-      thumbnail: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=540&h=960&fit=crop&auto=format&q=80',
       videoUrl: '#',
       likes: 2847,
       comments: 124,
@@ -20,25 +20,25 @@ export default function InstagramReelsFeed() {
       duration: '0:15',
       caption: 'How to style our new maxi dress 3 different ways ✨ Which look is your favorite?',
       hashtags: ['#StyleTips', '#MaxiDress', '#OOTD', '#ModaveStyle'],
-      userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=faces',
+      userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
       username: 'modave_official'
     },
     {
       id: 2,
       type: 'image',
-      thumbnail: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=540&h=960&fit=crop&auto=format&q=80',
       likes: 1923,
       comments: 89,
       shares: 43,
       caption: 'Behind the scenes of our autumn collection photoshoot 📸',
       hashtags: ['#BTS', '#AutumnCollection', '#Photoshoot'],
-      userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=faces',
+      userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
       username: 'modave_official'
     },
     {
       id: 3,
       type: 'video',
-      thumbnail: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=600&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=540&h=960&fit=crop&auto=format&q=80',
       videoUrl: '#',
       likes: 3456,
       comments: 156,
@@ -46,25 +46,25 @@ export default function InstagramReelsFeed() {
       duration: '0:30',
       caption: 'Transition from day to night look in under 30 seconds! 🌙✨',
       hashtags: ['#DayToNight', '#QuickChange', '#StyleTransition'],
-      userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=faces',
+      userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
       username: 'modave_official'
     },
     {
       id: 4,
       type: 'image',
-      thumbnail: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=600&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=540&h=960&fit=crop&auto=format&q=80',
       likes: 2167,
       comments: 92,
       shares: 54,
       caption: 'Our customers looking absolutely stunning! 💖 #CustomerSpotlight',
       hashtags: ['#CustomerLove', '#RealCustomers', '#Fashion'],
-      userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=faces',
+      userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
       username: 'modave_official'
     },
     {
       id: 5,
       type: 'video',
-      thumbnail: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=600&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=540&h=960&fit=crop&auto=format&q=80',
       videoUrl: '#',
       likes: 4123,
       comments: 203,
@@ -72,19 +72,19 @@ export default function InstagramReelsFeed() {
       duration: '0:45',
       caption: 'Sustainable fashion tips everyone should know 🌱 Save this post!',
       hashtags: ['#SustainableFashion', '#EcoFriendly', '#Tips'],
-      userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=faces',
+      userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
       username: 'modave_official'
     },
     {
       id: 6,
       type: 'image',
-      thumbnail: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=600&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=540&h=960&fit=crop&auto=format&q=80',
       likes: 1876,
       comments: 78,
       shares: 41,
       caption: 'New arrivals are here! Swipe to see the entire collection 👗',
       hashtags: ['#NewArrivals', '#Collection', '#Shopping'],
-      userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=faces',
+      userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
       username: 'modave_official'
     }
   ], []);

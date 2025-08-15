@@ -30,7 +30,7 @@ export default function BlogPostPage({ params }) {
     `,
     author: "Priya Sharma",
     authorBio: "Fashion stylist and blogger with over 8 years of experience in ethnic wear styling. Priya specializes in making traditional fashion accessible and modern for today's woman.",
-    authorImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=faces",
+    authorImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces&auto=format&q=80",
     date: "2024-01-15",
     readTime: "5 min read",
     category: "Styling Tips",

@@ -6,56 +6,56 @@ export default function InstagramFeed() {
   const instagramPosts = useMemo(() => [
     {
       id: 1,
-      image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 2847,
       comments: 124,
       caption: 'Elegant summer collection featuring our bestselling maxi dress ✨ #ModaveStyle'
     },
     {
       id: 2,
-      image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 1923,
       comments: 89,
       caption: 'Behind the scenes at our autumn photoshoot 📸 #BehindTheScenes'
     },
     {
       id: 3,
-      image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 3456,
       comments: 156,
       caption: 'Sustainable fashion meets contemporary style 🌱 #SustainableFashion'
     },
     {
       id: 4,
-      image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1503342394128-c104d54dba01?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 2167,
       comments: 92,
       caption: 'Customer spotlight: Looking absolutely stunning! 💫 #CustomerLove'
     },
     {
       id: 5,
-      image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 1876,
       comments: 78,
       caption: 'New arrivals: Timeless pieces for modern women 👗 #NewArrivals'
     },
     {
       id: 6,
-      image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1520975661595-6453be3f7070?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 2345,
       comments: 103,
       caption: 'Effortless elegance in our workwear collection 💼 #WorkwearStyle'
     },
     {
       id: 7,
-      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 1654,
       comments: 67,
       caption: 'Evening glamour redefined ✨ #EveningWear'
     },
     {
       id: 8,
-      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 2789,
       comments: 134,
       caption: 'Casual sophistication for everyday moments 🌸 #CasualChic'

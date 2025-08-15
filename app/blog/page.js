@@ -14,7 +14,7 @@ export default function BlogPage() {
       excerpt: "Discover versatile styling tips to transform your favorite kurti from casual day wear to elegant evening attire.",
       content: "Kurtis are the ultimate versatile piece in every woman's wardrobe...",
       author: "Priya Sharma",
-      authorImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=faces",
+      authorImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces&auto=format&q=80",
       date: "2024-01-15",
       readTime: "5 min read",
       category: "Styling Tips",
