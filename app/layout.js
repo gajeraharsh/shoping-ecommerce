@@ -6,9 +6,9 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { RecentlyViewedProvider } from '@/contexts/RecentlyViewedContext';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
+import Providers from './providers';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import TrustBar from '@/components/common/TrustBar';
 import CookieConsent from '@/components/common/CookieConsent';
 import StructuredData from '@/components/seo/StructuredData';
 
@@ -55,22 +55,23 @@ export default function RootLayout({ children }) {
         <StructuredData />
       </head>
       <body className={`${inter.className} transition-colors overflow-x-hidden min-h-screen antialiased`}>
-        <ThemeProvider>
-          <AuthProvider>
-            <CartProvider>
-              <WishlistProvider>
-                <RecentlyViewedProvider>
-                  <Header />
-                  <TrustBar />
-                  {children}
-                  <Footer />
-                  <Toaster />
-                  <CookieConsent />
-                </RecentlyViewedProvider>
-              </WishlistProvider>
-            </CartProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider>
+            <AuthProvider>
+              <CartProvider>
+                <WishlistProvider>
+                  <RecentlyViewedProvider>
+                    <Header />
+                    {children}
+                    <Footer />
+                    <Toaster />
+                    <CookieConsent />
+                  </RecentlyViewedProvider>
+                </WishlistProvider>
+              </CartProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

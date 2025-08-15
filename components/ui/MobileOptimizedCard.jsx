@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Heart, Star, ShoppingBag, Eye, Shield } from 'lucide-react';
 import { QuickGuarantees } from '@/components/ui/ProductGuarantees';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function MobileOptimizedCard({ product, className = '' }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -20,12 +21,11 @@ export default function MobileOptimizedCard({ product, className = '' }) {
           </div>
         )}
         
-        <img
+        <SmartImage
           src={product.image}
           alt={product.name}
-          className={`w-full h-full object-cover transition-all duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`object-cover transition-all duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setImageLoaded(true)}
-          loading="lazy"
         />
         
         {/* Quick Actions Overlay */}

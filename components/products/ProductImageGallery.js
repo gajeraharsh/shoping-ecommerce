@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Heart, Share2, Maximize2 } from 'lucide-react';
 
 export default function ProductImageGallery({ images }) {
@@ -104,13 +105,18 @@ export default function ProductImageGallery({ images }) {
             className="w-full h-full overflow-hidden"
             onMouseMove={handleMouseMove}
           >
-            <img
+            <Image
               ref={imageRef}
               src={images[currentImage]}
               alt={`Product image ${currentImage + 1}`}
-              className="w-full h-full object-cover transition-transform duration-300"
+              fill
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="object-cover transition-transform duration-300 will-change-transform"
               style={magnifyStyle}
               onClick={handleZoomToggle}
+              loading="lazy"
+              priority={false}
+              unoptimized
             />
           </div>
 
@@ -207,10 +213,14 @@ export default function ProductImageGallery({ images }) {
                     : 'border-gray-200 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-400 hover:scale-105'
                 }`}
               >
-                <img
+                <Image
                   src={image}
                   alt={`Thumbnail ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  width={80}
+                  height={80}
+                  className="object-cover"
+                  loading="lazy"
+                  unoptimized
                 />
               </button>
             ))}
@@ -245,11 +255,18 @@ export default function ProductImageGallery({ images }) {
           </button>
           
           <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center p-4">
-            <img
-              src={images[currentImage]}
-              alt={`Product image ${currentImage + 1}`}
-              className="max-w-full max-h-full object-contain"
-            />
+            <div className="relative w-full h-full">
+              <Image
+                src={images[currentImage]}
+                alt={`Product image ${currentImage + 1}`}
+                fill
+                sizes="100vw"
+                className="object-contain"
+                loading="lazy"
+                unoptimized
+                priority={false}
+              />
+            </div>
             
             {images.length > 1 && (
               <>

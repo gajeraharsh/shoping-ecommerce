@@ -6,6 +6,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/useToast';
 import { BRAND } from '@/lib/brand';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function QuickViewModal({ product, isOpen, onClose }) {
   const [selectedSize, setSelectedSize] = useState('');
@@ -154,10 +155,10 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
               {isImageLoading && (
                 <div className="absolute inset-0 bg-gray-100 dark:bg-gray-800 animate-pulse z-10" />
               )}
-              <img
+              <SmartImage
                 src={product.images[selectedImageIndex]}
                 alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
                 onLoad={() => setIsImageLoading(false)}
               />
               
@@ -213,11 +214,13 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
                       }`}
                     >
-                      <img
-                        src={image}
-                        alt={`${product.name} ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
+                      <div className="absolute inset-0">
+                        <SmartImage
+                          src={image}
+                          alt={`${product.name} ${index + 1}`}
+                          className="object-cover"
+                        />
+                      </div>
                     </button>
                   ))}
                 </div>

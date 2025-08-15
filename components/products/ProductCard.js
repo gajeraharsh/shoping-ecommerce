@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Heart, Star, ShoppingBag } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
@@ -62,13 +63,18 @@ export default function ProductCard({ product }) {
           {!imageLoaded && (
             <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse"></div>
           )}
-          <img
+          <Image
             src={product.images[currentImageIndex] || product.images[0]}
             alt={product.name}
-            className={`w-full h-full object-cover transition-all duration-700 ${
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 480px) 50vw, 100vw"
+            className={`object-cover transition-all duration-700 ${
               imageLoaded ? 'opacity-100' : 'opacity-0'
             } ${isHovered ? 'scale-105' : 'scale-100'}`}
             onLoad={() => setImageLoaded(true)}
+            loading="lazy"
+            priority={false}
+            unoptimized
           />
           
           {/* Discount Badge */}

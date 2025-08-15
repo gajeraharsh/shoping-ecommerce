@@ -8,6 +8,7 @@ import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import ProductCard from '@/components/products/ProductCard';
 import ProductSkeleton from '@/components/products/ProductSkeleton';
 import { mockProducts } from '@/utils/mockData';
+import SmartImage from '@/components/ui/SmartImage';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -125,12 +126,13 @@ export default function Hero() {
               <div className="relative h-full">
                 <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent z-10"></div>
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="w-full h-full object-cover"
-                  style={{ transform: 'translateZ(0)' }}
-                />
+                <div className="absolute inset-0">
+                  <SmartImage
+                    src={slide.image}
+                    alt={slide.title}
+                    className="object-cover"
+                  />
+                </div>
                 
                 <div className="absolute inset-0 z-20 flex items-center safe-area-bottom">
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -218,12 +220,13 @@ export default function Hero() {
                 className="group relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/3] block touch-manipulation shadow-sm"
                 style={{ transform: 'translateZ(0)' }}
               >
-                <img
-                  src={category.image}
-                  alt={category.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  style={{ transform: 'translateZ(0)' }}
-                />
+                <div className="absolute inset-0">
+                  <SmartImage
+                    src={category.image}
+                    alt={category.title}
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/70 transition-colors duration-300"></div>
                 <div className="absolute inset-0 p-6 sm:p-8 lg:p-10 flex flex-col justify-end">
                   <div className="transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300">

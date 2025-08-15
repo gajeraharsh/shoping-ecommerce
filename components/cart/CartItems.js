@@ -3,6 +3,7 @@
 import { Trash2, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import Link from 'next/link';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function CartItems() {
   const { cartItems, updateQuantity, removeFromCart } = useCart();
@@ -19,11 +20,9 @@ export default function CartItems() {
             {/* Mobile Layout */}
             <div className="flex gap-3 sm:hidden">
               <Link href={`/products/${item.id}`} className="flex-shrink-0">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-16 h-16 object-cover rounded-lg"
-                />
+                <div className="relative w-16 h-16 rounded-lg overflow-hidden">
+                  <SmartImage src={item.image} alt={item.name} className="object-cover" />
+                </div>
               </Link>
 
               <div className="flex-1 min-w-0">
@@ -67,11 +66,9 @@ export default function CartItems() {
             {/* Desktop Layout */}
             <div className="hidden sm:flex gap-4">
               <Link href={`/products/${item.id}`} className="flex-shrink-0">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-20 h-20 object-cover rounded-lg"
-                />
+                <div className="relative w-20 h-20 rounded-lg overflow-hidden">
+                  <SmartImage src={item.image} alt={item.name} className="object-cover" />
+                </div>
               </Link>
 
               <div className="flex-1 min-w-0">

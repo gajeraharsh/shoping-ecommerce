@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { Instagram, Heart, MessageCircle, Share, Play, Volume2, VolumeX, ExternalLink } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function InstagramReelsFeed() {
   const [hoveredPost, setHoveredPost] = useState(null);
@@ -19,7 +20,7 @@ export default function InstagramReelsFeed() {
       duration: '0:15',
       caption: 'How to style our new maxi dress 3 different ways ✨ Which look is your favorite?',
       hashtags: ['#StyleTips', '#MaxiDress', '#OOTD', '#ModaveStyle'],
-      userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
+      userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=faces',
       username: 'modave_official'
     },
     {
@@ -31,7 +32,7 @@ export default function InstagramReelsFeed() {
       shares: 43,
       caption: 'Behind the scenes of our autumn collection photoshoot 📸',
       hashtags: ['#BTS', '#AutumnCollection', '#Photoshoot'],
-      userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face',
+      userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=faces',
       username: 'modave_official'
     },
     {
@@ -45,7 +46,7 @@ export default function InstagramReelsFeed() {
       duration: '0:30',
       caption: 'Transition from day to night look in under 30 seconds! 🌙✨',
       hashtags: ['#DayToNight', '#QuickChange', '#StyleTransition'],
-      userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
+      userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=faces',
       username: 'modave_official'
     },
     {
@@ -57,7 +58,7 @@ export default function InstagramReelsFeed() {
       shares: 54,
       caption: 'Our customers looking absolutely stunning! 💖 #CustomerSpotlight',
       hashtags: ['#CustomerLove', '#RealCustomers', '#Fashion'],
-      userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face',
+      userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=faces',
       username: 'modave_official'
     },
     {
@@ -71,7 +72,7 @@ export default function InstagramReelsFeed() {
       duration: '0:45',
       caption: 'Sustainable fashion tips everyone should know 🌱 Save this post!',
       hashtags: ['#SustainableFashion', '#EcoFriendly', '#Tips'],
-      userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
+      userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=faces',
       username: 'modave_official'
     },
     {
@@ -83,7 +84,7 @@ export default function InstagramReelsFeed() {
       shares: 41,
       caption: 'New arrivals are here! Swipe to see the entire collection 👗',
       hashtags: ['#NewArrivals', '#Collection', '#Shopping'],
-      userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face',
+      userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=faces',
       username: 'modave_official'
     }
   ], []);
@@ -154,12 +155,11 @@ export default function InstagramReelsFeed() {
               onMouseLeave={handleMouseLeave}
             >
               {/* Background Image/Video */}
-              <div className="absolute inset-0">
-                <img
+              <div className="absolute inset-0 relative">
+                <SmartImage
                   src={reel.thumbnail}
                   alt="Instagram reel"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  style={{ transform: 'translateZ(0)' }}
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
               </div>
@@ -184,11 +184,13 @@ export default function InstagramReelsFeed() {
 
               {/* User Info */}
               <div className="absolute top-4 left-4 flex items-center gap-3">
-                <img
-                  src={reel.userAvatar}
-                  alt={reel.username}
-                  className="w-10 h-10 rounded-full border-2 border-white/50"
-                />
+                <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/50 relative">
+                  <SmartImage
+                    src={reel.userAvatar}
+                    alt={reel.username}
+                    className="object-cover"
+                  />
+                </div>
                 <span className="text-white font-semibold text-sm">
                   {reel.username}
                 </span>

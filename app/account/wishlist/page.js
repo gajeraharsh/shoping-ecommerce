@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
+import SmartImage from '@/components/ui/SmartImage';
 import {
   Heart,
   ShoppingBag,
@@ -308,11 +309,9 @@ export default function WishlistPage() {
                   </button>
 
                   <Link href={`/products/${item.id}`} className="flex-shrink-0">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-24 h-24 object-cover rounded-2xl border border-gray-200 dark:border-gray-600"
-                    />
+                    <div className="w-24 h-24 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-600 relative">
+                      <SmartImage src={item.image} alt={item.name} className="object-cover" />
+                    </div>
                   </Link>
 
                   <div className="flex-1 min-w-0">
@@ -404,11 +403,13 @@ export default function WishlistPage() {
                 </button>
 
                 <Link href={`/products/${item.id}`}>
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
-                  />
+                  <div className="w-full h-64 relative overflow-hidden">
+                    <SmartImage
+                      src={item.image}
+                      alt={item.name}
+                      className="object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
                 </Link>
 
                 {item.originalPrice && item.originalPrice > item.price && (

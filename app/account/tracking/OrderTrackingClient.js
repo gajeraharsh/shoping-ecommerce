@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Package, Truck, CheckCircle, Calendar, Navigation, ArrowLeft, Copy, Search } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function OrderTrackingClient() {
   const searchParams = useSearchParams();
@@ -199,7 +200,9 @@ export default function OrderTrackingClient() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {trackingData.items.map((item, idx) => (
                 <div key={idx} className="flex gap-4 items-center">
-                  <img src={item.image} alt={item.name} className="w-16 h-16 rounded-xl object-cover" />
+                  <div className="w-16 h-16 rounded-xl overflow-hidden relative">
+                    <SmartImage src={item.image} alt={item.name} className="object-cover" />
+                  </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">{item.name}</p>
                     <p className="text-gray-600 dark:text-gray-400">Qty: {item.quantity}</p>

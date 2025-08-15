@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function PageHero({
   title,
@@ -21,12 +22,13 @@ export default function PageHero({
   return (
     <section className="relative h-[60vh] md:h-[70vh] lg:h-[75vh] w-full overflow-hidden">
       {image && (
-        <img
-          src={image}
-          alt={title}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ transform: 'translateZ(0)' }}
-        />
+        <div className="absolute inset-0">
+          <SmartImage
+            src={image}
+            alt={title}
+            className="object-cover"
+          />
+        </div>
       )}
       <div className={`absolute inset-0 bg-gradient-to-b ${overlay} z-10`}></div>
       <div className="absolute inset-0 z-20 flex">

@@ -117,8 +117,9 @@ export default function Header() {
     const el = categoriesRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    setCategoriesTop(rect.bottom + window.scrollY);
-    setCategoriesRight(rect.right + window.scrollX);
+    // Use viewport coordinates for fixed-positioned dropdown
+    setCategoriesTop(rect.bottom);
+    setCategoriesRight(rect.right);
   };
 
   // Close categories on outside click or Escape (must be after state declarations)

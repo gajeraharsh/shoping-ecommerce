@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { Tag, Check, X } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function OrderSummary() {
   const { cartItems, getCartTotal } = useCart();
@@ -87,11 +88,9 @@ export default function OrderSummary() {
       <div className="space-y-3 mb-6">
         {cartItems.map(item => (
           <div key={item.cartId} className="flex gap-3">
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-12 h-12 object-cover rounded"
-            />
+            <div className="relative w-12 h-12 rounded overflow-hidden">
+              <SmartImage src={item.image} alt={item.name} className="object-cover" />
+            </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium text-gray-900 truncate">
                 {item.name}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ImageIcon } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function BlogImage({ 
   src, 
@@ -67,15 +68,15 @@ export default function BlogImage({
       )}
       
       {/* Actual image */}
-      <img
+      <SmartImage
         src={src}
         alt={alt}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${
+        className={`object-cover transition-opacity duration-300 ${
           imageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={handleImageLoad}
         onError={handleImageError}
-        loading={priority ? 'eager' : 'lazy'}
+        priority={priority}
       />
     </div>
   );
@@ -126,12 +127,13 @@ export function AuthorAvatar({
   }
 
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      onError={() => setImageError(true)}
-      loading="lazy"
-    />
+    <div className={className} style={{ position: 'relative', overflow: 'hidden' }}>
+      <SmartImage
+        src={src}
+        alt={alt}
+        className="object-cover"
+        onError={() => setImageError(true)}
+      />
+    </div>
   );
 }

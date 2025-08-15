@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { categories } from '@/utils/mockData';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function Categories() {
   return (
@@ -21,11 +22,13 @@ export default function Categories() {
               href={`/products?category=${category.slug}`}
               className="group relative overflow-hidden rounded-lg sm:rounded-2xl aspect-square bg-gray-200 hover:scale-105 transition-transform duration-300"
             >
-              <img
-                src={category.image}
-                alt={category.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-              />
+              <div className="absolute inset-0">
+                <SmartImage
+                  src={category.image}
+                  alt={category.name}
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              </div>
               <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"></div>
               <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 text-white">
                 <h3 className="text-xs xs:text-sm sm:text-lg lg:text-xl font-bold mb-1 line-clamp-1">{category.name}</h3>

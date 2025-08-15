@@ -1,5 +1,6 @@
 import { Instagram, Heart, MessageCircle, ExternalLink } from 'lucide-react';
 import { useMemo } from 'react';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function InstagramFeed() {
   const instagramPosts = useMemo(() => [
@@ -102,12 +103,13 @@ export default function InstagramFeed() {
               className="group relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-xl overflow-hidden block"
               style={{ transform: 'translateZ(0)' }}
             >
-              <img
-                src={post.image}
-                alt="Instagram post"
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                style={{ transform: 'translateZ(0)' }}
-              />
+              <div className="absolute inset-0">
+                <SmartImage
+                  src={post.image}
+                  alt="Instagram post"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
               
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-300 flex items-center justify-center">

@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { Search, X, Clock, TrendingUp, Tag } from 'lucide-react';
 import { mockProducts } from '@/utils/mockData';
 import Link from 'next/link';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
   const [query, setQuery] = useState('');
@@ -140,11 +141,13 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
                     onClick={onClose}
                     className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors touch-manipulation min-h-[60px]"
                   >
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg flex-shrink-0"
-                    />
+                    <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden flex-shrink-0">
+                      <SmartImage
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="object-cover"
+                      />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-gray-900 text-sm sm:text-base truncate">{product.name}</div>
                       <div className="text-sm text-gray-500">₹{product.price}</div>

@@ -27,10 +27,10 @@ export function SimplePaymentBadges({ className = '' }) {
   return (
     <div className={`flex justify-center gap-4 p-4 bg-gray-50 rounded-lg ${className}`}>
       <div className="text-sm font-medium text-gray-700">Secure payments with:</div>
-      <div className="flex gap-3">
-        <span className="bg-white px-3 py-1 rounded text-xs font-medium border">VISA</span>
-        <span className="bg-white px-3 py-1 rounded text-xs font-medium border">MASTERCARD</span>
-        <span className="bg-white px-3 py-1 rounded text-xs font-medium border">UPI</span>
+      <div className="flex gap-3 flex-nowrap overflow-x-auto max-w-full items-center min-w-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <span className="bg-white px-3 py-1 rounded text-xs font-medium border whitespace-nowrap">VISA</span>
+        <span className="bg-white px-3 py-1 rounded text-xs font-medium border whitespace-nowrap">MASTERCARD</span>
+        <span className="bg-white px-3 py-1 rounded text-xs font-medium border whitespace-nowrap">UPI</span>
       </div>
     </div>
   );

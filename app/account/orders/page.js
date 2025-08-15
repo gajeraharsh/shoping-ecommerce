@@ -20,6 +20,7 @@ import {
   Eye,
   ArrowLeft
 } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -338,11 +339,13 @@ export default function OrdersPage() {
                 <div className="space-y-4">
                   {order.items_detail.map((item, index) => (
                     <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 rounded-xl object-cover border border-gray-200 dark:border-gray-600"
-                      />
+                      <div className="w-16 h-16 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-600 relative">
+                        <SmartImage
+                          src={item.image}
+                          alt={item.name}
+                          className="object-cover"
+                        />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate">
                           {item.name}

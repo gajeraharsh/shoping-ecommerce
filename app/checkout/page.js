@@ -6,6 +6,9 @@ import CheckoutForm from '@/components/checkout/CheckoutForm';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useModal } from '@/hooks/useModal';
+import { MODAL_TYPES } from '@/features/ui/modalTypes';
+import SuccessModal from '@/components/ui/SuccessModal';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -13,6 +16,7 @@ export default function CheckoutPage() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
+  const modal = useModal();
 
   useEffect(() => {
     if (cartItems.length === 0) {
@@ -26,12 +30,32 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async (formData) => {
     setLoading(true);
-    
+
     // Simulate an API call
     setTimeout(() => {
       const orderId = 'ORD' + Date.now();
       clearCart();
-      router.push(`/order-confirmation?orderId=${orderId}`);
+      // Open branded success modal instead of immediate redirect
+      modal.open({
+        type: MODAL_TYPES.CUSTOM,
+        props: {
+          Component: SuccessModal,
+          title: 'Success',
+          message: 'Order placed successfully (demo)',
+          orderId,
+          onViewOrder: () => {
+            modal.close();
+            router.push(`/order-confirmation?orderId=${orderId}`);
+          },
+          onContinue: () => {
+            modal.close();
+            router.push('/products');
+          },
+          onClose: () => {
+            modal.close();
+          },
+        },
+      });
       setLoading(false);
     }, 2000);
   };

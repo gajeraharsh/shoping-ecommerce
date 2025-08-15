@@ -1,38 +1,13 @@
-'use client';
-
-import { useState, useCallback } from 'react';
-
-let toastId = 0;
-let toasts = [];
-let listeners = [];
+// /hooks/useToast.js
+'use client'
+import { useDispatch } from 'react-redux'
+import { showToast } from '@/features/ui/uiSlice'
 
 export function useToast() {
-  const [, forceUpdate] = useState(0);
-
-  const subscribe = useCallback((listener) => {
-    listeners.push(listener);
-    return () => {
-      listeners = listeners.filter(l => l !== listener);
-    };
-  }, []);
-
-  const showToast = useCallback((message, type = 'info', duration = 3000) => {
-    const id = ++toastId;
-    const toast = { id, message, type, duration };
-    
-    toasts.push(toast);
-    listeners.forEach(listener => listener());
-
-    setTimeout(() => {
-      toasts = toasts.filter(t => t.id !== id);
-      listeners.forEach(listener => listener());
-    }, duration);
-  }, []);
-
-  const removeToast = useCallback((id) => {
-    toasts = toasts.filter(t => t.id !== id);
-    listeners.forEach(listener => listener());
-  }, []);
-
-  return { showToast, removeToast, subscribe, toasts };
+  const dispatch = useDispatch()
+  return {
+    success: (message, duration) => dispatch(showToast({ type: 'success', message, duration })),
+    error:   (message, duration) => dispatch(showToast({ type: 'error', message, duration })),
+    info:    (message, duration) => dispatch(showToast({ type: 'info', message, duration })),
+  }
 }

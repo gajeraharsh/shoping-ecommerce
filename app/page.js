@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
 import Hero from '@/components/home/Hero';
 import InstagramFeed from '@/components/social/InstagramFeed';
 import InstagramReelsFeed from '@/components/social/InstagramReelsFeed';
@@ -49,12 +50,11 @@ export default function Home() {
               </div>
               <div className="relative mt-12 lg:mt-0">
                 <div className="absolute -inset-4 bg-gradient-to-r from-gray-200/40 to-gray-300/40 dark:from-gray-600/20 dark:to-gray-700/20 rounded-3xl blur-xl"></div>
-                <div className="relative">
-                  <img
+                <div className="relative h-80 sm:h-96 lg:h-[650px] rounded-2xl shadow-2xl overflow-hidden">
+                  <SmartImage
                     src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2340&auto=format&fit=crop"
                     alt="Fashion atelier"
-                    className="w-full h-80 sm:h-96 lg:h-[650px] object-cover rounded-2xl shadow-2xl"
-                    style={{ transform: 'translateZ(0)' }}
+                    className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl"></div>
                   <div className="absolute bottom-6 left-6 right-6">
@@ -128,12 +128,13 @@ export default function Home() {
                   className="group relative overflow-hidden rounded-xl sm:rounded-2xl aspect-[4/5] block touch-manipulation"
                   style={{ transform: 'translateZ(0)' }}
                 >
-                  <img
-                    src={collection.image}
-                    alt={collection.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{ transform: 'translateZ(0)' }}
-                  />
+                  <div className="absolute inset-0">
+                    <SmartImage
+                      src={collection.image}
+                      alt={collection.title}
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
                   <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end">
                     <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{collection.title}</h3>
