@@ -110,6 +110,16 @@ export default function Header() {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [isCategoriesPinned, setIsCategoriesPinned] = useState(false); // kept for compatibility but no longer used to pin
   const closeTimer = useRef(null);
+  const [categoriesTop, setCategoriesTop] = useState(0);
+  const [categoriesRight, setCategoriesRight] = useState(0);
+
+  const updateCategoriesTop = () => {
+    const el = categoriesRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    setCategoriesTop(rect.bottom + window.scrollY);
+    setCategoriesRight(rect.right + window.scrollX);
+  };
 
   // Close categories on outside click or Escape (must be after state declarations)
   useEffect(() => {
@@ -146,6 +156,7 @@ export default function Header() {
       clearTimeout(closeTimer.current);
       closeTimer.current = null;
     }
+    updateCategoriesTop();
     setIsCategoriesOpen(true);
   };
 
@@ -171,6 +182,19 @@ export default function Header() {
 
   const handleMouseEnter = () => openCategories();
   const [mobileCatOpen, setMobileCatOpen] = useState({ top: null, sub: null });
+
+  // Keep dropdown aligned on scroll/resize while open
+  useEffect(() => {
+    if (!isCategoriesOpen) return;
+    const handler = () => updateCategoriesTop();
+    handler();
+    window.addEventListener('scroll', handler, { passive: true });
+    window.addEventListener('resize', handler);
+    return () => {
+      window.removeEventListener('scroll', handler);
+      window.removeEventListener('resize', handler);
+    };
+  }, [isCategoriesOpen]);
 
   return (
     <header
@@ -243,15 +267,18 @@ export default function Header() {
                 <>
                   {/* Hover bridge to prevent flicker when moving from trigger to panel */}
                   <div
-                    className="absolute left-1/2 -translate-x-1/2 top-full -mt-px w-[92vw] max-w-[80rem] h-6 z-[70]"
+                    className="fixed w-[90vw] max-w-2xl h-6 z-[70]"
+                    style={{ top: categoriesTop - 1, left: categoriesRight }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
                     ref={hoverBridgeRef}
                   />
+                  {/* Right-aligned horizontal dropdown panel */}
                   <div
-                    className={`absolute left-1/2 -translate-x-1/2 top-full -mt-px w-[92vw] max-w-[80rem] bg-white dark:bg-gray-900
-                      border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 z-[200] max-h-[70vh] overflow-y-auto`}
+                    className={`fixed bg-white dark:bg-gray-900
+                      border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl p-4 grid grid-cols-2 md:grid-cols-3 gap-4 z-[200] max-h-[70vh] overflow-y-auto w-[90vw] max-w-2xl`}
+                    style={{ top: categoriesTop, left: categoriesRight }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     ref={panelRef}
