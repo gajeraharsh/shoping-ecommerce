@@ -8,13 +8,59 @@ import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/useToast';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, priority = false, viewMode }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
   const { showToast } = useToast();
+  
+  // Simple palette to ensure known color names render reliably
+  const COLOR_PALETTE = {
+    black: '#000000',
+    white: '#ffffff',
+    gray: '#808080',
+    grey: '#808080',
+    silver: '#c0c0c0',
+    charcoal: '#36454F',
+    offwhite: '#f5f5f5',
+    off_white: '#f5f5f5',
+    cream: '#f2efe6',
+    ivory: '#fffff0',
+    beige: '#f5f5dc',
+    brown: '#8B4513',
+    tan: '#d2b48c',
+    navy: '#000080',
+    blue: '#0000ff',
+    sky: '#87ceeb',
+    red: '#ff0000',
+    maroon: '#800000',
+    burgundy: '#800020',
+    green: '#008000',
+    olive: '#808000',
+    mint: '#98ff98',
+    teal: '#008080',
+    purple: '#800080',
+    violet: '#8F00FF',
+    pink: '#ffc0cb',
+    orange: '#ffa500',
+    yellow: '#ffff00',
+    gold: '#d4af37',
+  };
+
+  const normalizeName = (name = '') => String(name).toLowerCase().replace(/\s|-/g, '');
+
+  const getSwatchStyle = (name) => {
+    const key = normalizeName(name);
+    const bg = COLOR_PALETTE[key] || (typeof name === 'string' ? name.toLowerCase() : '#000');
+    const isLight = ['#ffffff', '#f5f5f5', '#f2efe6', '#fffff0', '#f5f5dc'].includes(bg) || /white/i.test(name || '');
+    return {
+      backgroundColor: bg,
+      // Strengthen border for very light colors so it stays visible
+      borderColor: isLight ? '#9ca3af' : undefined, // gray-400
+    };
+  };
   
   const inWishlist = isInWishlist(product.id);
 
@@ -32,6 +78,16 @@ export default function ProductCard({ product }) {
       if (interval) clearInterval(interval);
     };
   }, [isHovered, product.images]);
+
+  // Reset image loaded state when image source changes to ensure proper fade-in
+  useEffect(() => {
+    setImageLoaded(false);
+  }, [currentImageIndex]);
+
+  // Also reset when product changes (e.g., filtering/pagination)
+  useEffect(() => {
+    setImageLoaded(false);
+  }, [product?.id, product?.images]);
 
   const handleWishlistToggle = (e) => {
     e.preventDefault();
@@ -64,16 +120,17 @@ export default function ProductCard({ product }) {
             <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse"></div>
           )}
           <Image
+            key={product.images[currentImageIndex] || product.images[0]}
             src={product.images[currentImageIndex] || product.images[0]}
             alt={product.name}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 480px) 50vw, 100vw"
-            className={`object-cover transition-all duration-700 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            } ${isHovered ? 'scale-105' : 'scale-100'}`}
-            onLoad={() => setImageLoaded(true)}
-            loading="lazy"
-            priority={false}
+            className={`object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${isHovered ? 'scale-105' : 'scale-100'}`}
+            onLoadingComplete={() => setImageLoaded(true)}
+            loading={priority ? 'eager' : 'lazy'}
+            priority={priority}
+            decoding="async"
+            fetchPriority={priority ? 'high' : 'auto'}
             unoptimized
           />
           
@@ -149,17 +206,17 @@ export default function ProductCard({ product }) {
         {/* Colors and Stock */}
         <div className="flex items-center justify-between">
           <div className="flex gap-1">
-            {product.colors.slice(0, 4).map((color, index) => (
+            {(Array.isArray(product.colors) ? product.colors : []).slice(0, 4).map((color, index) => (
               <div
                 key={index}
                 className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-gray-200 dark:border-gray-600"
-                style={{ backgroundColor: color.toLowerCase() }}
-                title={color}
+                style={getSwatchStyle(color)}
+                title={String(color)}
               />
             ))}
-            {product.colors.length > 4 && (
+            {(Array.isArray(product.colors) ? product.colors : []).length > 4 && (
               <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 flex items-center justify-center">
-                <span className="text-[9px] sm:text-xs text-gray-500 font-medium">+{product.colors.length - 4}</span>
+                <span className="text-[9px] sm:text-xs text-gray-500 font-medium">+{(product.colors?.length || 0) - 4}</span>
               </div>
             )}
           </div>
