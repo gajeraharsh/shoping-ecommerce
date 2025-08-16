@@ -5,7 +5,7 @@ import { Star, ThumbsUp, MessageCircle, ShieldCheck, Truck, RotateCcw, Edit3 } f
 import WriteReview from './WriteReview';
 import ProductReviews from './ProductReviews';
 
-export default function ProductTabs({ product }) {
+export default function ProductTabs({ product, initialReviewsData = null }) {
   const [activeTab, setActiveTab] = useState('description');
   const [showWriteReview, setShowWriteReview] = useState(false);
 
@@ -13,13 +13,64 @@ export default function ProductTabs({ product }) {
     console.log('Review submitted:', reviewData);
   };
 
+  const reviewsCount =
+    typeof initialReviewsData?.count === 'number'
+      ? initialReviewsData.count
+      : Array.isArray(initialReviewsData?.reviews)
+      ? initialReviewsData.reviews.length
+      : Array.isArray(initialReviewsData)
+      ? initialReviewsData.length
+      : typeof product?.reviews === 'number'
+      ? product.reviews
+      : 0;
+
   const tabs = [
     { id: 'description', label: 'Description', count: null },
     { id: 'specifications', label: 'Specifications', count: null },
-    { id: 'reviews', label: 'Reviews', count: product.reviews || 10 },
+    { id: 'reviews', label: 'Reviews', count: reviewsCount },
     { id: 'size-guide', label: 'Size Guide', count: null },
     { id: 'delivery', label: 'Delivery & Returns', count: null }
   ];
+
+  // Helper: robustly parse JSON that may be single- or double-encoded strings
+  const parseMaybeJson = (value, label = 'value') => {
+    if (Array.isArray(value) || (value && typeof value === 'object')) return value;
+    if (typeof value !== 'string') return value ?? null;
+    let current = value.trim();
+    for (let i = 0; i < 3; i++) {
+      try {
+        const parsed = JSON.parse(current);
+        if (Array.isArray(parsed) || (parsed && typeof parsed === 'object')) return parsed;
+        if (typeof parsed === 'string') {
+          current = parsed;
+          continue;
+        }
+        return parsed;
+      } catch (err) {
+        console.warn(`[ProductTabs] Failed parse attempt ${i + 1} for ${label}:`, err, current?.slice?.(0, 120));
+        return null;
+      }
+    }
+    console.warn(`[ProductTabs] Exhausted parse attempts for ${label}.`);
+    return null;
+  };
+
+  // Specifications metadata can come from product.metadata.specification or product.specification
+  // Only show metadata; if unavailable, show placeholders (no fallback to product.* fields)
+  let specification = product?.metadata?.specification ?? product?.specification ?? null;
+  const rawSpec = specification;
+  specification = parseMaybeJson(specification, 'metadata.specification');
+  if (!specification && typeof rawSpec === 'string') {
+    console.warn('[ProductTabs] specification string present but could not parse. First 120 chars:', rawSpec.slice(0, 120));
+  }
+
+  // Parse highlights from metadata (can be JSON string and possibly double-encoded)
+  const meta = product?.metadata ?? {};
+  const rawHighlights = meta?.highlights ?? meta?.key_features ?? product?.highlights ?? [];
+  const parsedHighlights = (() => {
+    const parsed = parseMaybeJson(rawHighlights, 'metadata.highlights/key_features');
+    return Array.isArray(parsed) ? parsed : [];
+  })();
 
   const mockReviews = [
     {
@@ -82,7 +133,7 @@ export default function ProductTabs({ product }) {
                 }`}
               >
                 {tab.label}
-                {tab.count && (
+                {typeof tab.count === 'number' && (
                   <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-full text-xs">
                     {tab.count}
                   </span>
@@ -103,11 +154,11 @@ export default function ProductTabs({ product }) {
                 </p>
               )}
               
-              {Array.isArray(product?.highlights) && product.highlights.length > 0 && (
+              {Array.isArray(parsedHighlights) && parsedHighlights.length > 0 && (
                 <>
                   <h3 className="font-semibold text-xl mb-4 text-gray-900 dark:text-white">Key Features</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    {product.highlights.map((highlight, index) => (
+                    {parsedHighlights.map((highlight, index) => (
                       <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
                         <ShieldCheck className="h-6 w-6 sm:h-5 sm:w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
                         <span className="text-gray-900 dark:text-white font-medium">{highlight}</span>
@@ -139,27 +190,43 @@ export default function ProductTabs({ product }) {
                 <div className="space-y-4">
                   <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <dt className="text-gray-600 dark:text-gray-400 mb-1">Material</dt>
-                    <dd className="font-medium text-gray-900 dark:text-white">{product.fabric}</dd>
+                    <dd className="font-medium text-gray-900 dark:text-white">{specification?.productDetails?.material ?? '—'}</dd>
                   </div>
                   <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <dt className="text-gray-600 dark:text-gray-400 mb-1">Care Instructions</dt>
-                    <dd className="font-medium text-gray-900 dark:text-white">{product.care}</dd>
+                    {Array.isArray(specification?.productDetails?.careInstructions) ? (
+                      <ul className="list-disc list-inside text-gray-900 dark:text-white">
+                        {specification.productDetails.careInstructions.map((item, idx) => (
+                          <li key={idx}>{item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <dd className="font-medium text-gray-900 dark:text-white">—</dd>
+                    )}
                   </div>
                   <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <dt className="text-gray-600 dark:text-gray-400 mb-1">Available Sizes</dt>
-                    <dd className="font-medium text-gray-900 dark:text-white">{product.sizes.join(', ')}</dd>
+                    {Array.isArray(specification?.productDetails?.availableSizes) && specification.productDetails.availableSizes.length ? (
+                      <dd className="font-medium text-gray-900 dark:text-white">{specification.productDetails.availableSizes.join(', ')}</dd>
+                    ) : (
+                      <dd className="font-medium text-gray-900 dark:text-white">—</dd>
+                    )}
                   </div>
                   <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <dt className="text-gray-600 dark:text-gray-400 mb-1">Available Colors</dt>
-                    <dd className="font-medium text-gray-900 dark:text-white">{product.colors.join(', ')}</dd>
+                    {Array.isArray(specification?.productDetails?.availableColors) && specification.productDetails.availableColors.length ? (
+                      <dd className="font-medium text-gray-900 dark:text-white">{specification.productDetails.availableColors.join(', ')}</dd>
+                    ) : (
+                      <dd className="font-medium text-gray-900 dark:text-white">—</dd>
+                    )}
                   </div>
                   <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
                     <dt className="text-gray-600 dark:text-gray-400 mb-1">SKU</dt>
-                    <dd className="font-medium text-gray-900 dark:text-white">MOD{product.id.toString().padStart(4, '0')}</dd>
+                    <dd className="font-medium text-gray-900 dark:text-white">{specification?.productDetails?.sku ?? '—'}</dd>
                   </div>
                   <div>
                     <dt className="text-gray-600 dark:text-gray-400 mb-1">Country of Origin</dt>
-                    <dd className="font-medium text-gray-900 dark:text-white">India</dd>
+                    <dd className="font-medium text-gray-900 dark:text-white">{specification?.productDetails?.countryOfOrigin ?? '—'}</dd>
                   </div>
                 </div>
               </div>
@@ -169,22 +236,28 @@ export default function ProductTabs({ product }) {
                 <div className="space-y-4">
                   <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-3">Fit Guide</h4>
-                    <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                      <li>• Regular fit design</li>
-                      <li>• Model is 5'6" wearing size M</li>
-                      <li>• True to size - order your usual size</li>
-                      <li>• Comfortable for all-day wear</li>
-                    </ul>
+                    {Array.isArray(specification?.fitAndStyling?.fitGuide) && specification.fitAndStyling.fitGuide.length ? (
+                      <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+                        {specification.fitAndStyling.fitGuide.map((item, idx) => (
+                          <li key={idx}>• {item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="text-gray-600 dark:text-gray-300">—</div>
+                    )}
                   </div>
                   
                   <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-3">Styling Tips</h4>
-                    <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                      <li>• Pairs well with jeans or palazzo</li>
-                      <li>• Perfect for casual outings</li>
-                      <li>• Layer with jackets for cooler weather</li>
-                      <li>• Suitable for office and casual wear</li>
-                    </ul>
+                    {Array.isArray(specification?.fitAndStyling?.stylingTips) && specification.fitAndStyling.stylingTips.length ? (
+                      <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+                        {specification.fitAndStyling.stylingTips.map((item, idx) => (
+                          <li key={idx}>• {item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="text-gray-600 dark:text-gray-300">—</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -194,7 +267,7 @@ export default function ProductTabs({ product }) {
 
         {activeTab === 'reviews' && (
           <div className="max-w-6xl">
-            <ProductReviews productId={product.id} />
+            <ProductReviews productId={product.id} initialReviewsData={initialReviewsData} />
           </div>
         )}
 

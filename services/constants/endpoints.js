@@ -14,5 +14,9 @@ export const ENDPOINTS = {
   PRODUCT: {
     LIST: '/products',
     DETAILS: (id) => `/products/${id}`,
+    REVIEWS: (id) => `/products/${id}/reviews`,
+  },
+  REVIEW: {
+    CREATE: '/reviews',
   },
 }

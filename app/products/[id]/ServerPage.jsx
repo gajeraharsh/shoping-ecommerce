@@ -1,5 +1,6 @@
 import ProductDetailClient from './ClientPage';
 import { getProductById } from '@/services/modules/product/productService';
+import { getProductReviews } from '@/services/modules/review/reviewService';
 
 export default async function ServerProductPage({ params, searchParams }) {
   const sp = await searchParams;
@@ -21,7 +22,6 @@ export default async function ServerProductPage({ params, searchParams }) {
     const p = res?.product || res; // our apiClient returns response.data
 
     // Server-side log of raw data as requested
-    console.log('[Medusa][Product Detail] Raw product response:', JSON.stringify(p, null, 2));
 
     // Map Medusa product to UI shape expected by client
     const images = (p?.images?.map((img) => img.url).filter(Boolean) || []);
@@ -132,7 +132,22 @@ export default async function ServerProductPage({ params, searchParams }) {
     const fabric = md.fabric || md.material || p?.material || 'Cotton';
     const deliveryTime = md.delivery_time || '3–5 business days';
     const returnPolicy = md.return_policy || '30-day return policy. No questions asked.';
-    const reviews = Number(md.reviews_count) || 0;
+    // Fetch reviews count from API on server (page load)
+    let reviews = 0;
+    try {
+      const reviewsRes = await getProductReviews(id, { limit: 1 });
+      // Support both { reviews: [], count } or [] shapes
+      reviews =
+        typeof reviewsRes?.count === 'number'
+          ? reviewsRes.count
+          : Array.isArray(reviewsRes?.reviews)
+          ? reviewsRes.reviews.length
+          : Array.isArray(reviewsRes)
+          ? reviewsRes.length
+          : 0;
+    } catch (_) {
+      reviews = 0;
+    }
 
     product = {
       id: p.id,
@@ -149,6 +164,8 @@ export default async function ServerProductPage({ params, searchParams }) {
       stock: 999,
       description,
       highlights,
+      // Pass through raw metadata from Medusa so the client can parse specification/highlights
+      metadata: p?.metadata || {},
       care,
       fabric,
       deliveryTime,
@@ -159,5 +176,63 @@ export default async function ServerProductPage({ params, searchParams }) {
     product = null;
   }
 
-  return <ProductDetailClient initialProduct={product} />;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com';
+  const productUrl = product?.id ? `${siteUrl}/products/${product.id}` : `${siteUrl}/products`;
+
+  const productLd = product
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        image: Array.isArray(product.images) ? product.images : [],
+        description: product.description,
+        sku: `MOD${String(product.id || '').padStart(4, '0')}`,
+        brand: { '@type': 'Brand', name: 'Faxio' },
+        aggregateRating:
+          product.rating && product.reviews
+            ? { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviews }
+            : undefined,
+        offers:
+          typeof product.price === 'number'
+            ? {
+                '@type': 'Offer',
+                url: productUrl,
+                priceCurrency: process.env.NEXT_PUBLIC_DEFAULT_CURRENCY || 'INR',
+                price: product.price,
+                availability: 'https://schema.org/InStock',
+              }
+            : undefined,
+      }
+    : null;
+
+  const breadcrumbLd = product
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            item: { '@id': siteUrl, name: 'Home' },
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            item: { '@id': productUrl, name: product.name },
+          },
+        ],
+      }
+    : null;
+
+  return (
+    <>
+      {productLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }} />
+      )}
+      {breadcrumbLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      )}
+      <ProductDetailClient initialProduct={product} />
+    </>
+  );
 }

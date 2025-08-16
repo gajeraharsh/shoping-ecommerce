@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Breadcrumb from '@/components/ui/Breadcrumb';
@@ -10,11 +10,13 @@ import ProductTabs from '@/components/products/ProductTabs';
 import RelatedProducts from '@/components/products/RelatedProducts';
 import RecentlyViewed from '@/components/products/RecentlyViewed';
 import { mockProducts } from '@/utils/mockData';
+import { getProductReviews } from '@/services/modules/review/reviewService';
 
 export default function ProductDetailClient({ initialProduct = null }) {
   const params = useParams();
   const [product, setProduct] = useState(initialProduct);
   const [loading, setLoading] = useState(!initialProduct);
+  const [initialReviewsData, setInitialReviewsData] = useState(null);
 
   useEffect(() => {
     if (initialProduct) return; // already have server-fetched product
@@ -27,6 +29,24 @@ export default function ProductDetailClient({ initialProduct = null }) {
     }, 500);
     return () => clearTimeout(t);
   }, [params.id, initialProduct]);
+
+  // Prefetch product reviews on initial page load (not on tab change)
+  useEffect(() => {
+    let mounted = true;
+    const fetchReviews = async () => {
+      if (!product?.id) return;
+      try {
+        const res = await getProductReviews(product.id, { limit: 10, offset: 0, order: '-created_at' });
+        if (mounted) setInitialReviewsData(res);
+      } catch (e) {
+        if (mounted) setInitialReviewsData(null);
+      }
+    };
+    fetchReviews();
+    return () => {
+      mounted = false;
+    };
+  }, [product?.id]);
 
   if (loading) {
     return (
@@ -75,6 +95,39 @@ export default function ProductDetailClient({ initialProduct = null }) {
     { name: product.name, href: '#', current: true }
   ];
 
+  // Helper to robustly parse JSON (handles single/double-encoded strings)
+  const parseMaybeJson = (value) => {
+    if (Array.isArray(value) || (value && typeof value === 'object')) return value;
+    if (typeof value !== 'string') return value ?? null;
+    let current = value.trim();
+    for (let i = 0; i < 3; i++) {
+      try {
+        const parsed = JSON.parse(current);
+        if (Array.isArray(parsed) || (parsed && typeof parsed === 'object')) return parsed;
+        if (typeof parsed === 'string') { current = parsed; continue; }
+        return parsed;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  // Normalize product metadata so children always receive parsed objects/arrays
+  const normalizedProduct = useMemo(() => {
+    const meta = product?.metadata || {};
+    const spec = parseMaybeJson(meta.specification);
+    const highlights = parseMaybeJson(meta.highlights ?? meta.key_features) || [];
+    return {
+      ...product,
+      metadata: {
+        ...meta,
+        specification: spec ?? null,
+        highlights,
+      },
+    };
+  }, [product]);
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       
@@ -89,7 +142,7 @@ export default function ProductDetailClient({ initialProduct = null }) {
         </div>
         
         {/* Product Tabs */}
-        <ProductTabs product={product} />
+        <ProductTabs product={normalizedProduct} initialReviewsData={initialReviewsData} />
         
         {/* Related Products */}
         <RelatedProducts currentProductId={product.id} />
