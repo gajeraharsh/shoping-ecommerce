@@ -91,7 +91,7 @@ export default function Header() {
   }, [isMenuOpen]);
 
   const handleSearch = (searchTerm) => {
-    router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
+    router.push(`/products?q=${encodeURIComponent(searchTerm)}`);
   };
 
   const handleSearchKeyPress = (e) => {

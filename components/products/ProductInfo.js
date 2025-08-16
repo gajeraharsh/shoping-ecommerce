@@ -18,32 +18,34 @@ export default function ProductInfo({ product }) {
   const { showToast } = useToast();
   
   const inWishlist = isInWishlist(product.id);
+  const hasSizes = Array.isArray(product?.sizes) && product.sizes.length > 0;
+  const hasColors = Array.isArray(product?.colors) && product.colors.length > 0;
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
+    if (hasSizes && !selectedSize) {
       showToast('Please select a size', 'error');
       return;
     }
-    if (!selectedColor) {
+    if (hasColors && !selectedColor) {
       showToast('Please select a color', 'error');
       return;
     }
     
-    addToCart(product, selectedSize, selectedColor, quantity);
+    addToCart(product, hasSizes ? selectedSize : undefined, hasColors ? selectedColor : undefined, quantity);
     showToast('Added to cart successfully!', 'success');
   };
 
   const handleBuyNow = () => {
-    if (!selectedSize) {
+    if (hasSizes && !selectedSize) {
       showToast('Please select a size', 'error');
       return;
     }
-    if (!selectedColor) {
+    if (hasColors && !selectedColor) {
       showToast('Please select a color', 'error');
       return;
     }
     
-    addToCart(product, selectedSize, selectedColor, quantity);
+    addToCart(product, hasSizes ? selectedSize : undefined, hasColors ? selectedColor : undefined, quantity);
     // Navigate to checkout
     window.location.href = '/checkout';
   };
@@ -147,52 +149,56 @@ export default function ProductInfo({ product }) {
       </div>
 
       {/* Size Selection */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Size</h3>
-          <button
-            onClick={() => setShowSizeGuide(true)}
-            className="text-sm text-accent font-medium underline hover:no-underline"
-          >
-            Size Guide
-          </button>
-        </div>
-        <div className="flex gap-3 flex-wrap">
-          {product.sizes.map(size => (
+      {hasSizes && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Size</h3>
             <button
-              key={size}
-              onClick={() => setSelectedSize(size)}
-              className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
-                selectedSize === size
-                  ? 'bg-accent text-accent-foreground border-accent'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
-              }`}
+              onClick={() => setShowSizeGuide(true)}
+              className="text-sm text-accent font-medium underline hover:no-underline"
             >
-              {size}
+              Size Guide
             </button>
-          ))}
+          </div>
+          <div className="flex gap-3 flex-wrap">
+            {product.sizes.map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
+                  selectedSize === size
+                    ? 'bg-accent text-accent-foreground border-accent'
+                    : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
+                }`}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Color Selection */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Color: {selectedColor}</h3>
-        <div className="flex gap-3 flex-wrap">
-          {product.colors.map(color => (
-            <button
-              key={color}
-              onClick={() => setSelectedColor(color)}
-              className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
-                selectedColor === color
-                  ? 'bg-accent text-accent-foreground border-accent'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
-              }`}
-            >
-              {color}
-            </button>
-          ))}
+      {hasColors && (
+        <div>
+          <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Color{selectedColor ? `: ${selectedColor}` : ''}</h3>
+          <div className="flex gap-3 flex-wrap">
+            {product.colors.map((color) => (
+              <button
+                key={color}
+                onClick={() => setSelectedColor(color)}
+                className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
+                  selectedColor === color
+                    ? 'bg-accent text-accent-foreground border-accent'
+                    : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
+                }`}
+              >
+                {color}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Quantity */}
       <div>

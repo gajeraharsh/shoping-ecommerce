@@ -16,7 +16,7 @@ export default function ProductTabs({ product }) {
   const tabs = [
     { id: 'description', label: 'Description', count: null },
     { id: 'specifications', label: 'Specifications', count: null },
-    { id: 'reviews', label: 'Reviews', count: product.reviews },
+    { id: 'reviews', label: 'Reviews', count: product.reviews || 10 },
     { id: 'size-guide', label: 'Size Guide', count: null },
     { id: 'delivery', label: 'Delivery & Returns', count: null }
   ];
@@ -97,19 +97,25 @@ export default function ProductTabs({ product }) {
         {activeTab === 'description' && (
           <div className="max-w-4xl">
             <div className="prose max-w-none">
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-6">
-                {product.description}
-              </p>
+              {product?.description?.trim() && (
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg mb-6">
+                  {product.description}
+                </p>
+              )}
               
-              <h3 className="font-semibold text-xl mb-4 text-gray-900 dark:text-white">Key Features</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                {product.highlights?.map((highlight, index) => (
-                  <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                    <ShieldCheck className="h-6 w-6 sm:h-5 sm:w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
-                    <span className="text-gray-900 dark:text-white font-medium">{highlight}</span>
+              {Array.isArray(product?.highlights) && product.highlights.length > 0 && (
+                <>
+                  <h3 className="font-semibold text-xl mb-4 text-gray-900 dark:text-white">Key Features</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    {product.highlights.map((highlight, index) => (
+                      <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                        <ShieldCheck className="h-6 w-6 sm:h-5 sm:w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+                        <span className="text-gray-900 dark:text-white font-medium">{highlight}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
 
               <h3 className="font-semibold text-xl mb-4 text-gray-900 dark:text-white">Care Instructions</h3>
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">

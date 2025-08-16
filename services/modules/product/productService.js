@@ -5,8 +5,8 @@ import { ENDPOINTS } from '@/services/constants/endpoints'
 export const getProducts = (params = {}) =>
   apiClient.get(ENDPOINTS.PRODUCT.LIST, { params })
 
-export const getProductById = (id) =>
-  apiClient.get(ENDPOINTS.PRODUCT.DETAILS(id))
+export const getProductById = (id, config = {}) =>
+  apiClient.get(ENDPOINTS.PRODUCT.DETAILS(id), config)
 
 export const createProduct = (payload) =>
   apiClient.post(ENDPOINTS.PRODUCT.LIST, payload, {

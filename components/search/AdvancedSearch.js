@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Search, X, Clock, TrendingUp, Tag } from 'lucide-react';
-import { mockProducts } from '@/utils/mockData';
+import { getProducts } from '@/services/modules/product/productService';
+import { getCategoryTree } from '@/services/modules/category/categoryService';
 import Link from 'next/link';
 import SmartImage from '@/components/ui/SmartImage';
 
@@ -11,9 +12,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [recentSearches, setRecentSearches] = useState([]);
-  const [trendingSearches] = useState([
-    'Floral Kurti', 'Maxi Dress', 'Crop Top', 'Ethnic Wear', 'Designer Collection'
-  ]);
+  const [trendingSearches, setTrendingSearches] = useState([]);
   const inputRef = useRef(null);
   const [mounted, setMounted] = useState(false);
 
@@ -26,6 +25,24 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
   // Mount flag for portals and body scroll lock when open
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Load trending searches from Medusa categories (top names)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const tree = await getCategoryTree({ include_descendants_tree: true, limit: 100 });
+        if (cancelled) return;
+        // Flatten to names and dedupe
+        const collectNames = (nodes = []) => nodes.flatMap((n) => [n.name, ...(n.category_children?.length ? collectNames(n.category_children) : [])]);
+        const names = Array.from(new Set(collectNames(tree).filter(Boolean)));
+        setTrendingSearches(names.slice(0, 12));
+      } catch (e) {
+        setTrendingSearches([]);
+      }
+    })();
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
@@ -50,19 +67,70 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
     }
   }, []);
 
+  // Fetch live suggestions from Medusa when user types
   useEffect(() => {
-    if (query.length > 0) {
-      const filtered = mockProducts
-        .filter(product => 
-          product.name.toLowerCase().includes(query.toLowerCase()) ||
-          product.category.toLowerCase().includes(query.toLowerCase()) ||
-          product.description.toLowerCase().includes(query.toLowerCase())
-        )
-        .slice(0, 6);
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
-    }
+    let cancelled = false;
+    const fetchSuggestions = async () => {
+      const q = (query || '').trim();
+      if (!q) {
+        setSuggestions([]);
+        return;
+      }
+      // debounce a bit
+      await new Promise((r) => setTimeout(r, 300));
+      if (cancelled) return;
+      try {
+        // apiClient returns response.data directly, not { data }
+        const res = await getProducts({ q, limit: 6 });
+        // Expect Medusa shape: { products, count, offset, limit }
+        const items = Array.isArray(res?.products) ? res.products : (Array.isArray(res?.data) ? res.data : []);
+        const normalizeUrl = (u) => {
+          if (!u) return '';
+          let s = String(u);
+          if (s.startsWith('//')) s = 'https:' + s;
+          if (s.startsWith('http://')) s = s.replace(/^http:\/\//, 'https://');
+          if (s.startsWith('/')) {
+            const base = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || '';
+            return base ? `${base.replace(/\/$/, '')}${s}` : s;
+          }
+          return s;
+        };
+        const mapped = items.map((p) => {
+          const rawImages = (p.images?.map((img) => (typeof img === 'string' ? img : img?.url)).filter(Boolean) || []);
+          const tnRaw = typeof p.thumbnail === 'string' ? p.thumbnail : (p.thumbnail?.url || '');
+          const tn = normalizeUrl(tnRaw);
+          const images = rawImages.map(normalizeUrl);
+          const primary = tn || images[0] || '/placeholder.png';
+          // compute minimal price from variants
+          let minPrice = null;
+          (p.variants || []).forEach((v) => {
+            let cp = null;
+            if (typeof v.calculated_price_incl_tax === 'number') cp = v.calculated_price_incl_tax;
+            else if (typeof v.calculated_price === 'number') cp = v.calculated_price;
+            else if (v.calculated_price && typeof v.calculated_price === 'object') {
+              const obj = v.calculated_price;
+              if (typeof obj.calculated_amount === 'number') cp = obj.calculated_amount;
+              else if (obj.raw_calculated_amount?.value != null) cp = Number(obj.raw_calculated_amount.value);
+            }
+            if (typeof cp === 'number') {
+              minPrice = (minPrice == null) ? cp : Math.min(minPrice, cp);
+            }
+          });
+          return {
+            id: p.id,
+            name: p.title,
+            images: [primary],
+            price: typeof minPrice === 'number' ? Math.round(minPrice / 1) : undefined,
+            category: Array.isArray(p.categories) && p.categories[0]?.name ? p.categories[0].name : '',
+          };
+        });
+        if (!cancelled) setSuggestions(mapped);
+      } catch (e) {
+        if (!cancelled) setSuggestions([]);
+      }
+    };
+    fetchSuggestions();
+    return () => { cancelled = true; };
   }, [query]);
 
   const saveRecentSearch = (searchTerm) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useTransition } from 'react';
 import ProductCard from '@/components/products/ProductCard';
 import ProductFilters from '@/components/products/ProductFilters';
 import ProductSkeleton from '@/components/products/ProductSkeleton';
@@ -20,6 +20,7 @@ export default function ProductsClient({
   const searchParams = useSearchParams();
   // Prevent hydration mismatches by deferring UI until mounted
   const [mounted, setMounted] = useState(false);
+  const [isPending, startTransition] = useTransition();
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -27,6 +28,48 @@ export default function ProductsClient({
   const [products, setProducts] = useState(initialProducts);
   const [filteredProducts, setFilteredProducts] = useState(initialProducts);
   const [loading, setLoading] = useState(false);
+  // Visual loading avoids quick flashes: only shows skeletons if loading > 150ms
+  const [visualLoading, setVisualLoading] = useState(false);
+  // Mobile filters drawer open state (mirror header menu behavior)
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  // Control visualLoading to reduce flicker (placed after state initialization)
+  useEffect(() => {
+    if (loading) {
+      const t = setTimeout(() => setVisualLoading(true), 150);
+      return () => { clearTimeout(t); setVisualLoading(false); };
+    } else {
+      setVisualLoading(false);
+    }
+  }, [loading]);
+
+  // Lock body scroll when mobile filters are open (mirror Header)
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const prev = document.body.style.overflow;
+    const prevPad = document.body.style.paddingRight;
+    if (isFiltersOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = 'var(--scrollbar-width, 0px)';
+    } else {
+      document.body.style.overflow = prev || '';
+      document.body.style.paddingRight = prevPad || '0px';
+    }
+    return () => {
+      document.body.style.overflow = prev || '';
+      document.body.style.paddingRight = prevPad || '0px';
+    };
+  }, [isFiltersOpen]);
+
+  // Close on Escape like Header
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape' && isFiltersOpen) setIsFiltersOpen(false);
+    };
+    if (isFiltersOpen) {
+      document.addEventListener('keydown', onKey);
+      return () => document.removeEventListener('keydown', onKey);
+    }
+  }, [isFiltersOpen]);
   const [viewMode, setViewMode] = useState('grid');
   const [filters, setFilters] = useState({
     category: searchParams.get('category_id') || '',
@@ -76,8 +119,23 @@ export default function ProductsClient({
 
   // Map Medusa product to UI shape
   const mapToUiProduct = (p) => {
-    const images = (p.images?.map((img) => img.url).filter(Boolean) || []);
-    const primaryImage = p.thumbnail || images[0] || '/placeholder.png';
+    // Normalize thumbnail and images to string URLs with protocol/base fixes
+    const normalizeUrl = (u) => {
+      if (!u) return '';
+      let s = String(u);
+      if (s.startsWith('//')) s = 'https:' + s;
+      if (s.startsWith('http://')) s = s.replace(/^http:\/\//, 'https://');
+      if (s.startsWith('/')) {
+        const base = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || '';
+        return base ? `${base.replace(/\/$/, '')}${s}` : s;
+      }
+      return s;
+    };
+    const rawImages = (p.images?.map((img) => (typeof img === 'string' ? img : img?.url)).filter(Boolean) || []);
+    const images = rawImages.map(normalizeUrl);
+    const rawTn = typeof p.thumbnail === 'string' ? p.thumbnail : (p.thumbnail?.url || '');
+    const tn = normalizeUrl(rawTn);
+    const primaryImage = tn || images[0] || '/placeholder.png';
 
     const sizeOption = p.options?.find((o) => /size/i.test(o.title));
     const colorOption = p.options?.find((o) => /(colou?r|colorway|shade|tone)/i.test(o.title));
@@ -281,7 +339,7 @@ export default function ProductsClient({
         const mapped = list.map(mapToUiProduct);
         if (!cancelled) {
           setProducts(mapped);
-          setFilteredProducts(mapped);
+          // let client-side filters effect compute filteredProducts to avoid double updates/flicker
           setCount(Number(res?.count) || mapped.length);
         }
       } catch (e) {
@@ -342,33 +400,38 @@ export default function ProductsClient({
   };
 
   const handleFilterChange = (newFilters) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    startTransition(() => {
+      setFilters(prev => ({ ...prev, ...newFilters }));
 
-    const sp = new URLSearchParams(searchParams.toString());
-    if ('category' in newFilters) {
-      const v = newFilters.category; if (v) sp.set('category_id', v); else sp.delete('category_id'); sp.set('page', '1');
-    }
-    if ('collection' in newFilters) {
-      const v = newFilters.collection; if (v) sp.set('collection_id', v); else sp.delete('collection_id'); sp.set('page', '1');
-    }
-    if ('q' in newFilters) {
-      const v = newFilters.q; if (v) sp.set('q', v); else sp.delete('q'); sp.set('page', '1');
-    }
-    if ('sortBy' in newFilters) {
-      const v = newFilters.sortBy; if (v) sp.set('sort', v); else sp.delete('sort');
-    }
-    Object.entries(newFilters).forEach(([k, v]) => {
-      if (k.startsWith('option_')) { if (v) sp.set(k, String(v)); else sp.delete(k); sp.set('page', '1'); }
+      const sp = new URLSearchParams(searchParams.toString());
+      if ('category' in newFilters) {
+        const v = newFilters.category; if (v) sp.set('category_id', v); else sp.delete('category_id'); sp.set('page', '1');
+      }
+      if ('collection' in newFilters) {
+        const v = newFilters.collection; if (v) sp.set('collection_id', v); else sp.delete('collection_id'); sp.set('page', '1');
+      }
+      if ('q' in newFilters) {
+        const v = newFilters.q; if (v) sp.set('q', v); else sp.delete('q'); sp.set('page', '1');
+      }
+      if ('sortBy' in newFilters) {
+        const v = newFilters.sortBy; if (v) sp.set('sort', v); else sp.delete('sort');
+      }
+      Object.entries(newFilters).forEach(([k, v]) => {
+        if (k.startsWith('option_')) { if (v) sp.set(k, String(v)); else sp.delete(k); sp.set('page', '1'); }
+      });
+
+      // For filter/search changes, replace URL to avoid history spam and heavy navigations
+      router.replace(`${pathname}?${sp.toString()}`, { scroll: false });
     });
-
-    router.push(`${pathname}?${sp.toString()}`);
   };
 
   const totalPages = Math.max(1, Math.ceil(count / limit));
   const goToPage = (p) => {
-    const sp = new URLSearchParams(searchParams.toString());
-    sp.set('page', String(Math.min(Math.max(1, p), totalPages)));
-    router.push(`${pathname}?${sp.toString()}`);
+    startTransition(() => {
+      const sp = new URLSearchParams(searchParams.toString());
+      sp.set('page', String(Math.min(Math.max(1, p), totalPages)));
+      router.push(`${pathname}?${sp.toString()}`, { scroll: false });
+    });
   };
 
   // Until mounted on client, render a stable placeholder to avoid hydration issues
@@ -393,26 +456,7 @@ export default function ProductsClient({
     );
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          <div className="flex gap-8">
-            <div className="hidden lg:block w-64">
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-96 rounded-xl"></div>
-            </div>
-            <div className="flex-1">
-              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                {[...Array(limit || 12)].map((_, i) => (
-                  <ProductSkeleton key={i} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Note: Do not early-return on loading to avoid full page flicker. We'll show inline skeletons instead.
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -446,7 +490,7 @@ export default function ProductsClient({
               className="hidden md:block w-56 px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm min-h-[44px]"
             />
             <button
-              onClick={() => handleFilterChange({})}
+              onClick={() => setIsFiltersOpen(true)}
               className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors touch-manipulation min-h-[44px] text-sm"
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -496,9 +540,73 @@ export default function ProductsClient({
             </div>
           </div>
 
+          {/* Mobile Filters Drawer (mirrors Header mobile menu) */}
+          {isFiltersOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 z-40 lg:hidden"
+                aria-hidden="true"
+              >
+                <div
+                  className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-out"
+                  onClick={() => setIsFiltersOpen(false)}
+                />
+              </div>
+              {/* Panel */}
+              <div
+                className="fixed inset-y-0 left-0 w-full max-w-sm bg-white dark:bg-gray-900 z-50 shadow-2xl lg:hidden transform transition-all duration-300 ease-out translate-x-0 animate-in slide-in-from-left-full"
+                role="dialog"
+                aria-modal="true"
+              >
+                <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Filters</h2>
+                  <button
+                    onClick={() => setIsFiltersOpen(false)}
+                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                    aria-label="Close filters"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <div className="h-[calc(100vh-60px-68px)] overflow-y-auto p-4">
+                  <ProductFilters
+                    filters={filters}
+                    onFilterChange={handleFilterChange}
+                    categories={categoryOptions}
+                    sizes={sizeOptions}
+                    colors={colorOptions}
+                    productOptions={productOptions}
+                  />
+                </div>
+                {/* Sticky footer actions */}
+                <div className="p-4 border-t border-gray-200 dark:border-gray-800 flex gap-3">
+                  <button
+                    onClick={() => setIsFiltersOpen(false)}
+                    className="flex-1 py-3 rounded-full border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    Close
+                  </button>
+                  <button
+                    onClick={() => setIsFiltersOpen(false)}
+                    className="flex-1 py-3 rounded-full bg-black text-white dark:bg-white dark:text-black"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
           {/* Products Grid */}
-          <div className="flex-1 min-w-0">
-            {filteredProducts.length === 0 ? (
+          <div className={`flex-1 min-w-0 ${isPending ? 'opacity-95' : ''}`}>
+            {visualLoading ? (
+              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 transition-opacity duration-200">
+                {[...Array(limit || 12)].map((_, i) => (
+                  <ProductSkeleton key={i} />
+                ))}
+              </div>
+            ) : filteredProducts.length === 0 ? (
               <div className="text-center py-16 sm:py-20">
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-2">No products found</h3>
@@ -511,7 +619,7 @@ export default function ProductsClient({
                 </button>
               </div>
             ) : (
-              <div className={`grid gap-4 sm:gap-6 ${viewMode === 'grid' ? 'grid-cols-1 xs:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+              <div className={`grid gap-4 sm:gap-6 transition-opacity duration-200 ${viewMode === 'grid' ? 'grid-cols-1 xs:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
                 {filteredProducts.map((product, idx) => (
                   <ProductCard key={product.id} product={product} viewMode={viewMode} priority={idx < 4} />
                 ))}

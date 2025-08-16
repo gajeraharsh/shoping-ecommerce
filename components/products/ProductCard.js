@@ -12,9 +12,20 @@ export default function ProductCard({ product, priority = false, viewMode }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imgSrc, setImgSrc] = useState('');
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
   const { showToast } = useToast();
+
+  // Inline monochrome SVG placeholder to avoid missing file issues
+  const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 533">
+      <rect width="400" height="533" fill="#f3f4f6" />
+      <g fill="#9ca3af" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle">
+        <text x="200" y="266">No Image</text>
+      </g>
+    </svg>`
+  );
   
   // Simple palette to ensure known color names render reliably
   const COLOR_PALETTE = {
@@ -79,15 +90,24 @@ export default function ProductCard({ product, priority = false, viewMode }) {
     };
   }, [isHovered, product.images]);
 
-  // Reset image loaded state when image source changes to ensure proper fade-in
-  useEffect(() => {
-    setImageLoaded(false);
-  }, [currentImageIndex]);
+  // Note: do not reset imageLoaded on product/currentImageIndex directly,
+  // we handle it via imgSrc change to avoid flicker during search updates.
 
-  // Also reset when product changes (e.g., filtering/pagination)
+  // Derive a safe image source and update when index/product changes
   useEffect(() => {
+    const imgs = Array.isArray(product?.images) ? product.images : [];
+    const candidate = imgs[currentImageIndex] || imgs[0] || '';
+    const safe = typeof candidate === 'string' && candidate.trim().length > 0 ? candidate : FALLBACK_SVG;
+    setImgSrc(safe);
+  }, [product?.images, currentImageIndex]);
+
+  // Failsafe: if onLoad/onError don't fire (rare), reveal image area after a short delay
+  useEffect(() => {
+    if (!imgSrc) return;
     setImageLoaded(false);
-  }, [product?.id, product?.images]);
+    const t = setTimeout(() => setImageLoaded(true), 500);
+    return () => clearTimeout(t);
+  }, [imgSrc]);
 
   const handleWishlistToggle = (e) => {
     e.preventDefault();
@@ -116,17 +136,17 @@ export default function ProductCard({ product, priority = false, viewMode }) {
     >
       <Link href={`/products/${product.id}`}>
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-50 dark:bg-gray-800 rounded-t-xl">
-          {!imageLoaded && (
-            <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse"></div>
-          )}
           <Image
-            key={product.images[currentImageIndex] || product.images[0]}
-            src={product.images[currentImageIndex] || product.images[0]}
+            key={`${product.id || 'prod'}:${imgSrc}`}
+            src={imgSrc || FALLBACK_SVG}
             alt={product.name}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 480px) 50vw, 100vw"
-            className={`object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${isHovered ? 'scale-105' : 'scale-100'}`}
-            onLoadingComplete={() => setImageLoaded(true)}
+            className={`object-cover transition-transform duration-700 ${isHovered ? 'scale-105' : 'scale-100'}`}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => { setImgSrc(FALLBACK_SVG); setImageLoaded(true); }}
+            placeholder="blur"
+            blurDataURL={FALLBACK_SVG}
             loading={priority ? 'eager' : 'lazy'}
             priority={priority}
             decoding="async"
