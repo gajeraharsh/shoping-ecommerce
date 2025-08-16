@@ -137,7 +137,7 @@ export default function ProductDetailClient({ initialProduct = null }) {
 
         {/* Product Details */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 sm:mb-16">
-          <ProductImageGallery images={product.images} />
+          <ProductImageGallery images={product.images} productName={product.name} />
           <ProductInfo product={product} />
         </div>
         

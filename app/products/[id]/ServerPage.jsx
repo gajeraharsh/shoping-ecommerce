@@ -1,10 +1,14 @@
 import ProductDetailClient from './ClientPage';
 import { getProductById } from '@/services/modules/product/productService';
 import { getProductReviews } from '@/services/modules/review/reviewService';
+import { notFound } from 'next/navigation';
+
+// Enable ISR so subsequent reloads are served from cache (reduces flicker and speeds up reloads)
+export const revalidate = 300; // seconds
 
 export default async function ServerProductPage({ params, searchParams }) {
   const sp = await searchParams;
-  const id = (await params)?.id;
+  const { id } = await params;
 
   const query = {
     fields: '+variants,+variants.options,+options,+images,+tags,+collection,+categories,+metadata',
@@ -18,7 +22,11 @@ export default async function ServerProductPage({ params, searchParams }) {
 
   let product = null;
   try {
-    const res = await getProductById(id, { params: query });
+    // Run product and reviews requests in parallel to reduce server response time
+    const productPromise = getProductById(id, { params: query });
+    const reviewsPromise = getProductReviews(id, { limit: 3, offset: 0, order: '-created_at' }).catch(() => null);
+
+    const res = await productPromise;
     const p = res?.product || res; // our apiClient returns response.data
 
     // Server-side log of raw data as requested
@@ -132,10 +140,10 @@ export default async function ServerProductPage({ params, searchParams }) {
     const fabric = md.fabric || md.material || p?.material || 'Cotton';
     const deliveryTime = md.delivery_time || '3–5 business days';
     const returnPolicy = md.return_policy || '30-day return policy. No questions asked.';
-    // Fetch reviews count from API on server (page load)
+    // Fetch reviews count from API on server (already requested in parallel above)
     let reviews = 0;
-    try {
-      const reviewsRes = await getProductReviews(id, { limit: 1 });
+    const reviewsRes = await reviewsPromise;
+    if (reviewsRes) {
       // Support both { reviews: [], count } or [] shapes
       reviews =
         typeof reviewsRes?.count === 'number'
@@ -145,8 +153,6 @@ export default async function ServerProductPage({ params, searchParams }) {
           : Array.isArray(reviewsRes)
           ? reviewsRes.length
           : 0;
-    } catch (_) {
-      reviews = 0;
     }
 
     product = {
@@ -176,8 +182,33 @@ export default async function ServerProductPage({ params, searchParams }) {
     product = null;
   }
 
+  // If product is not found, render Next.js 404 page for correct SEO
+  if (!product) {
+    notFound();
+  }
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com';
   const productUrl = product?.id ? `${siteUrl}/products/${product.id}` : `${siteUrl}/products`;
+
+  // Build Review JSON-LD array (best-effort mapping)
+  let reviewLd = [];
+  try {
+    const rr = Array.isArray(reviewsRes?.reviews)
+      ? reviewsRes.reviews
+      : (Array.isArray(reviewsRes) ? reviewsRes : []);
+    reviewLd = rr.slice(0, 3).map((r) => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: r?.user?.name || r?.author_name || 'Verified Buyer' },
+      datePublished: r?.created_at || r?.date || undefined,
+      reviewBody: r?.comment || r?.content || r?.text || undefined,
+      name: r?.title || `Review for ${product?.name || 'product'}`,
+      reviewRating: (typeof r?.rating === 'number' || typeof r?.rate === 'number')
+        ? { '@type': 'Rating', ratingValue: r?.rating ?? r?.rate, bestRating: 5, worstRating: 1 }
+        : undefined,
+    })).filter(Boolean);
+  } catch (_) {
+    reviewLd = [];
+  }
 
   const productLd = product
     ? {
@@ -192,6 +223,7 @@ export default async function ServerProductPage({ params, searchParams }) {
           product.rating && product.reviews
             ? { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviews }
             : undefined,
+        review: reviewLd.length ? reviewLd : undefined,
         offers:
           typeof product.price === 'number'
             ? {

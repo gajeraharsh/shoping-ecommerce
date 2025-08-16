@@ -4,7 +4,7 @@ import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Heart, Share2, Maximize2 } from 'lucide-react';
 
-export default function ProductImageGallery({ images }) {
+export default function ProductImageGallery({ images, productName = 'Product' }) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -108,7 +108,7 @@ export default function ProductImageGallery({ images }) {
             <Image
               ref={imageRef}
               src={images[currentImage]}
-              alt={`Product image ${currentImage + 1}`}
+              alt={`${productName} – image ${currentImage + 1}`}
               fill
               sizes="(min-width: 1024px) 40vw, 100vw"
               className="object-cover transition-transform duration-300 will-change-transform"
@@ -216,7 +216,7 @@ export default function ProductImageGallery({ images }) {
                 <div className="w-full h-full rounded-xl overflow-hidden">
                   <Image
                     src={image}
-                    alt={`Thumbnail ${index + 1}`}
+                    alt={`${productName} – thumbnail ${index + 1}`}
                     width={80}
                     height={80}
                     className="object-cover w-full h-full"
@@ -260,7 +260,7 @@ export default function ProductImageGallery({ images }) {
             <div className="relative w-full h-full">
               <Image
                 src={images[currentImage]}
-                alt={`Product image ${currentImage + 1}`}
+                alt={`${productName} – image ${currentImage + 1}`}
                 fill
                 sizes="100vw"
                 className="object-contain"

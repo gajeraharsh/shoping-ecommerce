@@ -1,6 +1,7 @@
 import ProductsClient from '@/components/products/ProductsClient';
 import { getProducts } from '@/services/modules/product/productService';
 import { getCategoryTree } from '@/services/modules/category/categoryService';
+import PaginationLinks from '@/components/seo/PaginationLinks';
 
 // Server Component: first paint is fully rendered HTML for SEO
 export default async function ServerProductsPage({ searchParams }) {
@@ -137,12 +138,29 @@ export default async function ServerProductsPage({ searchParams }) {
     values: Array.from(set),
   }));
 
+  // ItemList JSON-LD for the listing page
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com';
+  const itemListLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: mapped.map((p, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1 + offset,
+      url: `${siteUrl}/products/${p.id}`,
+      name: p.name,
+    })),
+  };
+
   return (
-    <ProductsClient
-      initialProducts={mapped}
-      initialCount={count}
-      initialCategories={categoryOptions}
-      initialOptions={initialOptions}
-    />
+    <>
+      <PaginationLinks basePath="/products" page={page} limit={limit} count={count} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
+      <ProductsClient
+        initialProducts={mapped}
+        initialCount={count}
+        initialCategories={categoryOptions}
+        initialOptions={initialOptions}
+      />
+    </>
   );
 }
