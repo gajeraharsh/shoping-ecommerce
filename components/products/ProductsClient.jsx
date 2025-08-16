@@ -32,6 +32,8 @@ export default function ProductsClient({
   const [visualLoading, setVisualLoading] = useState(false);
   // Mobile filters drawer open state (mirror header menu behavior)
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  // Pending filters used only in mobile drawer; applied on Apply button
+  const [pendingFilters, setPendingFilters] = useState({});
   // Control visualLoading to reduce flicker (placed after state initialization)
   useEffect(() => {
     if (loading) {
@@ -490,7 +492,7 @@ export default function ProductsClient({
               className="hidden md:block w-56 px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm min-h-[44px]"
             />
             <button
-              onClick={() => setIsFiltersOpen(true)}
+              onClick={() => { setPendingFilters(filters); setIsFiltersOpen(true); }}
               className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors touch-manipulation min-h-[44px] text-sm"
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -571,8 +573,8 @@ export default function ProductsClient({
                 </div>
                 <div className="h-[calc(100vh-60px-68px)] overflow-y-auto p-4">
                   <ProductFilters
-                    filters={filters}
-                    onFilterChange={handleFilterChange}
+                    filters={pendingFilters}
+                    onFilterChange={(nf) => setPendingFilters((prev) => ({ ...prev, ...nf }))}
                     categories={categoryOptions}
                     sizes={sizeOptions}
                     colors={colorOptions}
@@ -588,7 +590,7 @@ export default function ProductsClient({
                     Close
                   </button>
                   <button
-                    onClick={() => setIsFiltersOpen(false)}
+                    onClick={() => { handleFilterChange(pendingFilters); setIsFiltersOpen(false); }}
                     className="flex-1 py-3 rounded-full bg-black text-white dark:bg-white dark:text-black"
                   >
                     Apply
