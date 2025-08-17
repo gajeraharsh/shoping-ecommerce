@@ -1,6 +1,6 @@
 // /features/auth/authSlice.js
 import { createSlice } from '@reduxjs/toolkit'
-import { loginUser, registerUser, verifyOtpUser, logoutUser } from './authThunks'
+import { loginUser, registerUser, verifyOtpUser, logoutUser, fetchMeUser } from './authThunks'
 
 let persistedToken = null
 let persistedUser = null
@@ -34,6 +34,11 @@ const authSlice = createSlice({
         if (user) localStorage.setItem('user', JSON.stringify(user))
       }
     },
+    clearCredentials: (state) => {
+      state.token = null
+      state.user = null
+      state.isAuthenticated = false
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -52,6 +57,21 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload || action.error?.message || 'Login failed'
+      })
+      // Fetch Me
+      .addCase(fetchMeUser.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchMeUser.fulfilled, (state, action) => {
+        state.loading = false
+        const user = action.payload || null
+        state.user = user
+        // keep isAuthenticated based on token
+      })
+      .addCase(fetchMeUser.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload || action.error?.message || 'Fetch me failed'
       })
       // Register
       .addCase(registerUser.pending, (state) => {
@@ -86,7 +106,7 @@ const authSlice = createSlice({
   },
 })
 
-export const { setCredentials } = authSlice.actions
+export const { setCredentials, clearCredentials } = authSlice.actions
 export default authSlice.reducer
 
 // Selectors

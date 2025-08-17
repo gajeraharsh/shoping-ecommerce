@@ -1,6 +1,9 @@
 // /services/config/apiClient.js
 import axios from 'axios'
 import { notify } from '@/utils/notify'
+import { clearAuth } from '@/services/utils/authStorage'
+import { dispatch } from '@/store/store'
+import { clearCredentials } from '@/features/auth/authSlice'
 
 export function createApiClient(baseURL) {
   const api = axios.create({
@@ -48,8 +51,13 @@ export function createApiClient(baseURL) {
 
       // Example: auth token expiration handling
       if (status === 401) {
-        // e.g., redirect to login or clear token
-        if (typeof window !== 'undefined') localStorage.removeItem('token')
+        // clear local storage and redux auth, caller can redirect
+        try {
+          clearAuth()
+          dispatch(clearCredentials())
+        } catch (_) {
+          if (typeof window !== 'undefined') localStorage.removeItem('token')
+        }
       }
 
       return Promise.reject(error)

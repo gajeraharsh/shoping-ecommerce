@@ -27,54 +27,22 @@ export default function AccountLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const safeName = typeof user?.name === 'string' ? user.name : ''
+  const safeEmail = typeof user?.email === 'string' ? user.email : ''
+  const userInitial = safeName && safeName.charAt ? safeName.charAt(0).toUpperCase() : (safeEmail && safeEmail.charAt ? safeEmail.charAt(0).toUpperCase() : 'U')
+
+  const hasToken = typeof window !== 'undefined' ? !!localStorage.getItem('token') : false
 
   if (!user) {
-    const handleDemoLogin = () => {
-      const demoUser = {
-        id: 1,
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '+91 9876543210'
-      };
-      login(demoUser);
-    };
-
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 border border-gray-200 dark:border-gray-700">
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-black to-gray-700 dark:from-white dark:to-gray-300 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-              <User className="w-10 h-10 text-white dark:text-black" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Welcome Back</h1>
-            <p className="text-gray-600 dark:text-gray-400">Sign in to access your account</p>
-          </div>
-
-          <div className="space-y-4">
-            <button
-              onClick={handleDemoLogin}
-              className="w-full bg-black dark:bg-white text-white dark:text-black py-4 px-6 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 active:scale-95"
-            >
-              Demo Login (Testing)
-            </button>
-
-            <Link
-              href="/auth/login"
-              className="w-full border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-4 px-6 rounded-2xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 text-center block"
-            >
-              Sign In
-            </Link>
-
-            <Link
-              href="/"
-              className="w-full text-gray-500 dark:text-gray-400 py-3 px-6 text-center block hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-            >
-              Back to Home
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+    // If we have a token but user isn't loaded yet, show a lightweight loading state
+    if (hasToken) {
+      return null; // keep page clean while Redux/ME hydrates
+    }
+    // No token: redirect to login and render nothing
+    useEffect(() => {
+      router.push('/auth/login');
+    }, [router]);
+    return null;
   }
 
   const navigation = [
@@ -167,11 +135,11 @@ export default function AccountLayout({ children }) {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-black dark:bg-white rounded-full flex items-center justify-center">
               <span className="text-white dark:text-black font-bold text-sm">
-                {user.name.charAt(0).toUpperCase()}
+                {userInitial}
               </span>
             </div>
             <div className="text-right">
-              <div className="text-sm font-semibold text-gray-900 dark:text-white">{user.name}</div>
+              <div className="text-sm font-semibold text-gray-900 dark:text-white">{safeName || 'Account User'}</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">Active Member</div>
             </div>
           </div>
@@ -187,11 +155,11 @@ export default function AccountLayout({ children }) {
               <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black p-8">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 bg-white/20 dark:bg-black/20 rounded-2xl flex items-center justify-center text-2xl font-bold backdrop-blur-sm">
-                    {user.name.charAt(0).toUpperCase()}
+                    {userInitial}
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold">{user.name}</h2>
-                    <p className="text-white/70 dark:text-black/70 text-sm">{user.email}</p>
+                    <h2 className="text-xl font-bold">{safeName || 'Account User'}</h2>
+                    <p className="text-white/70 dark:text-black/70 text-sm">{safeEmail}</p>
                   </div>
                 </div>
                 
@@ -275,11 +243,11 @@ export default function AccountLayout({ children }) {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-white/20 dark:bg-black/20 rounded-2xl flex items-center justify-center font-bold text-lg backdrop-blur-sm">
-                      {user.name.charAt(0).toUpperCase()}
+                      {userInitial}
                     </div>
                     <div>
-                      <div className="font-semibold text-lg">{user.name}</div>
-                      <div className="text-white/70 dark:text-black/70 text-sm">{user.email}</div>
+                      <div className="font-semibold text-lg">{safeName || 'Account User'}</div>
+                      <div className="text-white/70 dark:text-black/70 text-sm">{safeEmail}</div>
                       <div className="flex items-center gap-2 mt-1">
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                         <span className="text-xs">Premium Member</span>

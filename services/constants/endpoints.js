@@ -17,6 +17,9 @@ export const ENDPOINTS = {
     DETAILS: (id) => `/products/${id}`,
     REVIEWS: (id) => `/products/${id}/reviews`,
   },
+  CUSTOMER: {
+    ME: '/customers/me',
+  },
   REVIEW: {
     CREATE: '/reviews',
   },
