@@ -2,10 +2,11 @@
 import axios from 'axios'
 import { notify } from '@/utils/notify'
 
-export function createApiClient() {
+export function createApiClient(baseURL) {
   const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:9000/store',
+    baseURL: baseURL || process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:9000',
     timeout: 15000,
+    withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
       // Medusa Store publishable key (prefer env, fallback to provided key)
