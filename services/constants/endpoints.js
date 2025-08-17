@@ -23,5 +23,11 @@ export const ENDPOINTS = {
   REVIEW: {
     CREATE: '/reviews',
   },
+  WISHLIST: {
+    LIST: '/wishlist',
+    ADD: '/wishlist',
+    DELETE: (id) => `/wishlist/${id}`,
+    DELETE_BY_PRODUCT: (productId) => `/wishlist/by-product/${productId}`,
+    TOGGLE: '/wishlist/toggle',
+  },
 }
-  
