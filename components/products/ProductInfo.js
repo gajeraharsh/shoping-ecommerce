@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield, ShieldCheck, CreditCard, Lock, Leaf, Clock, MapPin, Package } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/contexts/WishlistContext';
+import { getProductById } from '@/services/modules/product/productService';
 import { useToast } from '@/hooks/useToast';
 import SizeGuideModal from '@/components/modals/SizeGuideModal';
 
@@ -14,10 +15,33 @@ export default function ProductInfo({ product }) {
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   
   const { addToCart } = useCart();
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { addToWishlist, removeFromWishlist } = useWishlist();
   const { showToast } = useToast();
   
-  const inWishlist = product?.is_wishlist === true ? true : isInWishlist(product.id);
+  // Use API-provided is_wishlist; manage optimistic local state
+  const [inWishlist, setInWishlist] = useState(!!product?.is_wishlist);
+  useEffect(() => {
+    setInWishlist(!!product?.is_wishlist);
+  }, [product?.id, product?.is_wishlist]);
+
+  // Client-side hydrate of is_wishlist so SSR/ISR can stay cached without user-specific state
+  useEffect(() => {
+    let cancelled = false;
+    async function hydrateWishlist() {
+      if (!product?.id) return;
+      try {
+        const res = await getProductById(product.id, { params: { fields: '+wishlist' } });
+        const fresh = !!res?.product?.is_wishlist;
+        if (!cancelled) setInWishlist(fresh);
+      } catch (_) {
+        // ignore; keep SSR-provided state
+      }
+    }
+    hydrateWishlist();
+    return () => {
+      cancelled = true;
+    };
+  }, [product?.id]);
   const hasSizes = Array.isArray(product?.sizes) && product.sizes.length > 0;
   const hasColors = Array.isArray(product?.colors) && product.colors.length > 0;
 
@@ -99,11 +123,11 @@ export default function ProductInfo({ product }) {
 
   const handleWishlistToggle = () => {
     if (inWishlist) {
+      setInWishlist(false); // optimistic UI
       removeFromWishlist(product.id);
-      showToast('Removed from wishlist', 'info');
     } else {
+      setInWishlist(true); // optimistic UI
       addToWishlist(product);
-      showToast('Added to wishlist', 'success');
     }
   };
 

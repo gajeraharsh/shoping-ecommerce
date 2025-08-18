@@ -3,13 +3,19 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star } from 'lucide-react';
+import { Star, Heart } from 'lucide-react';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 export default function ProductCard({ product, priority = false, viewMode }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imgSrc, setImgSrc] = useState('');
+  const { addToWishlist, removeFromWishlist } = useWishlist();
+  const [inWishlist, setInWishlist] = useState(!!product?.is_wishlist);
+  useEffect(() => {
+    setInWishlist(!!product?.is_wishlist);
+  }, [product?.id, product?.is_wishlist]);
   // Local state retained for image interactions only
   const rating = Number(product?.rating) || 0;
   const reviewCount = Number(product?.review_count) || 0;
@@ -145,7 +151,30 @@ export default function ProductCard({ product, priority = false, viewMode }) {
             </div>
           )}
 
-          {/* Action buttons removed: card now purely navigates to product page */}
+          {/* Wishlist Heart */}
+          <button
+            type="button"
+            aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (inWishlist) {
+                setInWishlist(false); // optimistic
+                removeFromWishlist(product.id);
+              } else {
+                setInWishlist(true); // optimistic
+                // For list cards, pass minimal product; WishlistContext should handle normalization
+                addToWishlist(product);
+              }
+            }}
+            className={`absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-full border shadow-sm transition-colors ${
+              inWishlist
+                ? 'bg-red-50 border-red-200 text-red-600'
+                : 'bg-white/90 border-gray-200 text-gray-600 hover:text-red-600'
+            }`}
+          >
+            <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+          </button>
         </div>
       </Link>
 

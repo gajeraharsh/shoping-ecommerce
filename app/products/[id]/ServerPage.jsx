@@ -11,7 +11,8 @@ export default async function ServerProductPage({ params, searchParams }) {
   const { id } = await params;
 
   const query = {
-    fields: '+variants,+variants.options,+options,+images,+tags,+collection,+categories,+metadata',
+    // include wishlist to hint backend and preserve consistency
+    fields: '+variants,+variants.options,+options,+images,+tags,+collection,+categories,+metadata,+wishlist',
   };
   if (process.env.NEXT_PUBLIC_MEDUSA_REGION_ID) {
     query.region_id = process.env.NEXT_PUBLIC_MEDUSA_REGION_ID;
@@ -174,6 +175,7 @@ export default async function ServerProductPage({ params, searchParams }) {
         })
         return { id: v.id, options: opts }
       })
+
     
     product = {
       id: p.id,
@@ -190,6 +192,8 @@ export default async function ServerProductPage({ params, searchParams }) {
       rating: aggAverage > 0 ? aggAverage : (typeof p?.rating === 'number' ? p.rating : 0),
       review_count,
       reviews: review_count, // backward compatibility for components expecting `reviews`
+      // Pass through wishlist flag from server so client can use it
+      is_wishlist: !!p?.is_wishlist,
       stock: 999,
       description,
       highlights,
