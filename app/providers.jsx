@@ -4,13 +4,14 @@ import { Provider, useSelector } from 'react-redux'
 import { store } from '@/store/store'
 import ToastHost from '@/components/ui/ToastHost'
 import ModalManager from '@/components/ui/ModalManager'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { fetchCategoryTree } from '@/features/category/categorySlice'
 import { fetchMeUser } from '@/features/auth/authThunks'
-import { ensureCart } from '@/features/cart/cartSlice'
+import { ensureCart, fetchCart } from '@/features/cart/cartSlice'
 
 function InitBoot() {
   const isAuthenticated = useSelector((s) => s.auth.isAuthenticated)
+  const bootEnsuredRef = useRef(false)
   useEffect(() => {
     // Preload categories on app init
     store.dispatch(fetchCategoryTree())
@@ -25,12 +26,20 @@ function InitBoot() {
 
     // Always ensure cart on boot so header can show count immediately
     store.dispatch(ensureCart())
+    bootEnsuredRef.current = true
   }, [])  
 
   // Whenever auth state flips to authenticated (e.g., after login), ensure cart again
   useEffect(() => {
     if (isAuthenticated) {
-      store.dispatch(ensureCart())
+      // Avoid back-to-back ensure if we just ensured on boot
+      const state = store.getState()
+      const cartId = state?.cart?.cart?.id || state?.cart?.id
+      if (cartId) {
+        store.dispatch(fetchCart(cartId))
+      } else if (!bootEnsuredRef.current) {
+        store.dispatch(ensureCart())
+      }
     }
   }, [isAuthenticated])
   return null

@@ -23,14 +23,14 @@ export function useCart() {
   const status = useSelector(selectCartStatus)
   const error = useSelector(selectCartError)
 
-  useEffect(() => {
-    dispatch(ensureCart())
-  }, [dispatch])
+  // Do NOT auto-ensure here; Providers already ensures cart on app boot and after login
 
   const refresh = useCallback(() => {
     if (cart?.id) dispatch(fetchCart(cart.id))
     else dispatch(ensureCart())
   }, [dispatch, cart?.id])
+
+  const ensure = useCallback(() => dispatch(ensureCart()), [dispatch])
 
   const addToCart = useCallback(
     ({ variant_id, quantity = 1, metadata }) => {
@@ -64,6 +64,7 @@ export function useCart() {
     status,
     error,
     refresh,
+    ensure,
     addToCart,
     updateQuantity,
     removeItem,

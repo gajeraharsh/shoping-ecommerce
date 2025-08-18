@@ -4,22 +4,12 @@ import { Trash2, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 import SmartImage from '@/components/ui/SmartImage';
+import { formatAmount } from '@/utils/money';
 
 export default function CartItems() {
   const { items, cart, updateQuantity, removeItem } = useCart();
 
-  const formatCurrency = (amount, currency) => {
-    if (typeof amount !== 'number') return '0';
-    try {
-      return new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency: (currency || 'USD').toUpperCase(),
-      }).format(amount);
-    } catch (_) {
-      // Fallback to plain number if currency code invalid
-      return amount.toLocaleString();
-    }
-  };
+  const money = (amount) => formatAmount(amount, cart?.currency_code);
 
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg w-full overflow-hidden">
@@ -47,7 +37,7 @@ export default function CartItems() {
                 <div className="mt-1 text-xs text-gray-500">
                   {item?.variant?.title || item?.description || 'Variant'}
                 </div>
-                <div className="mt-1 text-base font-semibold">{formatCurrency(item.unit_price, cart?.currency_code)}</div>
+                <div className="mt-1 text-base font-semibold">{money(item.unit_price)}</div>
 
                 <div className="flex items-center justify-between mt-3">
                   <div className="flex items-center gap-2">
@@ -93,7 +83,7 @@ export default function CartItems() {
                 <div className="mt-1 text-sm text-gray-500">
                   {item?.variant?.title || item?.description || 'Variant'}
                 </div>
-                <div className="mt-2 text-lg font-semibold">{formatCurrency(item.unit_price, cart?.currency_code)}</div>
+                <div className="mt-2 text-lg font-semibold">{money(item.unit_price)}</div>
               </div>
 
               <div className="flex items-center gap-3">

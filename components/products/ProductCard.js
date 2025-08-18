@@ -3,22 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Star, ShoppingBag } from 'lucide-react';
-import { useWishlist } from '@/contexts/WishlistContext';
-import { useCart } from '@/contexts/CartContext';
-import { useToast } from '@/hooks/useToast';
+import { Star } from 'lucide-react';
 
 export default function ProductCard({ product, priority = false, viewMode }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imgSrc, setImgSrc] = useState('');
-  const { addToWishlist, removeFromWishlist } = useWishlist();
-  const { addToCart } = useCart();
-  const { showToast } = useToast();
-  // Local wishlist state and loading for enable/disable button behavior
-  const [localInWishlist, setLocalInWishlist] = useState(!!product?.is_wishlist);
-  const [isWishLoading, setIsWishLoading] = useState(false);
+  // Local state retained for image interactions only
 
   // Inline monochrome SVG placeholder to avoid missing file issues
   const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
@@ -76,10 +68,7 @@ export default function ProductCard({ product, priority = false, viewMode }) {
     };
   };
   
-  // Keep local wishlist state in sync if product prop changes
-  useEffect(() => {
-    setLocalInWishlist(!!product?.is_wishlist);
-  }, [product?.is_wishlist]);
+  // (Removed wishlist state sync)
 
   // Image cycling effect on hover
   useEffect(() => {
@@ -115,34 +104,11 @@ export default function ProductCard({ product, priority = false, viewMode }) {
     return () => clearTimeout(t);
   }, [imgSrc]);
 
-  const handleWishlistToggle = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (isWishLoading) return;
-    try {
-      setIsWishLoading(true);
-      if (localInWishlist) {
-        await Promise.resolve(removeFromWishlist(product.id));
-        setLocalInWishlist(false);
-        showToast('Removed from wishlist', 'info');
-      } else {
-        await Promise.resolve(addToWishlist(product));
-        setLocalInWishlist(true);
-        showToast('Added to wishlist', 'success');
-      }
-    } catch (err) {
-      showToast('Something went wrong. Please try again.', 'error');
-    } finally {
-      setIsWishLoading(false);
-    }
-  };
+  // (Removed wishlist handler and Quick Add; product card now only links to product page)
 
-  const handleQuickAdd = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart(product, product.sizes[0], product.colors[0], 1);
-    showToast('Added to cart', 'success');
-  };
+  // (Removed variant resolution; actions are no longer present on card)
+
+  // (Removed Quick Add handler)
 
   return (
     <div
@@ -177,35 +143,7 @@ export default function ProductCard({ product, priority = false, viewMode }) {
             </div>
           )}
 
-          {/* Wishlist Button - Always visible on mobile, hover on desktop */}
-          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
-            <button
-              onClick={handleWishlistToggle}
-              className={`w-11 h-11 rounded-full transition-all flex items-center justify-center shadow-md border ${
-                localInWishlist
-                  ? 'bg-accent/10 text-accent border-accent'
-                  : 'bg-white/90 text-gray-600 hover:text-accent border-transparent'
-              } ${isWishLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-              title={localInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-              aria-pressed={localInWishlist}
-              disabled={isWishLoading}
-              style={{ margin: 0, padding: 0, border: 'none' }}
-            >
-              <Heart className={`h-5 w-5 ${localInWishlist ? 'fill-current text-accent' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
-            </button>
-          </div>
-
-          {/* Quick Add Button - Always visible on mobile, hover on desktop */}
-          <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform translate-y-0 sm:translate-y-2 sm:group-hover:translate-y-0">
-            <button
-              onClick={handleQuickAdd}
-              className="w-full btn-primary py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium transition-colors rounded-lg touch-manipulation min-h-[48px] flex items-center justify-center shadow-md"
-              style={{ margin: 0, border: 'none' }}
-            >
-              <ShoppingBag className="h-4 w-4 mr-2" style={{ margin: 0, padding: 0, display: 'block' }} />
-              <span>Add to Cart</span>
-            </button>
-          </div>
+          {/* Action buttons removed: card now purely navigates to product page */}
         </div>
       </Link>
 
