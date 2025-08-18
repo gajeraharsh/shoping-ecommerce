@@ -13,9 +13,12 @@ export default function ProductCard({ product, priority = false, viewMode }) {
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imgSrc, setImgSrc] = useState('');
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { addToWishlist, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
   const { showToast } = useToast();
+  // Local wishlist state and loading for enable/disable button behavior
+  const [localInWishlist, setLocalInWishlist] = useState(!!product?.is_wishlist);
+  const [isWishLoading, setIsWishLoading] = useState(false);
 
   // Inline monochrome SVG placeholder to avoid missing file issues
   const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
@@ -73,7 +76,10 @@ export default function ProductCard({ product, priority = false, viewMode }) {
     };
   };
   
-  const inWishlist = isInWishlist(product.id);
+  // Keep local wishlist state in sync if product prop changes
+  useEffect(() => {
+    setLocalInWishlist(!!product?.is_wishlist);
+  }, [product?.is_wishlist]);
 
   // Image cycling effect on hover
   useEffect(() => {
@@ -109,15 +115,25 @@ export default function ProductCard({ product, priority = false, viewMode }) {
     return () => clearTimeout(t);
   }, [imgSrc]);
 
-  const handleWishlistToggle = (e) => {
+  const handleWishlistToggle = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (inWishlist) {
-      removeFromWishlist(product.id);
-      showToast('Removed from wishlist', 'info');
-    } else {
-      addToWishlist(product);
-      showToast('Added to wishlist', 'success');
+    if (isWishLoading) return;
+    try {
+      setIsWishLoading(true);
+      if (localInWishlist) {
+        await Promise.resolve(removeFromWishlist(product.id));
+        setLocalInWishlist(false);
+        showToast('Removed from wishlist', 'info');
+      } else {
+        await Promise.resolve(addToWishlist(product));
+        setLocalInWishlist(true);
+        showToast('Added to wishlist', 'success');
+      }
+    } catch (err) {
+      showToast('Something went wrong. Please try again.', 'error');
+    } finally {
+      setIsWishLoading(false);
     }
   };
 
@@ -166,14 +182,16 @@ export default function ProductCard({ product, priority = false, viewMode }) {
             <button
               onClick={handleWishlistToggle}
               className={`w-11 h-11 rounded-full transition-all flex items-center justify-center shadow-md border ${
-                inWishlist
+                localInWishlist
                   ? 'bg-accent/10 text-accent border-accent'
                   : 'bg-white/90 text-gray-600 hover:text-accent border-transparent'
-              }`}
-              title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+              } ${isWishLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              title={localInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+              aria-pressed={localInWishlist}
+              disabled={isWishLoading}
               style={{ margin: 0, padding: 0, border: 'none' }}
             >
-              <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current text-accent' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
+              <Heart className={`h-5 w-5 ${localInWishlist ? 'fill-current text-accent' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
             </button>
           </div>
 

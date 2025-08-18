@@ -8,12 +8,17 @@ import { login as loginApi } from '@/services/modules/auth/authService';
 import { Eye, EyeOff } from 'lucide-react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useAuth } from '@/contexts/AuthContext';
+import { useDispatch } from 'react-redux';
+import { fetchMeUser } from '@/features/auth/authThunks';
 
 export default function LoginClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
   const toast = useToast();
+  const { login: setAuthSession } = useAuth();
+  const dispatch = useDispatch();
   
   useEffect(() => {
     if (searchParams.get('verified') === '1') {
@@ -45,7 +50,15 @@ export default function LoginClient() {
               onSubmit={async (values, { setSubmitting }) => {
                 setLoading(true);
                 try {
-                  await loginApi({ email: values.email, password: values.password });
+                  const res = await loginApi({ email: values.email, password: values.password });
+                  // Extract token and user similarly to thunk logic
+                  const isStringToken = typeof res === 'string';
+                  const token = isStringToken ? res : (res?.token || res?.access_token || res?.data?.token || null);
+                  const user = res?.user || res?.data?.user || null;
+                  // Immediately set auth session so UI updates without refresh
+                  setAuthSession(user, token);
+                  // Fire-and-forget profile fetch to sync counts like wishlist_count
+                  try { await dispatch(fetchMeUser()).unwrap(); } catch (_) {}
                   router.push(redirect);
                 } catch (err) {
                   // handled by interceptor

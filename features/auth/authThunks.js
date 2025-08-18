@@ -2,18 +2,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { login, register, verifyOtp, logout } from '@/services/modules/auth/authService'
 import { getMe } from '@/services/modules/customer/customerService'
+import { setAuth as setAuthStorage, clearAuth as clearAuthStorage } from '@/services/utils/authStorage'
 
-function persistAuth({ token, user }) {
-  if (typeof window === 'undefined') return
-  if (token) localStorage.setItem('token', token)
-  if (user) localStorage.setItem('user', JSON.stringify(user))
-}
-
-function clearAuth() {
-  if (typeof window === 'undefined') return
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
-}
+// Use centralized storage helpers to avoid direct localStorage usage here
 
 export const loginUser = createAsyncThunk(
   'auth/login',
@@ -26,7 +17,7 @@ export const loginUser = createAsyncThunk(
         token: isStringToken ? res : res?.token || res?.access_token || res?.data?.token || null,
         user: res?.user || res?.data?.user || null,
       }
-      persistAuth(payload)
+      setAuthStorage(payload)
       // After token is saved, fetch profile
       try {
         await dispatch(fetchMeUser()).unwrap()
@@ -60,7 +51,7 @@ export const verifyOtpUser = createAsyncThunk(
         token: res?.token || res?.access_token || res?.data?.token || null,
         user: res?.user || res?.data?.user || null,
       }
-      if (result.token) persistAuth(result)
+      if (result.token) setAuthStorage(result)
       return res
     } catch (err) {
       return rejectWithValue(err?.response?.data?.message || err.message)
@@ -73,10 +64,8 @@ export const fetchMeUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await getMe()
-      // Save to localStorage for persistence
-      if (typeof window !== 'undefined' && res) {
-        localStorage.setItem('user', JSON.stringify(res))
-      }
+      // Persist user via centralized storage helper
+      if (res) setAuthStorage({ user: res })
       return res
     } catch (err) {
       return rejectWithValue(err?.response?.data?.message || err.message)
@@ -89,11 +78,11 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await logout()
-      clearAuth()
+      clearAuthStorage()
       return true
     } catch (err) {
       // Even if API fails, clear local auth to avoid stuck sessions
-      clearAuth()
+      clearAuthStorage()
       return rejectWithValue(err?.response?.data?.message || err.message)
     }
   }

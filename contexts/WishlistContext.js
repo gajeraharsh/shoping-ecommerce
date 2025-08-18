@@ -2,12 +2,14 @@
 
 import { createContext, useContext, useReducer, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePathname } from 'next/navigation';
 import {
   getWishlist as apiGetWishlist,
   addToWishlist as apiAddToWishlist,
   removeByProduct as apiRemoveByProduct,
   toggleWishlist as apiToggleWishlist,
 } from '@/services/modules/wishlist/wishlistService';
+import { getMe as apiGetMe } from '@/services/modules/customer/customerService';
 
 const WishlistContext = createContext();
 
@@ -30,20 +32,135 @@ const wishlistReducer = (state, action) => {
   }
 };
 
+// Normalize Medusa product to UI shape expected by ProductCard / Wishlist UI
+const normalizeProduct = (p) => {
+  if (!p || typeof p !== 'object') return {};
+  const id = p.id;
+  const name = p.name || p.title || '';
+  // Image URL normalizer to handle //, http->https, and backend-relative / paths
+  const normalizeUrl = (u) => {
+    if (!u) return '';
+    let s = String(u);
+    if (s.startsWith('//')) s = 'https:' + s;
+    if (s.startsWith('http://')) s = s.replace(/^http:\/\//, 'https://');
+    if (s.startsWith('/')) {
+      const base = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || '';
+      return base ? `${base.replace(/\/$/, '')}${s}` : s;
+    }
+    return s;
+  };
+  // Images: array of urls; prefer images[].url, then thumbnail
+  const imgArray = Array.isArray(p.images) ? p.images : [];
+  const parsedImages = imgArray
+    .map((im) => (typeof im === 'string' ? im : (im?.url || im?.src || '')))
+    .filter(Boolean)
+    .map(normalizeUrl);
+  const tnRaw = typeof p.thumbnail === 'string' ? p.thumbnail : (p.thumbnail?.url || '');
+  const tn = normalizeUrl(tnRaw);
+  const images = parsedImages.length ? parsedImages : (tn ? [tn] : []);
+  const image = images[0] || '/placeholder.png';
+
+  // Price: choose the lowest available variant price (prefer INR) from all variants
+  let price = p.price;
+  let originalPrice = p.originalPrice;
+  let discount = p.discount;
+  const variants = Array.isArray(p.variants) ? p.variants : [];
+  // Support both legacy prices array and new calculated_price objects
+  if (price == null) {
+    const variantPriceObjs = variants.map((v) => {
+      // calculated_price object path
+      if (v && typeof v.calculated_price === 'object' && v.calculated_price) {
+        const obj = v.calculated_price;
+        const cp = typeof obj.calculated_amount === 'number'
+          ? obj.calculated_amount
+          : (obj.raw_calculated_amount?.value != null ? Number(obj.raw_calculated_amount.value) : undefined);
+        const op = typeof obj.original_amount === 'number'
+          ? obj.original_amount
+          : (obj.raw_original_amount?.value != null ? Number(obj.raw_original_amount.value) : undefined);
+        return { cp, op };
+      }
+      // legacy prices array
+      const pricesArr = Array.isArray(v?.prices) ? v.prices : [];
+      const any = pricesArr.find(Boolean);
+      if (any && typeof any.amount === 'number') {
+        return {
+          cp: Number(any.amount),
+          op: typeof any.compare_at_amount === 'number' ? Number(any.compare_at_amount) : undefined,
+        };
+      }
+      return { cp: undefined, op: undefined };
+    }).filter(x => typeof x.cp === 'number');
+
+    if (variantPriceObjs.length) {
+      const minCp = Math.min(...variantPriceObjs.map(v => v.cp));
+      price = Math.round(minCp);
+      const anyOp = variantPriceObjs.find(v => typeof v.op === 'number' && v.op > minCp);
+      if (anyOp) originalPrice = Math.round(anyOp.op);
+    }
+  }
+  if (discount == null && originalPrice && price) {
+    const d = Math.round(((originalPrice - price) / originalPrice) * 100);
+    discount = isFinite(d) && d > 0 ? d : undefined;
+  }
+
+  // Options -> colors/sizes
+  const options = Array.isArray(p.options) ? p.options : [];
+  const colorOpt = options.find(o => /color/i.test(o?.title || ''));
+  const sizeOpt = options.find(o => /size/i.test(o?.title || ''));
+  const colors = Array.isArray(colorOpt?.values)
+    ? colorOpt.values.map(v => v?.value || v).filter(Boolean)
+    : (Array.isArray(p.colors) ? p.colors : []);
+  const sizes = Array.isArray(sizeOpt?.values)
+    ? sizeOpt.values.map(v => v?.value || v).filter(Boolean)
+    : (Array.isArray(p.sizes) ? p.sizes : []);
+
+  // Stock
+  const firstVariant = variants[0] || {};
+  const stock = typeof firstVariant.inventory_quantity === 'number'
+    ? firstVariant.inventory_quantity
+    : (p.stock ?? undefined);
+
+  // Defaults
+  const rating = typeof p.rating === 'number' ? p.rating : 4.5;
+  const reviews = typeof p.reviews === 'number' ? p.reviews : 0;
+  const is_wishlist = !!p.is_wishlist;
+
+  return { id, name, image, images, price, originalPrice, discount, colors, sizes, stock, rating, reviews, is_wishlist };
+};
+
 export function WishlistProvider({ children }) {
   const [wishlistItems, dispatch] = useReducer(wishlistReducer, []);
   const { isAuthenticated, isInitializing } = useAuth();
+  const pathname = usePathname();
+  const onWishlistPage = typeof pathname === 'string' && (
+    pathname.startsWith('/wishlist') || pathname.startsWith('/account/wishlist')
+  );
 
   // Initial load: if authenticated, load from API; else load from localStorage for graceful degrade
   useEffect(() => {
     if (isInitializing) return;
-    if (isAuthenticated) {
+    // Only fetch wishlist from API when user is on the wishlist page
+    if (isAuthenticated && onWishlistPage) {
       (async () => {
         try {
-          const data = await apiGetWishlist();
+          const data = await apiGetWishlist({
+            region_id: process.env.NEXT_PUBLIC_MEDUSA_REGION_ID,
+            sales_channel_id: process.env.NEXT_PUBLIC_MEDUSA_SALES_CHANNEL,
+          });
+          // Prefer top-level products array if present for direct ProductCard rendering
+          if (Array.isArray(data?.products) && data.products.length) {
+            const mapped = data.products.map(normalizeProduct);
+            dispatch({ type: 'LOAD_WISHLIST', payload: mapped });
+            return;
+          }
           const items = Array.isArray(data?.items) ? data.items : [];
-          // Store minimal shape compatible with existing UI (expects item.id === productId)
-          const mapped = items.map((it) => ({ id: it.product_id }));
+          // Fallback: map items[].product if available
+          const mapped = items.map((it) => {
+            if (it && typeof it === 'object' && it.product) {
+              return normalizeProduct(it.product);
+            }
+            return { id: it?.product_id };
+          });
           dispatch({ type: 'LOAD_WISHLIST', payload: mapped });
         } catch (e) {
           // fall back to empty if API fails
@@ -58,7 +175,7 @@ export function WishlistProvider({ children }) {
         dispatch({ type: 'LOAD_WISHLIST', payload: [] });
       }
     }
-  }, [isAuthenticated, isInitializing]);
+  }, [isAuthenticated, isInitializing, onWishlistPage]);
 
   // Persist only for non-auth or as a minor cache; server is source of truth when authenticated
   useEffect(() => {
@@ -75,6 +192,8 @@ export function WishlistProvider({ children }) {
       try {
         await apiAddToWishlist({ product_id: product.id });
         doLocal();
+        // Fire-and-forget refresh of /customers/me to update header wishlist count
+        apiGetMe().catch(() => {});
       } catch (_) {
         // ignore; interceptors will toast
       }
@@ -88,6 +207,8 @@ export function WishlistProvider({ children }) {
       try {
         await apiRemoveByProduct(productId);
         doLocal();
+        // Fire-and-forget refresh of /customers/me to update header wishlist count
+        apiGetMe().catch(() => {});
       } catch (_) {}
     })();
   };

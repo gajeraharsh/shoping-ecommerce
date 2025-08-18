@@ -33,6 +33,9 @@ export default function WishlistPage() {
   const [sortBy, setSortBy] = useState('newest');
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  // Client-side pagination (Load More)
+  const PAGE_SIZE = 9; // items per batch
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   useEffect(() => {
     let filtered = [...wishlistItems];
@@ -62,6 +65,8 @@ export default function WishlistPage() {
     }
 
     setFilteredItems(filtered);
+    // Reset visible count whenever the filtered list changes
+    setVisibleCount(PAGE_SIZE);
   }, [wishlistItems, searchQuery, sortBy]);
 
   const handleAddToCart = (item) => {
@@ -279,7 +284,7 @@ export default function WishlistPage() {
           ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' 
           : 'space-y-4'
       }`}>
-        {filteredItems.map((item) => {
+        {filteredItems.slice(0, visibleCount).map((item) => {
           const isSelected = selectedItems.find(p => p.id === item.id);
           
           if (viewMode === 'list') {
@@ -466,6 +471,18 @@ export default function WishlistPage() {
           );
         })}
       </div>
+
+      {/* Load More */}
+      {visibleCount < filteredItems.length && (
+        <div className="flex justify-center">
+          <button
+            onClick={() => setVisibleCount((c) => Math.min(c + PAGE_SIZE, filteredItems.length))}
+            className="mt-6 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+          >
+            Load more ({filteredItems.length - visibleCount} left)
+          </button>
+        </div>
+      )}
 
       {filteredItems.length === 0 && searchQuery && (
         <div className="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-gray-700 text-center">

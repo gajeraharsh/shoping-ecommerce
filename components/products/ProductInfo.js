@@ -17,7 +17,7 @@ export default function ProductInfo({ product }) {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { showToast } = useToast();
   
-  const inWishlist = isInWishlist(product.id);
+  const inWishlist = product?.is_wishlist === true ? true : isInWishlist(product.id);
   const hasSizes = Array.isArray(product?.sizes) && product.sizes.length > 0;
   const hasColors = Array.isArray(product?.colors) && product.colors.length > 0;
 

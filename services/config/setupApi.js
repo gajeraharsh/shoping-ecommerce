@@ -2,14 +2,15 @@
 import { createApiClient } from './apiClient'
 import { setAuth } from '@/services/utils/authStorage'
 
-// Determine base URLs
-const storeBase =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:9000/store'
+// Determine base URLs robustly
+// Prefer explicit store API base; otherwise build from MEDUSA backend + '/store'
+const medusaRoot = (process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'http://localhost:9000').replace(/\/$/, '')
+const storeBase = (process.env.NEXT_PUBLIC_API_BASE_URL
+  ? process.env.NEXT_PUBLIC_API_BASE_URL
+  : `${medusaRoot}/store`)
 
-// Derive auth base from an explicit env or by stripping '/store' from store base
-const derivedRoot = storeBase.replace(/\/store\/?$/, '')
-const authBase =
-  process.env.NEXT_PUBLIC_AUTH_API_BASE_URL || derivedRoot || 'http://localhost:9000'
+// Derive auth base from explicit env or medusa root
+const authBase = (process.env.NEXT_PUBLIC_AUTH_API_BASE_URL || medusaRoot)
 
 // Axios instances
 // - apiClient: for Medusa Store endpoints (expects base like http://.../store)

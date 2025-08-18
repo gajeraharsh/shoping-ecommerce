@@ -8,6 +8,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
+import { getMe as apiGetMe } from '@/services/modules/customer/customerService';
 
 import { BRAND } from '@/lib/brand';
 import { CATEGORY_TREE } from '@/lib/categories';
@@ -21,7 +22,7 @@ export default function Header() {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const { getCartItemsCount } = useCart();
   const { wishlistItems } = useWishlist();
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const router = useRouter();
   const profileDropdownRef = useRef(null);
   const categoriesRef = useRef(null);
@@ -29,7 +30,29 @@ export default function Header() {
   const hoverBridgeRef = useRef(null);
 
   const cartCount = getCartItemsCount();
-  const wishlistCount = wishlistItems.length;
+  const [wishlistApiCount, setWishlistApiCount] = useState(null);
+  const wishlistCount = (isAuthenticated && typeof wishlistApiCount === 'number')
+    ? wishlistApiCount
+    : wishlistItems.length;
+
+  // Fetch wishlist_count from backend when authenticated
+  useEffect(() => {
+    let active = true;
+    if (!isAuthenticated) {
+      setWishlistApiCount(null);
+      return;
+    }
+    (async () => {
+      try {
+        const data = await apiGetMe();
+        const count = Number(data?.wishlist_count ?? data?.customer?.wishlist_count);
+        if (active) setWishlistApiCount(Number.isFinite(count) ? count : 0);
+      } catch (_) {
+        if (active) setWishlistApiCount(null);
+      }
+    })();
+    return () => { active = false; };
+  }, [isAuthenticated, wishlistItems.length]);
 
   // Handle click outside for profile dropdown
   useEffect(() => {
@@ -365,7 +388,7 @@ export default function Header() {
             </button>
 
             {/* Wishlist */}
-            <Link href="/wishlist" className={`relative text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`} style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
+            <Link href="/account/wishlist" className={`relative text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`} style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
               <Heart className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
@@ -396,11 +419,11 @@ export default function Header() {
               <div className={`absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg transition-all duration-200 z-50 ${
                 isProfileDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'
               }`}>
-                {user ? (
+                {isAuthenticated ? (
                   <>
                     <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">Welcome back!</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || 'Account'}</p>
                     </div>
                     <Link
                       href="/account"
@@ -580,7 +603,7 @@ export default function Header() {
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 px-4">Quick Actions</h3>
                     <div className="space-y-2">
                       <Link
-                        href="/wishlist"
+                        href="/account/wishlist"
                         onClick={() => setIsMenuOpen(false)}
                         className="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-200"
                       >
@@ -666,7 +689,7 @@ export default function Header() {
 
                 {/* Sidebar Footer */}
                 <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
-                  {user && (
+                  {isAuthenticated && (
                     <button
                       onClick={() => {
                         logout();

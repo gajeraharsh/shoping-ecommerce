@@ -1,6 +1,9 @@
 'use client';
 
 import { createContext, useContext, useReducer, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { setAuth as setAuthStorage, clearAuth as clearAuthStorage, getUser as getStoredUser, getToken as getStoredToken } from '@/services/utils/authStorage';
+import { getMe as apiGetMe } from '@/services/modules/customer/customerService';
 
 const AuthContext = createContext();
 
@@ -33,32 +36,81 @@ export function AuthProvider({ children }) {
     tokenPresent: false,
     isInitializing: true,
   });
+  const router = useRouter();
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
+    const savedUser = getStoredUser();
+    const token = getStoredToken();
     dispatch({ type: 'SET_TOKEN_PRESENT', payload: !!token });
     if (savedUser) {
-      dispatch({ type: 'LOAD_USER', payload: JSON.parse(savedUser) });
+      dispatch({ type: 'LOAD_USER', payload: savedUser });
     }
     // Mark hydration done so UIs can avoid flashing auth screens
     dispatch({ type: 'SET_INITIALIZING', payload: false });
   }, []);
 
-  const login = (userData) => {
-    localStorage.setItem('user', JSON.stringify(userData));
-    dispatch({ type: 'SET_TOKEN_PRESENT', payload: true });
+  // If we have a token but no user loaded yet, fetch profile to hydrate UI (e.g., header account menu)
+  useEffect(() => {
+    let active = true;
+    const token = getStoredToken();
+    if (token && !state.user) {
+      (async () => {
+        try {
+          const me = await apiGetMe();
+          if (!active) return;
+          if (me) {
+            // Persist and update context
+            setAuthStorage({ user: me });
+            dispatch({ type: 'LOAD_USER', payload: me });
+          }
+        } catch (err) {
+          const status = err?.response?.status;
+          if (status === 401) {
+            // Token invalid/expired: clear and logout so app can recover
+            try { clearAuthStorage(); } catch (_) {}
+            dispatch({ type: 'SET_TOKEN_PRESENT', payload: false });
+            dispatch({ type: 'LOGOUT' });
+          } else {
+            // Transient failure: keep token, try one quick retry after a short delay
+            setTimeout(async () => {
+              if (!active) return;
+              try {
+                const me2 = await apiGetMe();
+                if (!active) return;
+                if (me2) {
+                  setAuthStorage({ user: me2 });
+                  dispatch({ type: 'LOAD_USER', payload: me2 });
+                }
+              } catch (_) {
+                // swallow; UI will continue to show loading until next navigation/login
+              }
+            }, 500);
+          }
+        }
+      })();
+    }
+    return () => { active = false; };
+  }, [state.user, state.tokenPresent]);
+
+  const login = (userData, token) => {
+    // Persist via shared storage helper for consistency
+    setAuthStorage({ token, user: userData });
+    dispatch({ type: 'SET_TOKEN_PRESENT', payload: !!token || !!getStoredToken() });
     dispatch({ type: 'LOGIN', payload: userData });
   };
 
   const logout = () => {
-    localStorage.removeItem('user');
-    // token may be cleared by axios interceptor; reflect it locally too
-    const token = localStorage.getItem('token');
-    if (!token) {
-      dispatch({ type: 'SET_TOKEN_PRESENT', payload: false });
-    }
+    try {
+      // Clear all auth artifacts using shared util
+      clearAuthStorage();
+    } catch (_) {}
+    // Reflect cleared token in state immediately
+    dispatch({ type: 'SET_TOKEN_PRESENT', payload: false });
     dispatch({ type: 'LOGOUT' });
+    // Redirect to login
+    try {
+      router.push('/auth/login');
+    } catch (_) {}
   };
 
   return (

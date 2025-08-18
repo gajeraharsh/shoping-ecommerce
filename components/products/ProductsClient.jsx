@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useTransition } from 'react';
+import { useState, useEffect, useMemo, useTransition, useDeferredValue } from 'react';
 import ProductCard from '@/components/products/ProductCard';
 import ProductFilters from '@/components/products/ProductFilters';
 import ProductSkeleton from '@/components/products/ProductSkeleton';
@@ -26,7 +26,7 @@ export default function ProductsClient({
   }, []);
 
   const [products, setProducts] = useState(initialProducts);
-  const [filteredProducts, setFilteredProducts] = useState(initialProducts);
+  // filteredProducts is derived to avoid extra renders and flicker
   const [loading, setLoading] = useState(false);
   // Visual loading avoids quick flashes: only shows skeletons if loading > 150ms
   const [visualLoading, setVisualLoading] = useState(false);
@@ -203,6 +203,7 @@ export default function ProductsClient({
       price: typeof minPrice === 'number' ? Math.round(minPrice / 1) : 0,
       originalPrice: typeof originalPrice === 'number' ? Math.round(originalPrice / 1) : undefined,
       discount: discount || undefined,
+      is_wishlist: Boolean(p?.is_wishlist),
       colors,
       sizes,
       categoryIds,
@@ -260,35 +261,36 @@ export default function ProductsClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Apply client-side filters after Medusa response
-  useEffect(() => {
+  // Defer heavy filtering to keep UI responsive during typing/updates
+  const deferredFilters = useDeferredValue(filters);
+  const filteredProducts = useMemo(() => {
     let filtered = [...products];
 
-    if (filters.category) {
-      const cid = String(filters.category);
+    if (deferredFilters.category) {
+      const cid = String(deferredFilters.category);
       filtered = filtered.filter((product) => Array.isArray(product.categoryIds) && product.categoryIds.includes(cid));
     }
 
-    if (filters.priceRange) {
-      const [min, max] = filters.priceRange.split('-').map((n) => Number(n));
+    if (deferredFilters.priceRange) {
+      const [min, max] = deferredFilters.priceRange.split('-').map((n) => Number(n));
       filtered = filtered.filter((product) => product.price >= (min || 0) && product.price <= (max || Number.MAX_SAFE_INTEGER));
     }
 
-    if (filters.size) {
-      filtered = filtered.filter((product) => product.sizes?.includes(filters.size));
+    if (deferredFilters.size) {
+      filtered = filtered.filter((product) => product.sizes?.includes(deferredFilters.size));
     }
 
-    if (filters.color) {
+    if (deferredFilters.color) {
       filtered = filtered.filter((product) =>
         (product.colors || [])
           .map((c) => String(c).toLowerCase())
-          .includes(String(filters.color).toLowerCase())
+          .includes(String(deferredFilters.color).toLowerCase())
       );
     }
 
     // Text search (debounced via searchText -> filters.q)
-    if (filters.q && String(filters.q).trim().length) {
-      const q = String(filters.q).trim().toLowerCase();
+    if (deferredFilters.q && String(deferredFilters.q).trim().length) {
+      const q = String(deferredFilters.q).trim().toLowerCase();
       filtered = filtered.filter((p) => {
         const name = String(p.name || '').toLowerCase();
         const categories = (p.categoryNames || []).map((c) => String(c).toLowerCase());
@@ -302,7 +304,7 @@ export default function ProductsClient({
       });
     }
 
-    Object.entries(filters).forEach(([key, val]) => {
+    Object.entries(deferredFilters).forEach(([key, val]) => {
       if (!val || !key.startsWith('option_')) return;
       const optTitle = key.replace('option_', '').toLowerCase();
       filtered = filtered.filter((product) => {
@@ -311,7 +313,7 @@ export default function ProductsClient({
       });
     });
 
-    switch (filters.sortBy) {
+    switch (deferredFilters.sortBy) {
       case 'price-low':
         filtered.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
         break;
@@ -326,10 +328,21 @@ export default function ProductsClient({
         break;
     }
 
-    setFilteredProducts(filtered);
-  }, [products, filters]);
+    return filtered;
+  }, [products, deferredFilters]);
 
-  // Re-fetch from Medusa when URL server-side params change
+  // Re-fetch from Medusa ONLY when server-relevant URL params change (avoid option_* causing refetch flicker)
+  const serverParamValues = useMemo(() => {
+    return JSON.stringify({
+      q: searchParams.get('q') || '',
+      category_id: searchParams.get('category_id') || '',
+      collection_id: searchParams.get('collection_id') || '',
+      sort: searchParams.get('sort') || '',
+      page: searchParams.get('page') || '1',
+      limit: searchParams.get('limit') || String(limit),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, limit]);
   useEffect(() => {
     let cancelled = false;
     const fetchProducts = async () => {
@@ -347,7 +360,6 @@ export default function ProductsClient({
       } catch (e) {
         if (!cancelled) {
           setProducts([]);
-          setFilteredProducts([]);
           setCount(0);
         }
       } finally {
@@ -357,13 +369,13 @@ export default function ProductsClient({
     fetchProducts();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [serverParamValues]);
 
   const buildQueryParams = () => {
     const params = {
       limit,
       offset: (page - 1) * limit,
-      fields: '+variants,+variants.options,+options,+images,+tags,+collection,+categories',
+      fields: '+variants,+variants.options,+options,+images,+tags,+collection,+categories,+wishlist',
     };
 
     if (typeof window !== 'undefined') {
@@ -418,9 +430,7 @@ export default function ProductsClient({
       if ('sortBy' in newFilters) {
         const v = newFilters.sortBy; if (v) sp.set('sort', v); else sp.delete('sort');
       }
-      Object.entries(newFilters).forEach(([k, v]) => {
-        if (k.startsWith('option_')) { if (v) sp.set(k, String(v)); else sp.delete(k); sp.set('page', '1'); }
-      });
+      // Keep dynamic option_* filters client-side to avoid unnecessary URL changes and re-renders
 
       // For filter/search changes, replace URL to avoid history spam and heavy navigations
       router.replace(`${pathname}?${sp.toString()}`, { scroll: false });
@@ -614,7 +624,12 @@ export default function ProductsClient({
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-2">No products found</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">Try adjusting your filters or search terms</p>
                 <button 
-                  onClick={() => setFilters({ category: '', priceRange: '', size: '', color: '', sortBy: 'newest' })}
+                  onClick={() => {
+                    const base = { category: '', priceRange: '', size: '', color: '', sortBy: 'newest' };
+                    const dynamic = {};
+                    (productOptions || []).forEach((opt) => { dynamic[`option_${opt.title}`] = ''; });
+                    setFilters({ ...base, ...dynamic });
+                  }}
                   className="inline-flex items-center px-6 py-3 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors touch-manipulation"
                 >
                   Clear All Filters

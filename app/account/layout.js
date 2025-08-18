@@ -23,7 +23,7 @@ import {
 import Link from 'next/link';
 
 export default function AccountLayout({ children }) {
-  const { user, logout, login } = useAuth();
+  const { user, logout, login, isAuthenticated, isInitializing, tokenPresent } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,19 +31,28 @@ export default function AccountLayout({ children }) {
   const safeEmail = typeof user?.email === 'string' ? user.email : ''
   const userInitial = safeName && safeName.charAt ? safeName.charAt(0).toUpperCase() : (safeEmail && safeEmail.charAt ? safeEmail.charAt(0).toUpperCase() : 'U')
 
-  const hasToken = typeof window !== 'undefined' ? !!localStorage.getItem('token') : false
-
-  if (!user) {
-    // If we have a token but user isn't loaded yet, show a lightweight loading state
-    if (hasToken) {
-      return null; // keep page clean while Redux/ME hydrates
-    }
-    // No token: redirect to login and render nothing
-    useEffect(() => {
+  // Redirect unauthenticated users once initialization completes.
+  // IMPORTANT: If a token is present, do NOT redirect; allow hydration to complete.
+  useEffect(() => {
+    if (!isInitializing && !isAuthenticated && !tokenPresent) {
       router.push('/auth/login');
-    }, [router]);
-    return null;
+    }
+  }, [isInitializing, isAuthenticated, tokenPresent, router]);
+
+  // While initializing OR (token exists but user profile not yet hydrated), show a minimal loading state
+  if (isInitializing || (tokenPresent && !user)) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
+          <span className="w-4 h-4 rounded-full border-2 border-gray-300 border-t-black dark:border-gray-600 dark:border-t-white animate-spin" />
+          <span className="text-sm">Loading your account…</span>
+        </div>
+      </div>
+    );
   }
+
+  // If not authenticated (post-redirect), render nothing
+  if (!isAuthenticated) return null;
 
   const navigation = [
     { 
