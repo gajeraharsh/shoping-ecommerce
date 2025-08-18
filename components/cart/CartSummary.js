@@ -1,15 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 
 export default function CartSummary() {
-  const { cartItems, getCartTotal } = useCart();
-  
-  const subtotal = getCartTotal();
-  const shipping = subtotal > 999 ? 0 : 99;
-  const tax = Math.round(subtotal * 0.18);
-  const total = subtotal + shipping + tax;
+  const { items, totals, cart } = useCart();
+
+  const formatCurrency = (amount, currency) => {
+    if (typeof amount !== 'number') return '0';
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: (currency || 'USD').toUpperCase(),
+      }).format(amount);
+    } catch (_) {
+      return amount.toLocaleString();
+    }
+  };
+
+  const subtotal = totals.subtotal || 0;
+  const shipping = totals.shipping_total || 0;
+  const tax = totals.tax_total || 0;
+  const total = totals.total || subtotal + shipping + tax;
 
   return (
     <div className="bg-white border rounded-lg p-4 sm:p-6 lg:sticky lg:top-24">
@@ -17,32 +29,26 @@ export default function CartSummary() {
       
       <div className="space-y-3 text-sm">
         <div className="flex justify-between">
-          <span>Subtotal ({cartItems.length} items)</span>
-          <span>₹{subtotal}</span>
+          <span>Subtotal ({items.length} items)</span>
+          <span>{formatCurrency(subtotal, cart?.currency_code)}</span>
         </div>
         <div className="flex justify-between">
           <span>Shipping</span>
-          <span className={shipping === 0 ? 'text-green-600' : ''}>
-            {shipping === 0 ? 'FREE' : `₹${shipping}`}
-          </span>
+          <span>{formatCurrency(shipping, cart?.currency_code)}</span>
         </div>
         <div className="flex justify-between">
           <span>Tax (18%)</span>
-          <span>₹{tax}</span>
+          <span>{formatCurrency(tax, cart?.currency_code)}</span>
         </div>
         <div className="border-t pt-3">
           <div className="flex justify-between text-lg font-semibold">
             <span>Total</span>
-            <span>₹{total}</span>
+            <span>{formatCurrency(total, cart?.currency_code)}</span>
           </div>
         </div>
       </div>
 
-      {shipping > 0 && (
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
-          Add ₹{999 - subtotal} more to get FREE shipping!
-        </div>
-      )}
+      {/* Promo or shipping notice can be reintroduced with business logic if needed */}
 
       <Link
         href="/checkout"

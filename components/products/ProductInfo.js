@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield, ShieldCheck, CreditCard, Lock, Leaf, Clock, MapPin, Package } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/useToast';
 import SizeGuideModal from '@/components/modals/SizeGuideModal';
@@ -21,6 +21,27 @@ export default function ProductInfo({ product }) {
   const hasSizes = Array.isArray(product?.sizes) && product.sizes.length > 0;
   const hasColors = Array.isArray(product?.colors) && product.colors.length > 0;
 
+  // Find matching Medusa variant by selected options
+  const resolveVariantId = () => {
+    const variants = Array.isArray(product?.variants) ? product.variants : [];
+    if (!variants.length) return null;
+    // case-insensitive keys for matching
+    const want = {};
+    if (hasSizes && selectedSize) want.size = selectedSize.toLowerCase();
+    if (hasColors && selectedColor) want.color = selectedColor.toLowerCase();
+    const match = variants.find((v) => {
+      const opts = v?.options || {};
+      const entries = Object.entries(opts).reduce((acc, [k, v]) => {
+        acc[k.toLowerCase()] = String(v).toLowerCase();
+        return acc;
+      }, {});
+      const sizeOk = !want.size || entries.size === want.size;
+      const colorOk = !want.color || entries.color === want.color;
+      return sizeOk && colorOk;
+    });
+    return match?.id || null;
+  };
+
   const handleAddToCart = () => {
     if (hasSizes && !selectedSize) {
       showToast('Please select a size', 'error');
@@ -30,8 +51,22 @@ export default function ProductInfo({ product }) {
       showToast('Please select a color', 'error');
       return;
     }
-    
-    addToCart(product, hasSizes ? selectedSize : undefined, hasColors ? selectedColor : undefined, quantity);
+
+    const variantId = resolveVariantId();
+    if (!variantId) {
+      showToast('Unable to determine product variant. Please try different options.', 'error');
+      return;
+    }
+
+    addToCart({
+      variant_id: variantId,
+      quantity,
+      metadata: {
+        product_id: product?.id,
+        size: hasSizes ? selectedSize : undefined,
+        color: hasColors ? selectedColor : undefined,
+      },
+    });
     showToast('Added to cart successfully!', 'success');
   };
 
@@ -44,8 +79,20 @@ export default function ProductInfo({ product }) {
       showToast('Please select a color', 'error');
       return;
     }
-    
-    addToCart(product, hasSizes ? selectedSize : undefined, hasColors ? selectedColor : undefined, quantity);
+    const variantId = resolveVariantId();
+    if (!variantId) {
+      showToast('Unable to determine product variant. Please try different options.', 'error');
+      return;
+    }
+    addToCart({
+      variant_id: variantId,
+      quantity,
+      metadata: {
+        product_id: product?.id,
+        size: hasSizes ? selectedSize : undefined,
+        color: hasColors ? selectedColor : undefined,
+      },
+    });
     // Navigate to checkout
     window.location.href = '/checkout';
   };

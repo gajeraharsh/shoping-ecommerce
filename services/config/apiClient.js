@@ -2,7 +2,7 @@
 import axios from 'axios'
 import { notify } from '@/utils/notify'
 import { clearAuth } from '@/services/utils/authStorage'
-import { dispatch } from '@/store/store'
+import { getDispatcher } from '@/services/config/dispatcher'
 import { clearCredentials } from '@/features/auth/authSlice'
 
 export function createApiClient(baseURL) {
@@ -54,7 +54,8 @@ export function createApiClient(baseURL) {
         // clear local storage and redux auth, caller can redirect
         try {
           clearAuth()
-          dispatch(clearCredentials())
+          const dispatch = getDispatcher()
+          if (dispatch) dispatch(clearCredentials())
         } catch (_) {
           if (typeof window !== 'undefined') localStorage.removeItem('token')
         }

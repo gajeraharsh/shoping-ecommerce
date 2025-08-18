@@ -2,13 +2,13 @@
 
 import CartItems from '@/components/cart/CartItems';
 import CartSummary from '@/components/cart/CartSummary';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 
 export default function CartPage() {
-  const { cartItems } = useCart();
+  const { items } = useCart();
 
-  if (cartItems.length === 0) {
+  if (items.length === 0) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
@@ -33,7 +33,7 @@ export default function CartPage() {
         <div className="mb-8">
           <h1 className="heading-lg text-gray-900 dark:text-white mb-2">Shopping Cart</h1>
           <p className="body-base text-fade">
-            {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your cart
+            {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
           </p>
         </div>
 

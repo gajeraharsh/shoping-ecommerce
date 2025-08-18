@@ -155,6 +155,21 @@ export default async function ServerProductPage({ params, searchParams }) {
           : 0;
     }
 
+    // Build a simplified variant matrix: [{ id, options: { Size: 'M', Color: 'Red', ... } }]
+    const optionIdToTitle = new Map(
+      (Array.isArray(p?.options) ? p.options : []).map((o) => [o.id, o.title])
+    )
+    const simplifiedVariants = (Array.isArray(p?.variants) ? p.variants : [])
+      .map((v) => {
+        const opts = {}
+        const varOpts = Array.isArray(v?.options) ? v.options : []
+        varOpts.forEach((vo) => {
+          const t = optionIdToTitle.get(vo.option_id)
+          if (t) opts[t] = vo.value
+        })
+        return { id: v.id, options: opts }
+      })
+    
     product = {
       id: p.id,
       name: p.title,
@@ -164,6 +179,7 @@ export default async function ServerProductPage({ params, searchParams }) {
       discount: discount || undefined,
       colors,
       sizes,
+      variants: simplifiedVariants,
       category,
       rating: 4.6,
       reviews,

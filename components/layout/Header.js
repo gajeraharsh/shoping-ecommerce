@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search, Heart, ShoppingBag, User, Menu, X, Shield, ChevronDown } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
@@ -20,7 +20,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const { getCartItemsCount } = useCart();
+  const { getItemsCount } = useCart();
   const { wishlistItems } = useWishlist();
   const { user, logout, isAuthenticated } = useAuth();
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function Header() {
   const panelRef = useRef(null);
   const hoverBridgeRef = useRef(null);
 
-  const cartCount = getCartItemsCount();
+  const cartCount = getItemsCount();
   const [wishlistApiCount, setWishlistApiCount] = useState(null);
   const wishlistCount = (isAuthenticated && typeof wishlistApiCount === 'number')
     ? wishlistApiCount
