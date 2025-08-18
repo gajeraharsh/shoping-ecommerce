@@ -28,7 +28,6 @@ export default async function ServerProductPage({ params, searchParams }) {
 
     const res = await productPromise;
     const p = res?.product || res; // our apiClient returns response.data
-
     // Server-side log of raw data as requested
 
     // Map Medusa product to UI shape expected by client
@@ -140,6 +139,10 @@ export default async function ServerProductPage({ params, searchParams }) {
     const fabric = md.fabric || md.material || p?.material || 'Cotton';
     const deliveryTime = md.delivery_time || '3–5 business days';
     const returnPolicy = md.return_policy || '30-day return policy. No questions asked.';
+    // Prefer server-aggregated review stats from Medusa route augmentation
+    const aggStats = (p?.metadata && p.metadata.review_stats) ? p.metadata.review_stats : (p?.review_stats || null);
+    const aggAverage = typeof aggStats?.average === 'number' ? aggStats.average : Number(aggStats?.average ?? 0);
+    const aggCount = typeof aggStats?.count === 'number' ? aggStats.count : Number(aggStats?.count ?? 0);
     // Fetch reviews count from API on server (already requested in parallel above)
     let reviews = 0;
     const reviewsRes = await reviewsPromise;
@@ -154,6 +157,8 @@ export default async function ServerProductPage({ params, searchParams }) {
           ? reviewsRes.length
           : 0;
     }
+    // Prefer aggregated count from product.metadata.review_stats (fallback to dedicated reviews API)
+    const review_count = aggCount > 0 ? aggCount : (typeof p?.review_count === 'number' ? p.review_count : reviews);
 
     // Build a simplified variant matrix: [{ id, options: { Size: 'M', Color: 'Red', ... } }]
     const optionIdToTitle = new Map(
@@ -181,8 +186,10 @@ export default async function ServerProductPage({ params, searchParams }) {
       sizes,
       variants: simplifiedVariants,
       category,
-      rating: 4.6,
-      reviews,
+      // Prefer aggregated average rating from metadata.review_stats
+      rating: aggAverage > 0 ? aggAverage : (typeof p?.rating === 'number' ? p.rating : 0),
+      review_count,
+      reviews: review_count, // backward compatibility for components expecting `reviews`
       stock: 999,
       description,
       highlights,

@@ -67,7 +67,7 @@ export default function ProductInfo({ product }) {
         color: hasColors ? selectedColor : undefined,
       },
     });
-    showToast('Added to cart successfully!', 'success');
+    // Success toast is handled globally via API interceptors (cartService meta.successMessage)
   };
 
   const handleBuyNow = () => {
@@ -140,19 +140,25 @@ export default function ProductInfo({ product }) {
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center">
             <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-5 w-5 ${
-                    i < Math.floor(product.rating)
-                      ? 'fill-yellow-400 text-yellow-400'
-                      : 'text-gray-300 dark:text-gray-600'
-                  }`}
-                />
-              ))}
+              {(() => {
+                const raw = Number.isFinite(product?.rating) ? Number(product.rating) : Number.parseFloat(String(product?.rating || 0));
+                const safe = Number.isFinite(raw) ? raw : 0;
+                const oneDecimal = Number(safe.toFixed(1));
+                const rounded = Math.round(oneDecimal);
+                return [...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-5 w-5 ${
+                      i < rounded
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-gray-300 dark:text-gray-600'
+                    }`}
+                  />
+                ));
+              })()}
             </div>
             <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
-              {product.rating} ({product.reviews} reviews)
+              {Number.isFinite(product?.rating) ? Number(product.rating).toFixed(1) : Number.parseFloat(String(product?.rating || 0)).toFixed(1)} ({product.reviews} reviews)
             </span>
           </div>
           <span className="text-sm text-gray-500 dark:text-gray-400">SKU: MOD{product.id.toString().padStart(4, '0')}</span>

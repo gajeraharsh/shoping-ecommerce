@@ -6,18 +6,6 @@ import { useCart } from '@/hooks/useCart';
 export default function CartSummary() {
   const { items, totals, cart } = useCart();
 
-  const formatCurrency = (amount, currency) => {
-    if (typeof amount !== 'number') return '0';
-    try {
-      return new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency: (currency || 'USD').toUpperCase(),
-      }).format(amount);
-    } catch (_) {
-      return amount.toLocaleString();
-    }
-  };
-
   const subtotal = totals.subtotal || 0;
   const shipping = totals.shipping_total || 0;
   const tax = totals.tax_total || 0;
@@ -30,20 +18,20 @@ export default function CartSummary() {
       <div className="space-y-3 text-sm">
         <div className="flex justify-between">
           <span>Subtotal ({items.length} items)</span>
-          <span>{formatCurrency(subtotal, cart?.currency_code)}</span>
+          <span>₹{subtotal}</span>
         </div>
         <div className="flex justify-between">
           <span>Shipping</span>
-          <span>{formatCurrency(shipping, cart?.currency_code)}</span>
+          <span>₹{shipping}</span>
         </div>
         <div className="flex justify-between">
           <span>Tax (18%)</span>
-          <span>{formatCurrency(tax, cart?.currency_code)}</span>
+          <span>₹{tax}</span>
         </div>
         <div className="border-t pt-3">
           <div className="flex justify-between text-lg font-semibold">
             <span>Total</span>
-            <span>{formatCurrency(total, cart?.currency_code)}</span>
+            <span>₹{total}</span>
           </div>
         </div>
       </div>

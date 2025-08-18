@@ -4,12 +4,10 @@ import { Trash2, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 import SmartImage from '@/components/ui/SmartImage';
-import { formatAmount } from '@/utils/money';
+// Removed money formatter, showing original unit_price directly
 
 export default function CartItems() {
   const { items, cart, updateQuantity, removeItem } = useCart();
-
-  const money = (amount) => formatAmount(amount, cart?.currency_code);
 
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg w-full overflow-hidden">
@@ -35,9 +33,18 @@ export default function CartItems() {
                   </h3>
                 </Link>
                 <div className="mt-1 text-xs text-gray-500">
-                  {item?.variant?.title || item?.description || 'Variant'}
+                  {(() => {
+                    const fromMeta = [item?.metadata?.size, item?.metadata?.color].filter(Boolean).join(' / ');
+                    return (
+                      item?.variant_title ||
+                      item?.variant?.title ||
+                      fromMeta ||
+                      item?.description ||
+                      'Variant'
+                    );
+                  })()}
                 </div>
-                <div className="mt-1 text-base font-semibold">{money(item.unit_price)}</div>
+                <div className="mt-1 text-base font-semibold">₹{item.unit_price}</div>
 
                 <div className="flex items-center justify-between mt-3">
                   <div className="flex items-center gap-2">
@@ -81,9 +88,18 @@ export default function CartItems() {
                   </h3>
                 </Link>
                 <div className="mt-1 text-sm text-gray-500">
-                  {item?.variant?.title || item?.description || 'Variant'}
+                  {(() => {
+                    const fromMeta = [item?.metadata?.size, item?.metadata?.color].filter(Boolean).join(' / ');
+                    return (
+                      item?.variant_title ||
+                      item?.variant?.title ||
+                      fromMeta ||
+                      item?.description ||
+                      'Variant'
+                    );
+                  })()}
                 </div>
-                <div className="mt-2 text-lg font-semibold">{money(item.unit_price)}</div>
+                <div className="mt-2 text-lg font-semibold">₹{item.unit_price}</div>
               </div>
 
               <div className="flex items-center gap-3">

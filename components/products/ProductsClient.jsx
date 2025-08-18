@@ -209,8 +209,9 @@ export default function ProductsClient({
       categoryIds,
       categoryNames,
       optionsMap,
-      rating: 4.6,
-      reviews: 0,
+      rating: typeof p.rating === 'number' ? p.rating : 0,
+      review_count: typeof p.review_count === 'number' ? p.review_count : 0,
+      reviews: typeof p.review_count === 'number' ? p.review_count : 0, // backward compat
       stock: 999,
     };
   };

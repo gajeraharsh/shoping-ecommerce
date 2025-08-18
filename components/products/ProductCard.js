@@ -11,6 +11,8 @@ export default function ProductCard({ product, priority = false, viewMode }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imgSrc, setImgSrc] = useState('');
   // Local state retained for image interactions only
+  const rating = Number(product?.rating) || 0;
+  const reviewCount = Number(product?.review_count) || 0;
 
   // Inline monochrome SVG placeholder to avoid missing file issues
   const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
@@ -161,12 +163,12 @@ export default function ProductCard({ product, priority = false, viewMode }) {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`h-4 w-4 ${i < Math.round(product.rating) ? 'fill-current text-accent' : 'text-gray-300 dark:text-gray-600'}`}
+                className={`h-4 w-4 ${i < Math.round(rating) ? 'fill-current text-accent' : 'text-gray-300 dark:text-gray-600'}`}
               />
             ))}
-            <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">{Number(product.rating).toFixed(1)}</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">{rating.toFixed(1)}</span>
           </div>
-          <span className="text-xs sm:text-sm text-gray-400">({product.reviews} reviews)</span>
+          <span className="text-xs sm:text-sm text-gray-400">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
         </div>
 
         {/* Price */}

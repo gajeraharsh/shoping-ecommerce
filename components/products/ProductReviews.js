@@ -8,7 +8,7 @@ import { useModal } from '@/hooks/useModal';
 import { MODAL_TYPES } from '@/features/ui/modalTypes';
 import { useRouter } from 'next/navigation';
 
-export default function ProductReviews({ productId, initialReviewsData = null }) {
+export default function ProductReviews({ productId, initialReviewsData = null, fallbackAggregates = null }) {
   // Modal shown when login is required
   function LoginRequiredModal({ title = 'Login Required', message = 'Please log in to write a review.', redirectTo = '/auth/login', onClose }) {
     const router = useRouter();
@@ -57,7 +57,7 @@ export default function ProductReviews({ productId, initialReviewsData = null })
 
   const initialCount = typeof initialReviewsData?.count === 'number'
     ? initialReviewsData.count
-    : null;
+    : (typeof fallbackAggregates?.count === 'number' ? fallbackAggregates.count : null);
 
   const [reviews, setReviews] = useState(() => (initialReviewsData ? mapList(initialReviewsData) : []));
   const [loading, setLoading] = useState(!initialReviewsData);
@@ -109,8 +109,10 @@ export default function ProductReviews({ productId, initialReviewsData = null })
     }
   }, [initialReviewsData]);
 
-  const averageRating = reviews.length > 0 ? 
-    (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1) : 0;
+  const computedAverage = reviews.length > 0 
+    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length)
+    : null;
+  const displayedAverage = (computedAverage ?? (typeof fallbackAggregates?.average === 'number' ? fallbackAggregates.average : 0)).toFixed(1);
 
   const ratingDistribution = {
     5: reviews.filter(r => r.rating === 5).length,
@@ -227,7 +229,7 @@ export default function ProductReviews({ productId, initialReviewsData = null })
           </h3>
           <div className="flex items-center gap-4 mb-4">
             <div className="text-4xl font-bold text-gray-900 dark:text-white">
-              {averageRating}
+              {displayedAverage}
             </div>
             <div>
               <div className="flex items-center gap-1 mb-1">
@@ -235,7 +237,7 @@ export default function ProductReviews({ productId, initialReviewsData = null })
                   <Star 
                     key={star} 
                     className={`h-5 w-5 ${
-                      star <= Math.round(averageRating) 
+                      star <= Math.round(Number(displayedAverage)) 
                         ? 'text-yellow-400 fill-current' 
                         : 'text-gray-300'
                     }`} 
@@ -243,7 +245,7 @@ export default function ProductReviews({ productId, initialReviewsData = null })
                 ))}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                Based on {reviews.length} reviews
+                Based on {typeof totalCount === 'number' ? totalCount : reviews.length} reviews
               </div>
             </div>
           </div>

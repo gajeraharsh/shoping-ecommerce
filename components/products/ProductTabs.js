@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Star, ThumbsUp, MessageCircle, ShieldCheck, Truck, RotateCcw, Edit3 } from 'lucide-react';
 import WriteReview from './WriteReview';
 import ProductReviews from './ProductReviews';
+import ReviewsSummary from './ReviewsSummary';
 
 export default function ProductTabs({ product, initialReviewsData = null }) {
   const [activeTab, setActiveTab] = useState('description');
@@ -266,8 +267,15 @@ export default function ProductTabs({ product, initialReviewsData = null }) {
         )}
 
         {activeTab === 'reviews' && (
-          <div className="max-w-6xl">
-            <ProductReviews productId={product.id} initialReviewsData={initialReviewsData} />
+          <div className="max-w-6xl space-y-8">
+            <ProductReviews
+              productId={product?.id}
+              initialReviewsData={initialReviewsData}
+              fallbackAggregates={{
+                average: Number(product?.rating || 0),
+                count: Number(product?.review_count ?? product?.reviews ?? 0),
+              }}
+            />
           </div>
         )}
 

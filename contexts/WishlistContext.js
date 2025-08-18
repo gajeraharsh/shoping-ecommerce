@@ -121,8 +121,11 @@ const normalizeProduct = (p) => {
     : (p.stock ?? undefined);
 
   // Defaults
-  const rating = typeof p.rating === 'number' ? p.rating : 4.5;
-  const reviews = typeof p.reviews === 'number' ? p.reviews : 0;
+  // Rating/Reviews: support backend fields rating and review_count
+  const rating = typeof p.rating === 'number' ? p.rating : (typeof p.avg_rating === 'number' ? p.avg_rating : 0);
+  const reviews = typeof p.review_count === 'number'
+    ? p.review_count
+    : (typeof p.reviews === 'number' ? p.reviews : 0);
   const is_wishlist = !!p.is_wishlist;
 
   return { id, name, image, images, price, originalPrice, discount, colors, sizes, stock, rating, reviews, is_wishlist };
