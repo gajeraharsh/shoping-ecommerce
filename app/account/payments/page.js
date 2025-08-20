@@ -12,6 +12,7 @@ import {
   Check,
   AlertTriangle
 } from 'lucide-react';
+import Private from '@/components/auth/Private';
 
 export default function PaymentMethodsPage() {
   const [paymentMethods, setPaymentMethods] = useState([
@@ -214,7 +215,8 @@ export default function PaymentMethodsPage() {
   };
 
   return (
-    <div className="p-6 lg:p-8">
+    <Private>
+      <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -493,6 +495,7 @@ export default function PaymentMethodsPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </Private>
   );
 }

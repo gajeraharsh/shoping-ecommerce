@@ -24,6 +24,7 @@ import {
   Tag,
   Clock
 } from 'lucide-react';
+import Private from '@/components/auth/Private';
 
 export default function WishlistPage() {
   const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
@@ -113,7 +114,8 @@ export default function WishlistPage() {
 
   if (wishlistItems.length === 0) {
     return (
-      <div className="space-y-6">
+      <Private>
+        <div className="space-y-6">
         <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-6">
             <Link
@@ -143,12 +145,14 @@ export default function WishlistPage() {
             Start Shopping
           </Link>
         </div>
-      </div>
+        </div>
+      </Private>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <Private>
+      <div className="space-y-6">
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-6">
@@ -494,5 +498,6 @@ export default function WishlistPage() {
         </div>
       )}
     </div>
+    </Private>
   );
 }

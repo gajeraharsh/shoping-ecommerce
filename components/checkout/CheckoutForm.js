@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { CreditCard, Truck, MapPin } from 'lucide-react';
+import { CreditCard, Truck, MapPin, Home, Building2, Plus } from 'lucide-react';
 import SimpleTrustBadges, { SimplePaymentBadges } from '@/components/ui/SimpleTrustBadges';
+import AddAddressModal from '@/components/modals/AddAddressModal';
 
 export default function CheckoutForm({ onSubmit, loading }) {
   const [formData, setFormData] = useState({
@@ -17,6 +18,26 @@ export default function CheckoutForm({ onSubmit, loading }) {
     paymentMethod: 'card'
   });
 
+  // Saved addresses (mock for now; replace with real data when integrated)
+  const [addresses, setAddresses] = useState([
+    // Example default address; remove when wired to real data
+    // {
+    //   id: 1,
+    //   type: 'home',
+    //   name: 'John Doe',
+    //   phone: '+91 98765 43210',
+    //   street: '123 Main Street, Apartment 4B',
+    //   landmark: 'Near Central Mall',
+    //   city: 'Mumbai',
+    //   state: 'Maharashtra',
+    //   pincode: '400001',
+    //   isDefault: true
+    // }
+  ]);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingAddress, setEditingAddress] = useState(null);
+
   const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
@@ -26,7 +47,47 @@ export default function CheckoutForm({ onSubmit, loading }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    const selectedAddress = addresses.find(a => a.id === selectedAddressId) || null;
+    onSubmit({ ...formData, selectedAddress });
+  };
+
+  const addressTypes = [
+    { value: 'home', label: 'Home', icon: Home },
+    { value: 'office', label: 'Office', icon: Building2 },
+    { value: 'other', label: 'Other', icon: MapPin }
+  ];
+
+  const getTypeIcon = (type) => {
+    const typeConfig = addressTypes.find(t => t.value === type);
+    return typeConfig?.icon || MapPin;
+  };
+
+  const handleAddAddress = async (data) => {
+    const addr = { ...data, id: Date.now() };
+    if (addr.isDefault) {
+      setAddresses(prev => prev.map(a => ({ ...a, isDefault: false })));
+    }
+    setAddresses(prev => [...prev, addr]);
+    setSelectedAddressId(addr.id);
+  };
+
+  const handleModalSubmit = async (data) => {
+    if (editingAddress) {
+      const updated = { ...data, id: editingAddress.id };
+      if (updated.isDefault) {
+        setAddresses(prev => prev.map(a => ({ ...a, isDefault: false })));
+      }
+      setAddresses(prev => prev.map(a => (a.id === editingAddress.id ? updated : a)));
+      setSelectedAddressId(updated.id);
+      setEditingAddress(null);
+    } else {
+      await handleAddAddress(data);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowAddModal(false);
+    setEditingAddress(null);
   };
 
   return (
@@ -68,12 +129,81 @@ export default function CheckoutForm({ onSubmit, loading }) {
         </div>
       </div>
 
+      {/* Add Address Modal */}
+      <AddAddressModal
+        isOpen={showAddModal}
+        onClose={handleCloseModal}
+        onSubmit={handleModalSubmit}
+        editingAddress={editingAddress}
+      />
+
       {/* Shipping Address */}
       <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
           <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
           <h3 className="text-base sm:text-lg font-semibold">Shipping Address</h3>
         </div>
+        
+        {/* If saved addresses exist: show selection UI */}
+        {addresses.length > 0 ? (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-600">Select a saved address</p>
+              <button
+                type="button"
+                onClick={() => setShowAddModal(true)}
+                className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
+              >
+                <Plus className="w-4 h-4" /> Add Address
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {addresses.map((address) => {
+                const Icon = getTypeIcon(address.type);
+                const selected = selectedAddressId === address.id || (!selectedAddressId && address.isDefault);
+                return (
+                  <label
+                    key={address.id}
+                    className={`relative group cursor-pointer rounded-2xl border p-4 transition-all ${
+                      selected ? 'border-black shadow-sm' : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="radio"
+                        name="selectedAddress"
+                        checked={selected}
+                        onChange={() => setSelectedAddressId(address.id)}
+                        className="mt-1 accent-black"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100">
+                            <Icon className="w-4 h-4" />
+                          </span>
+                          <span className="text-sm font-semibold capitalize">{address.type} Address</span>
+                          {address.isDefault && (
+                            <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-gray-100">Default</span>
+                          )}
+                        </div>
+                        <div className="text-sm text-gray-700 truncate">
+                          {address.name} • {address.phone}
+                        </div>
+                        <div className="text-sm text-gray-600 line-clamp-2">
+                          {address.street}{address.landmark ? `, Near ${address.landmark}` : ''}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {address.city}, {address.state} - {address.pincode}
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
         
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -162,6 +292,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       {/* Payment Method */}

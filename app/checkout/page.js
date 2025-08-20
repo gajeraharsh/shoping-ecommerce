@@ -4,29 +4,35 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
 import OrderSummary from '@/components/checkout/OrderSummary';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/contexts/AuthContext';
 import { useModal } from '@/hooks/useModal';
 import { MODAL_TYPES } from '@/features/ui/modalTypes';
 import SuccessModal from '@/components/ui/SuccessModal';
+import Private from '@/components/auth/Private';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cartItems, clearCart } = useCart();
+  const { cart, items, status, ensure } = useCart();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const modal = useModal();
 
   useEffect(() => {
-    if (cartItems.length === 0) {
-      setRedirecting(true);
-      router.push('/cart');
-    } else if (!user) {
-      setRedirecting(true);
-      router.push('/auth/login?redirect=/checkout');
+    // If not authenticated, Private will handle redirect to login.
+    // Ensure cart exists before making any redirect decision.
+    if ((status === 'idle' || !cart?.id) && typeof ensure === 'function') {
+      ensure();
+      return;
     }
-  }, [cartItems, user, router]);
+    if (status === 'succeeded') {
+      if (items.length === 0) {
+        setRedirecting(true);
+        router.push('/cart');
+      }
+    }
+  }, [items.length, router, status, ensure, cart?.id]);
 
   const handlePlaceOrder = async (formData) => {
     setLoading(true);
@@ -60,22 +66,43 @@ export default function CheckoutPage() {
     }, 2000);
   };
 
-  if (redirecting || cartItems.length === 0 || !user) return null;
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-1 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 overflow-x-hidden">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Checkout</h1>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-          <div className="lg:col-span-2">
-            <CheckoutForm onSubmit={handlePlaceOrder} loading={loading} />
-          </div>
-          <div className="lg:col-span-1">
-            <OrderSummary />
+  if (status === 'idle' || status === 'loading' || redirecting) {
+    return (
+      <Private>
+        <div className="min-h-screen flex items-center justify-center px-4">
+          <div className="w-full max-w-5xl">
+            <div className="h-8 w-56 bg-gray-200 dark:bg-gray-700 rounded mb-8 animate-pulse" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-6">
+                <div className="h-60 bg-gray-100 dark:bg-gray-800 rounded-2xl animate-pulse" />
+                <div className="h-60 bg-gray-100 dark:bg-gray-800 rounded-2xl animate-pulse" />
+              </div>
+              <div className="lg:col-span-1">
+                <div className="h-72 bg-gray-100 dark:bg-gray-800 rounded-2xl animate-pulse" />
+              </div>
+            </div>
           </div>
         </div>
-      </main>
-    </div>
+      </Private>
+    );
+  }
+
+  return (
+    <Private>
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-1 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 overflow-x-hidden">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Checkout</h1>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div className="lg:col-span-2">
+              <CheckoutForm onSubmit={handlePlaceOrder} loading={loading} />
+            </div>
+            <div className="lg:col-span-1">
+              <OrderSummary />
+            </div>
+          </div>
+        </main>
+      </div>
+    </Private>
   );
 }

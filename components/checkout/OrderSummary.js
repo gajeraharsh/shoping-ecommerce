@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { Tag, Check, X } from 'lucide-react';
 import SmartImage from '@/components/ui/SmartImage';
 
 export default function OrderSummary() {
-  const { cartItems, getCartTotal } = useCart();
+  const { items, totals } = useCart();
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState('');
@@ -34,9 +34,11 @@ export default function OrderSummary() {
     }
   };
 
-  const subtotal = getCartTotal();
-  const shipping = subtotal > 999 ? 0 : 99;
-  const tax = Math.round(subtotal * 0.18);
+  // Prefer Redux totals; fallback to computed values when absent
+  const computedSubtotal = items.reduce((sum, i) => sum + (i.unit_price * i.quantity), 0);
+  const subtotal = totals?.subtotal ?? computedSubtotal;
+  const shipping = totals?.shipping_total ?? (subtotal > 999 ? 0 : 99);
+  const tax = totals?.tax_total ?? Math.round(subtotal * 0.18);
 
   // Calculate discount
   let discount = 0;
@@ -48,7 +50,7 @@ export default function OrderSummary() {
     }
   }
 
-  const total = subtotal + shipping + tax - discount;
+  const total = (totals?.total ?? (subtotal + shipping + tax)) - discount;
 
   const applyCoupon = async () => {
     if (!couponCode.trim()) return;
@@ -86,21 +88,26 @@ export default function OrderSummary() {
 
       {/* Items */}
       <div className="space-y-3 mb-6">
-        {cartItems.map(item => (
-          <div key={item.cartId} className="flex gap-3">
+        {items.map(item => (
+          <div key={item.id} className="flex gap-3">
             <div className="relative w-12 h-12 rounded overflow-hidden">
-              <SmartImage src={item.image} alt={item.name} className="object-cover" />
+              <SmartImage src={item.thumbnail} alt={item.title} className="object-cover" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium text-gray-900 truncate">
-                {item.name}
+                {item.title}
               </div>
               <div className="text-xs text-gray-500">
-                {item.size} | {item.color} | Qty: {item.quantity}
+                {(() => {
+                  const fromMeta = [item?.metadata?.size, item?.metadata?.color].filter(Boolean).join(' / ');
+                  return (
+                    item?.variant_title || item?.variant?.title || fromMeta || item?.description || 'Variant'
+                  );
+                })()} {`| Qty: ${item.quantity}`}
               </div>
             </div>
             <div className="text-sm font-medium">
-              ₹{item.price * item.quantity}
+              ₹{item.unit_price * item.quantity}
             </div>
           </div>
         ))}
@@ -137,19 +144,19 @@ export default function OrderSummary() {
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <div className="flex flex-col sm:grid sm:grid-cols-[1fr_auto] sm:items-stretch gap-2 sm:gap-3">
               <input
                 type="text"
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
                 placeholder="Enter coupon code"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-black focus:border-transparent min-h-[48px] touch-manipulation"
+                className="flex-1 w-full h-12 px-4 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-black focus:border-transparent touch-manipulation box-border"
                 onKeyPress={(e) => e.key === 'Enter' && applyCoupon()}
               />
               <button
                 onClick={applyCoupon}
                 disabled={isApplying || !couponCode.trim()}
-                className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors text-sm font-semibold disabled:opacity-50 min-h-[48px] sm:min-w-[100px] touch-manipulation whitespace-nowrap"
+                className="inline-flex items-center justify-center h-12 px-6 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors text-sm font-semibold disabled:opacity-50 sm:min-w-[100px] touch-manipulation whitespace-nowrap box-border shrink-0 sm:self-stretch"
               >
                 {isApplying ? 'Applying...' : 'Apply'}
               </button>

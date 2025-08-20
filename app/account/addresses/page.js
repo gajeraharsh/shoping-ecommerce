@@ -19,6 +19,7 @@ import {
   Navigation,
   Heart
 } from 'lucide-react';
+import Private from '@/components/auth/Private';
 
 export default function AddressesPage() {
   const [addresses, setAddresses] = useState([]);
@@ -152,23 +153,26 @@ export default function AddressesPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-32 bg-gray-100 dark:bg-gray-700 rounded-2xl"></div>
-              ))}
+      <Private>
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-32 bg-gray-100 dark:bg-gray-700 rounded-2xl"></div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Private>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <Private>
+      <div className="space-y-6">
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-6">
@@ -311,6 +315,7 @@ export default function AddressesPage() {
           })
         )}
       </div>
-    </div>
+      </div>
+    </Private>
   );
 }

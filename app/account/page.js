@@ -26,6 +26,7 @@ import {
   Award,
   Zap
 } from 'lucide-react';
+import Private from '@/components/auth/Private';
 
 export default function AccountDashboard() {
   const { user } = useAuth();
@@ -131,7 +132,8 @@ export default function AccountDashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <Private>
+      <div className="space-y-6">
       {/* Welcome Section */}
       <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
@@ -375,6 +377,7 @@ export default function AccountDashboard() {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </Private>
   );
 }
