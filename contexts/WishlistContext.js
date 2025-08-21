@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useReducer, useEffect } from 'react';
+import { createContext, useContext, useReducer, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePathname } from 'next/navigation';
 import {
@@ -133,6 +133,8 @@ const normalizeProduct = (p) => {
 
 export function WishlistProvider({ children }) {
   const [wishlistItems, dispatch] = useReducer(wishlistReducer, []);
+  // A monotonic counter that bumps on any wishlist mutation to notify listeners (e.g., Header)
+  const [wishlistVersion, setWishlistVersion] = useState(0);
   const { isAuthenticated, isInitializing } = useAuth();
   const pathname = usePathname();
   const onWishlistPage = typeof pathname === 'string' && (
@@ -195,6 +197,7 @@ export function WishlistProvider({ children }) {
       try {
         await apiAddToWishlist({ product_id: product.id });
         doLocal();
+        setWishlistVersion((v) => v + 1);
         // Fire-and-forget refresh of /customers/me to update header wishlist count
         apiGetMe().catch(() => {});
       } catch (_) {
@@ -210,6 +213,7 @@ export function WishlistProvider({ children }) {
       try {
         await apiRemoveByProduct(productId);
         doLocal();
+        setWishlistVersion((v) => v + 1);
         // Fire-and-forget refresh of /customers/me to update header wishlist count
         apiGetMe().catch(() => {});
       } catch (_) {}
@@ -227,6 +231,7 @@ export function WishlistProvider({ children }) {
   return (
     <WishlistContext.Provider value={{
       wishlistItems,
+      wishlistVersion,
       addToWishlist,
       removeFromWishlist,
       isInWishlist,

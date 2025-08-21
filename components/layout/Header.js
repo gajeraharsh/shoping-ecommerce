@@ -21,7 +21,7 @@ export default function Header() {
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const { getItemsCount } = useCart();
-  const { wishlistItems } = useWishlist();
+  const { wishlistItems, wishlistVersion } = useWishlist();
   const { user, logout, isAuthenticated } = useAuth();
   const router = useRouter();
   const profileDropdownRef = useRef(null);
@@ -52,7 +52,7 @@ export default function Header() {
       }
     })();
     return () => { active = false; };
-  }, [isAuthenticated, wishlistItems.length]);
+  }, [isAuthenticated, wishlistVersion]);
 
   // Handle click outside for profile dropdown
   useEffect(() => {
