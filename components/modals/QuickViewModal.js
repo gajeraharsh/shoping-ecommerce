@@ -7,6 +7,8 @@ import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/useToast';
 import { BRAND } from '@/lib/brand';
 import SmartImage from '@/components/ui/SmartImage';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function QuickViewModal({ product, isOpen, onClose }) {
   const [selectedSize, setSelectedSize] = useState('');
@@ -18,6 +20,21 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { showToast } = useToast();
+  const { isAuthenticated, tokenPresent } = useAuth();
+  const router = useRouter();
+  const ensureAuthed = () => {
+    const authed = Boolean(isAuthenticated || tokenPresent);
+    if (!authed) {
+      const next = typeof window !== 'undefined'
+        ? window.location.pathname + window.location.search
+        : '/';
+      try {
+        router.push(`/auth/login?next=${encodeURIComponent(next)}`);
+      } catch (_) {}
+      return false;
+    }
+    return true;
+  };
   
   const inWishlist = isInWishlist(product?.id);
 
@@ -59,6 +76,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   if (!isOpen || !product) return null;
 
   const handleAddToCart = () => {
+    if (!ensureAuthed()) return;
     if (!selectedSize) {
       showToast('Please select a size', 'error');
       return;
@@ -74,6 +92,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   };
 
   const handleWishlistToggle = () => {
+    if (!ensureAuthed()) return;
     if (inWishlist) {
       removeFromWishlist(product.id);
       showToast('Removed from wishlist', 'info');

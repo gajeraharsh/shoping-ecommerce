@@ -1,5 +1,6 @@
 // /services/modules/cart/cartService.js
 import { createApiClient } from '@/services/config/apiClient'
+import { getToken } from '@/services/utils/authStorage'
 
 const api = createApiClient()
 
@@ -14,8 +15,20 @@ function setStoredCartId(id) {
   localStorage.setItem('cart_id', id)
 }
 
+function requireAuth() {
+  const token = getToken()
+  if (!token) {
+    // No guest cart allowed
+    const err = new Error('Authentication required')
+    // Mark as 401-like for consumers if they check
+    err.response = { status: 401, data: { message: 'Please log in to use the cart' } }
+    throw err
+  }
+}
+
 export const cartService = {
   async ensureCart() {
+    requireAuth()
     // Try using existing cart id, otherwise create
     const existing = getStoredCartId()
     if (existing) {
@@ -35,6 +48,7 @@ export const cartService = {
   },
 
   async retrieve(id) {
+    requireAuth()
     const cartId = id || getStoredCartId()
     if (!cartId) return this.ensureCart()
     const { cart } = await api.get(`/carts/${cartId}`)
@@ -42,6 +56,7 @@ export const cartService = {
   },
 
   async addLineItem({ cartId, variant_id, quantity = 1, metadata }) {
+    requireAuth()
     const id = cartId || getStoredCartId()
     const { cart } = await api.post(`/carts/${id}/line-items`, { variant_id, quantity, metadata }, {
       meta: { successMessage: 'Added to cart' },
@@ -51,6 +66,7 @@ export const cartService = {
   },
 
   async updateLineItem({ cartId, line_id, quantity, metadata }) {
+    requireAuth()
     const id = cartId || getStoredCartId()
     const { cart } = await api.post(`/carts/${id}/line-items/${line_id}`, { quantity, metadata }, {
       meta: { successMessage: null },
@@ -59,6 +75,7 @@ export const cartService = {
   },
 
   async deleteLineItem({ cartId, line_id }) {
+    requireAuth()
     const id = cartId || getStoredCartId()
     await api.delete(`/carts/${id}/line-items/${line_id}`, { meta: { successMessage: 'Removed from cart' } })
     // After delete, fetch cart for latest state

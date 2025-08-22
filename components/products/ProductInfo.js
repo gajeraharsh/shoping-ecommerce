@@ -7,6 +7,8 @@ import { useWishlist } from '@/contexts/WishlistContext';
 import { getProductById } from '@/services/modules/product/productService';
 import { useToast } from '@/hooks/useToast';
 import SizeGuideModal from '@/components/modals/SizeGuideModal';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function ProductInfo({ product }) {
   const [selectedSize, setSelectedSize] = useState('');
@@ -17,6 +19,21 @@ export default function ProductInfo({ product }) {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist } = useWishlist();
   const { showToast } = useToast();
+  const { isAuthenticated, tokenPresent } = useAuth();
+  const router = useRouter();
+  const ensureAuthed = () => {
+    const authed = Boolean(isAuthenticated || tokenPresent);
+    if (!authed) {
+      const next = typeof window !== 'undefined'
+        ? window.location.pathname + window.location.search
+        : '/';
+      try {
+        router.push(`/auth/login?next=${encodeURIComponent(next)}`);
+      } catch (_) {}
+      return false;
+    }
+    return true;
+  };
   
   // Use API-provided is_wishlist; manage optimistic local state
   const [inWishlist, setInWishlist] = useState(!!product?.is_wishlist);
@@ -67,6 +84,7 @@ export default function ProductInfo({ product }) {
   };
 
   const handleAddToCart = () => {
+    if (!ensureAuthed()) return;
     if (hasSizes && !selectedSize) {
       showToast('Please select a size', 'error');
       return;
@@ -95,6 +113,7 @@ export default function ProductInfo({ product }) {
   };
 
   const handleBuyNow = () => {
+    if (!ensureAuthed()) return;
     if (hasSizes && !selectedSize) {
       showToast('Please select a size', 'error');
       return;
@@ -122,6 +141,7 @@ export default function ProductInfo({ product }) {
   };
 
   const handleWishlistToggle = () => {
+    if (!ensureAuthed()) return;
     if (inWishlist) {
       setInWishlist(false); // optimistic UI
       removeFromWishlist(product.id);

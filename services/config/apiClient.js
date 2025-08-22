@@ -4,6 +4,7 @@ import { notify } from '@/utils/notify'
 import { clearAuth } from '@/services/utils/authStorage'
 import { getDispatcher } from '@/services/config/dispatcher'
 import { clearCredentials } from '@/features/auth/authSlice'
+import { resetCartState } from '@/features/cart/cartSlice'
 
 export function createApiClient(baseURL) {
   const api = axios.create({
@@ -55,7 +56,14 @@ export function createApiClient(baseURL) {
         try {
           clearAuth()
           const dispatch = getDispatcher()
-          if (dispatch) dispatch(clearCredentials())
+          // Also clear any cart data since guest carts are disabled
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('cart_id')
+          }
+          if (dispatch) {
+            dispatch(clearCredentials())
+            dispatch(resetCartState())
+          }
         } catch (_) {
           if (typeof window !== 'undefined') localStorage.removeItem('token')
         }

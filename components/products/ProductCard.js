@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Star, Heart } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function ProductCard({ product, priority = false, viewMode }) {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -12,10 +14,25 @@ export default function ProductCard({ product, priority = false, viewMode }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imgSrc, setImgSrc] = useState('');
   const { addToWishlist, removeFromWishlist } = useWishlist();
+  const { isAuthenticated, tokenPresent } = useAuth();
+  const router = useRouter();
   const [inWishlist, setInWishlist] = useState(!!product?.is_wishlist);
   useEffect(() => {
     setInWishlist(!!product?.is_wishlist);
   }, [product?.id, product?.is_wishlist]);
+  const ensureAuthed = () => {
+    const authed = Boolean(isAuthenticated || tokenPresent);
+    if (!authed) {
+      const next = typeof window !== 'undefined'
+        ? window.location.pathname + window.location.search
+        : '/';
+      try {
+        router.push(`/auth/login?next=${encodeURIComponent(next)}`);
+      } catch (_) {}
+      return false;
+    }
+    return true;
+  };
   // Local state retained for image interactions only
   const rating = Number(product?.rating) || 0;
   const reviewCount = Number(product?.review_count) || 0;
@@ -158,6 +175,7 @@ export default function ProductCard({ product, priority = false, viewMode }) {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              if (!ensureAuthed()) return;
               if (inWishlist) {
                 setInWishlist(false); // optimistic
                 removeFromWishlist(product.id);

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CreditCard, Truck, MapPin, Home, Building2, Plus } from 'lucide-react';
 import SimpleTrustBadges, { SimplePaymentBadges } from '@/components/ui/SimpleTrustBadges';
 import AddAddressModal from '@/components/modals/AddAddressModal';
+import { listAddresses, createAddress, updateAddress } from '@/services/customer/addressService';
 
 export default function CheckoutForm({ onSubmit, loading }) {
   const [formData, setFormData] = useState({
@@ -18,25 +19,27 @@ export default function CheckoutForm({ onSubmit, loading }) {
     paymentMethod: 'card'
   });
 
-  // Saved addresses (mock for now; replace with real data when integrated)
-  const [addresses, setAddresses] = useState([
-    // Example default address; remove when wired to real data
-    // {
-    //   id: 1,
-    //   type: 'home',
-    //   name: 'John Doe',
-    //   phone: '+91 98765 43210',
-    //   street: '123 Main Street, Apartment 4B',
-    //   landmark: 'Near Central Mall',
-    //   city: 'Mumbai',
-    //   state: 'Maharashtra',
-    //   pincode: '400001',
-    //   isDefault: true
-    // }
-  ]);
+  // Saved addresses from backend
+  const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
+
+  // Load addresses from backend
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
+
+  const fetchAddresses = async () => {
+    try {
+      const { addresses: list } = await listAddresses();
+      setAddresses(list);
+      const def = list.find((a) => a.isDefault);
+      setSelectedAddressId(def?.id ?? (list[0]?.id || null));
+    } catch (e) {
+      // global toasts handled by api client
+    }
+  };
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -63,25 +66,35 @@ export default function CheckoutForm({ onSubmit, loading }) {
   };
 
   const handleAddAddress = async (data) => {
-    const addr = { ...data, id: Date.now() };
-    if (addr.isDefault) {
-      setAddresses(prev => prev.map(a => ({ ...a, isDefault: false })));
+    try {
+      const prevIds = new Set(addresses.map(a => a.id));
+      await createAddress(data, { successMessage: 'Address added' });
+      // Refresh and auto-select the newly added address
+      const { addresses: list } = await listAddresses();
+      setAddresses(list);
+      const newlyAdded = list.find(a => !prevIds.has(a.id));
+      if (newlyAdded) {
+        setSelectedAddressId(newlyAdded.id);
+      } else {
+        const def = list.find((a) => a.isDefault);
+        setSelectedAddressId(def?.id ?? (list[0]?.id || null));
+      }
+    } catch (e) {
+      // error toast handled globally
     }
-    setAddresses(prev => [...prev, addr]);
-    setSelectedAddressId(addr.id);
   };
 
   const handleModalSubmit = async (data) => {
-    if (editingAddress) {
-      const updated = { ...data, id: editingAddress.id };
-      if (updated.isDefault) {
-        setAddresses(prev => prev.map(a => ({ ...a, isDefault: false })));
+    try {
+      if (editingAddress) {
+        await updateAddress(editingAddress.id, data, { successMessage: 'Address updated' });
+        setEditingAddress(null);
+        await fetchAddresses();
+      } else {
+        await handleAddAddress(data);
       }
-      setAddresses(prev => prev.map(a => (a.id === editingAddress.id ? updated : a)));
-      setSelectedAddressId(updated.id);
-      setEditingAddress(null);
-    } else {
-      await handleAddAddress(data);
+    } catch (e) {
+      // handled by global toasts
     }
   };
 
@@ -151,7 +164,8 @@ export default function CheckoutForm({ onSubmit, loading }) {
               <p className="text-sm text-gray-600">Select a saved address</p>
               <button
                 type="button"
-                onClick={() => setShowAddModal(true)}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowAddModal(true); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); } }}
                 className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
               >
                 <Plus className="w-4 h-4" /> Add Address
