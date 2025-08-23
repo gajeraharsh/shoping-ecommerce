@@ -31,6 +31,55 @@ export const updateCartEmail = createAsyncThunk(
   }
 )
 
+export const applyPromotionCode = createAsyncThunk(
+  'cart/applyPromotionCode',
+  async ({ code, cartId }, { getState, rejectWithValue }) => {
+    try {
+      const state = getState()
+      const id = cartId || state.cart?.cart?.id || state.cart?.id
+      // Previous markers to verify effect
+      const prevCart = state.cart?.cart || state.cart
+      const prevCodes = Array.isArray(prevCart?.promotions)
+        ? prevCart.promotions.map((p) => p.code).filter(Boolean)
+        : Array.isArray(prevCart?.discounts)
+          ? prevCart.discounts.map((d) => d.code || d?.promotion?.code).filter(Boolean)
+          : []
+      const prevDiscount = prevCart?.totals?.discount_total ?? prevCart?.discount_total ?? 0
+
+      const cart = await cartService.addPromotion({ cartId: id, code })
+
+      const newCodes = Array.isArray(cart?.promotions)
+        ? cart.promotions.map((p) => p.code).filter(Boolean)
+        : Array.isArray(cart?.discounts)
+          ? cart.discounts.map((d) => d.code || d?.promotion?.code).filter(Boolean)
+          : []
+      const newDiscount = cart?.totals?.discount_total ?? cart?.discount_total ?? 0
+
+      const applied = (newCodes?.length || 0) > (prevCodes?.length || 0) || newDiscount > prevDiscount
+      if (!applied) {
+        return rejectWithValue('Invalid or ineligible coupon')
+      }
+      return cart
+    } catch (e) {
+      return rejectWithValue(e?.response?.data || e.message)
+    }
+  }
+)
+
+export const removePromotionCode = createAsyncThunk(
+  'cart/removePromotionCode',
+  async ({ code, cartId }, { getState, rejectWithValue }) => {
+    try {
+      const state = getState()
+      const id = cartId || state.cart?.cart?.id || state.cart?.id
+      const cart = await cartService.removePromotion({ cartId: id, code })
+      return cart
+    } catch (e) {
+      return rejectWithValue(e?.response?.data || e.message)
+    }
+  }
+)
+
 export const fetchCart = createAsyncThunk('cart/fetchCart', async (cartId, { rejectWithValue }) => {
   try {
     const cart = await cartService.retrieve(cartId)
@@ -108,6 +157,26 @@ const cartSlice = createSlice({
       .addCase(fetchCart.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.payload || 'Failed to load cart'
+      })
+
+      .addCase(applyPromotionCode.pending, (state) => {
+        // Do not toggle global status; prevent skeleton flash on coupon apply
+      })
+      .addCase(applyPromotionCode.fulfilled, (state, action) => {
+        state.cart = action.payload
+      })
+      .addCase(applyPromotionCode.rejected, (state, action) => {
+        state.error = action.payload || 'Failed to apply coupon'
+      })
+
+      .addCase(removePromotionCode.pending, (state) => {
+        // Do not toggle global status; prevent skeleton flash on coupon remove
+      })
+      .addCase(removePromotionCode.fulfilled, (state, action) => {
+        state.cart = action.payload
+      })
+      .addCase(removePromotionCode.rejected, (state, action) => {
+        state.error = action.payload || 'Failed to remove coupon'
       })
 
       .addCase(updateCartEmail.pending, (state) => {

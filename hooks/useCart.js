@@ -9,6 +9,8 @@ import {
   updateLineItem as updateLineItemThunk,
   deleteLineItem as deleteLineItemThunk,
   updateCartEmail as updateCartEmailThunk,
+  applyPromotionCode as applyPromotionCodeThunk,
+  removePromotionCode as removePromotionCodeThunk,
   selectCart,
   selectCartItems,
   selectCartTotals,
@@ -61,6 +63,20 @@ export function useCart() {
     [dispatch]
   )
 
+  const applyCoupon = useCallback(
+    (code) => {
+      return dispatch(applyPromotionCodeThunk({ code })).unwrap()
+    },
+    [dispatch]
+  )
+
+  const removeCoupon = useCallback(
+    (code) => {
+      return dispatch(removePromotionCodeThunk({ code })).unwrap()
+    },
+    [dispatch]
+  )
+
   const getItemsCount = useCallback(() => {
     return items.reduce((acc, i) => acc + i.quantity, 0)
   }, [items])
@@ -78,5 +94,7 @@ export function useCart() {
     removeItem,
     getItemsCount,
     setEmail,
+    applyCoupon,
+    removeCoupon,
   }
 }

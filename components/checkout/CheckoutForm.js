@@ -69,6 +69,8 @@ export default function CheckoutForm({ onSubmit, loading }) {
     }));
   };
 
+  // Coupon UI removed; managed within Order Summary
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const selectedAddress = addresses.find(a => a.id === selectedAddressId) || null;
@@ -149,6 +151,8 @@ export default function CheckoutForm({ onSubmit, loading }) {
           <p className="mt-1 text-xs text-gray-500">We’ll send order updates to this email.</p>
         </div>
       </div>
+
+      {/* Coupon UI managed in Order Summary component */}
 
       {/* Add Address Modal */}
       <AddAddressModal

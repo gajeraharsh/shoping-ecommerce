@@ -90,4 +90,34 @@ export const cartService = {
     // After delete, fetch cart for latest state
     return this.retrieve(id)
   },
+
+  async addPromotion({ cartId, code }) {
+    requireAuth()
+    let id = cartId || getStoredCartId()
+    if (!id) {
+      const cart = await this.ensureCart()
+      id = cart.id
+    }
+    if (!code) throw new Error('Promotion code is required')
+    const { cart } = await api.post(
+      `/carts/${id}/promotions`,
+      { promo_codes: [code] },
+      { meta: { successMessage: null } }
+    )
+    setStoredCartId(cart.id)
+    return cart
+  },
+
+  async removePromotion({ cartId, code }) {
+    requireAuth()
+    let id = cartId || getStoredCartId()
+    if (!id) {
+      const cart = await this.ensureCart()
+      id = cart.id
+    }
+    if (!code) throw new Error('Promotion code is required to remove')
+    // Use DELETE with body { promo_codes } as per Medusa v2
+    await api.delete(`/carts/${id}/promotions`, { data: { promo_codes: [code] }, meta: { successMessage: null } })
+    return this.retrieve(id)
+  },
 }
