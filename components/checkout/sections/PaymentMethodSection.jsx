@@ -5,6 +5,7 @@ export default function PaymentMethodSection({
   selectedProviderId,
   onSelect,
   paymentError,
+  loading = false,
 }) {
   return (
     <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
@@ -13,7 +14,13 @@ export default function PaymentMethodSection({
         <h3 className="text-base sm:text-lg font-semibold">Payment Method</h3>
       </div>
       <div className="space-y-3 sm:space-y-4">
-        {paymentProviders.length > 0 ? (
+        {loading ? (
+          <div className="space-y-3 animate-pulse">
+            <div className="h-6 w-56 bg-gray-200 rounded" />
+            <div className="h-5 w-48 bg-gray-200 rounded" />
+            <div className="h-5 w-40 bg-gray-200 rounded" />
+          </div>
+        ) : paymentProviders.length > 0 ? (
           paymentProviders.map((p) => {
             const id = p.id;
             const label = id === 'cod'

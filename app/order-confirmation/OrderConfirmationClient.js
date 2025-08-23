@@ -7,16 +7,40 @@ import Link from 'next/link';
 
 export default function OrderConfirmationClient() {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get('orderId');
-  const [orderDetails] = useState({
-    id: orderId,
-    total: 2499,
-    items: 3,
+  const orderId = searchParams.get('order_id') || searchParams.get('orderId');
+  const [orderDetails, setOrderDetails] = useState({
+    id: orderId || '—',
+    total: null,
+    items: null,
     estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-    trackingNumber: 'TRK' + Date.now()
+    trackingNumber: null,
   });
 
   useEffect(() => {
+    // Hydrate from sessionStorage if available (set in CheckoutForm)
+    try {
+      const raw = typeof window !== 'undefined' ? sessionStorage.getItem('last_order') : null;
+      if (raw) {
+        const ord = JSON.parse(raw);
+        if (!orderId || ord?.id === orderId) {
+          const lineCount = Array.isArray(ord?.items)
+            ? ord.items.length
+            : Array.isArray(ord?.lines)
+            ? ord.lines.length
+            : null;
+          const totalAmount = ord?.total ?? ord?.total_with_tax ?? ord?.summary?.total ?? null;
+          setOrderDetails((prev) => ({
+            ...prev,
+            id: ord?.id || prev.id,
+            total: totalAmount,
+            items: lineCount,
+            trackingNumber: ord?.fulfillments?.[0]?.tracking_numbers?.[0] || null,
+          }));
+          // Optional: clear once read to avoid stale data
+          // sessionStorage.removeItem('last_order');
+        }
+      }
+    } catch {}
     // Optionally add confetti/celebration effects here
   }, []);
 
@@ -35,24 +59,30 @@ export default function OrderConfirmationClient() {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-600">Order ID:</span>
-                <span className="font-medium">{orderDetails.id}</span>
+                <span className="font-medium">{orderDetails.id || '—'}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Total Amount:</span>
-                <span className="font-medium">₹{orderDetails.total}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Items:</span>
-                <span className="font-medium">{orderDetails.items}</span>
-              </div>
+              {orderDetails.total !== null && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Total Amount:</span>
+                  <span className="font-medium">₹{orderDetails.total}</span>
+                </div>
+              )}
+              {orderDetails.items !== null && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Items:</span>
+                  <span className="font-medium">{orderDetails.items}</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-gray-600">Estimated Delivery:</span>
                 <span className="font-medium">{orderDetails.estimatedDelivery}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Tracking Number:</span>
-                <span className="font-medium">{orderDetails.trackingNumber}</span>
-              </div>
+              {orderDetails.trackingNumber && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Tracking Number:</span>
+                  <span className="font-medium">{orderDetails.trackingNumber}</span>
+                </div>
+              )}
             </div>
           </div>
 

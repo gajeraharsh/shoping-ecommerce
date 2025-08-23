@@ -20,7 +20,7 @@ import useSubmittingLock from '@/hooks/checkout/useSubmittingLock';
 import useEmailSync from '@/hooks/checkout/useEmailSync';
 import useAutoSaveTempAddress from '@/hooks/checkout/useAutoSaveTempAddress';
 
-export default function CheckoutForm({ onSubmit, loading }) {
+export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) {
   // Persisted submit flag to avoid brief re-enables during async cart refreshes
   const SUBMIT_FLAG_KEY = 'checkout_is_submitting';
   const router = useRouter();
@@ -70,10 +70,121 @@ export default function CheckoutForm({ onSubmit, loading }) {
   // UX loading flags to avoid flicker
   const [isApplyingAddress, setIsApplyingAddress] = useState(false);
   const [isLoadingShippingOptions, setIsLoadingShippingOptions] = useState(true);
+  const [isChangingShipping, setIsChangingShipping] = useState(false);
   // Unified submit/loading state to avoid flicker (extracted without behavior change)
   const { isSubmitting, isSubmittingRef, lockSubmitting, releaseSubmitting } = useSubmittingLock(SUBMIT_FLAG_KEY);
+  // Debounced visual submitting state to avoid flicker on fast transitions (mobile)
+  const [visualSubmitting, setVisualSubmitting] = useState(false);
+  const submitShownAtRef = useRef(0);
+  // Only show full-page skeleton on the first visit
+  const [hasSeenInitialSkeleton, setHasSeenInitialSkeleton] = useState(false);
+
+  useEffect(() => {
+    let showTimer = null;
+    const MIN_SHOW_MS = 600; // keep visible at least this long once shown
+    const SHOW_DELAY_MS = 200; // delay before showing to avoid quick flashes
+    if (isSubmitting) {
+      // schedule show after delay if not already showing
+      if (!visualSubmitting) {
+        showTimer = setTimeout(() => {
+          submitShownAtRef.current = Date.now();
+          setVisualSubmitting(true);
+        }, SHOW_DELAY_MS);
+      }
+    } else {
+      // hide with minimum duration enforcement
+      if (visualSubmitting) {
+        const elapsed = Date.now() - submitShownAtRef.current;
+        const remaining = Math.max(0, MIN_SHOW_MS - elapsed);
+        const t = setTimeout(() => setVisualSubmitting(false), remaining);
+        return () => clearTimeout(t);
+      }
+    }
+    return () => {
+      if (showTimer) clearTimeout(showTimer);
+    };
+  }, [isSubmitting, visualSubmitting]);
+
+  // Initialize the "seen" flag from sessionStorage
+  useEffect(() => {
+    try {
+      const seen = sessionStorage.getItem('checkout_seen_initial_skeleton');
+      if (seen === 'true') setHasSeenInitialSkeleton(true);
+    } catch {}
+  }, []);
+
+  // Notify parent about submitting states (for mobile external button)
+  useEffect(() => {
+    if (typeof onSubmittingChange === 'function') {
+      onSubmittingChange({ isSubmitting, visualSubmitting });
+    }
+  }, [isSubmitting, visualSubmitting, onSubmittingChange]);
   const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
   const [isLoadingProviders, setIsLoadingProviders] = useState(true);
+  // Debounced visual loaders for smoother mobile experience
+  const [visualLoadingAddresses, setVisualLoadingAddresses] = useState(false);
+  const [visualLoadingShipping, setVisualLoadingShipping] = useState(false);
+  const [visualLoadingProviders, setVisualLoadingProviders] = useState(false);
+  const addrShownAtRef = useRef(0);
+  const shipShownAtRef = useRef(0);
+  const provShownAtRef = useRef(0);
+
+  useEffect(() => {
+    const MIN_SHOW_MS = 400;
+    const SHOW_DELAY_MS = 150;
+    let timer;
+    if (isLoadingAddresses) {
+      if (!visualLoadingAddresses) {
+        timer = setTimeout(() => {
+          addrShownAtRef.current = Date.now();
+          setVisualLoadingAddresses(true);
+        }, SHOW_DELAY_MS);
+      }
+    } else if (visualLoadingAddresses) {
+      const elapsed = Date.now() - addrShownAtRef.current;
+      const remaining = Math.max(0, MIN_SHOW_MS - elapsed);
+      timer = setTimeout(() => setVisualLoadingAddresses(false), remaining);
+    }
+    return () => timer && clearTimeout(timer);
+  }, [isLoadingAddresses, visualLoadingAddresses]);
+
+  useEffect(() => {
+    const MIN_SHOW_MS = 400;
+    const SHOW_DELAY_MS = 150;
+    let timer;
+    if (isLoadingShippingOptions) {
+      if (!visualLoadingShipping) {
+        timer = setTimeout(() => {
+          shipShownAtRef.current = Date.now();
+          setVisualLoadingShipping(true);
+        }, SHOW_DELAY_MS);
+      }
+    } else if (visualLoadingShipping) {
+      const elapsed = Date.now() - shipShownAtRef.current;
+      const remaining = Math.max(0, MIN_SHOW_MS - elapsed);
+      timer = setTimeout(() => setVisualLoadingShipping(false), remaining);
+    }
+    return () => timer && clearTimeout(timer);
+  }, [isLoadingShippingOptions, visualLoadingShipping]);
+
+  useEffect(() => {
+    const MIN_SHOW_MS = 400;
+    const SHOW_DELAY_MS = 150;
+    let timer;
+    if (isLoadingProviders) {
+      if (!visualLoadingProviders) {
+        timer = setTimeout(() => {
+          provShownAtRef.current = Date.now();
+          setVisualLoadingProviders(true);
+        }, SHOW_DELAY_MS);
+      }
+    } else if (visualLoadingProviders) {
+      const elapsed = Date.now() - provShownAtRef.current;
+      const remaining = Math.max(0, MIN_SHOW_MS - elapsed);
+      timer = setTimeout(() => setVisualLoadingProviders(false), remaining);
+    }
+    return () => timer && clearTimeout(timer);
+  }, [isLoadingProviders, visualLoadingProviders]);
 
   // Load addresses from backend
   useEffect(() => {
@@ -321,8 +432,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       if (paymentSectionRef.current) {
         paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-      isSubmittingRef.current = false;
-      setIsSubmitting(false);
+      releaseSubmitting();
       return;
     }
     const provider_id = selectedProviderId;
@@ -379,7 +489,12 @@ export default function CheckoutForm({ onSubmit, loading }) {
       if (result?.type === 'order' && result?.order?.id) {
         // Force-create a brand new cart after successful order (Medusa v2)
         try { await createCart(); } catch {}
-        try { sessionStorage.removeItem(SUBMIT_FLAG_KEY); } catch {}
+        try {
+          // Clear the submitting flag
+          sessionStorage.removeItem(SUBMIT_FLAG_KEY);
+          // Persist the order so confirmation page can show real data
+          sessionStorage.setItem('last_order', JSON.stringify(result.order));
+        } catch {}
         router.push(`/order-confirmation?order_id=${encodeURIComponent(result.order.id)}`);
         return;
       }
@@ -438,13 +553,24 @@ export default function CheckoutForm({ onSubmit, loading }) {
   };
 
   const isInitialLoading = !cart?.id || isLoadingAddresses || isLoadingProviders || isLoadingShippingOptions;
+  const shouldShowFullSkeleton = !hasSeenInitialSkeleton && isInitialLoading;
 
-  if (isInitialLoading) {
+  // Once the initial loading completes for the first time, persist the flag
+  useEffect(() => {
+    if (!isInitialLoading && !hasSeenInitialSkeleton) {
+      try {
+        sessionStorage.setItem('checkout_seen_initial_skeleton', 'true');
+      } catch {}
+      setHasSeenInitialSkeleton(true);
+    }
+  }, [isInitialLoading, hasSeenInitialSkeleton]);
+
+  if (shouldShowFullSkeleton) {
     return <CheckoutLoading isSubmitting={isSubmitting} onSubmit={handleSubmit} />;
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8 relative">
+    <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6 sm:space-y-8 relative">
       {/* Contact Information */}
       <div ref={shippingSectionRef}>
         <ContactInformationSection formData={formData} onChange={handleChange} />
@@ -461,11 +587,14 @@ export default function CheckoutForm({ onSubmit, loading }) {
       />
 
       {/* Shipping Address */}
-      <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
+      <div className={`bg-white border rounded-xl p-4 sm:p-6 shadow-sm relative transition-opacity duration-200 lg:transition-none ${visualLoadingAddresses ? 'opacity-60 pointer-events-none' : ''}`}>
         <div className="flex items-center gap-2 mb-4">
           <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
           <h3 className="text-base sm:text-lg font-semibold">Shipping Address</h3>
         </div>
+        {visualLoadingAddresses ? (
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-black/10 animate-pulse lg:hidden" aria-hidden />
+        ) : null}
         
         {/* If saved addresses exist: show selection UI */}
         {addresses.length > 0 ? (
@@ -531,29 +660,42 @@ export default function CheckoutForm({ onSubmit, loading }) {
       </div>
 
       {/* Shipping Method */}
-      <ShippingMethodSection
-        cart={cart}
-        shippingOptions={shippingOptions}
-        selectedShippingOptionId={selectedShippingOptionId}
-        onSelectOption={async (id) => {
-          setSelectedShippingOptionId(id);
-          setShippingError('');
-          try {
-            if (!cart?.id) throw new Error('Cart not ready');
-            await shippingService.addShippingMethod({ cartId: cart.id, option_id: id });
-            await refresh();
-          } catch (e) {
-            setShippingError(e?.message || 'Failed to set shipping method');
-          }
-        }}
-        shippingError={shippingError}
-      />
+      <div className={`relative transition-opacity duration-200 lg:transition-none ${visualLoadingShipping ? 'opacity-60 pointer-events-none' : ''}`}>
+        {visualLoadingShipping ? (
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-black/10 animate-pulse lg:hidden" aria-hidden />
+        ) : null}
+        <ShippingMethodSection
+          cart={cart}
+          shippingOptions={shippingOptions}
+          selectedShippingOptionId={selectedShippingOptionId}
+          loading={visualLoadingShipping || isChangingShipping}
+          onSelectOption={async (id) => {
+            setSelectedShippingOptionId(id);
+            setShippingError('');
+            try {
+              if (!cart?.id) throw new Error('Cart not ready');
+              setIsChangingShipping(true);
+              await shippingService.addShippingMethod({ cartId: cart.id, option_id: id });
+              await refresh();
+            } catch (e) {
+              setShippingError(e?.message || 'Failed to set shipping method');
+            } finally {
+              setIsChangingShipping(false);
+            }
+          }}
+          shippingError={shippingError}
+        />
+      </div>
 
       {/* Payment Method */}
-      <div ref={paymentSectionRef}>
+      <div ref={paymentSectionRef} className={`relative transition-opacity duration-200 lg:transition-none ${visualLoadingProviders ? 'opacity-60 pointer-events-none' : ''}`}>
+        {visualLoadingProviders ? (
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-black/10 animate-pulse lg:hidden" aria-hidden />
+        ) : null}
         <PaymentMethodSection
           paymentProviders={paymentProviders}
           selectedProviderId={selectedProviderId}
+          loading={visualLoadingProviders}
           onSelect={(id) => {
             setSelectedProviderId(id);
             setFormData((prev) => ({ ...prev, paymentMethod: id }));
@@ -571,14 +713,17 @@ export default function CheckoutForm({ onSubmit, loading }) {
       <button
         type="submit"
         aria-busy={isSubmitting}
-        disabled={isSubmitting}
-        className="w-full bg-black text-white py-4 px-4 rounded-xl hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl"
+        disabled={isSubmitting || !selectedShippingOptionId || !selectedProviderId}
+        className="hidden lg:block w-full bg-black text-white py-4 px-4 rounded-xl hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl"
       >
-        {isSubmitting ? 'Processing...' : 'Place Order'}
+        <span className="inline-flex justify-center min-w-[140px]">
+          {visualSubmitting ? 'Processing...' : 'Place Order'}
+        </span>
       </button>
-      {isSubmitting ? (
-        <div className="absolute inset-0 z-10 bg-white/40 backdrop-blur-[1px]" aria-hidden />
-      ) : null}
+      <div
+        className={`absolute inset-0 z-10 bg-white/40 backdrop-blur-[1px] transition-opacity duration-200 ${visualSubmitting ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        aria-hidden
+      />
     </form>
   );
 }

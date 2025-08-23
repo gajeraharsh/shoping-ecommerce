@@ -6,6 +6,7 @@ export default function ShippingMethodSection({
   selectedShippingOptionId,
   onSelectOption,
   shippingError,
+  loading = false,
 }) {
   return (
     <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
@@ -13,7 +14,13 @@ export default function ShippingMethodSection({
         <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
         <h3 className="text-base sm:text-lg font-semibold">Shipping Method</h3>
       </div>
-      {shippingOptions.length === 0 ? (
+      {loading ? (
+        <div className="space-y-3 animate-pulse">
+          <div className="h-6 w-64 bg-gray-200 rounded" />
+          <div className="h-5 w-52 bg-gray-200 rounded" />
+          <div className="h-5 w-44 bg-gray-200 rounded" />
+        </div>
+      ) : shippingOptions.length === 0 ? (
         <div className="text-sm text-gray-600">No shipping methods available for this cart.</div>
       ) : (
         <div className="space-y-3 sm:space-y-4">

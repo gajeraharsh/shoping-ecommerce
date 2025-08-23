@@ -13,11 +13,16 @@ export default function OrderSummary() {
 
   // Prefer Redux totals; fallback to simple computed values when absent
   const computedSubtotal = items.reduce((sum, i) => sum + (i.unit_price * i.quantity), 0);
-  const subtotal = totals?.subtotal ?? computedSubtotal;
-  const shipping = totals?.shipping_total ?? 0;
-  const tax = totals?.tax_total ?? 0;
-  const discount = totals?.discount_total ?? 0;
-  const total = totals?.total ?? Math.max(0, subtotal + shipping + tax - discount);
+  const subtotal = Number(totals?.subtotal ?? computedSubtotal) || 0;
+  const shipping = Number(totals?.shipping_total ?? 0) || 0;
+  const tax = Number(totals?.tax_total ?? 0) || 0;
+  const discount = Number(totals?.discount_total ?? 0) || 0;
+  // Always compute final total locally to ensure shipping is included
+  const finalTotal = Math.max(0, subtotal + shipping + tax - discount);
+  // Display helpers
+  const itemTotal = computedSubtotal; // sum of items without discounts
+  const subtotalAfterDiscount = Math.max(0, subtotal - discount); // items after discount, before shipping/tax
+  const totalQty = Array.isArray(items) ? items.reduce((acc, i) => acc + (Number(i?.quantity) || 0), 0) : 0;
 
   // Applied coupon codes from cart
   const appliedCodes = useMemo(() => {
@@ -155,29 +160,25 @@ export default function OrderSummary() {
       {/* Totals */}
       <div className="space-y-3 text-sm border-t pt-4">
         <div className="flex justify-between">
-          <span>Subtotal</span>
-          <span>₹{subtotal}</span>
+          <span>Total Product Price ({totalQty} {totalQty === 1 ? 'item' : 'items'})</span>
+          <span>₹{itemTotal}</span>
         </div>
+        {discount > 0 && (
+          <div className="flex justify-between text-green-600">
+            <span>Total Discount</span>
+            <span>-₹{discount}</span>
+          </div>
+        )}
         <div className="flex justify-between">
-          <span>Shipping</span>
+          <span>Shipping Fee</span>
           <span className={shipping === 0 ? 'text-green-600' : ''}>
             {shipping === 0 ? 'FREE' : `₹${shipping}`}
           </span>
         </div>
-        <div className="flex justify-between">
-          <span>Tax</span>
-          <span>₹{tax}</span>
-        </div>
-        {discount > 0 && (
-          <div className="flex justify-between text-green-600">
-            <span>Discount</span>
-            <span>-₹{discount}</span>
-          </div>
-        )}
         <div className="border-t pt-3">
           <div className="flex justify-between text-lg font-semibold">
             <span>Total</span>
-            <span>₹{total}</span>
+            <span>₹{finalTotal}</span>
           </div>
           {discount > 0 && (
             <div className="text-xs text-green-600 mt-1">

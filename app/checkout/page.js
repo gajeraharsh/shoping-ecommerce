@@ -16,8 +16,18 @@ export default function CheckoutPage() {
   const { cart, items, status, ensure } = useCart();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [submittingState, setSubmittingState] = useState({ isSubmitting: false, visualSubmitting: false });
   const [redirecting, setRedirecting] = useState(false);
+  // Only show the full-page skeleton on the first visit
+  const [hasSeenCheckoutPage, setHasSeenCheckoutPage] = useState(false);
   const modal = useModal();
+
+  useEffect(() => {
+    try {
+      const seen = sessionStorage.getItem('checkout_page_seen');
+      if (seen === 'true') setHasSeenCheckoutPage(true);
+    } catch {}
+  }, []);
 
   useEffect(() => {
     // If not authenticated, Private will handle redirect to login.
@@ -27,12 +37,17 @@ export default function CheckoutPage() {
       return;
     }
     if (status === 'succeeded') {
+      // Mark page as seen to avoid full-page skeleton on subsequent short loads
+      if (!hasSeenCheckoutPage) {
+        try { sessionStorage.setItem('checkout_page_seen', 'true'); } catch {}
+        setHasSeenCheckoutPage(true);
+      }
       if (items.length === 0) {
         setRedirecting(true);
         router.push('/cart');
       }
     }
-  }, [items.length, router, status, ensure, cart?.id]);
+  }, [items.length, router, status, ensure, cart?.id, hasSeenCheckoutPage]);
 
   const handlePlaceOrder = async (formData) => {
     setLoading(true);
@@ -66,7 +81,8 @@ export default function CheckoutPage() {
     }, 2000);
   };
 
-  if (status === 'idle' || status === 'loading' || redirecting) {
+  // Only show full-page skeleton before the page has been seen once, or when redirecting
+  if ((status === 'idle' || (!hasSeenCheckoutPage && status === 'loading')) || redirecting) {
     return (
       <Private>
         <div className="min-h-screen flex items-center justify-center px-4">
@@ -95,10 +111,21 @@ export default function CheckoutPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             <div className="lg:col-span-2">
-              <CheckoutForm onSubmit={handlePlaceOrder} loading={loading} />
+              <CheckoutForm onSubmit={handlePlaceOrder} loading={loading} onSubmittingChange={setSubmittingState} />
             </div>
             <div className="lg:col-span-1">
               <OrderSummary />
+              {/* Mobile-only Place Order button, after Order Summary */}
+              <button
+                type="submit"
+                form="checkout-form"
+                disabled={submittingState.isSubmitting}
+                className="mt-4 w-full bg-black text-white py-4 px-4 rounded-xl hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl lg:hidden"
+              >
+                <span className="inline-flex justify-center min-w-[140px]">
+                  {submittingState.visualSubmitting ? 'Processing...' : 'Place Order'}
+                </span>
+              </button>
             </div>
           </div>
         </main>
