@@ -51,6 +51,7 @@ export default function InlineAddressForm({
               value={formData.name}
               onChange={onChange}
               id="name"
+              autoComplete="name"
               aria-invalid={!!inlineErrors.name}
               aria-describedby={inlineErrors.name ? 'error-name' : undefined}
               className={`w-full pl-12 pr-4 py-3 min-h-[48px] border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 focus:ring-offset-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
@@ -74,6 +75,9 @@ export default function InlineAddressForm({
               value={formData.phone}
               onChange={onChange}
               id="phone"
+              autoComplete="tel"
+              inputMode="tel"
+              pattern="[+]?[0-9()\-\s]{10,}"
               aria-invalid={!!inlineErrors.phone}
               aria-describedby={inlineErrors.phone ? 'error-phone' : undefined}
               className={`w-full pl-12 pr-4 py-3 min-h-[48px] border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 focus:ring-offset-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
@@ -97,6 +101,7 @@ export default function InlineAddressForm({
           onChange={onChange}
           rows={3}
           id="street"
+          autoComplete="address-line1"
           aria-invalid={!!inlineErrors.street}
           aria-describedby={inlineErrors.street ? 'error-street' : undefined}
           className={`w-full px-4 py-3 min-h-[56px] border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 focus:ring-offset-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none transition-colors ${
@@ -117,6 +122,7 @@ export default function InlineAddressForm({
           value={formData.landmark}
           onChange={onChange}
           id="landmark"
+          autoComplete="address-line2"
           className="w-full px-4 py-3 min-h-[48px] border border-gray-300 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 focus:ring-offset-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
           placeholder="Near famous location, building, etc."
         />
@@ -131,6 +137,7 @@ export default function InlineAddressForm({
             value={formData.city}
             onChange={onChange}
             id="city"
+            autoComplete="address-level2"
             aria-invalid={!!inlineErrors.city}
             aria-describedby={inlineErrors.city ? 'error-city' : undefined}
             className={`w-full px-4 py-3 min-h-[48px] border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 focus:ring-offset-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
@@ -151,6 +158,7 @@ export default function InlineAddressForm({
             value={formData.state}
             onChange={onChange}
             id="state"
+            autoComplete="address-level1"
             aria-invalid={!!inlineErrors.state}
             aria-describedby={inlineErrors.state ? 'error-state' : undefined}
             className={`w-full px-4 py-3 min-h-[48px] border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 focus:ring-offset-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
@@ -171,6 +179,9 @@ export default function InlineAddressForm({
             value={formData.pincode}
             onChange={onChange}
             id="pincode"
+            autoComplete="postal-code"
+            inputMode="numeric"
+            pattern="[0-9]{6}"
             aria-invalid={!!inlineErrors.pincode}
             aria-describedby={inlineErrors.pincode ? 'error-pincode' : undefined}
             className={`w-full px-4 py-3 min-h-[48px] border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 focus:ring-offset-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${

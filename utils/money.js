@@ -44,3 +44,17 @@ export function formatAmount(minorAmount, code) {
     return major.toLocaleString();
   }
 }
+
+// Format an amount that is ALREADY in MAJOR units as Indian Rupees without any unit conversion.
+export function formatINR(amount) {
+  const safe = typeof amount === 'number' ? amount : Number(amount || 0);
+  try {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 2,
+    }).format(safe);
+  } catch (_) {
+    return `₹${safe.toLocaleString('en-IN')}`;
+  }
+}

@@ -128,36 +128,12 @@ export default function CheckoutPage() {
       <div className="min-h-screen flex flex-col">
         <main className="flex-1 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 overflow-x-hidden">
           <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Checkout</h1>
-          {/* <CheckoutStepper current={currentStep} /> */}
+          <CheckoutStepper current={currentStep} />
           <div className="h-4 sm:h-6" aria-hidden />
 
-          {/* Mobile collapsible order summary */}
-          <details className="group sm:hidden mb-4 rounded-xl border bg-white overflow-hidden">
-            <summary className="list-none w-full flex items-center justify-between gap-3 px-4 py-3 cursor-pointer select-none">
-              <span className="text-sm font-semibold">View order summary</span>
-              <span className="flex items-center gap-2">
-                <span className="text-sm text-gray-700 font-medium">{formatMoney(cart?.total)}</span>
-                {/* Chevron rotates when details is open via group-open */}
-                <svg
-                  className="h-4 w-4 text-gray-700 transition-transform duration-200 group-open:rotate-180"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
-              </span>
-            </summary>
-            <div id="mobile-order-summary-panel" className="border-t px-3 py-3">
-              <OrderSummary />
-            </div>
-          </details>
+          {/* Mobile summary handled by MobileStickyBar drawer */}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 pb-28 sm:pb-0">
             <div className="lg:col-span-2">
               <CheckoutForm onSubmit={handlePlaceOrder} loading={loading} onSubmittingChange={setSubmittingState} />
             </div>

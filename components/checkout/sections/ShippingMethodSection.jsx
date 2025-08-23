@@ -1,4 +1,5 @@
 import { Truck } from 'lucide-react';
+import { formatINR } from '@/utils/money';
 
 export default function ShippingMethodSection({
   cart,
@@ -27,9 +28,8 @@ export default function ShippingMethodSection({
           {shippingOptions.map((opt) => {
             const id = opt.id;
             const label = opt.name || opt.type?.label || 'Shipping Option';
-            const price = opt.calculated_price?.calculated_amount ?? opt.amount ?? 0;
-            const currency = (process.env.NEXT_PUBLIC_CURRENCY || '').toLowerCase() || opt.calculated_price?.currency_code || cart?.currency_code || cart?.region?.currency_code || 'inr';
-            const priceFmt = new Intl.NumberFormat(undefined, { style: 'currency', currency: String(currency).toUpperCase() }).format(price || 0);
+            const price = Number(opt.calculated_price?.calculated_amount ?? opt.amount ?? 0);
+            const priceFmt = price === 0 ? 'FREE' : formatINR(price);
             const checked = selectedShippingOptionId === id;
             return (
               <label

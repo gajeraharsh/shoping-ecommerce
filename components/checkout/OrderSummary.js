@@ -4,15 +4,18 @@ import { useMemo, useState } from 'react';
 import { useCart } from '@/hooks/useCart';
 import { Tag, Check, X } from 'lucide-react';
 import SmartImage from '@/components/ui/SmartImage';
+import { formatINR } from '@/utils/money';
 
 export default function OrderSummary() {
   const { cart, items, totals, applyCoupon, removeCoupon } = useCart();
   const [couponCode, setCouponCode] = useState('');
   const [isApplying, setIsApplying] = useState(false);
   const [couponError, setCouponError] = useState('');
+  // Display values exactly as provided (major units) in INR
 
   // Prefer Redux totals; fallback to simple computed values when absent
-  const computedSubtotal = items.reduce((sum, i) => sum + (i.unit_price * i.quantity), 0);
+  // Treat all incoming values as MAJOR units (no further conversion)
+  const computedSubtotal = items.reduce((sum, i) => sum + ((Number(i.unit_price) || 0) * (Number(i.quantity) || 0)), 0);
   const subtotal = Number(totals?.subtotal ?? computedSubtotal) || 0;
   const shipping = Number(totals?.shipping_total ?? 0) || 0;
   const tax = Number(totals?.tax_total ?? 0) || 0;
@@ -97,7 +100,7 @@ export default function OrderSummary() {
               </div>
             </div>
             <div className="text-sm font-medium">
-              ₹{item.unit_price * item.quantity}
+              {formatINR((Number(item.unit_price) || 0) * (Number(item.quantity) || 0))}
             </div>
           </div>
         ))}
@@ -167,28 +170,28 @@ export default function OrderSummary() {
       <div className="space-y-3 text-sm border-t pt-4">
         <div className="flex justify-between">
           <span>Total Product Price ({totalQty} {totalQty === 1 ? 'item' : 'items'})</span>
-          <span>₹{itemTotal}</span>
+          <span className="tabular-nums">{formatINR(itemTotal)}</span>
         </div>
         {discount > 0 && (
           <div className="flex justify-between text-green-600">
             <span>Total Discount</span>
-            <span>-₹{discount}</span>
+            <span className="tabular-nums">-{formatINR(discount)}</span>
           </div>
         )}
         <div className="flex justify-between">
           <span>Shipping Fee</span>
           <span className={shipping === 0 ? 'text-green-600' : ''}>
-            {shipping === 0 ? 'FREE' : `₹${shipping}`}
+            {shipping === 0 ? 'FREE' : formatINR(shipping)}
           </span>
         </div>
         <div className="border-t pt-3">
           <div className="flex justify-between text-lg font-semibold">
             <span>Total</span>
-            <span>₹{finalTotal}</span>
+            <span className="tabular-nums">{formatINR(finalTotal)}</span>
           </div>
           {discount > 0 && (
             <div className="text-xs text-green-600 mt-1">
-              You saved ₹{discount}!
+              You saved {formatINR(discount)}!
             </div>
           )}
         </div>
