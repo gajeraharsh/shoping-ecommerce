@@ -3,14 +3,26 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
-import { CreditCard, Truck, MapPin, Home, Building2, Plus, User, Phone, Check } from 'lucide-react';
+import { Truck, Plus, User, Phone, Check } from 'lucide-react';
 import SimpleTrustBadges, { SimplePaymentBadges } from '@/components/ui/SimpleTrustBadges';
 import AddAddressModal from '@/components/modals/AddAddressModal';
 import { listAddresses, createAddress, updateAddress } from '@/services/customer/addressService';
 import { paymentService } from '@/services/modules/payment/paymentService';
 import { shippingService } from '@/services/modules/shipping/shippingService';
+import ContactInformationSection from '@/components/checkout/sections/ContactInformationSection';
+import ShippingMethodSection from '@/components/checkout/sections/ShippingMethodSection';
+import PaymentMethodSection from '@/components/checkout/sections/PaymentMethodSection';
+import CheckoutLoading from '@/components/checkout/sections/CheckoutLoading';
+import { addressTypes, getTypeIcon } from '@/components/checkout/utils/addressTypes';
+import AddressBookSection from '@/components/checkout/sections/AddressBookSection';
+import InlineAddressForm from '@/components/checkout/sections/InlineAddressForm';
+import useSubmittingLock from '@/hooks/checkout/useSubmittingLock';
+import useEmailSync from '@/hooks/checkout/useEmailSync';
+import useAutoSaveTempAddress from '@/hooks/checkout/useAutoSaveTempAddress';
 
 export default function CheckoutForm({ onSubmit, loading }) {
+  // Persisted submit flag to avoid brief re-enables during async cart refreshes
+  const SUBMIT_FLAG_KEY = 'checkout_is_submitting';
   const router = useRouter();
   const { cart, setEmail, setShippingAddress, setBillingAddress, completeCart, refresh, createCart } = useCart();
   const [formData, setFormData] = useState({
@@ -55,6 +67,13 @@ export default function CheckoutForm({ onSubmit, loading }) {
   const [shippingOptions, setShippingOptions] = useState([]);
   const [selectedShippingOptionId, setSelectedShippingOptionId] = useState(null);
   const [shippingError, setShippingError] = useState('');
+  // UX loading flags to avoid flicker
+  const [isApplyingAddress, setIsApplyingAddress] = useState(false);
+  const [isLoadingShippingOptions, setIsLoadingShippingOptions] = useState(true);
+  // Unified submit/loading state to avoid flicker (extracted without behavior change)
+  const { isSubmitting, isSubmittingRef, lockSubmitting, releaseSubmitting } = useSubmittingLock(SUBMIT_FLAG_KEY);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+  const [isLoadingProviders, setIsLoadingProviders] = useState(true);
 
   // Load addresses from backend
   useEffect(() => {
@@ -65,12 +84,15 @@ export default function CheckoutForm({ onSubmit, loading }) {
   useEffect(() => {
     (async () => {
       try {
+        setIsLoadingProviders(true);
         const { payment_providers = [] } = await paymentService.listProviders({ region_id: cart?.region?.id });
         setPaymentProviders(payment_providers);
         // Do not auto-select any payment method; require explicit user choice
         setSelectedProviderId((prev) => prev && payment_providers.some(p => p.id === prev) ? prev : null);
       } catch (e) {
         // global toast via interceptor
+      } finally {
+        setIsLoadingProviders(false);
       }
     })();
   }, [cart?.region?.id]);
@@ -80,6 +102,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
     if (!cart?.id) return;
     (async () => {
       try {
+        setIsLoadingShippingOptions(true);
         const { shipping_options = [] } = await shippingService.listCartOptions({ cart_id: cart.id });
         setShippingOptions(shipping_options);
         // If cart already has a shipping method, keep it selected; else preselect first option
@@ -93,12 +116,15 @@ export default function CheckoutForm({ onSubmit, loading }) {
         setShippingOptions([]);
         setSelectedShippingOptionId(null);
         setShippingError(e?.message || 'Failed to load shipping options');
+      } finally {
+        setIsLoadingShippingOptions(false);
       }
     })();
   }, [cart?.id, cart?.shipping_address?.country_code]);
 
   const fetchAddresses = async () => {
     try {
+      setIsLoadingAddresses(true);
       const { addresses: list } = await listAddresses();
       setAddresses(list);
       // Do not auto-select or set on cart. User must select explicitly.
@@ -106,27 +132,19 @@ export default function CheckoutForm({ onSubmit, loading }) {
       setAddressError('');
     } catch (e) {
       // global toasts handled by api client
+    } finally {
+      setIsLoadingAddresses(false);
     }
   };
 
-  // Prefill email from cart when available
-  useEffect(() => {
-    if (cart?.email && !formData.email) {
-      setFormData(prev => ({ ...prev, email: cart.email }));
-    }
-  }, [cart?.email]);
-
-  // Debounced update to cart email when user types a valid email
-  useEffect(() => {
-    if (!formData.email) return;
-    const isValid = /[^@\s]+@[^@\s]+\.[^@\s]+/.test(formData.email);
-    if (!isValid) return;
-    const same = cart?.email === formData.email;
-    const t = setTimeout(() => {
-      if (!same) setEmail(formData.email);
-    }, 400);
-    return () => clearTimeout(t);
-  }, [formData.email, cart?.email, setEmail]);
+  // Email prefill + debounced sync (extracted without behavior change)
+  useEmailSync({
+    cartEmail: cart?.email,
+    formEmail: formData.email,
+    setFormEmail: (val) => setFormData((prev) => ({ ...prev, email: val })),
+    setCartEmail: setEmail,
+    debounceMs: 400,
+  });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -174,20 +192,25 @@ export default function CheckoutForm({ onSubmit, loading }) {
         country_code: 'dk',
         isDefault: typeof formData.isDefault === 'boolean' ? formData.isDefault : true,
       };
+      let newId = tempAddressId;
       if (!tempAddressId) {
         const created = await createAddress(uiAddr, { successMessage: 'Address saved' });
-        const newId = created?.address?.id || created?.id;
+        newId = created?.address?.id || created?.id;
         if (newId) setTempAddressId(newId);
+        if (newId) {
+          // Optimistically add to local list to avoid refetch flicker
+          setAddresses(prev => [{ ...uiAddr, id: newId, isDefault: uiAddr.isDefault }, ...prev]);
+        }
       } else {
         await updateAddress(tempAddressId, uiAddr, { successMessage: 'Address updated' });
+        // Optimistically update local list
+        setAddresses(prev => prev.map(a => a.id === tempAddressId ? { ...a, ...uiAddr } : a));
       }
-      const { addresses: list } = await listAddresses();
-      setAddresses(list);
-      const picked = tempAddressId ? (list.find(a => a.id === tempAddressId) || uiAddr) : (list[0] || uiAddr);
+      const picked = { ...uiAddr, id: newId || tempAddressId };
       try {
         await setShippingAddress(picked);
         await setBillingAddress(picked);
-        await refresh();
+        // Avoid refresh() to prevent UI flicker; rely on local state
       } catch {}
       setAutoSaveEnabled(true); // enable future debounced updates
       setAddressError('');
@@ -201,72 +224,31 @@ export default function CheckoutForm({ onSubmit, loading }) {
   };
 
   // When there are no saved addresses, auto-create/update an account address from inline form
-  useEffect(() => {
-    if (addresses.length > 0) return; // only when there are no saved addresses
-    if (!autoSaveEnabled) return; // only after user explicitly saved once
-    // basic validity check before auto-saving
-    const { firstName, lastName, address, city, state, zipCode, phone } = formData;
-    const errs = validateInlineAddress(formData);
-    const hasMin = Object.keys(errs).length === 0;
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
-    autoSaveTimerRef.current = setTimeout(async () => {
-      if (!hasMin) return;
-      try {
-        const uiAddr = {
-          name: `${firstName} ${lastName || ''}`.trim(),
-          type: 'home',
-          phone: phone || '',
-          street: address,
-          city,
-          state,
-          pincode: zipCode,
-          country_code: 'dk',
-          isDefault: true,
-        };
-        if (!tempAddressId) {
-          // Create once, store id
-          const created = await createAddress(uiAddr, { successMessage: null });
-          const newId = created?.address?.id || created?.id;
-          if (newId) setTempAddressId(newId);
-          // Refresh list to keep UI in sync
-          const { addresses: list } = await listAddresses();
-          setAddresses(list);
-          // Set on cart to unlock shipping options
-          const picked = list.find(a => a.id === newId) || uiAddr;
-          try {
-            await setShippingAddress(picked);
-            await setBillingAddress(picked);
-            await refresh();
-          } catch (e) {
-            // handled globally; keep quiet
-          }
-        } else {
-          // Update existing temp address as user edits
-          await updateAddress(tempAddressId, uiAddr, { successMessage: null });
-          const { addresses: list } = await listAddresses();
-          setAddresses(list);
-          const picked = list.find(a => a.id === tempAddressId) || uiAddr;
-          try {
-            await setShippingAddress(picked);
-            await setBillingAddress(picked);
-            await refresh();
-          } catch (e) {}
-        }
-        setAddressError('');
-      } catch (err) {
-        // show minimal inline error
-        setAddressError(typeof err === 'string' ? err : err?.message || 'Failed to save address');
-      }
-    }, 600);
-    return () => {
-      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
-    };
-  }, [addresses.length, autoSaveEnabled, formData.firstName, formData.lastName, formData.address, formData.city, formData.state, formData.zipCode, formData.phone, tempAddressId, createAddress, updateAddress, listAddresses, setShippingAddress, setBillingAddress, refresh]);
+  // Auto-save temp address when no saved addresses (extracted without behavior change)
+  useAutoSaveTempAddress({
+    addressesLength: addresses.length,
+    autoSaveEnabled,
+    formData,
+    tempAddressId,
+    setTempAddressId,
+    setAddresses,
+    setAddressError,
+    validateInlineAddress,
+    createAddress,
+    updateAddress,
+    setShippingAddress,
+    setBillingAddress,
+    debounceMs: 600,
+    autoSaveTimerRef,
+  });
 
   // Coupon UI removed; managed within Order Summary
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmittingRef.current || isSubmitting) return; // guard against double submit
+    // Lock immediately for smooth UX; revert on validation failure
+    lockSubmitting();
     let savedInlineAddr = null;
     // If no saved addresses, validate inline form first
     if (!addresses.length) {
@@ -277,14 +259,21 @@ export default function CheckoutForm({ onSubmit, loading }) {
         if (shippingSectionRef.current) {
           shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        releaseSubmitting();
         return;
       }
       // If valid and not yet saved, persist inline address before proceeding (same as Save button)
       try {
         const saved = await saveInlineAddress();
-        if (!saved) return; // saving failed or invalid
+        if (!saved) {
+          releaseSubmitting();
+          return; // saving failed or invalid
+        }
         savedInlineAddr = saved;
-      } catch (_) {}
+      } catch (_) {
+        releaseSubmitting();
+        return;
+      }
     }
     // Always use the current default address when placing order
     const defaultAddress = addresses.find(a => a.isDefault) || savedInlineAddr || null;
@@ -298,8 +287,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
     try {
       await setShippingAddress(defaultAddress);
       await setBillingAddress(defaultAddress);
-      // Refresh cart so state reflects latest addresses before we validate
-      await refresh();
+      // Avoid immediate refresh to reduce flicker; rely on local state and validations below
       setAddressError('');
     } catch (err) {
       setAddressError(typeof err === 'string' ? err : err?.message || 'Failed to set address on cart');
@@ -315,6 +303,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       if (shippingSectionRef.current) {
         shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      releaseSubmitting();
       return;
     }
     // Payment v2: Create payment collection then init session for selected provider
@@ -323,6 +312,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       if (paymentSectionRef.current) {
         paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      releaseSubmitting();
       return;
     }
     // Ensure a payment method is chosen
@@ -331,6 +321,8 @@ export default function CheckoutForm({ onSubmit, loading }) {
       if (paymentSectionRef.current) {
         paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      isSubmittingRef.current = false;
+      setIsSubmitting(false);
       return;
     }
     const provider_id = selectedProviderId;
@@ -343,6 +335,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       if (shippingSectionRef.current) {
         shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      releaseSubmitting();
       return;
     }
     let paymentCollection = cart?.payment_collection || null;
@@ -355,6 +348,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
         if (paymentSectionRef.current) {
           paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        releaseSubmitting();
         return;
       }
     }
@@ -366,6 +360,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
       if (paymentSectionRef.current) {
         paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      releaseSubmitting();
       return;
     }
     // Trigger cart completion
@@ -378,11 +373,13 @@ export default function CheckoutForm({ onSubmit, loading }) {
         if (shippingSectionRef.current) {
           shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        releaseSubmitting();
         return;
       }
       if (result?.type === 'order' && result?.order?.id) {
         // Force-create a brand new cart after successful order (Medusa v2)
         try { await createCart(); } catch {}
+        try { sessionStorage.removeItem(SUBMIT_FLAG_KEY); } catch {}
         router.push(`/order-confirmation?order_id=${encodeURIComponent(result.order.id)}`);
         return;
       }
@@ -392,27 +389,20 @@ export default function CheckoutForm({ onSubmit, loading }) {
       if (shippingSectionRef.current) {
         shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      releaseSubmitting();
     } catch (err) {
       const msg = err?.message || 'Failed to complete order';
       setAddressError(msg);
       if (shippingSectionRef.current) {
         shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      releaseSubmitting();
     }
     // Also pass form data upward if a parent wants to track it
     onSubmit?.({ ...formData, selectedAddress: defaultAddress });
   };
 
-  const addressTypes = [
-    { value: 'home', label: 'Home', icon: Home },
-    { value: 'office', label: 'Office', icon: Building2 },
-    { value: 'other', label: 'Other', icon: MapPin }
-  ];
-
-  const getTypeIcon = (type) => {
-    const typeConfig = addressTypes.find(t => t.value === type);
-    return typeConfig?.icon || MapPin;
-  };
+  // addressTypes and getTypeIcon are imported from utils to keep concerns separated
 
   const handleAddAddress = async (data) => {
     try {
@@ -447,30 +437,17 @@ export default function CheckoutForm({ onSubmit, loading }) {
     setEditingAddress(null);
   };
 
+  const isInitialLoading = !cart?.id || isLoadingAddresses || isLoadingProviders || isLoadingShippingOptions;
+
+  if (isInitialLoading) {
+    return <CheckoutLoading isSubmitting={isSubmitting} onSubmit={handleSubmit} />;
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8 relative">
       {/* Contact Information */}
-      <div ref={shippingSectionRef} className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
-        <div className="flex items-center gap-2 mb-4">
-          <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
-          <h3 className="text-base sm:text-lg font-semibold">Contact Information</h3>
-        </div>
-        
-        <div>
-          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-            Email Address
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="you@example.com"
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm min-h-[48px]"
-            required
-          />
-          <p className="mt-1 text-xs text-gray-500">We’ll send order updates to this email.</p>
-        </div>
+      <div ref={shippingSectionRef}>
+        <ContactInformationSection formData={formData} onChange={handleChange} />
       </div>
 
       {/* Coupon UI managed in Order Summary component */}
@@ -492,399 +469,97 @@ export default function CheckoutForm({ onSubmit, loading }) {
         
         {/* If saved addresses exist: show selection UI */}
         {addresses.length > 0 ? (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-600">Select a saved address</p>
-              <button
-                type="button"
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowAddModal(true); }}
-                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); } }}
-                className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
-              >
-                <Plus className="w-4 h-4" /> Add Address
-              </button>
-            </div>
-            {addressError && (
-              <p className="text-xs text-red-600">{addressError}</p>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {addresses.map((address) => {
-                const Icon = getTypeIcon(address.type);
-                const selected = !!address.isDefault;
-                return (
-                  <label
-                    key={address.id}
-                    className={`relative group cursor-pointer rounded-2xl border p-4 transition-all ${
-                      selected ? 'border-black shadow-sm' : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <input
-                        type="radio"
-                        name="selectedAddress"
-                        checked={selected}
-                        onChange={async () => {
-                          const id = address?.id
-                          setSelectedAddressId(id || null)
-                          if (!id) {
-                            setAddressError('No address id found for this selection. Please choose another or add a new address.')
-                            return
-                          }
-                          try {
-                            // 1) Set as customer's default
-                            await updateAddress(id, { isDefault: true }, { successMessage: 'Default address updated' })
-                            // 2) Refresh saved addresses to reflect new default
-                            const { addresses: list } = await listAddresses()
-                            setAddresses(list)
-                            setSelectedAddressId(id)
-                            setAddressError('')
-                            // 3) Also set this address on the cart immediately so shipping options resolve
-                            const picked = list.find(a => a.id === id) || address
-                            try {
-                              await setShippingAddress(picked)
-                              await refresh()
-                            } catch (err) {
-                              // cart set failure handled by global toasts; show minimal inline error
-                              setAddressError(typeof err === 'string' ? err : err?.message || 'Failed to set address on cart')
-                            }
-                            // 4) Re-load shipping options now that address is set
-                            try {
-                              const { shipping_options = [] } = await shippingService.listCartOptions({ cart_id: cart?.id })
-                              setShippingOptions(shipping_options)
-                              const currentId = cart?.shipping_methods?.[0]?.shipping_option_id || null
-                              const def = currentId || shipping_options[0]?.id || null
-                              setSelectedShippingOptionId(def)
-                              setShippingError('')
-                            } catch (err) {
-                              setShippingOptions([])
-                              setSelectedShippingOptionId(null)
-                              setShippingError(err?.message || 'Failed to load shipping options')
-                            }
-                          } catch (e) {
-                            setAddressError(typeof e === 'string' ? e : e?.message || 'Failed to set default address')
-                          }
-                        }}
-                        className="mt-1 accent-black"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100">
-                            <Icon className="w-4 h-4" />
-                          </span>
-                          <span className="text-sm font-semibold capitalize">{address.type} Address</span>
-                          {address.isDefault && (
-                            <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-gray-100">Default</span>
-                          )}
-                        </div>
-                        <div className="text-sm text-gray-700 truncate">
-                          {address.name} • {address.phone}
-                        </div>
-                        <div className="text-sm text-gray-600 line-clamp-2">
-                          {address.street}{address.landmark ? `, Near ${address.landmark}` : ''}
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          {address.city}, {address.state} - {address.pincode}
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-                );
-              })}
-            </div>
-          </div>
+          <AddressBookSection
+            addresses={addresses}
+            addressError={addressError}
+            isApplyingAddress={isApplyingAddress}
+            onAddAddress={() => setShowAddModal(true)}
+            getTypeIcon={getTypeIcon}
+            onSelect={async (address) => {
+              const id = address?.id;
+              setSelectedAddressId(id || null);
+              if (!id) {
+                setAddressError('No address id found for this selection. Please choose another or add a new address.');
+                return;
+              }
+              try {
+                setIsApplyingAddress(true);
+                // Optimistically mark default locally to avoid UI jump
+                setAddresses((prev) => prev.map((a) => ({ ...a, isDefault: a.id === id })));
+                await updateAddress(id, { isDefault: true }, { successMessage: null });
+                setSelectedAddressId(id);
+                setAddressError('');
+                const picked = { ...address };
+                try {
+                  await setShippingAddress(picked);
+                } catch (err) {
+                  setAddressError(typeof err === 'string' ? err : err?.message || 'Failed to set address on cart');
+                }
+                // Re-load shipping options without auto-selecting to prevent jumps
+                try {
+                  setIsLoadingShippingOptions(true);
+                  const { shipping_options = [] } = await shippingService.listCartOptions({ cart_id: cart?.id });
+                  setShippingOptions(shipping_options);
+                  // keep current selection if still valid
+                  setSelectedShippingOptionId((prev) => (prev && shipping_options.some((o) => o.id === prev) ? prev : null));
+                  setShippingError('');
+                } catch (err) {
+                  setShippingOptions([]);
+                  setSelectedShippingOptionId(null);
+                  setShippingError(err?.message || 'Failed to load shipping options');
+                } finally {
+                  setIsLoadingShippingOptions(false);
+                  setIsApplyingAddress(false);
+                }
+              } catch (e) {
+                setAddressError(typeof e === 'string' ? e : e?.message || 'Failed to set default address');
+                setIsApplyingAddress(false);
+              }
+            }}
+          />
         ) : (
-          <div className="space-y-6">
-            {/* Address Type */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">Address Type</label>
-              <div className="grid grid-cols-3 gap-3">
-                {addressTypes.map((type) => {
-                  const Icon = type.icon;
-                  return (
-                    <button
-                      key={type.value}
-                      type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, type: type.value }))}
-                      className={`flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all transform hover:scale-105 active:scale-95 ${
-                        formData.type === type.value
-                          ? 'border-black dark:border-white bg-gray-50 dark:bg-gray-700 shadow-lg'
-                          : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                      }`}
-                    >
-                      <Icon className={`w-6 h-6 ${
-                        formData.type === type.value ? 'text-black dark:text-white' : 'text-gray-400'
-                      }`} />
-                      <span className={`text-sm font-medium ${
-                        formData.type === type.value ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-400'
-                      }`}>
-                        {type.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Personal Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className={`w-full pl-12 pr-4 py-4 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
-                      inlineErrors.name ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
-                    }`}
-                    placeholder="Enter your full name"
-                  />
-                </div>
-                {inlineErrors.name && (
-                  <p className="mt-2 text-sm text-red-600 dark:text-red-400">{inlineErrors.name}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
-                <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className={`w-full pl-12 pr-4 py-4 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
-                      inlineErrors.phone ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
-                    }`}
-                    placeholder="+91 98765 43210"
-                  />
-                </div>
-                {inlineErrors.phone && (
-                  <p className="mt-2 text-sm text-red-600 dark:text-red-400">{inlineErrors.phone}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Address Details */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Street Address *</label>
-              <textarea
-                name="street"
-                value={formData.street}
-                onChange={handleChange}
-                rows={3}
-                className={`w-full px-4 py-4 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none transition-colors ${
-                  inlineErrors.street ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
-                }`}
-                placeholder="House/Flat no., Building name, Street name..."
-              />
-              {inlineErrors.street && (
-                <p className="mt-2 text-sm text-red-600 dark:text-red-400">{inlineErrors.street}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Landmark (Optional)</label>
-              <input
-                type="text"
-                name="landmark"
-                value={formData.landmark}
-                onChange={handleChange}
-                className="w-full px-4 py-4 border border-gray-300 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
-                placeholder="Near famous location, building, etc."
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">City *</label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-4 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
-                    inlineErrors.city ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
-                  }`}
-                  placeholder="Mumbai"
-                />
-                {inlineErrors.city && (
-                  <p className="mt-2 text-sm text-red-600 dark:text-red-400">{inlineErrors.city}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">State *</label>
-                <input
-                  type="text"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-4 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
-                    inlineErrors.state ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
-                  }`}
-                  placeholder="Maharashtra"
-                />
-                {inlineErrors.state && (
-                  <p className="mt-2 text-sm text-red-600 dark:text-red-400">{inlineErrors.state}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">PIN Code *</label>
-                <input
-                  type="text"
-                  name="pincode"
-                  value={formData.pincode}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-4 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
-                    inlineErrors.pincode ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
-                  }`}
-                  placeholder="400001"
-                  maxLength="6"
-                />
-                {inlineErrors.pincode && (
-                  <p className="mt-2 text-sm text-red-600 dark:text-red-400">{inlineErrors.pincode}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Default Address Checkbox */}
-            <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
-              <input
-                type="checkbox"
-                id="isDefault"
-                name="isDefault"
-                checked={!!formData.isDefault}
-                onChange={handleChange}
-                className="w-5 h-5 text-black focus:ring-black border-gray-300 rounded"
-              />
-              <label htmlFor="isDefault" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-                Make this my default address
-              </label>
-            </div>
-
-            {/* Form Actions */}
-            <div className="flex justify-end pt-2">
-              <button
-                type="button"
-                onClick={saveInlineAddress}
-                disabled={savingAddress}
-                className="inline-flex items-center justify-center gap-2 bg-black dark:bg-white text-white dark:text-black py-3 px-5 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] touch-manipulation"
-              >
-                {savingAddress ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/20 dark:border-black/20 border-t-white dark:border-t-black rounded-full animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Check className="w-5 h-5" />
-                    Save Address
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
+          <InlineAddressForm
+            formData={formData}
+            inlineErrors={inlineErrors}
+            onChange={handleChange}
+            onSave={saveInlineAddress}
+            saving={savingAddress}
+            addressTypes={addressTypes}
+            onSelectType={(val) => setFormData((prev) => ({ ...prev, type: val }))}
+          />
         )}
       </div>
 
       {/* Shipping Method */}
-      <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
-        <div className="flex items-center gap-2 mb-4">
-          <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
-          <h3 className="text-base sm:text-lg font-semibold">Shipping Method</h3>
-        </div>
-
-        {shippingOptions.length === 0 ? (
-          <div className="text-sm text-gray-600">No shipping methods available for this cart.</div>
-        ) : (
-          <div className="space-y-3 sm:space-y-4">
-            {shippingOptions.map((opt) => {
-              const id = opt.id
-              const label = opt.name || opt.type?.label || 'Shipping Option'
-              const price = opt.calculated_price?.calculated_amount ?? opt.amount ?? 0
-              const currency = (process.env.NEXT_PUBLIC_CURRENCY || '').toLowerCase() || opt.calculated_price?.currency_code || cart?.currency_code || cart?.region?.currency_code || 'inr'
-              const priceFmt = new Intl.NumberFormat(undefined, { style: 'currency', currency: String(currency).toUpperCase() }).format(price || 0)
-              return (
-                <div className="flex items-center" key={id}>
-                  <input
-                    type="radio"
-                    id={`ship_${id}`}
-                    name="shippingMethod"
-                    value={id}
-                    checked={selectedShippingOptionId === id}
-                    onChange={async () => {
-                      setSelectedShippingOptionId(id)
-                      setShippingError('')
-                      try {
-                        if (!cart?.id) throw new Error('Cart not ready')
-                        await shippingService.addShippingMethod({ cartId: cart.id, option_id: id })
-                        await refresh()
-                      } catch (e) {
-                        setShippingError(e?.message || 'Failed to set shipping method')
-                      }
-                    }}
-                    className="accent-black"
-                  />
-                  <label htmlFor={`ship_${id}`} className="ml-2 text-sm flex items-center gap-2">
-                    <span>{label}</span>
-                    <span className="text-gray-500">• {priceFmt}</span>
-                    {opt.insufficient_inventory ? (
-                      <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-gray-100">Limited</span>
-                    ) : null}
-                  </label>
-                </div>
-              )
-            })}
-            {shippingError ? (
-              <div className="text-sm text-red-600">{shippingError}</div>
-            ) : null}
-          </div>
-        )}
-      </div>
+      <ShippingMethodSection
+        cart={cart}
+        shippingOptions={shippingOptions}
+        selectedShippingOptionId={selectedShippingOptionId}
+        onSelectOption={async (id) => {
+          setSelectedShippingOptionId(id);
+          setShippingError('');
+          try {
+            if (!cart?.id) throw new Error('Cart not ready');
+            await shippingService.addShippingMethod({ cartId: cart.id, option_id: id });
+            await refresh();
+          } catch (e) {
+            setShippingError(e?.message || 'Failed to set shipping method');
+          }
+        }}
+        shippingError={shippingError}
+      />
 
       {/* Payment Method */}
-      <div ref={paymentSectionRef} className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
-        <div className="flex items-center gap-2 mb-4">
-          <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
-          <h3 className="text-base sm:text-lg font-semibold">Payment Method</h3>
-        </div>
-        
-        <div className="space-y-3 sm:space-y-4">
-          {paymentProviders.length > 0 ? (
-            paymentProviders.map((p) => {
-              const id = p.id
-              const label = id === 'cod' ? 'Cash on Delivery' : id?.replace(/^pp_/, '').replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
-              return (
-                <div className="flex items-center" key={id}>
-                  <input
-                    type="radio"
-                    id={`pm_${id}`}
-                    name="paymentMethod"
-                    value={id}
-                    checked={selectedProviderId === id}
-                    onChange={() => {
-                      setSelectedProviderId(id)
-                      setFormData((prev) => ({ ...prev, paymentMethod: id }))
-                    }}
-                    className="accent-black"
-                  />
-                  <label htmlFor={`pm_${id}`} className="ml-2 text-sm">{label}</label>
-                </div>
-              )
-            })
-          ) : (
-            <div className="text-sm text-gray-600">No payment methods available for this region.</div>
-          )}
-          {paymentError ? (
-            <div className="text-sm text-red-600">{paymentError}</div>
-          ) : null}
-        </div>
+      <div ref={paymentSectionRef}>
+        <PaymentMethodSection
+          paymentProviders={paymentProviders}
+          selectedProviderId={selectedProviderId}
+          onSelect={(id) => {
+            setSelectedProviderId(id);
+            setFormData((prev) => ({ ...prev, paymentMethod: id }));
+          }}
+          paymentError={paymentError}
+        />
       </div>
 
       {/* Security Assurance */}
@@ -895,11 +570,15 @@ export default function CheckoutForm({ onSubmit, loading }) {
 
       <button
         type="submit"
-        disabled={loading}
+        aria-busy={isSubmitting}
+        disabled={isSubmitting}
         className="w-full bg-black text-white py-4 px-4 rounded-xl hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl"
       >
-        {loading ? 'Processing...' : 'Place Order'}
+        {isSubmitting ? 'Processing...' : 'Place Order'}
       </button>
+      {isSubmitting ? (
+        <div className="absolute inset-0 z-10 bg-white/40 backdrop-blur-[1px]" aria-hidden />
+      ) : null}
     </form>
   );
 }
