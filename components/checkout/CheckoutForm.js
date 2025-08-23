@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useCart } from '@/hooks/useCart';
 import { CreditCard, Truck, MapPin, Home, Building2, Plus } from 'lucide-react';
 import SimpleTrustBadges, { SimplePaymentBadges } from '@/components/ui/SimpleTrustBadges';
 import AddAddressModal from '@/components/modals/AddAddressModal';
 import { listAddresses, createAddress, updateAddress } from '@/services/customer/addressService';
 
 export default function CheckoutForm({ onSubmit, loading }) {
+  const { cart, setEmail } = useCart();
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -40,6 +42,25 @@ export default function CheckoutForm({ onSubmit, loading }) {
       // global toasts handled by api client
     }
   };
+
+  // Prefill email from cart when available
+  useEffect(() => {
+    if (cart?.email && !formData.email) {
+      setFormData(prev => ({ ...prev, email: cart.email }));
+    }
+  }, [cart?.email]);
+
+  // Debounced update to cart email when user types a valid email
+  useEffect(() => {
+    if (!formData.email) return;
+    const isValid = /[^@\s]+@[^@\s]+\.[^@\s]+/.test(formData.email);
+    if (!isValid) return;
+    const same = cart?.email === formData.email;
+    const t = setTimeout(() => {
+      if (!same) setEmail(formData.email);
+    }, 400);
+    return () => clearTimeout(t);
+  }, [formData.email, cart?.email, setEmail]);
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -112,33 +133,20 @@ export default function CheckoutForm({ onSubmit, loading }) {
           <h3 className="text-base sm:text-lg font-semibold">Contact Information</h3>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
-              required
-            />
-          </div>
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+            Email Address
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="you@example.com"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm min-h-[48px]"
+            required
+          />
+          <p className="mt-1 text-xs text-gray-500">We’ll send order updates to this email.</p>
         </div>
       </div>
 

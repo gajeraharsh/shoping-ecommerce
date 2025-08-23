@@ -17,6 +17,20 @@ export const ensureCart = createAsyncThunk('cart/ensureCart', async (_, { reject
   }
 })
 
+export const updateCartEmail = createAsyncThunk(
+  'cart/updateCartEmail',
+  async ({ email, cartId }, { getState, rejectWithValue }) => {
+    try {
+      const state = getState()
+      const id = cartId || state.cart?.cart?.id || state.cart?.id
+      const cart = await cartService.updateCart({ cartId: id, data: { email }, meta: { successMessage: null } })
+      return cart
+    } catch (e) {
+      return rejectWithValue(e?.response?.data || e.message)
+    }
+  }
+)
+
 export const fetchCart = createAsyncThunk('cart/fetchCart', async (cartId, { rejectWithValue }) => {
   try {
     const cart = await cartService.retrieve(cartId)
@@ -94,6 +108,18 @@ const cartSlice = createSlice({
       .addCase(fetchCart.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.payload || 'Failed to load cart'
+      })
+
+      .addCase(updateCartEmail.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(updateCartEmail.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.cart = action.payload
+      })
+      .addCase(updateCartEmail.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.payload || 'Failed to update cart email'
       })
 
       .addCase(addLineItem.pending, (state) => {

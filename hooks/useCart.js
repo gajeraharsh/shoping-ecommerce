@@ -8,6 +8,7 @@ import {
   addLineItem as addLineItemThunk,
   updateLineItem as updateLineItemThunk,
   deleteLineItem as deleteLineItemThunk,
+  updateCartEmail as updateCartEmailThunk,
   selectCart,
   selectCartItems,
   selectCartTotals,
@@ -53,6 +54,13 @@ export function useCart() {
     [dispatch]
   )
 
+  const setEmail = useCallback(
+    (email) => {
+      return dispatch(updateCartEmailThunk({ email }))
+    },
+    [dispatch]
+  )
+
   const getItemsCount = useCallback(() => {
     return items.reduce((acc, i) => acc + i.quantity, 0)
   }, [items])
@@ -69,5 +77,6 @@ export function useCart() {
     updateQuantity,
     removeItem,
     getItemsCount,
+    setEmail,
   }
 }

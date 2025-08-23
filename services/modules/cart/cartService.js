@@ -55,6 +55,15 @@ export const cartService = {
     return cart
   },
 
+  async updateCart({ cartId, data, meta = { successMessage: null } }) {
+    requireAuth()
+    const id = cartId || getStoredCartId()
+    if (!id) throw new Error('No cart to update')
+    const { cart } = await api.post(`/carts/${id}`, data, { meta })
+    setStoredCartId(cart.id)
+    return cart
+  },
+
   async addLineItem({ cartId, variant_id, quantity = 1, metadata }) {
     requireAuth()
     const id = cartId || getStoredCartId()
