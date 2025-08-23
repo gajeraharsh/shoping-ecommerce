@@ -23,14 +23,15 @@ function uiToMedusaPayload(ui) {
     // Medusa expects province as ISO-3166-2 (lowercase); we pass as-is for now
     province: (ui.state || '').toLowerCase(),
     postal_code: ui.pincode || '',
-    // TODO: set a real country code; default to 'us' if not provided
-    country_code: ui.country_code || 'us',
+    // Use provided country code or default to Denmark ('dk')
+    country_code: (ui.country_code || 'DK').toLowerCase(),
     address_name: ui.type || 'other',
     is_default_shipping: !!ui.isDefault,
     is_default_billing: !!ui.isDefault,
     metadata: {
       type: ui.type || 'other',
       landmark: ui.landmark || '',
+      country: ui.country || 'Denmark',
     },
   }
 }
@@ -53,7 +54,10 @@ function uiToMedusaPartial(ui) {
   if (typeof ui.city === 'string') out.city = ui.city
   if (typeof ui.state === 'string') out.province = ui.state.toLowerCase()
   if (typeof ui.pincode === 'string') out.postal_code = ui.pincode
-  if (typeof ui.country_code === 'string') out.country_code = ui.country_code
+  if (typeof ui.country_code === 'string') out.country_code = ui.country_code.toLowerCase()
+  if (typeof ui.country === 'string') {
+    out.metadata = { ...(out.metadata || {}), country: ui.country }
+  }
   if (typeof ui.type === 'string') {
     out.address_name = ui.type
     out.metadata = { ...(out.metadata || {}), type: ui.type }
@@ -77,6 +81,8 @@ function medusaToUiAddress(m) {
     city: m.city || '',
     state: m.province || '',
     pincode: m.postal_code || '',
+    country_code: (m.country_code || 'DK').toLowerCase(),
+    country: m.metadata?.country || undefined,
     isDefault: !!(m.is_default_shipping || m.is_default_billing),
     raw: m,
   }

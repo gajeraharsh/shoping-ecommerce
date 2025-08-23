@@ -47,6 +47,16 @@ export const cartService = {
     return cart
   },
 
+  async createCart() {
+    requireAuth()
+    // Always create a new empty cart and overwrite stored id
+    const regionId = process.env.NEXT_PUBLIC_MEDUSA_REGION_ID
+    const payload = regionId ? { region_id: regionId } : {}
+    const { cart } = await api.post('/carts', payload, { meta: { successMessage: null, silent: true } })
+    setStoredCartId(cart.id)
+    return cart
+  },
+
   async retrieve(id) {
     requireAuth()
     const cartId = id || getStoredCartId()

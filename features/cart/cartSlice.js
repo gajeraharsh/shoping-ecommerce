@@ -17,6 +17,15 @@ export const ensureCart = createAsyncThunk('cart/ensureCart', async (_, { reject
   }
 })
 
+export const createCart = createAsyncThunk('cart/createCart', async (_, { rejectWithValue }) => {
+  try {
+    const cart = await cartService.createCart()
+    return cart
+  } catch (e) {
+    return rejectWithValue(e?.response?.data || e.message)
+  }
+})
+
 export const updateCartEmail = createAsyncThunk(
   'cart/updateCartEmail',
   async ({ email, cartId }, { getState, rejectWithValue }) => {
@@ -98,7 +107,7 @@ export const updateCartShippingAddress = createAsyncThunk(
         city: address.city,
         province: address.province || address.state,
         postal_code: address.postal_code || address.pincode || address.zipCode,
-        country_code: address.country_code,
+        country_code: 'dk',
         phone: address.phone,
         company: address.company,
         metadata: { ...(address.metadata || {}), type: address.type, customer_address_id: address.id },
@@ -132,7 +141,7 @@ export const updateCartBillingAddress = createAsyncThunk(
         city: address.city,
         province: address.province || address.state,
         postal_code: address.postal_code || address.pincode || address.zipCode,
-        country_code: address.country_code,
+        country_code: 'dk',
         phone: address.phone,
         company: address.company,
         metadata: { ...(address.metadata || {}), type: address.type, customer_address_id: address.id },
@@ -227,6 +236,19 @@ const cartSlice = createSlice({
       .addCase(ensureCart.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.payload || 'Failed to ensure cart'
+      })
+
+      .addCase(createCart.pending, (state) => {
+        state.status = 'loading'
+        state.error = null
+      })
+      .addCase(createCart.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.cart = action.payload
+      })
+      .addCase(createCart.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.payload || 'Failed to create cart'
       })
 
       .addCase(fetchCart.pending, (state) => {

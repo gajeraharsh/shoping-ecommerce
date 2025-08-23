@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   ensureCart,
+  createCart as createCartThunk,
   fetchCart,
   addLineItem as addLineItemThunk,
   updateLineItem as updateLineItemThunk,
@@ -37,6 +38,8 @@ export function useCart() {
   }, [dispatch, cart?.id])
 
   const ensure = useCallback(() => dispatch(ensureCart()), [dispatch])
+
+  const createCart = useCallback(() => dispatch(createCartThunk()).unwrap(), [dispatch])
 
   const addToCart = useCallback(
     ({ variant_id, quantity = 1, metadata }) => {
@@ -113,6 +116,7 @@ export function useCart() {
     error,
     refresh,
     ensure,
+    createCart,
     addToCart,
     updateQuantity,
     removeItem,
