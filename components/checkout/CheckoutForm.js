@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCart } from '@/hooks/useCart';
 import { CreditCard, Truck, MapPin, Home, Building2, Plus } from 'lucide-react';
 import SimpleTrustBadges, { SimplePaymentBadges } from '@/components/ui/SimpleTrustBadges';
@@ -8,7 +8,7 @@ import AddAddressModal from '@/components/modals/AddAddressModal';
 import { listAddresses, createAddress, updateAddress } from '@/services/customer/addressService';
 
 export default function CheckoutForm({ onSubmit, loading }) {
-  const { cart, setEmail } = useCart();
+  const { cart, setEmail, setShippingAddress, setBillingAddress } = useCart();
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -26,6 +26,8 @@ export default function CheckoutForm({ onSubmit, loading }) {
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
+  const [addressError, setAddressError] = useState('');
+  const shippingSectionRef = useRef(null);
 
   // Load addresses from backend
   useEffect(() => {
@@ -36,8 +38,9 @@ export default function CheckoutForm({ onSubmit, loading }) {
     try {
       const { addresses: list } = await listAddresses();
       setAddresses(list);
-      const def = list.find((a) => a.isDefault);
-      setSelectedAddressId(def?.id ?? (list[0]?.id || null));
+      // Do not auto-select or set on cart. User must select explicitly.
+      setSelectedAddressId(null);
+      setAddressError('');
     } catch (e) {
       // global toasts handled by api client
     }
@@ -71,10 +74,29 @@ export default function CheckoutForm({ onSubmit, loading }) {
 
   // Coupon UI removed; managed within Order Summary
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const selectedAddress = addresses.find(a => a.id === selectedAddressId) || null;
-    onSubmit({ ...formData, selectedAddress });
+    // Always use the current default address when placing order
+    const defaultAddress = addresses.find(a => a.isDefault) || null;
+    if (!defaultAddress) {
+      setAddressError('Please select or set a default shipping address to continue.');
+      if (shippingSectionRef.current) {
+        shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+    try {
+      await setShippingAddress(defaultAddress);
+      await setBillingAddress(defaultAddress);
+      setAddressError('');
+    } catch (err) {
+      setAddressError(typeof err === 'string' ? err : err?.message || 'Failed to set address on cart');
+      if (shippingSectionRef.current) {
+        shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+    onSubmit({ ...formData, selectedAddress: defaultAddress });
   };
 
   const addressTypes = [
@@ -92,16 +114,11 @@ export default function CheckoutForm({ onSubmit, loading }) {
     try {
       const prevIds = new Set(addresses.map(a => a.id));
       await createAddress(data, { successMessage: 'Address added' });
-      // Refresh and auto-select the newly added address
+      // Refresh list without auto-setting cart or auto-selecting.
       const { addresses: list } = await listAddresses();
       setAddresses(list);
-      const newlyAdded = list.find(a => !prevIds.has(a.id));
-      if (newlyAdded) {
-        setSelectedAddressId(newlyAdded.id);
-      } else {
-        const def = list.find((a) => a.isDefault);
-        setSelectedAddressId(def?.id ?? (list[0]?.id || null));
-      }
+      setSelectedAddressId(null);
+      setAddressError('');
     } catch (e) {
       // error toast handled globally
     }
@@ -129,7 +146,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
       {/* Contact Information */}
-      <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
+      <div ref={shippingSectionRef} className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
           <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
           <h3 className="text-base sm:text-lg font-semibold">Contact Information</h3>
@@ -183,11 +200,14 @@ export default function CheckoutForm({ onSubmit, loading }) {
                 <Plus className="w-4 h-4" /> Add Address
               </button>
             </div>
+            {addressError && (
+              <p className="text-xs text-red-600">{addressError}</p>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {addresses.map((address) => {
                 const Icon = getTypeIcon(address.type);
-                const selected = selectedAddressId === address.id || (!selectedAddressId && address.isDefault);
+                const selected = !!address.isDefault;
                 return (
                   <label
                     key={address.id}
@@ -200,7 +220,25 @@ export default function CheckoutForm({ onSubmit, loading }) {
                         type="radio"
                         name="selectedAddress"
                         checked={selected}
-                        onChange={() => setSelectedAddressId(address.id)}
+                        onChange={async () => {
+                          const id = address?.id
+                          setSelectedAddressId(id || null)
+                          if (!id) {
+                            setAddressError('No address id found for this selection. Please choose another or add a new address.')
+                            return
+                          }
+                          try {
+                            // Only change customer's default address; do not hit cart here
+                            await updateAddress(id, { isDefault: true }, { successMessage: 'Default address updated' })
+                            // Refresh list to reflect new default state
+                            const { addresses: list } = await listAddresses()
+                            setAddresses(list)
+                            setSelectedAddressId(id)
+                            setAddressError('')
+                          } catch (e) {
+                            setAddressError(typeof e === 'string' ? e : e?.message || 'Failed to set default address')
+                          }
+                        }}
                         className="mt-1 accent-black"
                       />
                       <div className="flex-1 min-w-0">

@@ -66,6 +66,75 @@ export const applyPromotionCode = createAsyncThunk(
   }
 )
 
+export const updateCartShippingAddress = createAsyncThunk(
+  'cart/updateCartShippingAddress',
+  async ({ address, cartId }, { getState, rejectWithValue }) => {
+    try {
+      if (!address) {
+        throw new Error('No address selected')
+      }
+      const state = getState()
+      const id = cartId || state.cart?.cart?.id || state.cart?.id
+      // Map saved customer address -> Medusa v2 address shape
+      const mapped = {
+        first_name: address.first_name || address.firstName || address.name || undefined,
+        last_name: address.last_name || address.lastName || undefined,
+        address_1: address.address_1 || address.street || address.address || undefined,
+        address_2: address.address_2 || (address.landmark ? `Near ${address.landmark}` : undefined),
+        city: address.city,
+        province: address.province || address.state,
+        postal_code: address.postal_code || address.pincode || address.zipCode,
+        country_code: address.country_code,
+        phone: address.phone,
+        company: address.company,
+        metadata: { ...(address.metadata || {}), type: address.type, customer_address_id: address.id },
+      }
+      const cart = await cartService.updateCart({
+        cartId: id,
+        data: { shipping_address: mapped },
+        meta: { successMessage: null },
+      })
+      return cart
+    } catch (e) {
+      return rejectWithValue(e?.response?.data || e.message)
+    }
+  }
+)
+
+export const updateCartBillingAddress = createAsyncThunk(
+  'cart/updateCartBillingAddress',
+  async ({ address, cartId }, { getState, rejectWithValue }) => {
+    try {
+      if (!address) {
+        throw new Error('No billing address selected')
+      }
+      const state = getState()
+      const id = cartId || state.cart?.cart?.id || state.cart?.id
+      const mapped = {
+        first_name: address.first_name || address.firstName || address.name || undefined,
+        last_name: address.last_name || address.lastName || undefined,
+        address_1: address.address_1 || address.street || address.address || undefined,
+        address_2: address.address_2 || (address.landmark ? `Near ${address.landmark}` : undefined),
+        city: address.city,
+        province: address.province || address.state,
+        postal_code: address.postal_code || address.pincode || address.zipCode,
+        country_code: address.country_code,
+        phone: address.phone,
+        company: address.company,
+        metadata: { ...(address.metadata || {}), type: address.type, customer_address_id: address.id },
+      }
+      const cart = await cartService.updateCart({
+        cartId: id,
+        data: { billing_address: mapped },
+        meta: { successMessage: null },
+      })
+      return cart
+    } catch (e) {
+      return rejectWithValue(e?.response?.data || e.message)
+    }
+  }
+)
+
 export const removePromotionCode = createAsyncThunk(
   'cart/removePromotionCode',
   async ({ code, cartId }, { getState, rejectWithValue }) => {
@@ -189,6 +258,26 @@ const cartSlice = createSlice({
       .addCase(updateCartEmail.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.payload || 'Failed to update cart email'
+      })
+
+      .addCase(updateCartShippingAddress.pending, (state) => {
+        // keep UX smooth without full-page loading states
+      })
+      .addCase(updateCartShippingAddress.fulfilled, (state, action) => {
+        state.cart = action.payload
+      })
+      .addCase(updateCartShippingAddress.rejected, (state, action) => {
+        state.error = action.payload || 'Failed to set shipping address'
+      })
+
+      .addCase(updateCartBillingAddress.pending, (state) => {
+        // no global loading
+      })
+      .addCase(updateCartBillingAddress.fulfilled, (state, action) => {
+        state.cart = action.payload
+      })
+      .addCase(updateCartBillingAddress.rejected, (state, action) => {
+        state.error = action.payload || 'Failed to set billing address'
       })
 
       .addCase(addLineItem.pending, (state) => {

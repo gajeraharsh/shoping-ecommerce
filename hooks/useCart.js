@@ -11,6 +11,8 @@ import {
   updateCartEmail as updateCartEmailThunk,
   applyPromotionCode as applyPromotionCodeThunk,
   removePromotionCode as removePromotionCodeThunk,
+  updateCartShippingAddress as updateCartShippingAddressThunk,
+  updateCartBillingAddress as updateCartBillingAddressThunk,
   selectCart,
   selectCartItems,
   selectCartTotals,
@@ -77,6 +79,20 @@ export function useCart() {
     [dispatch]
   )
 
+  const setShippingAddress = useCallback(
+    (address) => {
+      return dispatch(updateCartShippingAddressThunk({ address })).unwrap()
+    },
+    [dispatch]
+  )
+
+  const setBillingAddress = useCallback(
+    (address) => {
+      return dispatch(updateCartBillingAddressThunk({ address })).unwrap()
+    },
+    [dispatch]
+  )
+
   const getItemsCount = useCallback(() => {
     return items.reduce((acc, i) => acc + i.quantity, 0)
   }, [items])
@@ -96,5 +112,7 @@ export function useCart() {
     setEmail,
     applyCoupon,
     removeCoupon,
+    setShippingAddress,
+    setBillingAddress,
   }
 }
