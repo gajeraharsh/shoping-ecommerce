@@ -120,4 +120,14 @@ export const cartService = {
     await api.delete(`/carts/${id}/promotions`, { data: { promo_codes: [code] }, meta: { successMessage: null } })
     return this.retrieve(id)
   },
+
+  async completeCart({ cartId, query = '' } = {}) {
+    requireAuth()
+    const id = cartId || getStoredCartId()
+    if (!id) throw new Error('No cart to complete')
+    const url = `/carts/${id}/complete${query ? `?${query}` : ''}`
+    // Raw response shape differs based on success: { type: 'order', order } or { type: 'cart', cart, error }
+    const data = await api.post(url, undefined, { meta: { successMessage: null } })
+    return data
+  },
 }

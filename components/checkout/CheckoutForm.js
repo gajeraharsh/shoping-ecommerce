@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
 import { CreditCard, Truck, MapPin, Home, Building2, Plus } from 'lucide-react';
 import SimpleTrustBadges, { SimplePaymentBadges } from '@/components/ui/SimpleTrustBadges';
@@ -8,7 +9,8 @@ import AddAddressModal from '@/components/modals/AddAddressModal';
 import { listAddresses, createAddress, updateAddress } from '@/services/customer/addressService';
 
 export default function CheckoutForm({ onSubmit, loading }) {
-  const { cart, setEmail, setShippingAddress, setBillingAddress } = useCart();
+  const router = useRouter();
+  const { cart, setEmail, setShippingAddress, setBillingAddress, completeCart } = useCart();
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -96,7 +98,29 @@ export default function CheckoutForm({ onSubmit, loading }) {
       }
       return;
     }
-    onSubmit({ ...formData, selectedAddress: defaultAddress });
+    // Trigger cart completion
+    try {
+      const result = await completeCart();
+      if (result?.type === 'order' && result?.order?.id) {
+        // Navigate to thank-you page
+        router.push(`/thank-you?order_id=${encodeURIComponent(result.order.id)}`);
+        return;
+      }
+      // If completion returned a cart, show error message
+      const errMsg = result?.error || 'Unable to complete order. Please review your details and try again.';
+      setAddressError(errMsg);
+      if (shippingSectionRef.current) {
+        shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } catch (err) {
+      const msg = err?.message || 'Failed to complete order';
+      setAddressError(msg);
+      if (shippingSectionRef.current) {
+        shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    // Also pass form data upward if a parent wants to track it
+    onSubmit?.({ ...formData, selectedAddress: defaultAddress });
   };
 
   const addressTypes = [

@@ -31,6 +31,20 @@ export const updateCartEmail = createAsyncThunk(
   }
 )
 
+export const completeCart = createAsyncThunk(
+  'cart/completeCart',
+  async ({ cartId, query }, { getState, rejectWithValue }) => {
+    try {
+      const state = getState()
+      const id = cartId || state.cart?.cart?.id || state.cart?.id
+      const data = await cartService.completeCart({ cartId: id, query })
+      return data
+    } catch (e) {
+      return rejectWithValue(e?.response?.data || e.message)
+    }
+  }
+)
+
 export const applyPromotionCode = createAsyncThunk(
   'cart/applyPromotionCode',
   async ({ code, cartId }, { getState, rejectWithValue }) => {
@@ -314,6 +328,23 @@ const cartSlice = createSlice({
       .addCase(deleteLineItem.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.payload || 'Failed to remove item'
+      })
+
+      .addCase(completeCart.pending, (state) => {
+        state.status = 'loading'
+        state.error = null
+      })
+      .addCase(completeCart.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        const payload = action.payload
+        // If server returns a cart (error case), keep latest cart in state for UI to show errors
+        if (payload && payload.type === 'cart' && payload.cart) {
+          state.cart = payload.cart
+        }
+      })
+      .addCase(completeCart.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.payload || 'Failed to complete cart'
       })
   },
 })

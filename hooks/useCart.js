@@ -13,6 +13,7 @@ import {
   removePromotionCode as removePromotionCodeThunk,
   updateCartShippingAddress as updateCartShippingAddressThunk,
   updateCartBillingAddress as updateCartBillingAddressThunk,
+  completeCart as completeCartThunk,
   selectCart,
   selectCartItems,
   selectCartTotals,
@@ -93,6 +94,13 @@ export function useCart() {
     [dispatch]
   )
 
+  const completeCart = useCallback(
+    (params = {}) => {
+      return dispatch(completeCartThunk(params)).unwrap()
+    },
+    [dispatch]
+  )
+
   const getItemsCount = useCallback(() => {
     return items.reduce((acc, i) => acc + i.quantity, 0)
   }, [items])
@@ -114,5 +122,6 @@ export function useCart() {
     removeCoupon,
     setShippingAddress,
     setBillingAddress,
+    completeCart,
   }
 }
