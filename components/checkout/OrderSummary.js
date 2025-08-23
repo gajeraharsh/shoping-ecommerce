@@ -110,51 +110,57 @@ export default function OrderSummary() {
           <span className="text-sm font-medium text-gray-700">Have a coupon?</span>
         </div>
 
-        {appliedCodes.length > 0 ? (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-green-600" />
-                  <span className="text-sm font-medium text-green-800">Coupon Applied</span>
+        <div className="min-h-[96px]">
+          {appliedCodes.length > 0 ? (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-800">Coupon Applied</span>
+                  </div>
+                  <div className="text-xs text-green-600 mt-1 break-all">
+                    {appliedCodes.join(', ')}
+                  </div>
                 </div>
-                <div className="text-xs text-green-600 mt-1 break-all">
-                  {appliedCodes.join(', ')}
-                </div>
+                <button
+                  onClick={() => removeCoupon(appliedCodes[0])}
+                  className="text-red-600 hover:text-red-800 p-1"
+                  aria-label="Remove coupon"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
-              <button
-                onClick={() => removeCoupon(appliedCodes[0])}
-                className="text-red-600 hover:text-red-800 p-1"
-                aria-label="Remove coupon"
-              >
-                <X className="h-4 w-4" />
-              </button>
             </div>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <div className="flex flex-col sm:grid sm:grid-cols-[1fr_auto] sm:items-stretch gap-2 sm:gap-3">
-              <input
-                type="text"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-                placeholder="Enter coupon code"
-                className="flex-1 w-full h-12 px-4 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-black focus:border-transparent touch-manipulation box-border"
-                onKeyDown={(e) => e.key === 'Enter' && onApplyCoupon()}
-              />
-              <button
-                onClick={onApplyCoupon}
-                disabled={isApplying || !couponCode.trim()}
-                className="inline-flex items-center justify-center h-12 px-6 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors text-sm font-semibold disabled:opacity-50 sm:min-w-[100px] touch-manipulation whitespace-nowrap box-border shrink-0 sm:self-stretch"
-              >
-                {isApplying ? 'Applying...' : 'Apply'}
-              </button>
+          ) : (
+            <div className="space-y-3">
+              <label htmlFor="coupon" className="sr-only">Coupon code</label>
+              <div className="flex flex-col sm:grid sm:grid-cols-[1fr_auto] sm:items-stretch gap-2 sm:gap-3">
+                <input
+                  type="text"
+                  id="coupon"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  placeholder="Enter coupon code"
+                  aria-invalid={!!couponError}
+                  aria-describedby={couponError ? 'coupon-error' : undefined}
+                  className="flex-1 w-full h-12 px-4 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black touch-manipulation box-border"
+                  onKeyDown={(e) => e.key === 'Enter' && onApplyCoupon()}
+                />
+                <button
+                  onClick={onApplyCoupon}
+                  disabled={isApplying || !couponCode.trim()}
+                  className="inline-flex items-center justify-center h-12 px-6 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors text-sm font-semibold disabled:opacity-50 sm:min-w-[100px] touch-manipulation whitespace-nowrap box-border shrink-0 sm:self-stretch"
+                >
+                  {isApplying ? 'Applying...' : 'Apply'}
+                </button>
+              </div>
+              {couponError && (
+                <div id="coupon-error" role="alert" className="text-xs text-red-600">{couponError}</div>
+              )}
             </div>
-            {couponError && (
-              <div className="text-xs text-red-600">{couponError}</div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Totals */}

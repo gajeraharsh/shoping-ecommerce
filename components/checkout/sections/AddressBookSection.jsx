@@ -8,31 +8,38 @@ export default function AddressBookSection({
   onSelect,
   getTypeIcon,
 }) {
+  const errorId = addressError ? 'saved-addresses-error' : undefined;
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-600">Select a saved address</p>
+        <p id="saved-addresses-label" className="text-sm text-gray-700">Select a saved address</p>
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); onAddAddress?.(); }}
           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); } }}
-          className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
+          className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white"
        >
           <Plus className="w-4 h-4" /> Add Address
         </button>
       </div>
       {addressError ? (
-        <p className="text-xs text-red-600">{addressError}</p>
+        <p id="saved-addresses-error" role="alert" className="text-xs text-red-600">{addressError}</p>
       ) : null}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        role="radiogroup"
+        aria-labelledby="saved-addresses-label"
+        aria-invalid={!!addressError}
+        aria-describedby={errorId}
+      >
         {addresses.map((address) => {
           const Icon = getTypeIcon(address.type);
           const selected = !!address.isDefault;
           return (
             <label
               key={address.id}
-              className={`relative group cursor-pointer rounded-2xl border p-4 transition-all ${
+              className={`relative group cursor-pointer rounded-2xl border p-4 transition-colors ${
                 selected ? 'border-black shadow-sm' : 'border-gray-200 hover:border-gray-300'
               }`}
             >
@@ -42,7 +49,7 @@ export default function AddressBookSection({
                   name="selectedAddress"
                   checked={selected}
                   onChange={() => onSelect?.(address)}
-                  className="mt-1 accent-black"
+                  className="mt-1 accent-black h-4 w-4"
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
 import OrderSummary from '@/components/checkout/OrderSummary';
+import CheckoutStepper from '@/components/checkout/CheckoutStepper';
+import MobileStickyBar from '@/components/checkout/MobileStickyBar';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/contexts/AuthContext';
 import { useModal } from '@/hooks/useModal';
@@ -48,6 +50,24 @@ export default function CheckoutPage() {
       }
     }
   }, [items.length, router, status, ensure, cart?.id, hasSeenCheckoutPage]);
+
+  // Compute current step for the stepper based on cart state
+  const currentStep = (() => {
+    if (!cart?.shipping_address) return 'shipping';
+    if (!cart?.shipping_methods?.length) return 'shipping';
+    const sessions = cart?.payment_collection?.payment_sessions || [];
+    if (!sessions.length) return 'payment';
+    return 'review';
+  })();
+
+  const currency = cart?.region?.currency_code || 'usd';
+  const formatMoney = (amount) => {
+    try {
+      return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format((amount || 0) / 100);
+    } catch {
+      return `₹${(amount || 0) / 100}`;
+    }
+  };
 
   const handlePlaceOrder = async (formData) => {
     setLoading(true);
@@ -107,27 +127,45 @@ export default function CheckoutPage() {
     <Private>
       <div className="min-h-screen flex flex-col">
         <main className="flex-1 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 overflow-x-hidden">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Checkout</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Checkout</h1>
+          {/* <CheckoutStepper current={currentStep} /> */}
+          <div className="h-4 sm:h-6" aria-hidden />
+
+          {/* Mobile collapsible order summary */}
+          <details className="group sm:hidden mb-4 rounded-xl border bg-white overflow-hidden">
+            <summary className="list-none w-full flex items-center justify-between gap-3 px-4 py-3 cursor-pointer select-none">
+              <span className="text-sm font-semibold">View order summary</span>
+              <span className="flex items-center gap-2">
+                <span className="text-sm text-gray-700 font-medium">{formatMoney(cart?.total)}</span>
+                {/* Chevron rotates when details is open via group-open */}
+                <svg
+                  className="h-4 w-4 text-gray-700 transition-transform duration-200 group-open:rotate-180"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div id="mobile-order-summary-panel" className="border-t px-3 py-3">
+              <OrderSummary />
+            </div>
+          </details>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             <div className="lg:col-span-2">
               <CheckoutForm onSubmit={handlePlaceOrder} loading={loading} onSubmittingChange={setSubmittingState} />
             </div>
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 hidden sm:block lg:sticky lg:top-24">
               <OrderSummary />
-              {/* Mobile-only Place Order button, after Order Summary */}
-              <button
-                type="submit"
-                form="checkout-form"
-                disabled={submittingState.isSubmitting}
-                className="mt-4 w-full bg-black text-white py-4 px-4 rounded-xl hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl lg:hidden"
-              >
-                <span className="inline-flex justify-center min-w-[140px]">
-                  {submittingState.visualSubmitting ? 'Processing...' : 'Place Order'}
-                </span>
-              </button>
             </div>
           </div>
+          <MobileStickyBar submittingState={submittingState} />
         </main>
       </div>
     </Private>

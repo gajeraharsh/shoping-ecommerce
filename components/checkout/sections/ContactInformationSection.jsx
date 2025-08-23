@@ -8,19 +8,23 @@ export default function ContactInformationSection({ formData, onChange }) {
         <h3 className="text-base sm:text-lg font-semibold">Contact Information</h3>
       </div>
       <div>
-        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5">
           Email Address
         </label>
         <input
           type="email"
           name="email"
+          id="email"
           value={formData.email}
           onChange={onChange}
           placeholder="you@example.com"
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm min-h-[48px]"
+          autoComplete="email"
+          inputMode="email"
+          aria-describedby="email-help"
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white text-sm min-h-[48px]"
           required
         />
-        <p className="mt-1 text-xs text-gray-500">We’ll send order updates to this email.</p>
+        <p id="email-help" className="mt-1.5 text-xs text-gray-500">We’ll send order updates to this email.</p>
       </div>
     </div>
   );

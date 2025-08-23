@@ -414,6 +414,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       if (shippingSectionRef.current) {
         shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      scrollToFirstInvalid();
       releaseSubmitting();
       return;
     }
@@ -423,6 +424,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       if (paymentSectionRef.current) {
         paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      scrollToFirstInvalid();
       releaseSubmitting();
       return;
     }
@@ -432,6 +434,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       if (paymentSectionRef.current) {
         paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      scrollToFirstInvalid();
       releaseSubmitting();
       return;
     }
@@ -445,6 +448,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       if (shippingSectionRef.current) {
         shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      scrollToFirstInvalid();
       releaseSubmitting();
       return;
     }
@@ -458,6 +462,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
         if (paymentSectionRef.current) {
           paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        scrollToFirstInvalid();
         releaseSubmitting();
         return;
       }
@@ -470,6 +475,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       if (paymentSectionRef.current) {
         paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      scrollToFirstInvalid();
       releaseSubmitting();
       return;
     }
@@ -483,6 +489,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
         if (shippingSectionRef.current) {
           shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        scrollToFirstInvalid();
         releaseSubmitting();
         return;
       }
@@ -504,6 +511,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       if (shippingSectionRef.current) {
         shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      scrollToFirstInvalid();
       releaseSubmitting();
     } catch (err) {
       const msg = err?.message || 'Failed to complete order';
@@ -511,6 +519,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       if (shippingSectionRef.current) {
         shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      scrollToFirstInvalid();
       releaseSubmitting();
     }
     // Also pass form data upward if a parent wants to track it
@@ -564,6 +573,19 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       setHasSeenInitialSkeleton(true);
     }
   }, [isInitialLoading, hasSeenInitialSkeleton]);
+
+  // Scroll to the first invalid field (aria-invalid=true) or error alert
+  const scrollToFirstInvalid = () => {
+    try {
+      const el = document.querySelector('[aria-invalid="true"], [data-error="true"], [role="alert"].text-red-600');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (typeof el.focus === 'function') {
+          el.focus({ preventScroll: true });
+        }
+      }
+    } catch {}
+  };
 
   if (shouldShowFullSkeleton) {
     return <CheckoutLoading isSubmitting={isSubmitting} onSubmit={handleSubmit} />;
@@ -704,17 +726,20 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
         />
       </div>
 
-      {/* Security Assurance */}
-      <SimpleTrustBadges className="mb-6" />
-
-      {/* Payment Security */}
-      <SimplePaymentBadges className="mb-6" />
+      {/* Trust and payment badges near CTA */}
+      <section aria-labelledby="payment-security-label" className="mb-6">
+        <h4 id="payment-security-label" className="sr-only">Payment security and assurances</h4>
+        <div className="bg-gray-50 border rounded-xl p-4 sm:p-5">
+          <SimpleTrustBadges className="mb-4 sm:mb-5" />
+          <SimplePaymentBadges />
+        </div>
+      </section>
 
       <button
         type="submit"
         aria-busy={isSubmitting}
         disabled={isSubmitting || !selectedShippingOptionId || !selectedProviderId}
-        className="hidden lg:block w-full bg-black text-white py-4 px-4 rounded-xl hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl"
+        className="hidden lg:block w-full bg-black text-white py-4 px-4 rounded-xl hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base min-h-[56px] touch-manipulation shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white transition-transform active:scale-[0.99]"
       >
         <span className="inline-flex justify-center min-w-[140px]">
           {visualSubmitting ? 'Processing...' : 'Place Order'}
