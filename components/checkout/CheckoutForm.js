@@ -7,6 +7,7 @@ import { CreditCard, Truck, MapPin, Home, Building2, Plus } from 'lucide-react';
 import SimpleTrustBadges, { SimplePaymentBadges } from '@/components/ui/SimpleTrustBadges';
 import AddAddressModal from '@/components/modals/AddAddressModal';
 import { listAddresses, createAddress, updateAddress } from '@/services/customer/addressService';
+import { paymentService } from '@/services/modules/payment/paymentService';
 
 export default function CheckoutForm({ onSubmit, loading }) {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function CheckoutForm({ onSubmit, loading }) {
     state: '',
     zipCode: '',
     phone: '',
-    paymentMethod: 'card'
+    paymentMethod: 'cod'
   });
 
   // Saved addresses from backend
@@ -30,11 +31,35 @@ export default function CheckoutForm({ onSubmit, loading }) {
   const [editingAddress, setEditingAddress] = useState(null);
   const [addressError, setAddressError] = useState('');
   const shippingSectionRef = useRef(null);
+  const paymentSectionRef = useRef(null);
+  // Payment providers
+  const [paymentProviders, setPaymentProviders] = useState([]);
+  const [selectedProviderId, setSelectedProviderId] = useState('cod');
+  const [paymentError, setPaymentError] = useState('');
 
   // Load addresses from backend
   useEffect(() => {
     fetchAddresses();
   }, []);
+
+  // Load payment providers for the region
+  useEffect(() => {
+    (async () => {
+      try {
+        const { payment_providers = [] } = await paymentService.listProviders({ region_id: cart?.region?.id });
+        setPaymentProviders(payment_providers);
+        // Prefer COD if available, otherwise first provider
+        const cod = payment_providers.find((p) => p.id === 'cod');
+        const def = cod?.id || payment_providers[0]?.id;
+        if (def) {
+          setSelectedProviderId(def);
+          setFormData((prev) => ({ ...prev, paymentMethod: def }));
+        }
+      } catch (e) {
+        // global toast via interceptor
+      }
+    })();
+  }, [cart?.region?.id]);
 
   const fetchAddresses = async () => {
     try {
@@ -95,6 +120,39 @@ export default function CheckoutForm({ onSubmit, loading }) {
       setAddressError(typeof err === 'string' ? err : err?.message || 'Failed to set address on cart');
       if (shippingSectionRef.current) {
         shippingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+    // Payment v2: Create payment collection then init session for selected provider
+    if (!cart?.id) {
+      setPaymentError('Cart not ready');
+      if (paymentSectionRef.current) {
+        paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+    const provider_id = selectedProviderId || formData.paymentMethod || 'cod';
+    setPaymentError('');
+    let paymentCollection = cart?.payment_collection || null;
+    if (!paymentCollection?.id) {
+      try {
+        paymentCollection = await paymentService.createPaymentCollection({ cartId: cart.id });
+      } catch (err) {
+        const msg = err?.message || 'Failed to create payment collection';
+        setPaymentError(msg);
+        if (paymentSectionRef.current) {
+          paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        return;
+      }
+    }
+    try {
+      await paymentService.initPaymentSession({ payment_collection_id: paymentCollection?.id, provider_id });
+    } catch (err) {
+      const msg = err?.message || 'Failed to initialize payment session';
+      setPaymentError(msg);
+      if (paymentSectionRef.current) {
+        paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
       return;
     }
@@ -384,51 +442,41 @@ export default function CheckoutForm({ onSubmit, loading }) {
       </div>
 
       {/* Payment Method */}
-      <div className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
+      <div ref={paymentSectionRef} className="bg-white border rounded-xl p-4 sm:p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
           <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
           <h3 className="text-base sm:text-lg font-semibold">Payment Method</h3>
         </div>
         
         <div className="space-y-3 sm:space-y-4">
-          <div className="flex items-center">
-            <input
-              type="radio"
-              id="card"
-              name="paymentMethod"
-              value="card"
-              checked={formData.paymentMethod === 'card'}
-              onChange={handleChange}
-              className="mr-3"
-            />
-            <label htmlFor="card" className="text-sm sm:text-base font-medium">Credit/Debit Card</label>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              type="radio"
-              id="cod"
-              name="paymentMethod"
-              value="cod"
-              checked={formData.paymentMethod === 'cod'}
-              onChange={handleChange}
-              className="mr-3"
-            />
-            <label htmlFor="cod" className="text-sm sm:text-base font-medium">Cash on Delivery</label>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              type="radio"
-              id="upi"
-              name="paymentMethod"
-              value="upi"
-              checked={formData.paymentMethod === 'upi'}
-              onChange={handleChange}
-              className="mr-3"
-            />
-            <label htmlFor="upi" className="text-sm sm:text-base font-medium">UPI Payment</label>
-          </div>
+          {paymentProviders.length > 0 ? (
+            paymentProviders.map((p) => {
+              const id = p.id
+              const label = id === 'cod' ? 'Cash on Delivery' : id?.replace(/^pp_/, '').replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+              return (
+                <div className="flex items-center" key={id}>
+                  <input
+                    type="radio"
+                    id={`pm_${id}`}
+                    name="paymentMethod"
+                    value={id}
+                    checked={selectedProviderId === id}
+                    onChange={() => {
+                      setSelectedProviderId(id)
+                      setFormData((prev) => ({ ...prev, paymentMethod: id }))
+                    }}
+                    className="accent-black"
+                  />
+                  <label htmlFor={`pm_${id}`} className="ml-2 text-sm">{label}</label>
+                </div>
+              )
+            })
+          ) : (
+            <div className="text-sm text-gray-600">No payment methods available for this region.</div>
+          )}
+          {paymentError ? (
+            <div className="text-sm text-red-600">{paymentError}</div>
+          ) : null}
         </div>
       </div>
 
