@@ -8,7 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import Providers from './providers';
 import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import ConditionalFooter from '@/components/layout/ConditionalFooter';
 import CookieConsent from '@/components/common/CookieConsent';
 import StructuredData from '@/components/seo/StructuredData';
 
@@ -63,7 +63,7 @@ export default function RootLayout({ children }) {
                   <RecentlyViewedProvider>
                     <Header />
                     {children}
-                    <Footer />
+                    <ConditionalFooter />
                     <Toaster />
                     <CookieConsent />
                   </RecentlyViewedProvider>
