@@ -90,27 +90,27 @@ export default function AccountLayout({ children }) {
       description: 'Saved items',
       color: 'text-red-600 dark:text-red-400'
     },
-    {
-      name: 'Payments',
-      href: '/account/payments',
-      icon: CreditCard,
-      description: 'Payment methods',
-      color: 'text-indigo-600 dark:text-indigo-400'
-    },
-    {
-      name: 'Returns',
-      href: '/account/returns',
-      icon: RotateCcw,
-      description: 'Return requests',
-      color: 'text-amber-600 dark:text-amber-400'
-    },
-    {
-      name: 'Notifications',
-      href: '/account/notifications',
-      icon: Bell,
-      description: 'Alerts & updates',
-      color: 'text-teal-600 dark:text-teal-400'
-    },
+    // {
+    //   name: 'Payments',
+    //   href: '/account/payments',
+    //   icon: CreditCard,
+    //   description: 'Payment methods',
+    //   color: 'text-indigo-600 dark:text-indigo-400'
+    // },
+    // {
+    //   name: 'Returns',
+    //   href: '/account/returns',
+    //   icon: RotateCcw,
+    //   description: 'Return requests',
+    //   color: 'text-amber-600 dark:text-amber-400'
+    // },
+    // {
+    //   name: 'Notifications',
+    //   href: '/account/notifications',
+    //   icon: Bell,
+    //   description: 'Alerts & updates',
+    //   color: 'text-teal-600 dark:text-teal-400'
+    // },
     {
       name: 'Settings',
       href: '/account/settings',
