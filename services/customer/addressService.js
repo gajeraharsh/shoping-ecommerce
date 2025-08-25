@@ -1,9 +1,5 @@
 // services/customer/addressService.js
-import { createApiClient } from '@/services/config/apiClient'
-
-const BASE_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:9000'
-
-const api = createApiClient(BASE_URL)
+import { apiClient as api } from '@/services/config/setupApi'
 
 // Helpers to map between UI model and Medusa model
 function uiToMedusaPayload(ui) {

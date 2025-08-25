@@ -18,7 +18,8 @@ function InitBoot() {
 
     // If a token exists (from previous session), fetch current user profile
     try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const state = store.getState()
+      const token = state?.auth?.token
       if (token) {
         store.dispatch(fetchMeUser())
       }
