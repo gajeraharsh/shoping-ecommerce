@@ -24,9 +24,12 @@ import {
   ChevronRight,
   Calendar,
   Award,
-  Zap
+  Zap,
+  Settings
 } from 'lucide-react';
 import Private from '@/components/auth/Private';
+import SmartImage from '@/components/ui/SmartImage';
+import { listMyOrders } from '@/services/order/orderService';
 
 export default function AccountDashboard() {
   const { user } = useAuth();
@@ -41,33 +44,17 @@ export default function AccountDashboard() {
   });
 
   useEffect(() => {
-    // Mock recent orders
-    setRecentOrders([
-      {
-        id: 'ORD-2024-001',
-        date: '2024-01-15',
-        status: 'delivered',
-        total: 2499,
-        items: 2,
-        image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400'
-      },
-      {
-        id: 'ORD-2024-002', 
-        date: '2024-01-12',
-        status: 'shipped',
-        total: 1899,
-        items: 1,
-        image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400'
-      },
-      {
-        id: 'ORD-2024-003',
-        date: '2024-01-08',
-        status: 'processing',
-        total: 3299,
-        items: 3,
-        image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400'
+    let active = true;
+    (async () => {
+      try {
+        const res = await listMyOrders({ limit: 3, offset: 0 });
+        if (!active) return;
+        setRecentOrders(res?.orders || []);
+      } catch (e) {
+        // Errors are globally handled by apiClient toasts
       }
-    ]);
+    })();
+    return () => { active = false; };
   }, []);
 
   const quickActions = [
@@ -77,7 +64,6 @@ export default function AccountDashboard() {
       icon: Truck,
       href: '/account/tracking',
       color: 'bg-blue-500',
-      count: 3
     },
     {
       title: 'My Wishlist',
@@ -85,7 +71,6 @@ export default function AccountDashboard() {
       icon: Heart,
       href: '/account/wishlist',
       color: 'bg-red-500',
-      count: wishlistItems.length
     },
     {
       title: 'Addresses',
@@ -93,15 +78,13 @@ export default function AccountDashboard() {
       icon: MapPin,
       href: '/account/addresses',
       color: 'bg-green-500',
-      count: 2
     },
     {
-      title: 'Payment Methods',
-      description: 'Cards & wallets',
-      icon: CreditCard,
-      href: '/account/payments',
+      title: 'Settings',
+      description: 'Account preferences',
+      icon: Settings,
+      href: '/account/settings',
       color: 'bg-purple-500',
-      count: 3
     }
   ];
 
@@ -159,7 +142,7 @@ export default function AccountDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
@@ -215,7 +198,7 @@ export default function AccountDashboard() {
             <span className="text-xs text-pink-600 dark:text-pink-400 font-medium">₹245 value</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Quick Actions */}
       <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
@@ -276,11 +259,13 @@ export default function AccountDashboard() {
             >
               {/* Mobile Layout */}
               <div className="flex items-start gap-4 sm:hidden">
-                <img
-                  src={order.image}
-                  alt="Order"
-                  className="w-16 h-16 rounded-2xl object-cover border border-gray-200 dark:border-gray-600 flex-shrink-0"
-                />
+                <div className="w-16 h-16 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-600 flex-shrink-0 relative">
+                  <SmartImage
+                    src={order.items_detail?.[0]?.image}
+                    alt="Order item"
+                    className="object-cover"
+                  />
+                </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-3">
@@ -317,11 +302,13 @@ export default function AccountDashboard() {
 
               {/* Desktop Layout */}
               <div className="hidden sm:flex items-center gap-6">
-                <img
-                  src={order.image}
-                  alt="Order"
-                  className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl object-cover border border-gray-200 dark:border-gray-600 flex-shrink-0"
-                />
+                <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-600 flex-shrink-0 relative">
+                  <SmartImage
+                    src={order.items_detail?.[0]?.image}
+                    alt="Order item"
+                    className="object-cover"
+                  />
+                </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-3">
