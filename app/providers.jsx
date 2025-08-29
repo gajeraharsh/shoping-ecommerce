@@ -6,7 +6,6 @@ import ToastHost from '@/components/ui/ToastHost'
 import ModalManager from '@/components/ui/ModalManager'
 import { useEffect, useRef } from 'react'
 import { fetchCategoryTree } from '@/features/category/categorySlice'
-import { fetchMeUser } from '@/features/auth/authThunks'
 import { ensureCart, fetchCart } from '@/features/cart/cartSlice'
 
 function InitBoot() {
@@ -16,14 +15,7 @@ function InitBoot() {
     // Preload categories on app init
     store.dispatch(fetchCategoryTree())
 
-    // If a token exists (from previous session), fetch current user profile
-    try {
-      const state = store.getState()
-      const token = state?.auth?.token
-      if (token) {
-        store.dispatch(fetchMeUser())
-      }
-    } catch (_) {}
+    // AuthContext handles /me hydration; avoid duplicate fetchMe here
 
     // Always ensure cart on boot so header can show count immediately
     store.dispatch(ensureCart())

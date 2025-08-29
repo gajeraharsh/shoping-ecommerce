@@ -1,9 +1,14 @@
 'use client';
 
-import { createContext, useContext, useReducer, useEffect } from 'react';
+import { createContext, useContext, useReducer, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { setAuth as setAuthStorage, clearAuth as clearAuthStorage, getUser as getStoredUser, getToken as getStoredToken } from '@/services/utils/authStorage';
 import { getMe as apiGetMe } from '@/services/modules/customer/customerService';
+
+// Guards to avoid duplicate /me calls in React 18 Strict Mode (dev double-mount).
+// Use window-scoped flags so a single request is guaranteed per page load even if modules re-evaluate.
+let ME_HYDRATED_ONCE = false;
+let ME_INFLIGHT_PROMISE = null;
 
 const AuthContext = createContext();
 
@@ -50,28 +55,41 @@ export function AuthProvider({ children }) {
   }, []);
 
   // If we have a token but no user loaded yet, fetch profile to hydrate UI (e.g., header account menu)
+  // Ref helps avoid re-entry during a single mount; module guards handle double-mount
+  const fetchedMeOnce = useRef(false);
   useEffect(() => {
     let active = true;
     const token = getStoredToken();
-    if (token && !state.user) {
+    if (token && !state.user && !fetchedMeOnce.current && !ME_HYDRATED_ONCE) {
+      fetchedMeOnce.current = true;
+      // Resolve guards: prefer window flags if available, else fallback to module flags
+      const w = typeof window !== 'undefined' ? window : null;
+      const hydratedOnce = w ? Boolean(w.__ME_HYDRATED__) : ME_HYDRATED_ONCE;
+      if (hydratedOnce) return;
+      if (w) w.__ME_HYDRATED__ = true; else ME_HYDRATED_ONCE = true;
+      // Ensure single-flight across mounts
+      const inflight = w ? (w.__ME_INFLIGHT__ || null) : ME_INFLIGHT_PROMISE;
+      if (inflight) {
+        if (!w) ME_INFLIGHT_PROMISE = inflight;
+      } else {
+        const p = apiGetMe().then((me) => me).finally(() => { if (w) w.__ME_INFLIGHT__ = null; else ME_INFLIGHT_PROMISE = null; });
+        if (w) w.__ME_INFLIGHT__ = p; else ME_INFLIGHT_PROMISE = p;
+      }
       (async () => {
         try {
-          const me = await apiGetMe();
+          const me = await (w ? w.__ME_INFLIGHT__ : ME_INFLIGHT_PROMISE);
           if (!active) return;
           if (me) {
-            // Persist and update context
             setAuthStorage({ user: me });
             dispatch({ type: 'LOAD_USER', payload: me });
           }
         } catch (err) {
           const status = err?.response?.status;
           if (status === 401) {
-            // Token invalid/expired: clear and logout so app can recover
             try { clearAuthStorage(); } catch (_) {}
             dispatch({ type: 'SET_TOKEN_PRESENT', payload: false });
             dispatch({ type: 'LOGOUT' });
           } else {
-            // Transient failure: keep token, try one quick retry after a short delay
             setTimeout(async () => {
               if (!active) return;
               try {
@@ -81,9 +99,7 @@ export function AuthProvider({ children }) {
                   setAuthStorage({ user: me2 });
                   dispatch({ type: 'LOAD_USER', payload: me2 });
                 }
-              } catch (_) {
-                // swallow; UI will continue to show loading until next navigation/login
-              }
+              } catch (_) {}
             }, 500);
           }
         }
@@ -113,6 +129,27 @@ export function AuthProvider({ children }) {
     } catch (_) {}
   };
 
+  // Public method to re-fetch the current user (GET /me) and update context + storage.
+  // Useful after profile updates so UI reflects latest values without reloads.
+  const refreshUser = async () => {
+    try {
+      const me = await apiGetMe();
+      if (me) {
+        setAuthStorage({ user: me });
+        dispatch({ type: 'LOAD_USER', payload: me });
+      }
+      return me;
+    } catch (err) {
+      const status = err?.response?.status;
+      if (status === 401) {
+        try { clearAuthStorage(); } catch (_) {}
+        dispatch({ type: 'SET_TOKEN_PRESENT', payload: false });
+        dispatch({ type: 'LOGOUT' });
+      }
+      throw err;
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user: state.user,
@@ -120,7 +157,8 @@ export function AuthProvider({ children }) {
       tokenPresent: state.tokenPresent,
       isInitializing: state.isInitializing,
       login,
-      logout
+      logout,
+      refreshUser
     }}>
       {children}
     </AuthContext.Provider>

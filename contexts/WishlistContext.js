@@ -9,7 +9,7 @@ import {
   removeByProduct as apiRemoveByProduct,
   toggleWishlist as apiToggleWishlist,
 } from '@/services/modules/wishlist/wishlistService';
-import { getMe as apiGetMe } from '@/services/modules/customer/customerService';
+// apiGetMe removed from here to avoid duplicate /me calls; rely on AuthContext.refreshUser
 
 const WishlistContext = createContext();
 
@@ -135,7 +135,7 @@ export function WishlistProvider({ children }) {
   const [wishlistItems, dispatch] = useReducer(wishlistReducer, []);
   // A monotonic counter that bumps on any wishlist mutation to notify listeners (e.g., Header)
   const [wishlistVersion, setWishlistVersion] = useState(0);
-  const { isAuthenticated, isInitializing } = useAuth();
+  const { isAuthenticated, isInitializing, refreshUser } = useAuth();
   const pathname = usePathname();
   const onWishlistPage = typeof pathname === 'string' && (
     pathname.startsWith('/wishlist') || pathname.startsWith('/account/wishlist')
@@ -198,8 +198,8 @@ export function WishlistProvider({ children }) {
         await apiAddToWishlist({ product_id: product.id });
         doLocal();
         setWishlistVersion((v) => v + 1);
-        // Fire-and-forget refresh of /customers/me to update header wishlist count
-        apiGetMe().catch(() => {});
+        // Fire-and-forget refresh of auth user to update header wishlist count without extra /me duplication
+        try { await refreshUser?.(); } catch (_) {}
       } catch (_) {
         // ignore; interceptors will toast
       }
@@ -214,8 +214,8 @@ export function WishlistProvider({ children }) {
         await apiRemoveByProduct(productId);
         doLocal();
         setWishlistVersion((v) => v + 1);
-        // Fire-and-forget refresh of /customers/me to update header wishlist count
-        apiGetMe().catch(() => {});
+        // Fire-and-forget refresh of auth user to update header wishlist count without extra /me duplication
+        try { await refreshUser?.(); } catch (_) {}
       } catch (_) {}
     })();
   };

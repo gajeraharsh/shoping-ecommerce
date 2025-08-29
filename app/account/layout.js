@@ -141,16 +141,9 @@ export default function AccountLayout({ children }) {
             <span className="font-semibold text-gray-700 dark:text-gray-300">Account</span>
           </button>
           
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-black dark:bg-white rounded-full flex items-center justify-center">
-              <span className="text-white dark:text-black font-bold text-sm">
-                {userInitial}
-              </span>
-            </div>
-            <div className="text-right">
-              <div className="text-sm font-semibold text-gray-900 dark:text-white">{safeName || 'Account User'}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Active Member</div>
-            </div>
+          <div className="text-right">
+            <div className="text-sm font-semibold text-gray-900 dark:text-white">{safeName || 'Account User'}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">Active Member</div>
           </div>
         </div>
       </div>
@@ -162,14 +155,9 @@ export default function AccountLayout({ children }) {
             <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden sticky top-24 border border-gray-200 dark:border-gray-700">
               {/* User Profile Section */}
               <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black p-8">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-white/20 dark:bg-black/20 rounded-2xl flex items-center justify-center text-2xl font-bold backdrop-blur-sm">
-                    {userInitial}
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold">{safeName || 'Account User'}</h2>
-                    <p className="text-white/70 dark:text-black/70 text-sm">{safeEmail}</p>
-                  </div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold">{safeName || 'Account User'}</h2>
+                  <p className="text-white/70 dark:text-black/70 text-sm">{safeEmail}</p>
                 </div>
                 
                 <div className="flex items-center gap-3 bg-white/10 dark:bg-black/10 rounded-xl p-3 backdrop-blur-sm">
@@ -250,17 +238,12 @@ export default function AccountLayout({ children }) {
                       <X className="h-5 w-5" />
                     </button>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-white/20 dark:bg-black/20 rounded-2xl flex items-center justify-center font-bold text-lg backdrop-blur-sm">
-                      {userInitial}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-lg">{safeName || 'Account User'}</div>
-                      <div className="text-white/70 dark:text-black/70 text-sm">{safeEmail}</div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                        <span className="text-xs">Premium Member</span>
-                      </div>
+                  <div>
+                    <div className="font-semibold text-lg">{safeName || 'Account User'}</div>
+                    <div className="text-white/70 dark:text-black/70 text-sm">{safeEmail}</div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-xs">Premium Member</span>
                     </div>
                   </div>
                 </div>

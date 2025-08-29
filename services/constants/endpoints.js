@@ -5,6 +5,7 @@ export const ENDPOINTS = {
     REGISTER: '/auth/register',
     LOGOUT: '/auth/logout',
     VERIFY_OTP: '/auth/verify-otp',
+    RESET_PASSWORD: (provider = 'emailpass') => `/auth/reset-password/${provider}`,
   },
   CATEGORY: {
     // Medusa Store API for product categories

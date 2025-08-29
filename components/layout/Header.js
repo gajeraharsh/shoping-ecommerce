@@ -8,7 +8,7 @@ import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
-import { getMe as apiGetMe } from '@/services/modules/customer/customerService';
+// Removed direct /me fetch here to avoid duplicate calls; rely on AuthContext
 
 import { BRAND } from '@/lib/brand';
 import { CATEGORY_TREE } from '@/lib/categories';
@@ -35,24 +35,15 @@ export default function Header() {
     ? wishlistApiCount
     : wishlistItems.length;
 
-  // Fetch wishlist_count from backend when authenticated
+  // Derive wishlist_count from AuthContext.user when authenticated, no extra /me fetch
   useEffect(() => {
-    let active = true;
     if (!isAuthenticated) {
       setWishlistApiCount(null);
       return;
     }
-    (async () => {
-      try {
-        const data = await apiGetMe();
-        const count = Number(data?.wishlist_count ?? data?.customer?.wishlist_count);
-        if (active) setWishlistApiCount(Number.isFinite(count) ? count : 0);
-      } catch (_) {
-        if (active) setWishlistApiCount(null);
-      }
-    })();
-    return () => { active = false; };
-  }, [isAuthenticated, wishlistVersion]);
+    const count = Number(user?.wishlist_count ?? user?.customer?.wishlist_count);
+    setWishlistApiCount(Number.isFinite(count) ? count : 0);
+  }, [isAuthenticated, wishlistVersion, user]);
 
   // Handle click outside for profile dropdown
   useEffect(() => {
