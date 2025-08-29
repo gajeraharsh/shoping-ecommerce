@@ -21,3 +21,15 @@ export const verifyOtp = (payload) =>
   authApiClient.post(ENDPOINTS.AUTH.VERIFY_OTP, payload, {
     meta: { successMessage: 'Email verified successfully' },
   })
+
+// Request a password reset email
+export const requestPasswordReset = (email) =>
+  authApiClient.post(ENDPOINTS.AUTH.FORGOT_PASSWORD, { email }, {
+    meta: { successMessage: 'Password reset email sent' },
+  })
+
+// Reset password using token and new password
+export const resetPassword = ({ token, password, provider = 'emailpass' }) =>
+  authApiClient.post(ENDPOINTS.AUTH.RESET_PASSWORD(provider), { token, password }, {
+    meta: { successMessage: 'Password reset successful' },
+  })
