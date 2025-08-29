@@ -13,19 +13,25 @@ export default function OrderSummary() {
   const [couponError, setCouponError] = useState('');
   // Display values exactly as provided (major units) in INR
 
-  // Prefer Redux totals; fallback to simple computed values when absent
-  // Treat all incoming values as MAJOR units (no further conversion)
-  const computedSubtotal = items.reduce((sum, i) => sum + ((Number(i.unit_price) || 0) * (Number(i.quantity) || 0)), 0);
-  const subtotal = Number(totals?.subtotal ?? computedSubtotal) || 0;
-  const shipping = Number(totals?.shipping_total ?? 0) || 0;
-  const tax = Number(totals?.tax_total ?? 0) || 0;
-  const discount = Number(totals?.discount_total ?? 0) || 0;
-  // Always compute final total locally to ensure shipping is included
-  const finalTotal = Math.max(0, subtotal + shipping + tax - discount);
-  // Display helpers
-  const itemTotal = computedSubtotal; // sum of items without discounts
-  const subtotalAfterDiscount = Math.max(0, subtotal - discount); // items after discount, before shipping/tax
-  const totalQty = Array.isArray(items) ? items.reduce((acc, i) => acc + (Number(i?.quantity) || 0), 0) : 0;
+  // Use API-provided totals as the single source of truth to avoid double-counting.
+  // Fallback to simple computed values only when API totals are absent.
+  const computedItemsTotal = items.reduce(
+    (sum, i) => sum + ((Number(i.unit_price) || 0) * (Number(i.quantity) || 0)),
+    0
+  );
+  const totalsSource = totals ?? cart ?? {};
+  const itemTotal = Number(
+    totalsSource?.item_total ?? totalsSource?.item_subtotal ?? computedItemsTotal
+  ) || 0;
+  const shipping = Number(totalsSource?.shipping_total ?? 0) || 0;
+  const tax = Number(totalsSource?.tax_total ?? 0) || 0;
+  const discount = Number(totalsSource?.discount_total ?? 0) || 0;
+  const finalTotal = Number(
+    totalsSource?.total ?? (itemTotal + shipping + tax - discount)
+  ) || 0;
+  const totalQty = Array.isArray(items)
+    ? items.reduce((acc, i) => acc + (Number(i?.quantity) || 0), 0)
+    : 0;
 
   // Applied coupon codes from cart
   const appliedCodes = useMemo(() => {
@@ -166,7 +172,7 @@ export default function OrderSummary() {
         </div>
       </div>
 
-      {/* Totals */}
+      {/* Totals (driven by API totals) */}
       <div className="space-y-3 text-sm border-t pt-4">
         <div className="flex justify-between">
           <span>Total Product Price ({totalQty} {totalQty === 1 ? 'item' : 'items'})</span>

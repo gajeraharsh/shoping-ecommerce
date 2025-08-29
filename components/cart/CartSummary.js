@@ -5,17 +5,22 @@ import { useCart } from '@/hooks/useCart';
 
 export default function CartSummary() {
   const { items, totals, cart } = useCart();
-  const subtotal = Number(totals?.subtotal || 0);
-  const shipping = Number(totals?.shipping_total || 0);
-  const tax = Number(totals?.tax_total || 0);
-  const discount = Number(totals?.discount_total || 0);
-  const itemTotal = Array.isArray(items)
+  const totalsSource = totals ?? cart ?? {};
+  const shipping = Number(totalsSource?.shipping_total || 0);
+  const tax = Number(totalsSource?.tax_total || 0);
+  const discount = Number(totalsSource?.discount_total || 0);
+  const computedItemsTotal = Array.isArray(items)
     ? items.reduce((sum, i) => sum + (Number(i?.unit_price) || 0) * (Number(i?.quantity) || 0), 0)
     : 0;
+  const itemTotal = Number(
+    totalsSource?.item_total ?? totalsSource?.item_subtotal ?? computedItemsTotal
+  ) || 0;
   const totalQty = Array.isArray(items)
     ? items.reduce((acc, i) => acc + (Number(i?.quantity) || 0), 0)
     : 0;
-  const finalTotal = Math.max(0, itemTotal - discount + shipping + tax);
+  const finalTotal = Number(
+    totalsSource?.total ?? (itemTotal - discount + shipping + tax)
+  ) || 0;
 
   return (
     <div className="bg-white border rounded-lg p-4 sm:p-6 lg:sticky lg:top-24">

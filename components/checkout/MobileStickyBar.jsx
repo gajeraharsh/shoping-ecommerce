@@ -11,18 +11,17 @@ import { X } from "lucide-react";
  * Props: { submittingState: { isSubmitting, visualSubmitting } }
  */
 export default function MobileStickyBar({ submittingState }) {
-  const { totals } = useCart();
-  // Treat incoming totals as MAJOR units (e.g., 10 => ₹10.00)
-  const total = Math.max(
-    0,
-    Number(
-      totals?.total ??
-        (Number(totals?.subtotal) || 0) +
-          (Number(totals?.shipping_total) || 0) +
-          (Number(totals?.tax_total) || 0) -
-          (Number(totals?.discount_total) || 0)
+  const { totals, cart } = useCart();
+  // Prefer API-provided total; fallback to safe recompute only if missing
+  const totalsSource = totals ?? cart ?? {};
+  const total = Number(
+    totalsSource?.total ?? (
+      (Number(totalsSource?.item_total ?? totalsSource?.item_subtotal) || 0) +
+      (Number(totalsSource?.shipping_total) || 0) +
+      (Number(totalsSource?.tax_total) || 0) -
+      (Number(totalsSource?.discount_total) || 0)
     )
-  );
+  ) || 0;
   const [open, setOpen] = useState(false);
 
   return (
