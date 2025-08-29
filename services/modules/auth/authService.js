@@ -33,3 +33,17 @@ export const resetPassword = ({ token, password, provider = 'emailpass' }) =>
   authApiClient.post(ENDPOINTS.AUTH.RESET_PASSWORD(provider), { token, password }, {
     meta: { successMessage: 'Password reset successful' },
   })
+
+// Change password (authenticated user)
+export const changePassword = ({ currentPassword, newPassword, confirmPassword }) =>
+  authApiClient.post(
+    ENDPOINTS.AUTH.CHANGE_PASSWORD,
+    {
+      current_password: currentPassword,
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    },
+    {
+      meta: { successMessage: 'Password updated successfully' },
+    }
+  )

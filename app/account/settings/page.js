@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { updateMe } from '@/services/modules/customer/customerService'
+import { changePassword } from '@/services/modules/auth/authService'
 import { notify } from '@/utils/notify'
 import {
   User,
@@ -70,6 +71,7 @@ export default function SettingsPage() {
     newPassword: '',
     confirmPassword: ''
   });
+  const passwordMismatch = passwordData.confirmPassword.length > 0 && passwordData.newPassword !== passwordData.confirmPassword;
 
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark');
@@ -149,16 +151,26 @@ export default function SettingsPage() {
     }
   };
 
-  const handlePasswordUpdate = (e) => {
+  const handlePasswordUpdate = async (e) => {
     e.preventDefault();
+    if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) return;
+    if (passwordData.newPassword !== passwordData.confirmPassword) return;
     setLoading(true);
-    
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword,
+        confirmPassword: passwordData.confirmPassword,
+      });
+      // Success toast handled by global interceptor
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-      setEditingSection(null);
-      // Show success message
-    }, 1000);
+      // Keep Security & Privacy tab selected after update
+      setEditingSection('security');
+    } catch (err) {
+      // Error toast handled by global interceptor
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleDarkMode = () => {
@@ -414,7 +426,7 @@ export default function SettingsPage() {
                     type="password"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className={`w-full px-4 py-3 border ${passwordMismatch ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                     required
                   />
                 </div>
@@ -427,14 +439,17 @@ export default function SettingsPage() {
                     type="password"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className={`w-full px-4 py-3 border ${passwordMismatch ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                     required
                   />
+                  {passwordMismatch && (
+                    <div className="mt-1 text-sm text-red-600">Passwords do not match</div>
+                  )}
                 </div>
 
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || passwordMismatch || !passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword}
                   className="w-full bg-black dark:bg-white text-white dark:text-black py-3 px-4 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-50"
                 >
                   {loading ? 'Updating...' : 'Update Password'}
