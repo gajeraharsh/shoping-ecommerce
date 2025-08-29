@@ -1,5 +1,5 @@
-import { Calendar, Clock, Heart, MessageCircle, User } from 'lucide-react';
-import BlogImage, { AuthorAvatar } from './BlogImage';
+import { Calendar, Clock, Heart, MessageCircle } from 'lucide-react';
+import BlogImage from './BlogImage';
 
 export default function BlogCard({ post }) {
   return (
@@ -21,45 +21,25 @@ export default function BlogCard({ post }) {
           </span>
         </div>
         
-        {/* Engagement stats on hover */}
-        <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
-            <Heart className="w-3 h-3" />
-            {post.likes}
-          </div>
-          <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
-            <MessageCircle className="w-3 h-3" />
-            {post.comments}
-          </div>
-        </div>
       </div>
       
       {/* Content */}
       <div className="p-6">
-        {/* Author and date */}
-        <div className="flex items-center gap-3 mb-4">
-          <AuthorAvatar
-            src={post.authorImage}
-            alt={post.author}
-            className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 dark:border-gray-700"
-          />
-          <div className="flex-1">
-            <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
-              <User className="w-3 h-3" />
-              <span className="font-medium">{post.author}</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500">
-              <Calendar className="w-3 h-3" />
-              {new Date(post.date).toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric', 
-                year: 'numeric' 
-              })}
-              <span>•</span>
-              <Clock className="w-3 h-3" />
-              {post.readTime}
-            </div>
-          </div>
+        {/* Meta */}
+        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500 mb-4">
+          <Calendar className="w-3 h-3" />
+          {(() => {
+            try {
+              const d = post?.date ? new Date(post.date) : null;
+              if (!d || isNaN(d.getTime())) return '—';
+              return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            } catch {
+              return '—';
+            }
+          })()}
+          <span>•</span>
+          <Clock className="w-3 h-3" />
+          {post.readTime}
         </div>
         
         {/* Title */}

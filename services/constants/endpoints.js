@@ -20,6 +20,13 @@ export const ENDPOINTS = {
     DETAILS: (id) => `/products/${id}`,
     REVIEWS: (id) => `/products/${id}/reviews`,
   },
+  BLOG: {
+    LIST: '/blogs',
+    DETAILS: (id) => `/blogs/${id}`,
+  },
+  BLOG_CATEGORY: {
+    LIST: '/blog-categories',
+  },
   CUSTOMER: {
     ME: '/customers/me',
   },
