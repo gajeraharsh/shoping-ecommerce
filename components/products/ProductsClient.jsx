@@ -118,6 +118,10 @@ export default function ProductsClient({
   const [count, setCount] = useState(initialCount);
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 24;
+  // Flags to know which filters are already applied server-side via URL
+  const serverQActive = Boolean(searchParams.get('q'));
+  const serverCategoryActive = Boolean(searchParams.get('category_id'));
+  const serverCollectionActive = Boolean(searchParams.get('collection_id'));
 
   // Map Medusa product to UI shape
   const mapToUiProduct = (p) => {
@@ -267,7 +271,8 @@ export default function ProductsClient({
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
 
-    if (deferredFilters.category) {
+    // When category is applied on server via category_id, do not re-filter locally by category
+    if (!serverCategoryActive && deferredFilters.category) {
       const cid = String(deferredFilters.category);
       filtered = filtered.filter((product) => Array.isArray(product.categoryIds) && product.categoryIds.includes(cid));
     }
@@ -289,8 +294,8 @@ export default function ProductsClient({
       );
     }
 
-    // Text search (debounced via searchText -> filters.q)
-    if (deferredFilters.q && String(deferredFilters.q).trim().length) {
+    // Text search (debounced via searchText -> filters.q). If q is active on server, avoid re-filtering locally.
+    if (!serverQActive && deferredFilters.q && String(deferredFilters.q).trim().length) {
       const q = String(deferredFilters.q).trim().toLowerCase();
       filtered = filtered.filter((p) => {
         const name = String(p.name || '').toLowerCase();
@@ -330,7 +335,7 @@ export default function ProductsClient({
     }
 
     return filtered;
-  }, [products, deferredFilters]);
+  }, [products, deferredFilters, serverCategoryActive, serverQActive]);
 
   // Re-fetch from Medusa ONLY when server-relevant URL params change (avoid option_* causing refetch flicker)
   const serverParamValues = useMemo(() => {

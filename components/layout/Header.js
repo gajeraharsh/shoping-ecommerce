@@ -113,8 +113,60 @@ export default function Header() {
     }
   }, [isMenuOpen]);
 
-  const handleSearch = (searchTerm) => {
-    router.push(`/products?q=${encodeURIComponent(searchTerm)}`);
+  const saveRecentSearch = (item) => {
+    try {
+      const stored = localStorage.getItem('recentSearches');
+      let list = [];
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        list = Array.isArray(parsed) ? parsed : [];
+      }
+      // migrate strings
+      list = list.map((it) => (typeof it === 'string' ? { type: 'keyword', value: it } : it)).filter((it) => it && it.value);
+      const key = (it) => `${it.type}:${it.id ?? it.value}`.toLowerCase();
+      const dedup = [item, ...list].reduce((acc, cur) => {
+        const k = key(cur);
+        if (!acc.map.has(k)) { acc.map.set(k, true); acc.list.push(cur); }
+        return acc;
+      }, { map: new Map(), list: [] }).list.slice(0, 10);
+      localStorage.setItem('recentSearches', JSON.stringify(dedup));
+    } catch (_) {
+      // ignore
+    }
+  };
+
+  const handleSearch = (payload) => {
+    // Supports string or typed object { type: 'keyword'|'category'|'product', value, id? }
+    if (!payload) return;
+    if (typeof payload === 'string') {
+      const term = payload.trim();
+      if (!term) return;
+      saveRecentSearch({ type: 'keyword', value: term });
+      router.push(`/products?q=${encodeURIComponent(term)}`);
+      return;
+    }
+    const { type, value, id } = payload;
+    switch (type) {
+      case 'product': {
+        const pid = id || value;
+        if (pid) router.push(`/products/${encodeURIComponent(pid)}`);
+        break;
+      }
+      case 'category': {
+        const cid = id || value;
+        if (cid) router.push(`/products?category_id=${encodeURIComponent(cid)}&page=1`);
+        break;
+      }
+      case 'keyword':
+      default: {
+        const term = (value || '').trim();
+        if (term) {
+          saveRecentSearch({ type: 'keyword', value: term });
+          router.push(`/products?q=${encodeURIComponent(term)}&page=1`);
+        }
+        break;
+      }
+    }
   };
 
   const handleSearchKeyPress = (e) => {
