@@ -242,7 +242,7 @@ export default async function BlogPostPage({ params }) {
                     : (blogPost.category?.name || (Array.isArray(blogPost.categories) ? blogPost.categories[0]?.name : blogPost.category_name));
                   const jsonLdArticle = {
                     '@context': 'https://schema.org',
-                    '@type': 'Article',
+                    '@type': 'BlogPosting',
                     headline: blogPost.title,
                     description: (typeof contentHtml === 'string' ? contentHtml.replace(/<[^>]*>/g, ' ') : '').trim().slice(0, 160) || undefined,
                     keywords: tagList?.length ? tagList.join(', ') : undefined,
@@ -250,6 +250,8 @@ export default async function BlogPostPage({ params }) {
                     articleSection: categoryName || undefined,
                     datePublished: publishedDate || undefined,
                     dateModified: blogPost.updated_at || blogPost.modified_at || undefined,
+                    isAccessibleForFree: true,
+                    inLanguage: 'en',
                     author: authorName ? { '@type': 'Person', name: authorName } : undefined,
                     publisher: {
                       '@type': 'Organization',
@@ -267,6 +269,20 @@ export default async function BlogPostPage({ params }) {
                       '@id': `${siteUrl}/blog/${blogPost.id}`,
                     },
                     url: `${siteUrl}/blog/${blogPost.id}`,
+                    commentCount: (typeof blogPost.comments_count === 'number' ? blogPost.comments_count : (Array.isArray(blogPost.comments) ? blogPost.comments.length : undefined)),
+                    interactionStatistic: (() => {
+                      const likeCount = (
+                        typeof blogPost.likes_count === 'number' ? blogPost.likes_count :
+                        typeof blogPost.likes === 'number' ? blogPost.likes :
+                        typeof blogPost.favorites === 'number' ? blogPost.favorites :
+                        undefined
+                      );
+                      return likeCount != null ? [{
+                        '@type': 'InteractionCounter',
+                        interactionType: { '@type': 'LikeAction' },
+                        userInteractionCount: likeCount,
+                      }] : undefined;
+                    })(),
                   };
                   const jsonLdBreadcrumb = {
                     '@context': 'https://schema.org',
