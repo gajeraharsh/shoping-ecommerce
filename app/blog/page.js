@@ -46,7 +46,7 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       
-      <BlogHero />
+      {/* <BlogHero /> */}
       <BlogListingClient />
 
       {/* Instagram Reels Section */}

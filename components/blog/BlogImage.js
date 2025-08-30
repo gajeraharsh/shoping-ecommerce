@@ -45,6 +45,18 @@ export default function BlogImage({
   };
 
   if (imageError || !src) {
+    // Error/empty fallback: show skeleton if requested, else gradient placeholder
+    if (fallbackType === 'skeleton') {
+      return (
+        <div className={`${aspectRatio} ${className} relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800`}>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 animate-pulse flex items-center justify-center">
+            <div className="text-gray-400 dark:text-gray-600">
+              <ImageIcon className="w-8 h-8" />
+            </div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className={`${aspectRatio} ${className} relative overflow-hidden rounded-lg bg-gradient-to-br ${generateGradient(alt)} flex items-center justify-center`}>
         <div className="text-center text-white/80">

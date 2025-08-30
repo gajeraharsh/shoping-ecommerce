@@ -49,7 +49,7 @@ function mapBlogToUi(b) {
 export default function BlogListingClient() {
   const [categories, setCategories] = useState([])
   const [catLoading, setCatLoading] = useState(true)
-  const [selectedCat, setSelectedCat] = useState(null)
+  const [selectedCat, setSelectedCat] = useState('all')
 
   const [blogs, setBlogs] = useState([])
   const [loading, setLoading] = useState(true)
@@ -151,7 +151,7 @@ export default function BlogListingClient() {
         <BlogCategories
           categories={categories}
           selectedId={selectedCat}
-          onSelect={(c) => setSelectedCat(c.id === 'all' ? null : c.id)}
+          onSelect={(c) => setSelectedCat(c.id)}
         />
       )}
 
@@ -193,6 +193,7 @@ export default function BlogListingClient() {
                   className="w-full h-80 lg:h-96 object-cover transition-transform duration-700 group-hover:scale-110"
                   aspectRatio="h-80 lg:h-96"
                   priority={true}
+                  fallbackType="skeleton"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute top-4 left-4">
