@@ -599,8 +599,8 @@ export default function ProductsClient({
 
         <div className="flex gap-8">
           {/* Desktop Filters */}
-          <div className="hidden lg:block w-64 flex-shrink-0">
-            <div>
+          <div className="hidden lg:block w-64 flex-shrink-0 lg:sticky lg:top-24 self-start">
+            <div className="max-h-[calc(100vh-8rem)] overflow-auto pr-2">
               <ProductFilters
                 filters={filters}
                 onFilterChange={handleFilterChange}
