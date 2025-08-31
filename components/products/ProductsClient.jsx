@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useTransition, useDeferredValue } from 'react';
+import { useState, useEffect, useMemo, useTransition, useDeferredValue, useRef } from 'react';
 import ProductCard from '@/components/products/ProductCard';
 import ProductFilters from '@/components/products/ProductFilters';
 import ProductSkeleton from '@/components/products/ProductSkeleton';
@@ -24,6 +24,42 @@ export default function ProductsClient({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Anchor to scroll the view to the top of products list on pagination
+  const productsTopRef = useRef(null);
+
+  // Build centered, ellipsis-style pagination list
+  const getPageItems = () => {
+    const items = [];
+    const siblingCount = 1; // pages around current
+    const boundaryCount = 1; // pages at start/end
+    if (totalPages <= (2 * boundaryCount) + 2 + (2 * siblingCount)) {
+      // small number of pages, show all
+      for (let p = 1; p <= totalPages; p++) items.push(p);
+      return items;
+    }
+
+    const startPages = [];
+    for (let p = 1; p <= Math.min(boundaryCount, totalPages); p++) startPages.push(p);
+
+    const endPages = [];
+    for (let p = Math.max(totalPages - boundaryCount + 1, 1); p <= totalPages; p++) endPages.push(p);
+
+    const start = Math.max(Math.min(page - siblingCount, totalPages - boundaryCount - (2 * siblingCount) - 1), boundaryCount + 2);
+    const end = Math.min(Math.max(page + siblingCount, boundaryCount + (2 * siblingCount) + 2), totalPages - boundaryCount - 1);
+
+    items.push(...startPages);
+    if (start > boundaryCount + 2) items.push('left-ellipsis');
+    else if (start === boundaryCount + 2) items.push(boundaryCount + 1);
+
+    for (let p = start; p <= end; p++) items.push(p);
+
+    if (end < totalPages - boundaryCount - 1) items.push('right-ellipsis');
+    else if (end === totalPages - boundaryCount - 1) items.push(totalPages - boundaryCount);
+
+    items.push(...endPages);
+    return items;
+  };
 
   const [products, setProducts] = useState(initialProducts);
   // filteredProducts is derived to avoid extra renders and flicker
@@ -118,6 +154,7 @@ export default function ProductsClient({
   const [count, setCount] = useState(initialCount);
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 24;
+  const totalPages = useMemo(() => Math.max(1, Math.ceil((Number(count) || 0) / (Number(limit) || 1))), [count, limit]);
   // Flags to know which filters are already applied server-side via URL
   const serverQActive = Boolean(searchParams.get('q'));
   const serverCategoryActive = Boolean(searchParams.get('category_id'));
@@ -443,12 +480,29 @@ export default function ProductsClient({
     });
   };
 
-  const totalPages = Math.max(1, Math.ceil(count / limit));
+  
   const goToPage = (p) => {
+    // Smooth scroll to the top of the products list (pre-navigation)
+    if (productsTopRef?.current) {
+      try {
+        productsTopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch {}
+    }
+    // Fallback to window top
+    if (typeof window !== 'undefined' && 'scrollTo' in window) {
+      try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch {}
+    }
     startTransition(() => {
       const sp = new URLSearchParams(searchParams.toString());
       sp.set('page', String(Math.min(Math.max(1, p), totalPages)));
       router.push(`${pathname}?${sp.toString()}`, { scroll: false });
+      // Post-navigation nudge to ensure we are at the top even after layout shift
+      setTimeout(() => {
+        try {
+          if (productsTopRef?.current) productsTopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (typeof window !== 'undefined' && 'scrollTo' in window) window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch {}
+      }, 60);
     });
   };
 
@@ -462,7 +516,7 @@ export default function ProductsClient({
               <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-96 rounded-xl"></div>
             </div>
             <div className="flex-1">
-              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6">
                 {Array.from({ length: 12 }).map((_, i) => (
                   <ProductSkeleton key={i} />
                 ))}
@@ -617,9 +671,10 @@ export default function ProductsClient({
           )}
 
           {/* Products Grid */}
+          <div ref={productsTopRef} />
           <div className={`flex-1 min-w-0 ${isPending ? 'opacity-95' : ''}`}>
             {visualLoading ? (
-              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 transition-opacity duration-200">
+              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 transition-opacity duration-200">
                 {[...Array(limit || 12)].map((_, i) => (
                   <ProductSkeleton key={i} />
                 ))}
@@ -650,7 +705,7 @@ export default function ProductsClient({
             )}
 
             {/* Pagination */}
-            {count > 0 && (
+            {count > 0 && totalPages > 1 && (
               <div className="mt-8 flex items-center justify-center gap-2">
                 <button
                   onClick={() => goToPage(page - 1)}
@@ -659,34 +714,31 @@ export default function ProductsClient({
                 >
                   Prev
                 </button>
-                {/* Page numbers (compact) */}
-                {Array.from({ length: Math.max(1, Math.ceil(count / limit)) }).slice(0, 7).map((_, i) => {
-                  const p = i + 1;
+                {getPageItems().map((it, idx) => {
+                  if (typeof it === 'string') {
+                    return (
+                      <span key={`${it}-${idx}`} className="px-2 text-gray-500 select-none">
+                        ...
+                      </span>
+                    );
+                  }
+                  const p = it;
+                  const active = p === page;
                   return (
                     <button
                       key={p}
                       onClick={() => goToPage(p)}
-                      className={`w-10 h-10 rounded-full text-sm border ${p === page ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white' : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                      aria-current={active ? 'page' : undefined}
+                      className={`w-10 h-10 rounded-full text-sm border ${active ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white' : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
                     >
                       {p}
                     </button>
                   );
                 })}
-                {Math.ceil(count / limit) > 7 && (
-                  <>
-                    <span className="px-2 text-gray-500">...</span>
-                    <button
-                      onClick={() => goToPage(Math.ceil(count / limit))}
-                      className={`w-10 h-10 rounded-full text-sm border ${Math.ceil(count / limit) === page ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white' : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
-                    >
-                      {Math.ceil(count / limit)}
-                    </button>
-                  </>
-                )}
                 <button
                   onClick={() => goToPage(page + 1)}
-                  disabled={page >= Math.ceil(count / limit)}
-                  className={`px-4 py-2 rounded-full border text-sm ${page >= Math.ceil(count / limit) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50 dark:hover:bg-gray-800'} border-gray-200 dark:border-gray-700`}
+                  disabled={page >= totalPages}
+                  className={`px-4 py-2 rounded-full border text-sm ${page >= totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50 dark:hover:bg-gray-800'} border-gray-200 dark:border-gray-700`}
                 >
                   Next
                 </button>
