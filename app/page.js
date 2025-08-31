@@ -83,11 +83,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Style Stories - Video Reels */}
-        <VideoReelGrid title="Style Stories" filters={{ is_display_home: true, type: 'video' }} />
+        {/* Style Stories - Video Reels (limit 4) */}
+        <VideoReelGrid title="Style Stories" filters={{ is_display_home: true, type: 'video' }} limit={4} />
 
-        {/* Follow Our Journey - Photo Grid */}
-        <PhotoReelGrid title="Follow Our Journey" filters={{ is_display_home: true, type: 'image' }} />
+        {/* Follow Our Journey - Photo Grid (limit 4) */}
+        <PhotoReelGrid title="Follow Our Journey" filters={{ is_display_home: true, type: 'image' }} limit={4} />
 
         {/* Verified Testimonials */}
         <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">

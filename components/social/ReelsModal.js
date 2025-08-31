@@ -6,7 +6,7 @@ import SmartImage from "@/components/ui/SmartImage"
 import { reelsService } from "@/services/modules/reels/reelsService"
 import ShareDialog from "@/components/social/ShareDialog"
 
-export default function ReelsModal({ isOpen, onClose, initialReelId, initialReelData = null, filters = {}, order = "-created_at", variant = 'phone', forceHome = true }) {
+export default function ReelsModal({ isOpen, onClose, initialReelId, initialReelData = null, filters = {}, order = "-created_at", variant = 'phone', forceHome = true, singleOnly = false }) {
   const [allReels, setAllReels] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -26,26 +26,42 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
     setLoading(true)
     setError(null)
     try {
-      const effective = forceHome ? { is_display_home: true, ...filters } : { ...filters }
-      const reels = await reelsService.fetchAll({ filters: effective, order, batchSize: 50 })
-      let list = reels || []
-      // If deep-linked reel data is provided and not already present, include it at the start
-      if (initialReelData && initialReelData.id && !list.find((r) => r.id === initialReelData.id)) {
-        list = [initialReelData, ...list]
-      }
-      setAllReels(list)
-      if (initialReelId) {
-        const found = list.findIndex((r) => r.id === initialReelId)
-        setIndex(found >= 0 ? found : 0)
-      } else {
+      if (singleOnly) {
+        // Only load the selected reel
+        let reel = initialReelData
+        if (!reel && initialReelId) {
+          try {
+            const data = await reelsService.getById(initialReelId)
+            reel = data?.reel || data
+          } catch (e) {
+            // ignore, will show empty state
+          }
+        }
+        const list = reel ? [reel] : []
+        setAllReels(list)
         setIndex(0)
+      } else {
+        const effective = forceHome ? { is_display_home: true, ...filters } : { ...filters }
+        const reels = await reelsService.fetchAll({ filters: effective, order, batchSize: 50 })
+        let list = reels || []
+        // If deep-linked reel data is provided and not already present, include it at the start
+        if (initialReelData && initialReelData.id && !list.find((r) => r.id === initialReelData.id)) {
+          list = [initialReelData, ...list]
+        }
+        setAllReels(list)
+        if (initialReelId) {
+          const found = list.findIndex((r) => r.id === initialReelId)
+          setIndex(found >= 0 ? found : 0)
+        } else {
+          setIndex(0)
+        }
       }
     } catch (e) {
       setError(e?.message || "Failed to load reels")
     } finally {
       setLoading(false)
     }
-  }, [filters, order, initialReelId, initialReelData, forceHome])
+  }, [filters, order, initialReelId, initialReelData, forceHome, singleOnly])
 
   useEffect(() => {
     if (!isOpen) return
@@ -56,14 +72,16 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
     if (!isOpen) return
     const onKey = (e) => {
       if (e.key === "Escape") onClose?.()
-      if (e.key === "ArrowDown") scrollToIndex(index + 1)
-      if (e.key === "ArrowUp") scrollToIndex(index - 1)
-      if (e.key === "ArrowRight") scrollToIndex(index + 1)
-      if (e.key === "ArrowLeft") scrollToIndex(index - 1)
+      if (!singleOnly) {
+        if (e.key === "ArrowDown") scrollToIndex(index + 1)
+        if (e.key === "ArrowUp") scrollToIndex(index - 1)
+        if (e.key === "ArrowRight") scrollToIndex(index + 1)
+        if (e.key === "ArrowLeft") scrollToIndex(index - 1)
+      }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [isOpen, index])
+  }, [isOpen, index, singleOnly])
 
   const scrollToIndex = useCallback(
     (i) => {
@@ -81,7 +99,14 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
     if (el) {
       el.scrollIntoView({ behavior: "instant", block: "nearest" })
     }
-  }, [isOpen, allReels.length])
+  }, [isOpen, allReels.length, singleOnly])
+
+  // When in singleOnly mode, ensure video starts playing (no observer to trigger play)
+  useEffect(() => {
+    if (!isOpen || !singleOnly) return
+    const vid = videoRefs.current.get(index)
+    try { vid?.play?.() } catch {}
+  }, [isOpen, singleOnly, index, allReels.length])
 
   const handleLike = async (reel) => {
     if (!reel?.id) return
@@ -108,6 +133,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
   // IntersectionObserver to set active index and control video play/pause
   useEffect(() => {
     if (!isOpen) return
+    if (singleOnly) return
     const root = containerRef.current
     if (!root) return
 
@@ -166,18 +192,18 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
           {/* Large invisible click zones for easy navigation */}
           <div
             className="absolute inset-y-0 left-0 w-1/3 z-[105] cursor-pointer"
-            onClick={() => scrollToIndex(index - 1)}
+            onClick={() => !singleOnly && scrollToIndex(index - 1)}
           />
           <div
             className="absolute inset-y-0 right-0 w-1/3 z-[105] cursor-pointer"
-            onClick={() => scrollToIndex(index + 1)}
+            onClick={() => !singleOnly && scrollToIndex(index + 1)}
           />
 
           {/* Visible left/right arrows with labels - aligned via flex containers */}
           <div className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-[110] flex flex-col items-center gap-1 select-none">
             <button
               onClick={() => scrollToIndex(index - 1)}
-              disabled={index === 0}
+              disabled={index === 0 || singleOnly}
               className="p-4 rounded-full bg-black/45 backdrop-blur text-white hover:bg-black/60 disabled:opacity-40"
               aria-label="Previous"
             >
@@ -188,7 +214,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
           <div className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-[110] flex flex-col items-center gap-1 select-none">
             <button
               onClick={() => scrollToIndex(index + 1)}
-              disabled={index >= allReels.length - 1}
+              disabled={index >= allReels.length - 1 || singleOnly}
               className="p-4 rounded-full bg-black/45 backdrop-blur text-white hover:bg-black/60 disabled:opacity-40"
               aria-label="Next"
             >
@@ -201,7 +227,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
 
           <div
             ref={containerRef}
-            className="absolute inset-0 overflow-y-auto snap-y snap-mandatory scroll-smooth"
+            className={`absolute inset-0 ${singleOnly ? 'overflow-hidden' : 'overflow-y-auto'} ${singleOnly ? '' : 'snap-y snap-mandatory scroll-smooth'}`}
             onTouchStart={(e) => {
               if (e.touches?.length !== 1) return
               touchStartX.current = e.touches[0].clientX
@@ -214,16 +240,16 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
               const dx = e.touches[0].clientX - touchStartX.current
               const dy = e.touches[0].clientY - touchStartY.current
               // begin swipe only if horizontal movement dominates
-              if (!isSwiping.current && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.15) {
+              if (!singleOnly && !isSwiping.current && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.15) {
                 isSwiping.current = true
               }
-              if (isSwiping.current) {
+              if (!singleOnly && isSwiping.current) {
                 touchDeltaX.current = dx
                 e.preventDefault()
               }
             }}
             onTouchEnd={() => {
-              if (!isSwiping.current) return
+              if (singleOnly || !isSwiping.current) return
               const threshold = 35
               const dx = touchDeltaX.current
               if (dx <= -threshold) {
@@ -244,7 +270,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
             ) : !allReels.length ? (
               <div className="min-h-screen flex items-center justify-center text-white/70 text-sm">No reels</div>
             ) : (
-              allReels.map((reel, i) => (
+              (singleOnly ? allReels.slice(0, 1) : allReels).map((reel, i) => (
                 <div
                   key={reel.id}
                   data-index={i}
@@ -252,10 +278,17 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
                   className="snap-start min-h-screen flex items-center justify-center relative bg-black"
                 >
                   {reel.video_url ? (
-                    <SmartImage
-                      src={reel.thumbnail_url}
-                      alt={reel.name || 'Reel'}
+                    <video
+                      ref={(el) => {
+                        if (el) videoRefs.current.set(i, el)
+                        else videoRefs.current.delete(i)
+                      }}
+                      src={reel.video_url}
                       className="max-h-full max-w-full object-contain"
+                      muted
+                      playsInline
+                      loop
+                      autoPlay
                     />
                   ) : (
                     <SmartImage
@@ -305,7 +338,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
             {/* Up/Down inside phone box */}
             <button
               onClick={() => scrollToIndex(index - 1)}
-              disabled={index === 0}
+              disabled={index === 0 || singleOnly}
               className="absolute right-3 top-1/2 -translate-y-16 z-[20] p-2 rounded-full bg-white/10 text-white hover:bg-white/20 disabled:opacity-40"
               aria-label="Previous"
             >
@@ -313,14 +346,14 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
             </button>
             <button
               onClick={() => scrollToIndex(index + 1)}
-              disabled={index >= allReels.length - 1}
+              disabled={index >= allReels.length - 1 || singleOnly}
               className="absolute right-3 top-1/2 translate-y-16 z-[20] p-2 rounded-full bg-white/10 text-white hover:bg-white/20 disabled:opacity-40"
               aria-label="Next"
             >
               <ChevronDown size={18} />
             </button>
 
-            <div ref={containerRef} className="absolute inset-0 overflow-y-auto snap-y snap-mandatory scroll-smooth">
+            <div ref={containerRef} className={`absolute inset-0 ${singleOnly ? 'overflow-hidden' : 'overflow-y-auto'} ${singleOnly ? '' : 'snap-y snap-mandatory scroll-smooth'}`}>
               {loading ? (
                 <div className="min-h-full h-full flex items-center justify-center text-white/80 text-sm">Loading reels…</div>
               ) : error ? (
@@ -328,7 +361,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
               ) : !allReels.length ? (
                 <div className="min-h-full h-full flex items-center justify-center text-white/70 text-sm">No reels</div>
               ) : (
-                allReels.map((reel, i) => (
+                (singleOnly ? allReels.slice(0, 1) : allReels).map((reel, i) => (
                   <div
                     key={reel.id}
                     data-index={i}
@@ -346,6 +379,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
                         muted
                         playsInline
                         loop
+                        autoPlay
                       />
                     ) : (
                       <SmartImage

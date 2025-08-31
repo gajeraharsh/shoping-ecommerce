@@ -89,6 +89,11 @@ export default function InstagramReelsFeed() {
     }
   ], []);
 
+  // Limit: only 4 videos and 4 images
+  const limitedVideos = useMemo(() => instagramReels.filter(r => r.type === 'video').slice(0, 4), [instagramReels]);
+  const limitedImages = useMemo(() => instagramReels.filter(r => r.type === 'image').slice(0, 4), [instagramReels]);
+  const displayReels = useMemo(() => [...limitedVideos, ...limitedImages], [limitedVideos, limitedImages]);
+
   const toggleMute = useCallback((postId) => {
     setMutedPosts(prev => {
       const newMuted = new Set(prev);
@@ -146,7 +151,7 @@ export default function InstagramReelsFeed() {
 
         {/* Reels Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 lg:gap-8 mb-12">
-          {instagramReels.map((reel) => (
+          {displayReels.map((reel) => (
             <div
               key={reel.id}
               className="group relative bg-black rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"

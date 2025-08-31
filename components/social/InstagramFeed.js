@@ -62,6 +62,9 @@ export default function InstagramFeed() {
     }
   ], []);
 
+  // Limit: only 4 images on homepage
+  const displayPosts = useMemo(() => instagramPosts.slice(0, 4), [instagramPosts]);
+
   const formatNumber = (num) => {
     if (num >= 1000) {
       return (num / 1000).toFixed(1) + 'k';
@@ -94,7 +97,7 @@ export default function InstagramFeed() {
 
         {/* Instagram Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-12">
-          {instagramPosts.map((post) => (
+          {displayPosts.map((post) => (
             <a
               key={post.id}
               href={`https://instagram.com/modave_official`}

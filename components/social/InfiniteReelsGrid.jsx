@@ -14,6 +14,7 @@ export default function InfiniteReelsGrid({
   pageSize = 12,
   order = "-created_at",
   className = "",
+  enableInfinite = false,
 }) {
   const [items, setItems] = useState([])
   const [count, setCount] = useState(0)
@@ -35,6 +36,8 @@ export default function InfiniteReelsGrid({
   const lastLoadAtRef = useRef(0)
   const itemsLenRef = useRef(0)
   const countRef = useRef(0)
+  const lastPageSizeRef = useRef(0) // deduped page size actually appended
+  const lastServerPageSizeRef = useRef(0) // raw server page size received
   const idSetRef = useRef(new Set())
   const endedRef = useRef(false)
   const requestCountRef = useRef(0)
@@ -95,6 +98,7 @@ export default function InfiniteReelsGrid({
         order,
       })
       const incoming = Array.isArray(reels) ? reels : []
+      lastServerPageSizeRef.current = incoming.length
       // dedupe by id
       const filtered = incoming.filter((r) => {
         const id = r?.id
@@ -102,29 +106,61 @@ export default function InfiniteReelsGrid({
         idSetRef.current.add(id)
         return true
       })
+      lastPageSizeRef.current = filtered.length
 
+      const advanceBy = incoming.length // advance by server page size to avoid overlap even if dedupe removed items
       if (reset) {
         setItems(filtered)
         const inferredCount = typeof total === 'number' && total > 0
           ? total
           : (filtered.length < pageSize ? filtered.length : filtered.length + 1) // +1 implies more unknown
         setCount(inferredCount)
-        setOffset((newOffset || 0) + filtered.length)
-        const reachedEnd = (total === 0 && currOffset === 0) || filtered.length < pageSize
+        setOffset((newOffset || 0) + advanceBy)
+        // Reach end conditions (avoid premature end when total is known)
+        let reachedEnd = false
+        if (typeof total === 'number' && total >= 0) {
+          const projected = filtered.length
+          reachedEnd = projected >= total || filtered.length === 0
+        } else {
+          reachedEnd = filtered.length < pageSize
+        }
+        // Also end when the pagination offset reaches/exceeds total
+        if (!reachedEnd && typeof total === 'number' && total >= 0) {
+          const afterOffset = ((newOffset || 0) + advanceBy)
+          if (afterOffset >= total) reachedEnd = true
+        }
         setEnded(reachedEnd)
         endedRef.current = reachedEnd
       } else {
         setItems((prev) => [...prev, ...filtered])
-        setCount((prev) => (typeof total === 'number' && total >= 0 ? total : prev))
-        setOffset((prev) => prev + filtered.length)
+        setCount((prev) => (typeof total === 'number' && total > 0 ? total : prev))
+        setOffset((newOffset || 0) + advanceBy)
+        if ((newOffset || 0) >= total) {
+          setEnded(true)
+          endedRef.current = true
+        }
       }
 
-      // End conditions: if fewer than pageSize arrived, or nothing new added, clamp count to current length
-      const noMore = filtered.length === 0 || filtered.length < pageSize
-      if (noMore) {
-        setCount(() => itemsLenRef.current + filtered.length)
-        setEnded(true)
-        endedRef.current = true
+      // End conditions
+      if (typeof total === 'number' && total >= 0) {
+        // Using authoritative total from server; don't end on duplicate-only page
+        const projected = itemsLenRef.current + filtered.length
+        let shouldEnd = projected >= total
+        // Also end when the pagination offset reaches/exceeds total
+        const afterOffset = ((newOffset || 0) + advanceBy)
+        if (!shouldEnd && afterOffset >= total) shouldEnd = true
+        if (shouldEnd) {
+          setEnded(true)
+          endedRef.current = true
+        }
+      } else {
+        // Heuristic when total is unknown
+        const noMore = filtered.length === 0 || filtered.length < pageSize
+        if (noMore) {
+          setCount(() => itemsLenRef.current + filtered.length)
+          setEnded(true)
+          endedRef.current = true
+        }
       }
     } catch (e) {
       setError(e?.message || "Failed to load")
@@ -145,6 +181,7 @@ export default function InfiniteReelsGrid({
     idSetRef.current = new Set()
     setEnded(false)
     endedRef.current = false
+    lastServerPageSizeRef.current = 0
     load(true)
   }, [effectiveFilters, order, pageSize])
 
@@ -153,7 +190,7 @@ export default function InfiniteReelsGrid({
   useEffect(() => { countRef.current = count }, [count])
 
   useEffect(() => {
-    if (ended || isLoading) return
+    if (!enableInfinite) return
     const sentinel = sentinelRef.current
     if (!sentinel) return
     if (observerRef.current) observerRef.current.disconnect()
@@ -162,17 +199,17 @@ export default function InfiniteReelsGrid({
         const [entry] = entries
         if (!entry?.isIntersecting) return
         if (endedRef.current) { try { observerRef.current?.unobserve(entry.target) } catch {}; return }
-        const hasMore = items.length < count
-        if (!hasMore || isLoading || isLoadingMore) return
-        // Unobserve immediately to avoid cascade triggers while loading
-        try { observerRef.current?.unobserve(entry.target) } catch {}
+        const currentLen = itemsLenRef.current
+        const totalCount = countRef.current
+        const hasMore = (totalCount === 0) || (currentLen < totalCount) || (lastServerPageSizeRef.current >= pageSize)
+        if (!hasMore || isLoading || isLoadingMore || fetchingRef.current) return
         load(false)
       },
-      { root: null, rootMargin: "200px", threshold: 0.1 }
+      { root: null, rootMargin: "1200px", threshold: 0 }
     )
     observerRef.current.observe(sentinel)
     return () => observerRef.current?.disconnect()
-  }, [items.length, count, isLoading, isLoadingMore, load, ended])
+  }, [enableInfinite, pageSize, isLoading, isLoadingMore, load, ended])
 
   const renderTags = (it) => {
     if (Array.isArray(it?.tags) && it.tags.length) {
@@ -219,6 +256,36 @@ export default function InfiniteReelsGrid({
     setShareOpen(true)
   }
 
+  // Lightweight video hover preview: do not load until hover
+  const startPreview = useCallback((containerEl) => {
+    try {
+      const v = containerEl?.querySelector?.('video[data-src]')
+      if (!v) return
+      if (!v.getAttribute('src')) {
+        const src = v.getAttribute('data-src')
+        if (src) {
+          v.setAttribute('src', src)
+          // Ensure the browser starts fetching only now
+          try { v.load() } catch {}
+        }
+      }
+      try { v.play?.() } catch {}
+    } catch {}
+  }, [])
+
+  const stopPreview = useCallback((containerEl) => {
+    try {
+      const v = containerEl?.querySelector?.('video[data-src]')
+      if (!v) return
+      try { v.pause?.() } catch {}
+      // Detach src to stop network and free resources
+      try {
+        v.removeAttribute('src')
+        v.load()
+      } catch {}
+    } catch {}
+  }, [])
+
   return (
     <section className={`py-10 sm:py-14 bg-white dark:bg-gray-900 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -252,12 +319,16 @@ export default function InfiniteReelsGrid({
                   isVideo(it) ? "aspect-[9/16] bg-black" : "aspect-square bg-gray-100 dark:bg-gray-800"
                 }`}
                 onClick={() => onCardClick(it)}
+                onMouseEnter={(e) => { if (isVideo(it)) startPreview(e.currentTarget) }}
+                onMouseLeave={(e) => { if (isVideo(it)) stopPreview(e.currentTarget) }}
               >
                 <SmartImage src={it.thumbnail_url} alt={it.name || "Reel"} className="h-full w-full object-cover" />
 
                 {isVideo(it) && it.video_url ? (
                   <video
-                    src={it.video_url}
+                    // Do not set src initially; attach on hover
+                    data-src={it.video_url}
+                    preload="none"
                     className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                     muted
                     playsInline
@@ -298,6 +369,19 @@ export default function InfiniteReelsGrid({
 
         {/* sentinel */}
         <div ref={sentinelRef} className="h-10" />
+        {/* Load more button (show only when more data is available) */}
+        {(((count > 0) ? (offset < count) : (lastServerPageSizeRef.current >= pageSize))
+          && !ended && !isLoading && !isLoadingMore) && (
+          <div className="mt-4 flex justify-center">
+            <button
+              type="button"
+              className="px-4 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+              onClick={() => load(false)}
+            >
+              Load more
+            </button>
+          </div>
+        )}
         {isLoadingMore && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 mt-2">
             {Array.from({ length: Math.min(4, pageSize) }).map((_, i) => (
@@ -332,6 +416,7 @@ export default function InfiniteReelsGrid({
         order={order}
         variant={currentVariant}
         forceHome={false}
+        singleOnly
       />
       <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={shareUrl} title="Check this reel" />
     </section>

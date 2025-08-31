@@ -188,6 +188,7 @@ export default function VideoReelGrid({ title = 'Style Stories', filters = {}, l
         filters={{ type: 'video', is_display_home: true, ...filters }}
         order="-created_at"
         variant="phone"
+        singleOnly
       />
       <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={shareUrl} title="Check this reel" />
     </section>

@@ -130,6 +130,7 @@ export default function PhotoReelGrid({ title = 'Follow Our Journey', filters = 
         filters={{ type: 'image', is_display_home: true, ...filters }}
         order="-created_at"
         variant="fullscreen"
+        singleOnly
       />
       <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={shareUrl} title="Check this reel" />
     </section>
