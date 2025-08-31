@@ -1,4 +1,3 @@
-import BlogCard from '@/components/blog/BlogCard';
 import BlogImage from '@/components/blog/BlogImage';
 import { Calendar, Clock, Heart, MessageCircle, Share2, BookOpen, Tag, ArrowLeft } from 'lucide-react';
 import { getBlogById } from '@/services/modules/blog/blogService';
