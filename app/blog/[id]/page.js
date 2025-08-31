@@ -4,6 +4,7 @@ import { Calendar, Clock, Heart, MessageCircle, Share2, BookOpen, Tag, ArrowLeft
 import { getBlogById } from '@/services/modules/blog/blogService';
 import { notFound } from 'next/navigation';
 import RelatedBlogsClient from '@/components/blog/RelatedBlogsClient';
+import RelatedReelsForBlog from '@/components/social/RelatedReelsForBlog';
 
 export const revalidate = 300;
 
@@ -397,6 +398,9 @@ export default async function BlogPostPage({ params }) {
           </div>
         </div>
       </div>
+
+      {/* Reels & Feed related to this blog (renders only if data exists) */}
+      <RelatedReelsForBlog blogId={blogPost.id} className="mt-12 sm:mt-16" />
 
       {/* Related Posts (client-side) */}
       <RelatedBlogsClient currentId={blogPost.id} categoryId={blogPost.category_id || blogPost.category?.id} />

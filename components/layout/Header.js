@@ -168,9 +168,9 @@ export default function Header() {
 
   const navigation = [
     { name: 'Collections', href: '/products' },
-    { name: 'New Arrivals', href: '/products?sort=newest' },
+    { name: 'Reels', href: '/reels' },
     { name: 'Blog', href: '/blog' },
-    { name: 'Sale', href: '/products?sale=true' },
+    { name: 'Feed', href: '/feed' },
     { name: 'About', href: '/about' }
   ];
 

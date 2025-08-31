@@ -1,8 +1,8 @@
 import { ArrowRight } from 'lucide-react';
 import SmartImage from '@/components/ui/SmartImage';
 import Hero from '@/components/home/Hero';
-import InstagramFeed from '@/components/social/InstagramFeed';
-import InstagramReelsFeed from '@/components/social/InstagramReelsFeed';
+import VideoReelGrid from '@/components/social/VideoReelGrid';
+import PhotoReelGrid from '@/components/social/PhotoReelGrid';
 import SimpleTrustSection from '@/components/ui/SimpleTrustSection';
 import SimpleTestimonials from '@/components/ui/SimpleTestimonials';
 
@@ -83,11 +83,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Instagram Reels Section */}
-        <InstagramReelsFeed />
+        {/* Style Stories - Video Reels */}
+        <VideoReelGrid title="Style Stories" filters={{ is_display_home: true, type: 'video' }} />
 
-        {/* Instagram Feed Section */}
-        <InstagramFeed />
+        {/* Follow Our Journey - Photo Grid */}
+        <PhotoReelGrid title="Follow Our Journey" filters={{ is_display_home: true, type: 'image' }} />
 
         {/* Verified Testimonials */}
         <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">

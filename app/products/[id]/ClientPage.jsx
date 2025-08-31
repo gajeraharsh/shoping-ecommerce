@@ -9,6 +9,7 @@ import ProductInfo from '@/components/products/ProductInfo';
 import ProductTabs from '@/components/products/ProductTabs';
 import RelatedProducts from '@/components/products/RelatedProducts';
 import RecentlyViewed from '@/components/products/RecentlyViewed';
+import RelatedReelsForProduct from '@/components/social/RelatedReelsForProduct';
 import { mockProducts } from '@/utils/mockData';
 import { getProductReviews } from '@/services/modules/review/reviewService';
 
@@ -149,6 +150,9 @@ export default function ProductDetailClient({ initialProduct = null }) {
         
         {/* Recently Viewed */}
         <RecentlyViewed currentProductId={product.id} />
+
+        {/* Reels & Feed related to this product (renders only if data exists) */}
+        <RelatedReelsForProduct productId={product.id} className="mt-12 sm:mt-16" />
       </div>
       
     </div>
