@@ -50,19 +50,19 @@ export default function Hero() {
       title: "New Arrivals",
       description: "Latest trends and seasonal favorites",
       image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
-      link: "/products?sort=newest"
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K3V0ZFHSH1BTQW2828K6C14P', page: 1 } }
     },
     {
       title: "Bestsellers",
       description: "Customer favorites and top-rated pieces",
       image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
-      link: "/products?sort=popular"
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K3V0KC1402M0C54RT3ER9DJ5', page: 1 } }
     },
     {
       title: "Sale",
       description: "Limited time offers on premium pieces",
       image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1000&auto=format&fit=crop",
-      link: "/products?sale=true"
+      link: { pathname: '/products', query: { collection_id: '3439849387434', page: 1 } }
     }
   ], []);
 

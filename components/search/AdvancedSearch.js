@@ -341,26 +341,28 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
           {query.length === 0 && (
             <div className="p-3 sm:p-4 bg-gray-50 border-t safe-area-bottom">
               <div className="flex flex-wrap gap-2">
+                {/* Collections quick links */}
                 <Link
-                  href="/products?q=kurtis"
+                  href={{ pathname: '/products', query: { collection_id: 'pcol_01K3V0ZFHSH1BTQW2828K6C14P', page: 1 } }}
                   onClick={onClose}
                   className="px-4 py-3 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors touch-manipulation min-h-[44px] flex items-center"
                 >
-                  Browse Kurtis
+                  New Arrivals
                 </Link>
                 <Link
-                  href="/products?q=dresses"
+                  href={{ pathname: '/products', query: { collection_id: 'pcol_01K3V0KC1402M0C54RT3ER9DJ5', page: 1 } }}
                   onClick={onClose}
                   className="px-4 py-3 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors touch-manipulation min-h-[44px] flex items-center"
                 >
-                  Browse Dresses
+                  Best Seller
                 </Link>
+                {/* Sale: use configured collection if available, else fallback to keyword */}
                 <Link
-                  href="/products?q=ethnic"
+                  href={{ pathname: '/products', query: { collection_id: '3439849387434', page: 1 } }}
                   onClick={onClose}
                   className="px-4 py-3 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors touch-manipulation min-h-[44px] flex items-center"
                 >
-                  Ethnic Wear
+                  Sale
                 </Link>
               </div>
             </div>
