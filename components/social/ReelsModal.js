@@ -6,7 +6,7 @@ import SmartImage from "@/components/ui/SmartImage"
 import { reelsService } from "@/services/modules/reels/reelsService"
 import ShareDialog from "@/components/social/ShareDialog"
 
-export default function ReelsModal({ isOpen, onClose, initialReelId, filters = {}, order = "-created_at", variant = 'phone' }) {
+export default function ReelsModal({ isOpen, onClose, initialReelId, initialReelData = null, filters = {}, order = "-created_at", variant = 'phone', forceHome = true }) {
   const [allReels, setAllReels] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -26,11 +26,16 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, filters = {
     setLoading(true)
     setError(null)
     try {
-      const effective = { is_display_home: true, ...filters }
+      const effective = forceHome ? { is_display_home: true, ...filters } : { ...filters }
       const reels = await reelsService.fetchAll({ filters: effective, order, batchSize: 50 })
-      setAllReels(reels || [])
+      let list = reels || []
+      // If deep-linked reel data is provided and not already present, include it at the start
+      if (initialReelData && initialReelData.id && !list.find((r) => r.id === initialReelData.id)) {
+        list = [initialReelData, ...list]
+      }
+      setAllReels(list)
       if (initialReelId) {
-        const found = reels.findIndex((r) => r.id === initialReelId)
+        const found = list.findIndex((r) => r.id === initialReelId)
         setIndex(found >= 0 ? found : 0)
       } else {
         setIndex(0)
@@ -40,7 +45,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, filters = {
     } finally {
       setLoading(false)
     }
-  }, [filters, order, initialReelId])
+  }, [filters, order, initialReelId, initialReelData, forceHome])
 
   useEffect(() => {
     if (!isOpen) return

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState, useCallback } from "react"
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import SmartImage from "@/components/ui/SmartImage"
 import { reelsService } from "@/services/modules/reels/reelsService"
 import ReelsModal from "@/components/social/ReelsModal"
@@ -24,6 +25,7 @@ export default function InfiniteReelsGrid({
 
   const [modalOpen, setModalOpen] = useState(false)
   const [activeId, setActiveId] = useState(null)
+  const [initialReelData, setInitialReelData] = useState(null)
   const [shareOpen, setShareOpen] = useState(false)
   const [shareUrl, setShareUrl] = useState("")
 
@@ -39,6 +41,33 @@ export default function InfiniteReelsGrid({
   const MAX_REQUESTS = 50
 
   const effectiveFilters = useMemo(() => ({ ...filters }), [JSON.stringify(filters)])
+
+  // Deep-link: open modal by reel id from query param
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  useEffect(() => {
+    const reelId = searchParams?.get('reel')
+    if (!reelId) return
+    let cancelled = false
+    ;(async () => {
+      try {
+        const data = await reelsService.getById(reelId)
+        const reel = data?.reel || data
+        if (cancelled) return
+        setInitialReelData(reel || null)
+        setActiveId(reelId)
+        setModalOpen(true)
+      } catch (_) {
+        // still attempt to open modal with id so user sees loader/empty state
+        if (cancelled) return
+        setActiveId(reelId)
+        setModalOpen(true)
+      }
+    })()
+    return () => { cancelled = true }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   const load = useCallback(async (reset = false) => {
     if (fetchingRef.current) return
@@ -284,11 +313,25 @@ export default function InfiniteReelsGrid({
 
       <ReelsModal
         isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          setModalOpen(false)
+          setActiveId(null)
+          setInitialReelData(null)
+          setShareOpen(false)
+          setShareUrl("")
+          try {
+            const params = new URLSearchParams(searchParams?.toString?.() || "")
+            params.delete('reel')
+            const nextUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname
+            router.replace(nextUrl, { scroll: false })
+          } catch {}
+        }}
         initialReelId={activeId}
+        initialReelData={initialReelData}
         filters={effectiveFilters}
         order={order}
         variant={currentVariant}
+        forceHome={false}
       />
       <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={shareUrl} title="Check this reel" />
     </section>

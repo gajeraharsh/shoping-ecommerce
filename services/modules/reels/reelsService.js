@@ -58,4 +58,9 @@ export const reelsService = {
     if (!reelId) throw new Error('Missing reel id')
     return apiClient.delete(`/reels/${encodeURIComponent(reelId)}/like`)
   },
+
+  async getById(reelId) {
+    if (!reelId) throw new Error('Missing reel id')
+    return apiClient.get(`/reels/${encodeURIComponent(reelId)}`)
+  },
 }
