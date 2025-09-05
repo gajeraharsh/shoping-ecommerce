@@ -9,7 +9,7 @@ export default function InstagramFeed() {
       image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 2847,
       comments: 124,
-      caption: 'Elegant summer collection featuring our bestselling maxi dress ✨ #ModaveStyle'
+      caption: 'Elegant summer collection featuring our bestselling maxi dress ✨ #FaxioStyle'
     },
     {
       id: 2,
@@ -84,13 +84,13 @@ export default function InstagramFeed() {
             Get daily fashion inspiration, styling tips, and behind-the-scenes content from our community
           </p>
           <a
-            href="https://instagram.com/modave_official"
+            href="https://instagram.com/faxio_official"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary inline-flex items-center gap-2"
           >
             <Instagram className="h-5 w-5" />
-            @modave_official
+            @faxio_official
             <ExternalLink className="h-4 w-4" />
           </a>
         </div>
@@ -100,7 +100,7 @@ export default function InstagramFeed() {
           {displayPosts.map((post) => (
             <a
               key={post.id}
-              href={`https://instagram.com/modave_official`}
+              href={`https://instagram.com/faxio_official`}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-xl overflow-hidden block"
@@ -147,11 +147,11 @@ export default function InstagramFeed() {
             Join Our Style Community
           </h3>
           <p className="body-base text-fade mb-6">
-            Tag us <span className="font-semibold text-gray-900 dark:text-white">@modave_official</span> and use
-            <span className="font-semibold text-gray-900 dark:text-white"> #ModaveStyle</span> for a chance to be featured!
+            Tag us <span className="font-semibold text-gray-900 dark:text-white">@faxio_official</span> and use
+            <span className="font-semibold text-gray-900 dark:text-white"> #FaxioStyle</span> for a chance to be featured!
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            {['#ModaveStyle', '#OOTD', '#ElegantFashion', '#TimelessStyle', '#ModernWoman'].map((tag) => (
+            {['#FaxioStyle', '#OOTD', '#ElegantFashion', '#TimelessStyle', '#ModernWoman'].map((tag) => (
               <span
                 key={tag}
                 className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"

@@ -19,9 +19,9 @@ export default function InstagramReelsFeed() {
       shares: 67,
       duration: '0:15',
       caption: 'How to style our new maxi dress 3 different ways ✨ Which look is your favorite?',
-      hashtags: ['#StyleTips', '#MaxiDress', '#OOTD', '#ModaveStyle'],
+      hashtags: ['#StyleTips', '#MaxiDress', '#OOTD', '#FaxioStyle'],
       userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
-      username: 'modave_official'
+      username: 'faxio_official'
     },
     {
       id: 2,
@@ -33,7 +33,7 @@ export default function InstagramReelsFeed() {
       caption: 'Behind the scenes of our autumn collection photoshoot 📸',
       hashtags: ['#BTS', '#AutumnCollection', '#Photoshoot'],
       userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
-      username: 'modave_official'
+      username: 'faxio_official'
     },
     {
       id: 3,
@@ -47,7 +47,7 @@ export default function InstagramReelsFeed() {
       caption: 'Transition from day to night look in under 30 seconds! 🌙✨',
       hashtags: ['#DayToNight', '#QuickChange', '#StyleTransition'],
       userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
-      username: 'modave_official'
+      username: 'faxio_official'
     },
     {
       id: 4,
@@ -59,7 +59,7 @@ export default function InstagramReelsFeed() {
       caption: 'Our customers looking absolutely stunning! 💖 #CustomerSpotlight',
       hashtags: ['#CustomerLove', '#RealCustomers', '#Fashion'],
       userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
-      username: 'modave_official'
+      username: 'faxio_official'
     },
     {
       id: 5,
@@ -73,7 +73,7 @@ export default function InstagramReelsFeed() {
       caption: 'Sustainable fashion tips everyone should know 🌱 Save this post!',
       hashtags: ['#SustainableFashion', '#EcoFriendly', '#Tips'],
       userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
-      username: 'modave_official'
+      username: 'faxio_official'
     },
     {
       id: 6,
@@ -85,7 +85,7 @@ export default function InstagramReelsFeed() {
       caption: 'New arrivals are here! Swipe to see the entire collection 👗',
       hashtags: ['#NewArrivals', '#Collection', '#Shopping'],
       userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces&auto=format&q=80',
-      username: 'modave_official'
+      username: 'faxio_official'
     }
   ], []);
 
@@ -138,13 +138,13 @@ export default function InstagramReelsFeed() {
             Get daily fashion inspiration, styling tutorials, and behind-the-scenes content from our fashion community
           </p>
           <a
-            href="https://instagram.com/modave_official"
+            href="https://instagram.com/faxio_official"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary inline-flex items-center gap-3"
           >
             <Instagram className="h-6 w-6" />
-            Follow @modave_official
+            Follow @faxio_official
             <ExternalLink className="h-5 w-5" />
           </a>
         </div>
@@ -282,11 +282,11 @@ export default function InstagramReelsFeed() {
             Be Part of Our Fashion Community
           </h3>
           <p className="body-base text-fade mb-6 max-w-2xl mx-auto">
-            Tag us <span className="font-semibold text-gray-900 dark:text-white">@modave_official</span> and use 
-            <span className="font-semibold text-gray-900 dark:text-white"> #ModaveStyle</span> for a chance to be featured in our stories!
+            Tag us <span className="font-semibold text-gray-900 dark:text-white">@faxio_official</span> and use 
+            <span className="font-semibold text-gray-900 dark:text-white"> #FaxioStyle</span> for a chance to be featured in our stories!
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            {['#ModaveStyle', '#OOTD', '#StyleTips', '#FashionInspo', '#ElegantStyle'].map((tag) => (
+            {['#FaxioStyle', '#OOTD', '#StyleTips', '#FashionInspo', '#ElegantStyle'].map((tag) => (
               <span
                 key={tag}
                 className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 cursor-pointer"

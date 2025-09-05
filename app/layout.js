@@ -16,24 +16,24 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: 'Modave - Premium Fashion & Style',
+  title: 'Faxio - Premium Fashion & Style',
   description: 'Discover exceptional fashion pieces that blend timeless style with contemporary flair. Curated collections for the modern woman.',
-  keywords: 'fashion, women clothing, premium fashion, elegant dresses, luxury fashion, online shopping, style, modave',
+  keywords: 'fashion, women clothing, premium fashion, elegant dresses, luxury fashion, online shopping, style, faxio',
   icons: {
     icon: '/favicon.svg',
   },
   robots: 'index, follow',
-  author: 'Modave Fashion',
+  author: 'Faxio',
   openGraph: {
-    title: 'Modave - Premium Fashion & Style',
+    title: 'Faxio - Premium Fashion & Style',
     description: 'Discover exceptional fashion pieces that blend timeless style with contemporary flair.',
     type: 'website',
     locale: 'en_US',
-    siteName: 'Modave',
+    siteName: 'Faxio',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Modave - Premium Fashion & Style',
+    title: 'Faxio - Premium Fashion & Style',
     description: 'Discover exceptional fashion pieces that blend timeless style with contemporary flair.',
   },
   verification: {

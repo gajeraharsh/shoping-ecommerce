@@ -39,7 +39,7 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
               <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 text-black px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl font-bold text-lg sm:text-xl shadow-lg">
-                M
+                F
               </div>
               <div>
                 <span className="text-lg sm:text-xl font-bold tracking-tight">{BRAND.name}</span>

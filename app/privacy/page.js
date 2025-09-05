@@ -252,9 +252,9 @@ export default function PrivacyPage() {
                 If you have any questions about this privacy policy or our data practices, please contact us:
               </p>
               <div className="space-y-2 text-gray-600">
-                <p><strong>Email:</strong> privacy@modave.com</p>
-                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                <p><strong>Mail:</strong> Modave Privacy Team, 123 Fashion Avenue, New York, NY 10001</p>
+                <p><strong>Email:</strong> storemanager.faxio@gmail.com</p>
+                <p><strong>Phone:</strong> 7801959924</p>
+                <p><strong>Mail:</strong> Faxio Privacy Team, A/10 Harikrishan Socity Ahmedabad Thakkarnagar, Gujarat, India</p>
               </div>
             </section>
           </div>

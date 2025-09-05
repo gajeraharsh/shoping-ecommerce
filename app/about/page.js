@@ -36,7 +36,7 @@ export default function AboutPage() {
   ];
 
   const milestones = [
-    { year: '2018', title: 'Founded', description: 'Modave was born with a vision to democratize fashion' },
+    { year: '2018', title: 'Founded', description: 'Faxio was born with a vision to democratize fashion' },
     { year: '2019', title: '10K Customers', description: 'Reached our first major milestone of 10,000 happy customers' },
     { year: '2021', title: 'Sustainable Line', description: 'Launched our eco-friendly sustainable fashion collection' },
     { year: '2023', title: 'Global Reach', description: 'Expanded internationally, now serving customers worldwide' },
@@ -68,7 +68,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Page Hero with brand aesthetic */}
       <PageHero
-        title="About Modave"
+        title="About Faxio"
         eyebrow="Our Story"
         description="We're more than a fashion retailer. We're your style companion, helping you express your unique personality with carefully curated, high‑quality pieces."
         image="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=2340&auto=format&fit=crop"
@@ -85,7 +85,7 @@ export default function AboutPage() {
             <div>
               <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                 <p>
-                  Founded in 2018, Modave started with a simple belief: that everyone deserves 
+                  Founded in 2018, Faxio started with a simple belief: that everyone deserves 
                   access to beautiful, well-made clothing that makes them feel confident and authentic.
                 </p>
                 <p>

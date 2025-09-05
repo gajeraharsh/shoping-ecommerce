@@ -52,7 +52,7 @@ function RegisterContent() {
           <div className="card-minimal p-8">
             <div className="text-center mb-8">
               <h1 className="heading-md text-gray-900 dark:text-white mb-2">Create Account</h1>
-              <p className="body-base text-fade">Join the Modave community</p>
+              <p className="body-base text-fade">Join the Faxio community</p>
             </div>
             
             <Formik

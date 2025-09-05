@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Cookie Policy | Modave',
-  description: 'Learn how Modave uses cookies to enhance your shopping experience, provide secure checkout, and analyze site usage.'
+  title: 'Cookie Policy | Faxio',
+  description: 'Learn how Faxio uses cookies to enhance your shopping experience, provide secure checkout, and analyze site usage.'
 };
 
 export default function CookiePolicyPage() {

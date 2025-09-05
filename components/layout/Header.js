@@ -303,7 +303,7 @@ export default function Header() {
               <div className={`bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black rounded-xl font-bold tracking-tight shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105
                 ${isScrolled ? 'px-2.5 py-1.5 text-base sm:text-base md:text-lg' : 'px-2.5 py-1.5 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-base sm:text-lg md:text-xl'}
               `}>
-                M
+                F
               </div>
               <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 rounded-xl opacity-0 group-hover:opacity-30 blur-sm transition-all duration-300"></div>
             </div>
