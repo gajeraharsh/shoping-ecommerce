@@ -180,6 +180,7 @@ export default function Header() {
   const [categoriesTop, setCategoriesTop] = useState(0);
   const [categoriesRight, setCategoriesRight] = useState(0);
   const categoryTree = useSelector((state) => state.category?.items || []);
+  const [activeTopIdx, setActiveTopIdx] = useState(0);
 
   const updateCategoriesTop = () => {
     const el = categoriesRef.current;
@@ -227,6 +228,7 @@ export default function Header() {
     }
     updateCategoriesTop();
     setIsCategoriesOpen(true);
+    setActiveTopIdx(0);
   };
 
   const scheduleCloseCategories = () => {
@@ -338,50 +340,131 @@ export default function Header() {
                 <>
                   {/* Hover bridge to prevent flicker when moving from trigger to panel */}
                   <div
-                    className="fixed w-[90vw] max-w-2xl h-6 z-[70]"
-                    style={{ top: categoriesTop - 1, left: categoriesRight }}
+                    className="fixed left-0 right-0 h-6 z-[70]"
+                    style={{ top: categoriesTop - 1 }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
                     ref={hoverBridgeRef}
                   />
-                  {/* Right-aligned horizontal dropdown panel */}
+                  {/* Full-width premium mega menu */}
                   <div
-                    className={`fixed bg-white dark:bg-gray-900
-                      border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl p-4 grid grid-cols-2 md:grid-cols-3 gap-4 z-[200] max-h-[70vh] overflow-y-auto w-[90vw] max-w-2xl`}
-                    style={{ top: categoriesTop, left: categoriesRight }}
+                    className="fixed left-0 right-0 z-[200]"
+                    style={{ top: categoriesTop }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    ref={panelRef}
                   >
-                  {(categoryTree.length ? categoryTree : CATEGORY_TREE).map((top, idx) => (
-                    <div key={top.slug} className={`min-w-0 px-2 ${idx !== 0 ? 'lg:border-l border-gray-100 dark:border-gray-800' : ''}`}>
-                      <Link href={`/products?category=${top.slug}`} className="block text-base font-semibold text-gray-900 dark:text-white mb-4 hover:text-black dark:hover:text-white" onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}>
-                        {top.name}
-                      </Link>
-                      <div className="space-y-5">
-                        {top.children?.map((sub) => (
-                          <div key={sub.slug}>
-                            <Link href={`/products?category=${top.slug}&sub=${sub.slug}`} className="block text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 hover:text-gray-700 dark:hover:text-gray-300" onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}>
-                              {sub.name}
-                            </Link>
-                            <div className="flex flex-wrap gap-2.5">
-                              {sub.children?.map((leaf) => (
-                                <Link
-                                  key={leaf.slug}
-                                  href={`/products?category=${top.slug}&sub=${sub.slug}&type=${leaf.slug}`}
-                                  className="text-[13px] text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-100 dark:border-gray-700 rounded-lg px-3 py-1.5 transition-colors"
-                                  onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
-                                >
-                                  {leaf.name}
-                                </Link>
-                              ))}
+                    <div className="max-w-7xl mx-auto px-4 lg:px-6">
+                      <div
+                        ref={panelRef}
+                        className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl overflow-hidden"
+                      >
+                        <div className="grid grid-cols-[240px_1fr] gap-0 max-h-[70vh]">
+                          {/* Left rail: Top categories list + search */}
+                          <div className="border-r border-gray-100 dark:border-gray-800 p-3 sm:p-4 overflow-y-auto">
+                            <div className="relative mb-3 sm:mb-4">
+                              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                              <input
+                                type="text"
+                                placeholder="Search categories"
+                                className="w-full pl-9 pr-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent"
+                                onChange={(e) => {
+                                  const q = (e.target.value || '').trim().toLowerCase();
+                                  const tops = (categoryTree.length ? categoryTree : CATEGORY_TREE);
+                                  const matches = (t) => {
+                                    if (!q) return false;
+                                    if (t.name?.toLowerCase().includes(q)) return true;
+                                    if (Array.isArray(t.children)) {
+                                      for (const sub of t.children) {
+                                        if (sub?.name?.toLowerCase().includes(q)) return true;
+                                        if (Array.isArray(sub.children)) {
+                                          for (const leaf of sub.children) {
+                                            if (leaf?.name?.toLowerCase().includes(q)) return true;
+                                          }
+                                        }
+                                      }
+                                    }
+                                    return false;
+                                  };
+                                  let idx = tops.findIndex(matches);
+                                  if (idx < 0) idx = 0;
+                                  setActiveTopIdx(idx);
+                                }}
+                              />
                             </div>
+                            <ul className="space-y-1">
+                              {(categoryTree.length ? categoryTree : CATEGORY_TREE).map((top, idx) => (
+                                <li key={top.slug}>
+                                  <button
+                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                                      ${idx === activeTopIdx ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                                    onMouseEnter={() => setActiveTopIdx(idx)}
+                                    onFocus={() => setActiveTopIdx(idx)}
+                                    onClick={() => {
+                                      setIsCategoriesPinned(false);
+                                      setIsCategoriesOpen(false);
+                                      window.location.href = `/products?category_id=${encodeURIComponent(top.id || top.slug)}`;
+                                    }}
+                                  >
+                                    {top.name}
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
                           </div>
-                        ))}
+                          {/* Right content: subcategories and chips */}
+                          <div className="p-4 sm:p-6 overflow-y-auto">
+                            {(() => {
+                              const tops = (categoryTree.length ? categoryTree : CATEGORY_TREE);
+                              const active = tops[activeTopIdx] || tops[0];
+                              if (!active) return null;
+                              return (
+                                <div className="flex flex-col gap-4 sm:gap-6">
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white tracking-tight">{active.name}</h3>
+                                      <p className="text-xs text-gray-500 dark:text-gray-400">Explore all {active.name} categories</p>
+                                    </div>
+                                    <Link
+                                      href={`/products?category_id=${active.id || active.slug}`}
+                                      onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
+                                      className="px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                    >
+                                      View all
+                                    </Link>
+                                  </div>
+                                  <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
+                                    {active.children?.map((sub) => (
+                                      <div key={sub.slug} className="min-w-0">
+                                        <Link
+                                          href={`/products?category_id=${sub.id || active.id || active.slug}`}
+                                          onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
+                                          className="block text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 hover:text-gray-700 dark:hover:text-gray-300"
+                                        >
+                                          {sub.name}
+                                        </Link>
+                                        <div className="flex flex-wrap gap-2.5">
+                                          {sub.children?.map((leaf) => (
+                                            <Link
+                                              key={leaf.slug}
+                                              href={`/products?category_id=${leaf.id || sub.id || active.id || active.slug}`}
+                                              onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
+                                              className="text-[13px] text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-100 dark:border-gray-700 rounded-lg px-3 py-1.5 transition-colors"
+                                            >
+                                              {leaf.name}
+                                            </Link>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  ))}
                   </div>
                 </>
               )}
@@ -572,7 +655,7 @@ export default function Header() {
                 <div className="px-6 py-6 border-b border-gray-100 dark:border-gray-800">
                   <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Shop by Category</h3>
                   <div className="divide-y divide-gray-100 dark:divide-gray-800">
-                    {CATEGORY_TREE.map((top, i) => (
+                    {(categoryTree.length ? categoryTree : CATEGORY_TREE).map((top, i) => (
                       <div key={top.slug} className="py-2">
                         <button
                           className="w-full flex items-center justify-between py-2 text-gray-700 dark:text-gray-300"
@@ -599,7 +682,7 @@ export default function Header() {
                                     {sub.children?.map((leaf) => (
                                       <Link
                                         key={leaf.slug}
-                                        href={`/products?category=${top.slug}&sub=${sub.slug}&type=${leaf.slug}`}
+                                        href={`/products?category_id=${encodeURIComponent(leaf.id || sub.id || top.id || top.slug)}`}
                                         onClick={() => setIsMenuOpen(false)}
                                         className="text-sm text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg px-2.5 py-1"
                                       >

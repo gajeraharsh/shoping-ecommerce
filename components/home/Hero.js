@@ -32,7 +32,7 @@ export default function Hero() {
       description: "Exquisite evening wear crafted for the modern woman who values elegance",
       image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2340&auto=format&fit=crop",
       cta: "Explore Now",
-      link: "/products?category=evening"
+      link: "/products?q=evening"
     },
     {
       id: 3,
@@ -41,7 +41,7 @@ export default function Hero() {
       description: "Premium casual wear that transitions seamlessly from day to night",
       image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2340&auto=format&fit=crop",
       cta: "Shop Now",
-      link: "/products?category=casual"
+      link: "/products?q=casual"
     }
   ], []);
 

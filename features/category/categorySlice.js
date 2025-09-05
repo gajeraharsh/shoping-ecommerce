@@ -35,6 +35,7 @@ const categorySlice = createSlice({
           [...arr].sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0) || a.name.localeCompare(b.name))
 
         const toNode = (c) => ({
+          id: c.id,
           name: c.name,
           slug: c.handle || c.id,
           children: sortCats(

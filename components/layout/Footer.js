@@ -78,7 +78,7 @@ export default function Footer() {
               <li><Link href="/products" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">All Collections</Link></li>
               <li><Link href="/products?sort=newest" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">New Arrivals</Link></li>
               <li><Link href="/products?sale=true" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">Sale</Link></li>
-              <li><Link href="/products?category=bestsellers" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">Bestsellers</Link></li>
+              <li><Link href="/products?q=bestsellers" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">Bestsellers</Link></li>
               <li><Link href="/account/wishlist" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">Wishlist</Link></li>
             </ul>
           </div>

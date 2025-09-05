@@ -19,7 +19,7 @@ export default function Categories() {
           {categories.map((category) => (
             <Link
               key={category.id}
-              href={`/products?category=${category.slug}`}
+              href={`/products?category_id=${encodeURIComponent(category.id || category.slug)}`}
               className="group relative overflow-hidden rounded-lg sm:rounded-2xl aspect-square bg-gray-200 hover:scale-105 transition-transform duration-300"
             >
               <div className="absolute inset-0">
