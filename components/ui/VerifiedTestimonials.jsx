@@ -1,6 +1,7 @@
 'use client';
 
 import { Star, CheckCircle, Quote } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function VerifiedTestimonials({ className = '' }) {
   const testimonials = [
@@ -13,7 +14,7 @@ export default function VerifiedTestimonials({ className = '' }) {
       rating: 5,
       verified: true,
       purchaseDate: "Verified Purchase - November 2024",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b890?w=150&h=150&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b890?w=150&h=150&fit=crop&crop=faces"
     },
     {
       id: 2,
@@ -24,7 +25,7 @@ export default function VerifiedTestimonials({ className = '' }) {
       rating: 5,
       verified: true,
       purchaseDate: "Verified Purchase - November 2024",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces"
     },
     {
       id: 3,
@@ -35,7 +36,7 @@ export default function VerifiedTestimonials({ className = '' }) {
       rating: 5,
       verified: true,
       purchaseDate: "Verified Purchase - October 2024",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=faces"
     }
   ];
 
@@ -85,11 +86,13 @@ export default function VerifiedTestimonials({ className = '' }) {
             </p>
             
             <div className="flex items-center gap-3">
-              <img
-                src={testimonial.avatar}
-                alt={testimonial.author}
-                className="w-10 h-10 rounded-full object-cover"
-              />
+              <div className="w-10 h-10 rounded-full overflow-hidden relative">
+                <SmartImage
+                  src={testimonial.avatar}
+                  alt={testimonial.author}
+                  className="object-cover"
+                />
+              </div>
               <div>
                 <p className="font-semibold text-gray-900 dark:text-white text-sm">
                   {testimonial.author}

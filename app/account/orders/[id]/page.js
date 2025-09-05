@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
@@ -21,116 +21,46 @@ import {
   MessageCircle,
   Share2
 } from 'lucide-react';
+import { retrieveMyOrder } from '@/services/order/orderService';
 
 export default function OrderDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const orderId = params.id;
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const fetchedIdsRef = React.useRef(new Set());
+  const inFlightRef = React.useRef(false);
 
-  // Mock order details (in real app, fetch based on orderId)
-  const orderDetails = {
-    id: 'ORD-2024-001',
-    date: '2024-01-15',
-    status: 'delivered',
-    total: 2499,
-    subtotal: 2100,
-    shipping: 99,
-    tax: 300,
-    discount: 0,
-    couponCode: '',
-    paymentMethod: 'Credit Card',
-    paymentStatus: 'Paid',
-    trackingNumber: 'TRK123456789',
-    deliveryDate: '2024-01-18',
-    items: [
-      {
-        id: 1,
-        name: 'Floral Summer Dress',
-        description: 'Beautiful floral print summer dress made with premium cotton fabric',
-        image: '/api/placeholder/400/400',
-        price: 1899,
-        originalPrice: 2299,
-        quantity: 1,
-        size: 'M',
-        color: 'Blue',
-        sku: 'FSD-001-M-BL',
-        canReturn: true,
-        canReview: true
-      },
-      {
-        id: 2,
-        name: 'Cotton Casual Shirt',
-        description: 'Comfortable cotton casual shirt perfect for everyday wear',
-        image: '/api/placeholder/400/400',
-        price: 600,
-        originalPrice: 799,
-        quantity: 1,
-        size: 'L',
-        color: 'White',
-        sku: 'CCS-002-L-WH',
-        canReturn: true,
-        canReview: true
+  useEffect(() => {
+    let mounted = true;
+    async function run() {
+      try {
+        if (!orderId) return;
+        // prevent duplicate calls (StrictMode double invoke, rapid mount/unmount)
+        if (fetchedIdsRef.current.has(orderId) || inFlightRef.current) return;
+        inFlightRef.current = true;
+        // Only show skeleton on first load to avoid flicker on re-renders
+        if (!orderDetails) setLoading(true);
+        const res = await retrieveMyOrder(orderId, {
+          // request useful fields to reduce payload
+          fields: '+items,+shipping_address,+billing_address,+subtotal,+shipping_total,+tax_total,+discount_total,+total,+status,+payment_status,+payment_collection,+fulfillments',
+        });
+        if (!mounted) return;
+        setOrderDetails(res.order);
+        fetchedIdsRef.current.add(orderId);
+      } catch (e) {
+        if (!mounted) return;
+        setError(e?.response?.data?.message || e.message || 'Failed to load order');
+      } finally {
+        inFlightRef.current = false;
+        if (mounted) setLoading(false);
       }
-    ],
-    shippingAddress: {
-      name: 'John Doe',
-      phone: '+91 9876543210',
-      email: 'john@example.com',
-      address: '123 Main Street, Apartment 4B',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      pincode: '400001',
-      country: 'India'
-    },
-    billingAddress: {
-      name: 'John Doe',
-      phone: '+91 9876543210',
-      email: 'john@example.com',
-      address: '123 Main Street, Apartment 4B',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      pincode: '400001',
-      country: 'India'
-    },
-    timeline: [
-      {
-        status: 'Order Placed',
-        date: '2024-01-15 10:30 AM',
-        description: 'Your order has been confirmed',
-        completed: true
-      },
-      {
-        status: 'Payment Confirmed',
-        date: '2024-01-15 10:32 AM',
-        description: 'Payment has been processed successfully',
-        completed: true
-      },
-      {
-        status: 'Order Prepared',
-        date: '2024-01-16 2:15 PM',
-        description: 'Your items have been picked and packed',
-        completed: true
-      },
-      {
-        status: 'Shipped',
-        date: '2024-01-16 6:45 PM',
-        description: 'Your order is on the way',
-        completed: true
-      },
-      {
-        status: 'Out for Delivery',
-        date: '2024-01-18 9:00 AM',
-        description: 'Your order is out for delivery',
-        completed: true
-      },
-      {
-        status: 'Delivered',
-        date: '2024-01-18 2:30 PM',
-        description: 'Order delivered successfully',
-        completed: true
-      }
-    ]
-  };
+    }
+    run();
+    return () => { mounted = false };
+  }, [orderId]);
 
   const statusConfig = {
     processing: { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
@@ -139,13 +69,63 @@ export default function OrderDetailsPage() {
     cancelled: { color: 'bg-red-100 text-red-800', icon: XCircle }
   };
 
-  const currentStatus = statusConfig[orderDetails.status] || statusConfig.processing;
+  const currentStatus = statusConfig[orderDetails?.status] || statusConfig.processing;
   const StatusIcon = currentStatus.icon;
+
+  const showContent = !loading && !!orderDetails
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 overflow-x-hidden">
+      {/* Skeleton: layout-matched to final UI to minimize CLS */}
+      {loading && (
+        <div className="space-y-6">
+          {/* Header skeleton */}
+          <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 animate-pulse">
+            <div className="h-6 sm:h-8 bg-gray-200 rounded w-1/3 mb-4" />
+            <div className="flex gap-2">
+              <div className="h-8 w-24 bg-gray-100 rounded" />
+              <div className="h-8 w-36 bg-gray-100 rounded" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {/* Left column skeletons */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 animate-pulse">
+                <div className="h-5 w-40 bg-gray-200 rounded mb-4" />
+                <div className="space-y-3">
+                  <div className="h-24 bg-gray-100 rounded" />
+                  <div className="h-24 bg-gray-100 rounded" />
+                  <div className="h-24 bg-gray-100 rounded" />
+                </div>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 animate-pulse">
+                <div className="h-5 w-40 bg-gray-200 rounded mb-4" />
+                <div className="space-y-3">
+                  <div className="h-12 bg-gray-100 rounded" />
+                  <div className="h-12 bg-gray-100 rounded" />
+                  <div className="h-12 bg-gray-100 rounded" />
+                </div>
+              </div>
+            </div>
+
+            {/* Right column skeletons */}
+            <div className="space-y-6">
+              <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 animate-pulse min-h-[220px]" />
+              <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 animate-pulse min-h-[160px]" />
+              <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 animate-pulse min-h-[160px]" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="mb-4 p-3 rounded bg-red-50 text-red-700 border border-red-200">
+          {error}
+        </div>
+      )}
       {/* Header */}
-      <div className="mb-6 sm:mb-8">
+      <div className={`mb-6 sm:mb-8 transition-opacity duration-300 ${showContent ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}>
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors text-sm sm:text-base"
@@ -157,13 +137,13 @@ export default function OrderDetailsPage() {
         <div className="flex flex-col gap-4">
           <div>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-              Order #{orderDetails.id}
+              Order #{orderDetails?.id || orderId}
             </h1>
             <div className="flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-4 text-xs sm:text-sm text-gray-600">
-              <span>Placed on {new Date(orderDetails.date).toLocaleDateString()}</span>
+              <span>Placed on {orderDetails?.date ? new Date(orderDetails.date).toLocaleDateString() : '-'}</span>
               <div className={`flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full font-medium ${currentStatus.color} w-fit`}>
                 <StatusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="text-xs sm:text-sm">{orderDetails.status.charAt(0).toUpperCase() + orderDetails.status.slice(1)}</span>
+                <span className="text-xs sm:text-sm">{(orderDetails?.status || 'processing').replace(/^./, c => c.toUpperCase())}</span>
               </div>
             </div>
           </div>
@@ -182,18 +162,18 @@ export default function OrderDetailsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+      <div className={`grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 transition-opacity duration-300 ${showContent ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}>
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-4 sm:space-y-6 lg:space-y-8">
           {/* Order Items */}
           <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2">
               <Package className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="text-sm sm:text-base lg:text-lg">Order Items ({orderDetails.items.length})</span>
+              <span className="text-sm sm:text-base lg:text-lg">Order Items ({orderDetails?.items?.length || 0})</span>
             </h2>
             
             <div className="space-y-4 sm:space-y-6">
-              {orderDetails.items.map(item => (
+              {(orderDetails?.items || []).map(item => (
                 <div key={item.id} className="flex flex-col xs:flex-row gap-3 sm:gap-4 lg:gap-6 p-3 sm:p-4 border border-gray-100 rounded-lg">
                   <img
                     src={item.image}
@@ -248,7 +228,7 @@ export default function OrderDetailsPage() {
             </h2>
             
             <div className="space-y-3 sm:space-y-4">
-              {orderDetails.timeline.map((event, index) => (
+              {(orderDetails?.timeline || []).map((event, index) => (
                 <div key={index} className="flex gap-3 sm:gap-4">
                   <div className="flex flex-col items-center">
                     <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${
@@ -260,7 +240,7 @@ export default function OrderDetailsPage() {
                         <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
                       )}
                     </div>
-                    {index < orderDetails.timeline.length - 1 && (
+                    {index < ((orderDetails?.timeline || []).length - 1) && (
                       <div className={`w-px h-8 sm:h-12 ${event.completed ? 'bg-green-200' : 'bg-gray-200'}`} />
                     )}
                   </div>
@@ -289,26 +269,26 @@ export default function OrderDetailsPage() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Subtotal</span>
-                <span className="font-medium">₹{orderDetails.subtotal}</span>
+                <span className="font-medium">₹{orderDetails?.subtotal ?? 0}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Shipping</span>
-                <span className="font-medium">₹{orderDetails.shipping}</span>
+                <span className="font-medium">₹{orderDetails?.shipping ?? 0}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Tax</span>
-                <span className="font-medium">₹{orderDetails.tax}</span>
+                <span className="font-medium">₹{orderDetails?.tax ?? 0}</span>
               </div>
-              {orderDetails.discount > 0 && (
+              {Number(orderDetails?.discount || 0) > 0 && (
                 <div className="flex justify-between text-green-600">
                   <span>Discount</span>
-                  <span>-₹{orderDetails.discount}</span>
+                  <span>-₹{orderDetails?.discount}</span>
                 </div>
               )}
               <div className="border-t pt-3">
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total</span>
-                  <span>₹{orderDetails.total}</span>
+                  <span>₹{orderDetails?.total ?? 0}</span>
                 </div>
               </div>
             </div>
@@ -324,13 +304,13 @@ export default function OrderDetailsPage() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Payment Method</span>
-                <span className="font-medium">{orderDetails.paymentMethod}</span>
+                <span className="font-medium">{orderDetails?.paymentMethod || '—'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Payment Status</span>
-                <span className="text-green-600 font-medium">{orderDetails.paymentStatus}</span>
+                <span className="text-green-600 font-medium">{orderDetails?.paymentStatus || '—'}</span>
               </div>
-              {orderDetails.trackingNumber && (
+              {orderDetails?.trackingNumber && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tracking Number</span>
                   <span className="font-medium text-blue-600">{orderDetails.trackingNumber}</span>
@@ -347,17 +327,17 @@ export default function OrderDetailsPage() {
             </h3>
             
             <div className="text-xs sm:text-sm space-y-1 text-gray-600">
-              <div className="font-medium text-gray-900">{orderDetails.shippingAddress.name}</div>
-              <div className="line-clamp-2">{orderDetails.shippingAddress.address}</div>
-              <div>{orderDetails.shippingAddress.city}, {orderDetails.shippingAddress.state} {orderDetails.shippingAddress.pincode}</div>
-              <div>{orderDetails.shippingAddress.country}</div>
+              <div className="font-medium text-gray-900">{orderDetails?.shippingAddress?.name || '—'}</div>
+              <div className="line-clamp-2">{orderDetails?.shippingAddress?.address || '—'}</div>
+              <div>{orderDetails?.shippingAddress?.city || '—'}, {orderDetails?.shippingAddress?.state || '—'} {orderDetails?.shippingAddress?.pincode || '—'}</div>
+              <div>{orderDetails?.shippingAddress?.country || '—'}</div>
               <div className="flex items-center gap-2 pt-2">
                 <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="break-all">{orderDetails.shippingAddress.phone}</span>
+                <span className="break-all">{orderDetails?.shippingAddress?.phone || '—'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="break-all">{orderDetails.shippingAddress.email}</span>
+                <span className="break-all">{orderDetails?.shippingAddress?.email || '—'}</span>
               </div>
             </div>
           </div>
@@ -368,7 +348,7 @@ export default function OrderDetailsPage() {
 
             <div className="space-y-3">
               <Link
-                href={`/account/tracking?order=${orderDetails.id}`}
+                href={`/account/tracking?order=${orderDetails?.id || orderId}`}
                 className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm sm:text-base"
               >
                 <Truck className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />

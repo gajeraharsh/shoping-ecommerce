@@ -1,77 +1,165 @@
-import BlogCard from '@/components/blog/BlogCard';
-import BlogImage, { AuthorAvatar } from '@/components/blog/BlogImage';
-import { Calendar, Clock, User, Heart, MessageCircle, Share2, BookOpen, Tag, ArrowLeft } from 'lucide-react';
+import BlogImage from '@/components/blog/BlogImage';
+import { Calendar, Clock, Heart, MessageCircle, Share2, BookOpen, Tag, ArrowLeft } from 'lucide-react';
+import { getBlogById } from '@/services/modules/blog/blogService';
+import { notFound } from 'next/navigation';
+import RelatedBlogsClient from '@/components/blog/RelatedBlogsClient';
+import RelatedReelsForBlog from '@/components/social/RelatedReelsForBlog';
 
-export default function BlogPostPage({ params }) {
-  // Mock blog post data - replace with your CMS/database data
-  const blogPost = {
-    id: params.id,
-    title: "5 Ways to Style Your Kurti for Every Occasion",
-    content: `
-      <p>Kurtis are the ultimate versatile piece in every woman's wardrobe. Whether you're heading to the office, meeting friends for brunch, or attending a special celebration, a well-styled kurti can be your perfect companion. Today, we'll explore five distinct ways to transform your favorite kurti for any occasion.</p>
+export const revalidate = 300;
 
-      <h2>1. Professional Office Look</h2>
-      <p>Transform your kurti into sophisticated office wear by pairing it with well-fitted trousers or a pencil skirt. Choose solid colors or subtle prints, and add a structured blazer for extra polish. Complete the look with closed-toe shoes and minimal jewelry. This combination strikes the perfect balance between traditional and contemporary professional style.</p>
+export async function generateMetadata({ params }) {
+  const { id } = params || {};
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com';
+  const url = `${siteUrl}/blog/${id}`;
+  try {
+    // Fetch without unsupported fields param
+    const res = await getBlogById(id);
+    const b = res?.blog || res || {};
+    const title = b?.title ? `${b.title} | Faxio` : 'Blog | Faxio';
+    const contentText = b?.excerpt || b?.summary || b?.content_plain || b?.content || b?.content_html || '';
+    const description = (typeof contentText === 'string' ? contentText.replace(/<[^>]*>/g, '') : '').slice(0, 160) || 'Read fashion tips, trends, and stories on Faxio.';
+    const images = (
+      Array.isArray(b?.images) ? b.images :
+      (Array.isArray(b?.media) ? b.media.map((m) => m?.url || m).filter(Boolean) :
+      (b?.cover_image ? [b.cover_image] :
+      (b?.banner ? [b.banner] :
+      (b?.thumbnail ? [b.thumbnail] :
+      (b?.image ? [b.image] :
+      (b?.image_url ? [b.image_url] : []))))))
+    ).filter(Boolean).slice(0, 4);
+    const ogImages = images.length ? images : [];
+    const rawTags = Array.isArray(b?.tags)
+      ? b.tags
+      : (Array.isArray(b?.tag_list)
+        ? b.tag_list
+        : (Array.isArray(b?.metadata?.tags)
+          ? b.metadata.tags
+          : (Array.isArray(b?.hashtags)
+            ? b.hashtags
+            : (typeof b?.hashtags === 'string'
+              ? b.hashtags.split(',').map((t) => t.trim()).filter(Boolean)
+              : []))));
+    const keywords = rawTags.map((t) => (typeof t === 'string' ? t : t?.name)).filter(Boolean);
 
-      <h2>2. Casual Weekend Vibes</h2>
-      <p>For a relaxed weekend look, pair your kurti with comfortable leggings or straight pants. Roll up the sleeves, add a denim jacket or light cardigan, and finish with sneakers or flats. This effortless combination is perfect for shopping trips, casual lunch dates, or running errands while looking put-together.</p>
+    // Article-specific metadata
+    const publishedTime = b?.published_at || b?.created_at || b?.date || undefined;
+    const modifiedTime = b?.updated_at || b?.modified_at || undefined;
+    const authorName = (typeof b?.author === 'string')
+      ? b.author
+      : (b?.author?.name || b?.user?.name || b?.created_by || undefined);
+    const section = (typeof b?.category === 'string')
+      ? b.category
+      : (b?.category?.name || (Array.isArray(b?.categories) ? b.categories[0]?.name : b?.category_name));
 
-      <h2>3. Elegant Evening Ensemble</h2>
-      <p>Elevate your kurti for evening events by choosing pieces with embellishments, rich fabrics, or intricate embroidery. Pair with palazzo pants or a flowing skirt, add statement jewelry, and complete with heels or embellished flats. A light dupatta can add an extra layer of elegance to your evening look.</p>
+    return {
+      title,
+      description,
+      keywords,
+      robots: {
+        index: true,
+        follow: true,
+        nocache: false,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+          'max-video-preview': -1,
+        },
+      },
+      alternates: { canonical: url },
+      openGraph: {
+        title,
+        description,
+        url,
+        type: 'article',
+        siteName: 'Faxio',
+        locale: 'en_US',
+        images: ogImages.map((src) => ({ url: src })),
+        publishedTime,
+        modifiedTime,
+        authors: authorName ? [authorName] : undefined,
+        tags: keywords?.length ? keywords : undefined,
+        section,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        images: ogImages,
+        site: '@faxio',
+        creator: '@faxio',
+      },
+    };
+  } catch (_) {
+    return {
+      title: 'Blog | Faxio',
+      description: 'Read fashion tips, trends, and stories on Faxio.',
+      alternates: { canonical: url },
+    };
+  }
+}
 
-      <h2>4. Festive Celebration Style</h2>
-      <p>For festivals and celebrations, opt for vibrant colors and traditional prints. Layer with a contrasting jacket or shrug, add oxidized jewelry, and choose traditional footwear like juttis or wedges. Don't forget to carry a potli bag or clutch that complements your outfit's color scheme.</p>
+export default async function BlogPostPage({ params }) {
+  const { id } = params || {};
+  let blogPost = null;
+  try {
+    // Fetch without unsupported fields param
+    const res = await getBlogById(id);
+    blogPost = res?.blog || res || null;
+  } catch (e) {
+    blogPost = null;
+  }
 
-      <h2>5. Date Night Chic</h2>
-      <p>Create a romantic date night look by choosing a kurti in soft pastels or rich jewel tones. Pair with fitted bottom wear, add delicate jewelry, and finish with heels or elegant sandals. A light scarf or shawl can add a feminine touch while keeping you comfortable throughout the evening.</p>
+  if (!blogPost || !blogPost.id) {
+    return notFound();
+  }
 
-      <h2>Final Styling Tips</h2>
-      <p>Remember, the key to styling kurtis is understanding the occasion and choosing appropriate accessories. Always ensure the fit is flattering, colors complement your skin tone, and accessories enhance rather than overwhelm your look. With these five styling approaches, your kurti collection will work harder for you, providing endless outfit possibilities for every occasion in your calendar.</p>
-    `,
-    author: "Priya Sharma",
-    authorBio: "Fashion stylist and blogger with over 8 years of experience in ethnic wear styling. Priya specializes in making traditional fashion accessible and modern for today's woman.",
-    authorImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-    date: "2024-01-15",
-    readTime: "5 min read",
-    category: "Styling Tips",
-    tags: ["kurti", "styling", "fashion", "ethnic wear", "versatile", "occasion wear"],
-    image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1200&h=600&fit=crop",
-    likes: 245,
-    comments: 18,
-    shares: 34
-  };
+  // Normalize common fields
+  const imagesArr = (
+    Array.isArray(blogPost.images) ? blogPost.images :
+    (Array.isArray(blogPost.media) ? blogPost.media.map((m) => m?.url || m).filter(Boolean) :
+    (blogPost.cover_image ? [blogPost.cover_image] :
+    (blogPost.banner ? [blogPost.banner] :
+    (blogPost.thumbnail ? [blogPost.thumbnail] :
+    (blogPost.image ? [blogPost.image] :
+    (blogPost.image_url ? [blogPost.image_url] : []))))))
+  ).filter(Boolean);
+  const heroImg = imagesArr[0] || '';
+  const contentHtml = blogPost.content_html || blogPost.content || blogPost.body || '';
+  // Estimate read time from content (200 wpm)
+  const plainContent = typeof contentHtml === 'string' ? contentHtml.replace(/<[^>]*>/g, ' ') : '';
+  const wordCount = plainContent.trim().split(/\s+/).filter(Boolean).length;
+  const estimatedReadTime = `${Math.max(3, Math.ceil(wordCount / 200))} min read`;
+  // Normalize API read time to always show like `3 min read`
+  const apiReadRaw = blogPost.readTime ?? blogPost.read_time;
+  const displayReadTime = (() => {
+    if (apiReadRaw == null) return estimatedReadTime;
+    const val = typeof apiReadRaw === 'number' ? apiReadRaw : String(apiReadRaw).trim();
+    if (typeof val === 'number') return `${Math.max(1, Math.round(val))} min read`;
+    // If it's a string like '3' or '03'
+    if (/^\d+$/.test(val)) return `${parseInt(val, 10)} min read`;
+    // If it already contains 'min', keep as is; otherwise append suffix
+    return /min/i.test(val) ? val : `${val} min read`;
+  })();
+  const rawTags = Array.isArray(blogPost.tags)
+    ? blogPost.tags
+    : (Array.isArray(blogPost.tag_list)
+      ? blogPost.tag_list
+      : (Array.isArray(blogPost.metadata?.tags)
+        ? blogPost.metadata.tags
+        : (Array.isArray(blogPost.hashtags)
+          ? blogPost.hashtags
+          : (typeof blogPost.hashtags === 'string'
+            ? blogPost.hashtags.split(',').map((t) => t.trim()).filter(Boolean)
+            : []))));
+  const tagList = rawTags.map((t) => (typeof t === 'string' ? t : t?.name)).filter(Boolean);
+  const categoryName = typeof blogPost.category === 'string'
+    ? blogPost.category
+    : (blogPost.category?.name || (Array.isArray(blogPost.categories) ? (blogPost.categories[0]?.name) : (blogPost.category_name || '')));
+  const publishedDate = blogPost.published_at || blogPost.created_at || blogPost.date || '';
 
-  // Related posts
-  const relatedPosts = [
-    {
-      id: 2,
-      title: "The Art of Layering: Master the Ethnic Chic Look",
-      excerpt: "Learn how to layer ethnic pieces to create stunning, contemporary outfits.",
-      author: "Anita Desai",
-      authorImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-      date: "2024-01-12",
-      readTime: "7 min read",
-      category: "Fashion Guide",
-      tags: ["ethnic", "layering", "style"],
-      image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=800&h=600&fit=crop",
-      likes: 189,
-      comments: 12
-    },
-    {
-      id: 4,
-      title: "Trending Colors This Season: What to Wear Now",
-      excerpt: "Discover the hottest color trends for this season and how to incorporate them.",
-      author: "Kavya Menon",
-      authorImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-      date: "2024-01-08",
-      readTime: "4 min read",
-      category: "Trends",
-      tags: ["colors", "trends", "seasonal"],
-      image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&h=600&fit=crop",
-      likes: 203,
-      comments: 15
-    }
-  ];
+  // Related posts now fetched client-side via RelatedBlogsClient
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -92,62 +180,27 @@ export default function BlogPostPage({ params }) {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             {/* Category */}
-            <div className="inline-flex items-center gap-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              <Tag className="w-4 h-4" />
-              {blogPost.category}
-            </div>
+            {categoryName && (
+              <div className="inline-flex items-center gap-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                <Tag className="w-4 h-4" />
+                {categoryName}
+              </div>
+            )}
             
             {/* Title */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
               {blogPost.title}
             </h1>
             
-            {/* Author and meta info */}
-            <div className="flex items-center justify-center gap-6 mb-8">
-              <div className="flex items-center gap-3">
-                <AuthorAvatar
-                  src={blogPost.authorImage}
-                  alt={blogPost.author}
-                  className="w-12 h-12 rounded-full object-cover border-3 border-white shadow-lg"
-                />
-                <div className="text-left">
-                  <div className="font-semibold text-gray-900 dark:text-white">
-                    {blogPost.author}
-                  </div>
-                  <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      {new Date(blogPost.date).toLocaleDateString('en-US', { 
-                        month: 'long', 
-                        day: 'numeric', 
-                        year: 'numeric' 
-                      })}
-                    </div>
-                    <span>•</span>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {blogPost.readTime}
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {/* Meta info (date and read time only) */}
+            <div className="flex items-center justify-center gap-3 mb-8 text-sm text-gray-600 dark:text-gray-400">
+              <Calendar className="w-4 h-4" />
+              {publishedDate ? new Date(publishedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
+              <span>•</span>
+              <Clock className="w-4 h-4" />
+              {displayReadTime}
             </div>
-            
-            {/* Engagement stats */}
-            <div className="flex items-center justify-center gap-6 text-sm text-gray-600 dark:text-gray-400">
-              <div className="flex items-center gap-1">
-                <Heart className="w-4 h-4" />
-                {blogPost.likes} likes
-              </div>
-              <div className="flex items-center gap-1">
-                <MessageCircle className="w-4 h-4" />
-                {blogPost.comments} comments
-              </div>
-              <div className="flex items-center gap-1">
-                <Share2 className="w-4 h-4" />
-                {blogPost.shares} shares
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -156,13 +209,15 @@ export default function BlogPostPage({ params }) {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-            <BlogImage
-              src={blogPost.image}
-              alt={blogPost.title}
-              className="w-full h-96 md:h-[500px] object-cover"
-              aspectRatio="h-96 md:h-[500px]"
-              priority={true}
-            />
+            {heroImg && (
+              <BlogImage
+                src={heroImg}
+                alt={blogPost.title}
+                className="w-full h-96 md:h-[500px] object-cover"
+                aspectRatio="h-96 md:h-[500px]"
+                priority={true}
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           </div>
         </div>
@@ -175,8 +230,93 @@ export default function BlogPostPage({ params }) {
             {/* Main Content */}
             <div className="lg:col-span-3">
               <article className="prose prose-lg dark:prose-invert max-w-none">
+                {/* JSON-LD for Article */}
+                {(() => {
+                  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com';
+                  const img = imagesArr;
+                  const authorName = (typeof blogPost.author === 'string')
+                    ? blogPost.author
+                    : (blogPost.author?.name || blogPost.user?.name || blogPost.created_by || undefined);
+                  const categoryName = (typeof blogPost.category === 'string')
+                    ? blogPost.category
+                    : (blogPost.category?.name || (Array.isArray(blogPost.categories) ? blogPost.categories[0]?.name : blogPost.category_name));
+                  const jsonLdArticle = {
+                    '@context': 'https://schema.org',
+                    '@type': 'BlogPosting',
+                    headline: blogPost.title,
+                    description: (typeof contentHtml === 'string' ? contentHtml.replace(/<[^>]*>/g, ' ') : '').trim().slice(0, 160) || undefined,
+                    keywords: tagList?.length ? tagList.join(', ') : undefined,
+                    wordCount: Number.isFinite(wordCount) ? wordCount : undefined,
+                    articleSection: categoryName || undefined,
+                    datePublished: publishedDate || undefined,
+                    dateModified: blogPost.updated_at || blogPost.modified_at || undefined,
+                    isAccessibleForFree: true,
+                    inLanguage: 'en',
+                    author: authorName ? { '@type': 'Person', name: authorName } : undefined,
+                    publisher: {
+                      '@type': 'Organization',
+                      name: 'Faxio',
+                      logo: {
+                        '@type': 'ImageObject',
+                        url: `${siteUrl}/favicon.ico`,
+                      },
+                    },
+                    image: img?.length
+                      ? img.map((src) => ({ '@type': 'ImageObject', url: src }))
+                      : undefined,
+                    mainEntityOfPage: {
+                      '@type': 'WebPage',
+                      '@id': `${siteUrl}/blog/${blogPost.id}`,
+                    },
+                    url: `${siteUrl}/blog/${blogPost.id}`,
+                    commentCount: (typeof blogPost.comments_count === 'number' ? blogPost.comments_count : (Array.isArray(blogPost.comments) ? blogPost.comments.length : undefined)),
+                    interactionStatistic: (() => {
+                      const likeCount = (
+                        typeof blogPost.likes_count === 'number' ? blogPost.likes_count :
+                        typeof blogPost.likes === 'number' ? blogPost.likes :
+                        typeof blogPost.favorites === 'number' ? blogPost.favorites :
+                        undefined
+                      );
+                      return likeCount != null ? [{
+                        '@type': 'InteractionCounter',
+                        interactionType: { '@type': 'LikeAction' },
+                        userInteractionCount: likeCount,
+                      }] : undefined;
+                    })(),
+                  };
+                  const jsonLdBreadcrumb = {
+                    '@context': 'https://schema.org',
+                    '@type': 'BreadcrumbList',
+                    itemListElement: [
+                      {
+                        '@type': 'ListItem',
+                        position: 1,
+                        name: 'Home',
+                        item: siteUrl,
+                      },
+                      {
+                        '@type': 'ListItem',
+                        position: 2,
+                        name: 'Blog',
+                        item: `${siteUrl}/blog`,
+                      },
+                      {
+                        '@type': 'ListItem',
+                        position: 3,
+                        name: blogPost.title,
+                        item: `${siteUrl}/blog/${blogPost.id}`,
+                      },
+                    ],
+                  };
+                  return (
+                    <>
+                      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdArticle) }} />
+                      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }} />
+                    </>
+                  );
+                })()}
                 <div 
-                  dangerouslySetInnerHTML={{ __html: blogPost.content }}
+                  dangerouslySetInnerHTML={{ __html: contentHtml }}
                   className="leading-relaxed text-gray-700 dark:text-gray-300"
                 />
               </article>
@@ -186,39 +326,21 @@ export default function BlogPostPage({ params }) {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Tags
                 </h3>
-                <div className="flex flex-wrap gap-3">
-                  {blogPost.tags.map(tag => (
+                {tagList.length > 0 && (
+                  <div className="flex flex-wrap gap-3">
+                  {tagList.map(tag => (
                     <span 
-                      key={tag}
+                      key={typeof tag === 'string' ? tag : (tag?.id || tag)}
                       className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                     >
-                      #{tag}
+                      #{typeof tag === 'string' ? tag : tag}
                     </span>
                   ))}
-                </div>
+                  </div>
+                )}
               </div>
               
-              {/* Author Bio */}
-              <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-8">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-                  About the Author
-                </h3>
-                <div className="flex items-start gap-6">
-                  <AuthorAvatar
-                    src={blogPost.authorImage}
-                    alt={blogPost.author}
-                    className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
-                  />
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                      {blogPost.author}
-                    </h4>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                      {blogPost.authorBio}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {/* Author section removed */}
             </div>
             
             {/* Sidebar */}
@@ -276,21 +398,11 @@ export default function BlogPostPage({ params }) {
         </div>
       </div>
 
-      {/* Related Posts */}
-      <div className="bg-gray-50 dark:bg-gray-800 py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
-              You Might Also Like
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {relatedPosts.map(post => (
-                <BlogCard key={post.id} post={post} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Reels & Feed related to this blog (renders only if data exists) */}
+      <RelatedReelsForBlog blogId={blogPost.id} className="mt-12 sm:mt-16" />
+
+      {/* Related Posts (client-side) */}
+      <RelatedBlogsClient currentId={blogPost.id} categoryId={blogPost.category_id || blogPost.category?.id} />
     </div>
   );
 }

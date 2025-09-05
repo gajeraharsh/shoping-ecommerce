@@ -32,7 +32,7 @@ export default function StructuredData() {
     url: base,
     potentialAction: {
       '@type': 'SearchAction',
-      target: `${base}/products?search={search_term_string}`,
+      target: `${base}/products?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
   };

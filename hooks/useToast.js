@@ -1,38 +1,17 @@
-'use client';
-
-import { useState, useCallback } from 'react';
-
-let toastId = 0;
-let toasts = [];
-let listeners = [];
+// /hooks/useToast.js
+'use client'
+import { useDispatch } from 'react-redux'
+import { showToast as showToastAction } from '@/features/ui/uiSlice'
 
 export function useToast() {
-  const [, forceUpdate] = useState(0);
-
-  const subscribe = useCallback((listener) => {
-    listeners.push(listener);
-    return () => {
-      listeners = listeners.filter(l => l !== listener);
-    };
-  }, []);
-
-  const showToast = useCallback((message, type = 'info', duration = 3000) => {
-    const id = ++toastId;
-    const toast = { id, message, type, duration };
-    
-    toasts.push(toast);
-    listeners.forEach(listener => listener());
-
-    setTimeout(() => {
-      toasts = toasts.filter(t => t.id !== id);
-      listeners.forEach(listener => listener());
-    }, duration);
-  }, []);
-
-  const removeToast = useCallback((id) => {
-    toasts = toasts.filter(t => t.id !== id);
-    listeners.forEach(listener => listener());
-  }, []);
-
-  return { showToast, removeToast, subscribe, toasts };
+  const dispatch = useDispatch()
+  return {
+    // Generic function compatible with existing calls: showToast(message, type)
+    showToast: (message, type = 'info', duration) =>
+      dispatch(showToastAction({ type, message, duration })),
+    // Convenience helpers
+    success: (message, duration) => dispatch(showToastAction({ type: 'success', message, duration })),
+    error:   (message, duration) => dispatch(showToastAction({ type: 'error', message, duration })),
+    info:    (message, duration) => dispatch(showToastAction({ type: 'info', message, duration })),
+  }
 }

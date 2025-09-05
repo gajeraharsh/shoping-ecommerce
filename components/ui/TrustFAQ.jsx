@@ -19,7 +19,7 @@ export default function TrustFAQ({ className = '' }) {
         },
         {
           question: 'How do I know this website is legitimate?',
-          answer: 'Modave is a registered business with verified certifications. We have served over 100,000+ customers since 2018, maintain an A+ Better Business Bureau rating, and are verified by Google and other trusted platforms.'
+          answer: 'Faxio is a registered business with verified certifications. We have served over 100,000+ customers since 2018, maintain an A+ Better Business Bureau rating, and are verified by Google and other trusted platforms.'
         },
         {
           question: 'What if I receive a damaged or wrong item?',
@@ -115,7 +115,7 @@ export default function TrustFAQ({ className = '' }) {
       faqs: [
         {
           question: 'How can I contact customer support?',
-          answer: 'Our support team is available 24/7 via live chat, email (support@modave.com), or phone (+1-555-123-4567). Average response time is under 2 hours.'
+          answer: 'Our support team is available 24/7 via live chat, email (storemanager.faxio@gmail.com), or phone (7801959924). Average response time is under 2 hours.'
         },
         {
           question: 'Do you have a size consultation service?',
@@ -149,7 +149,7 @@ export default function TrustFAQ({ className = '' }) {
           Frequently Asked Questions
         </h2>
         <p className="text-lg text-gray-600 dark:text-gray-300">
-          Everything you need to know about shopping with confidence at Modave
+          Everything you need to know about shopping with confidence at Faxio
         </p>
       </div>
 
@@ -211,7 +211,7 @@ export default function TrustFAQ({ className = '' }) {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
-            href="mailto:support@modave.com"
+            href="mailto:storemanager.faxio@gmail.com"
             className="inline-flex items-center gap-2 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
           >
             <HeartHandshake className="h-5 w-5" />

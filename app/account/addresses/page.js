@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AddAddressModal from '@/components/modals/AddAddressModal';
+import { listAddresses, createAddress, deleteAddress, updateAddress } from '@/services/customer/addressService';
+import { notify } from '@/utils/notify';
 import {
   MapPin,
   Plus,
@@ -19,6 +21,7 @@ import {
   Navigation,
   Heart
 } from 'lucide-react';
+import Private from '@/components/auth/Private';
 
 export default function AddressesPage() {
   const [addresses, setAddresses] = useState([]);
@@ -26,52 +29,21 @@ export default function AddressesPage() {
   const [editingAddress, setEditingAddress] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
-
   useEffect(() => {
-    // Mock addresses data
-    setTimeout(() => {
-      setAddresses([
-        {
-          id: 1,
-          type: 'home',
-          name: 'John Doe',
-          phone: '+91 98765 43210',
-          street: '123 Main Street, Apartment 4B',
-          landmark: 'Near Central Mall',
-          city: 'Mumbai',
-          state: 'Maharashtra',
-          pincode: '400001',
-          isDefault: true
-        },
-        {
-          id: 2,
-          type: 'office',
-          name: 'John Doe',
-          phone: '+91 98765 43210',
-          street: '456 Business Park, Tower A, Floor 12',
-          landmark: 'Opposite Metro Station',
-          city: 'Mumbai',
-          state: 'Maharashtra',
-          pincode: '400051',
-          isDefault: false
-        },
-        {
-          id: 3,
-          type: 'other',
-          name: 'Jane Doe',
-          phone: '+91 98765 43211',
-          street: '789 Residential Complex, Block C',
-          landmark: 'Behind City Hospital',
-          city: 'Delhi',
-          state: 'Delhi',
-          pincode: '110001',
-          isDefault: false
-        }
-      ]);
-      setLoading(false);
-    }, 1000);
+    fetchAddresses();
   }, []);
+
+  const fetchAddresses = async () => {
+    try {
+      setLoading(true);
+      const { addresses } = await listAddresses();
+      setAddresses(addresses);
+    } catch (err) {
+      // errors are auto-toasted by apiClient
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addressTypes = [
     { value: 'home', label: 'Home', icon: Home },
@@ -80,16 +52,12 @@ export default function AddressesPage() {
   ];
 
   const handleAddAddress = async (addressData) => {
-    const address = {
-      ...addressData,
-      id: Date.now()
-    };
-
-    if (address.isDefault) {
-      setAddresses(prev => prev.map(addr => ({ ...addr, isDefault: false })));
+    try {
+      await createAddress(addressData, { successMessage: 'Address saved' });
+      await fetchAddresses();
+    } catch (err) {
+      // error toast handled globally
     }
-
-    setAddresses(prev => [...prev, address]);
   };
 
   const handleEditAddress = (address) => {
@@ -98,15 +66,13 @@ export default function AddressesPage() {
   };
 
   const handleUpdateAddress = async (addressData) => {
-    if (addressData.isDefault) {
-      setAddresses(prev => prev.map(addr => ({ ...addr, isDefault: false })));
+    try {
+      await updateAddress(editingAddress.id, addressData, { successMessage: 'Address updated' });
+      setEditingAddress(null);
+      await fetchAddresses();
+    } catch (err) {
+      // error toast handled globally
     }
-
-    setAddresses(prev => prev.map(addr =>
-      addr.id === editingAddress.id ? { ...addressData, id: editingAddress.id } : addr
-    ));
-
-    setEditingAddress(null);
   };
 
   const handleModalSubmit = async (addressData) => {
@@ -122,15 +88,22 @@ export default function AddressesPage() {
     setEditingAddress(null);
   };
 
-  const handleDeleteAddress = (id) => {
-    setAddresses(prev => prev.filter(addr => addr.id !== id));
+  const handleDeleteAddress = async (id) => {
+    try {
+      await deleteAddress(id, { successMessage: 'Address deleted' });
+      await fetchAddresses();
+    } catch (err) {
+      // error toast handled globally
+    }
   };
 
-  const handleSetDefault = (id) => {
-    setAddresses(prev => prev.map(addr => ({
-      ...addr,
-      isDefault: addr.id === id
-    })));
+  const handleSetDefault = async (id) => {
+    try {
+      await updateAddress(id, { isDefault: true }, { successMessage: 'Default address set' });
+      await fetchAddresses();
+    } catch (err) {
+      // error toast handled globally
+    }
   };
 
   const getTypeIcon = (type) => {
@@ -152,23 +125,26 @@ export default function AddressesPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-32 bg-gray-100 dark:bg-gray-700 rounded-2xl"></div>
-              ))}
+      <Private>
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-32 bg-gray-100 dark:bg-gray-700 rounded-2xl"></div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Private>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <Private>
+      <div className="space-y-6">
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-6">
@@ -311,6 +287,7 @@ export default function AddressesPage() {
           })
         )}
       </div>
-    </div>
+      </div>
+    </Private>
   );
 }

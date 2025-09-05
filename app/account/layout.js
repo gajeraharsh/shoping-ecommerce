@@ -23,59 +23,36 @@ import {
 import Link from 'next/link';
 
 export default function AccountLayout({ children }) {
-  const { user, logout, login } = useAuth();
+  const { user, logout, login, isAuthenticated, isInitializing, tokenPresent } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const safeName = typeof user?.name === 'string' ? user.name : ''
+  const safeEmail = typeof user?.email === 'string' ? user.email : ''
+  const userInitial = safeName && safeName.charAt ? safeName.charAt(0).toUpperCase() : (safeEmail && safeEmail.charAt ? safeEmail.charAt(0).toUpperCase() : 'U')
 
-  if (!user) {
-    const handleDemoLogin = () => {
-      const demoUser = {
-        id: 1,
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '+91 9876543210'
-      };
-      login(demoUser);
-    };
+  // Redirect unauthenticated users once initialization completes.
+  // IMPORTANT: If a token is present, do NOT redirect; allow hydration to complete.
+  useEffect(() => {
+    if (!isInitializing && !isAuthenticated && !tokenPresent) {
+      router.push('/auth/login');
+    }
+  }, [isInitializing, isAuthenticated, tokenPresent, router]);
 
+  // While initializing OR (token exists but user profile not yet hydrated), show a minimal loading state
+  if (isInitializing || (tokenPresent && !user)) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 border border-gray-200 dark:border-gray-700">
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-black to-gray-700 dark:from-white dark:to-gray-300 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-              <User className="w-10 h-10 text-white dark:text-black" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Welcome Back</h1>
-            <p className="text-gray-600 dark:text-gray-400">Sign in to access your account</p>
-          </div>
-
-          <div className="space-y-4">
-            <button
-              onClick={handleDemoLogin}
-              className="w-full bg-black dark:bg-white text-white dark:text-black py-4 px-6 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 active:scale-95"
-            >
-              Demo Login (Testing)
-            </button>
-
-            <Link
-              href="/auth/login"
-              className="w-full border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-4 px-6 rounded-2xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 text-center block"
-            >
-              Sign In
-            </Link>
-
-            <Link
-              href="/"
-              className="w-full text-gray-500 dark:text-gray-400 py-3 px-6 text-center block hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-            >
-              Back to Home
-            </Link>
-          </div>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
+          <span className="w-4 h-4 rounded-full border-2 border-gray-300 border-t-black dark:border-gray-600 dark:border-t-white animate-spin" />
+          <span className="text-sm">Loading your account…</span>
         </div>
       </div>
     );
   }
+
+  // If not authenticated (post-redirect), render nothing
+  if (!isAuthenticated) return null;
 
   const navigation = [
     { 
@@ -113,27 +90,27 @@ export default function AccountLayout({ children }) {
       description: 'Saved items',
       color: 'text-red-600 dark:text-red-400'
     },
-    {
-      name: 'Payments',
-      href: '/account/payments',
-      icon: CreditCard,
-      description: 'Payment methods',
-      color: 'text-indigo-600 dark:text-indigo-400'
-    },
-    {
-      name: 'Returns',
-      href: '/account/returns',
-      icon: RotateCcw,
-      description: 'Return requests',
-      color: 'text-amber-600 dark:text-amber-400'
-    },
-    {
-      name: 'Notifications',
-      href: '/account/notifications',
-      icon: Bell,
-      description: 'Alerts & updates',
-      color: 'text-teal-600 dark:text-teal-400'
-    },
+    // {
+    //   name: 'Payments',
+    //   href: '/account/payments',
+    //   icon: CreditCard,
+    //   description: 'Payment methods',
+    //   color: 'text-indigo-600 dark:text-indigo-400'
+    // },
+    // {
+    //   name: 'Returns',
+    //   href: '/account/returns',
+    //   icon: RotateCcw,
+    //   description: 'Return requests',
+    //   color: 'text-amber-600 dark:text-amber-400'
+    // },
+    // {
+    //   name: 'Notifications',
+    //   href: '/account/notifications',
+    //   icon: Bell,
+    //   description: 'Alerts & updates',
+    //   color: 'text-teal-600 dark:text-teal-400'
+    // },
     {
       name: 'Settings',
       href: '/account/settings',
@@ -164,16 +141,9 @@ export default function AccountLayout({ children }) {
             <span className="font-semibold text-gray-700 dark:text-gray-300">Account</span>
           </button>
           
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-black dark:bg-white rounded-full flex items-center justify-center">
-              <span className="text-white dark:text-black font-bold text-sm">
-                {user.name.charAt(0).toUpperCase()}
-              </span>
-            </div>
-            <div className="text-right">
-              <div className="text-sm font-semibold text-gray-900 dark:text-white">{user.name}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Active Member</div>
-            </div>
+          <div className="text-right">
+            <div className="text-sm font-semibold text-gray-900 dark:text-white">{safeName || 'Account User'}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">Active Member</div>
           </div>
         </div>
       </div>
@@ -185,14 +155,9 @@ export default function AccountLayout({ children }) {
             <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden sticky top-24 border border-gray-200 dark:border-gray-700">
               {/* User Profile Section */}
               <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black p-8">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-white/20 dark:bg-black/20 rounded-2xl flex items-center justify-center text-2xl font-bold backdrop-blur-sm">
-                    {user.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold">{user.name}</h2>
-                    <p className="text-white/70 dark:text-black/70 text-sm">{user.email}</p>
-                  </div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold">{safeName || 'Account User'}</h2>
+                  <p className="text-white/70 dark:text-black/70 text-sm">{safeEmail}</p>
                 </div>
                 
                 <div className="flex items-center gap-3 bg-white/10 dark:bg-black/10 rounded-xl p-3 backdrop-blur-sm">
@@ -273,17 +238,12 @@ export default function AccountLayout({ children }) {
                       <X className="h-5 w-5" />
                     </button>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-white/20 dark:bg-black/20 rounded-2xl flex items-center justify-center font-bold text-lg backdrop-blur-sm">
-                      {user.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-lg">{user.name}</div>
-                      <div className="text-white/70 dark:text-black/70 text-sm">{user.email}</div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                        <span className="text-xs">Premium Member</span>
-                      </div>
+                  <div>
+                    <div className="font-semibold text-lg">{safeName || 'Account User'}</div>
+                    <div className="text-white/70 dark:text-black/70 text-sm">{safeEmail}</div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-xs">Premium Member</span>
                     </div>
                   </div>
                 </div>

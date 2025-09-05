@@ -2,13 +2,40 @@
 
 import CartItems from '@/components/cart/CartItems';
 import CartSummary from '@/components/cart/CartSummary';
-import { useCart } from '@/contexts/CartContext';
+import CartItemsSkeleton from '@/components/cart/CartItemsSkeleton';
+import CartSummarySkeleton from '@/components/cart/CartSummarySkeleton';
+import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 
 export default function CartPage() {
-  const { cartItems } = useCart();
+  const { items, status, cart } = useCart();
 
-  if (cartItems.length === 0) {
+  // Show skeletons during the initial cart load to prevent empty-state flash
+  const isInitialLoading = status === 'loading' && !cart;
+
+  if (isInitialLoading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+          <div className="mb-8">
+            <div className="h-7 w-40 bg-gray-200 dark:bg-gray-800 rounded animate-pulse mb-2" />
+            <div className="h-4 w-64 bg-gray-200 dark:bg-gray-800 rounded animate-pulse" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <CartItemsSkeleton />
+            </div>
+            <div className="lg:col-span-1">
+              <CartSummarySkeleton />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
@@ -33,7 +60,7 @@ export default function CartPage() {
         <div className="mb-8">
           <h1 className="heading-lg text-gray-900 dark:text-white mb-2">Shopping Cart</h1>
           <p className="body-base text-fade">
-            {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your cart
+            {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
           </p>
         </div>
 

@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Heart, Share2, Maximize2 } from 'lucide-react';
 
-export default function ProductImageGallery({ images }) {
+export default function ProductImageGallery({ images, productName = 'Product' }) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -104,13 +105,18 @@ export default function ProductImageGallery({ images }) {
             className="w-full h-full overflow-hidden"
             onMouseMove={handleMouseMove}
           >
-            <img
+            <Image
               ref={imageRef}
               src={images[currentImage]}
-              alt={`Product image ${currentImage + 1}`}
-              className="w-full h-full object-cover transition-transform duration-300"
+              alt={`${productName} – image ${currentImage + 1}`}
+              fill
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="object-cover transition-transform duration-300 will-change-transform"
               style={magnifyStyle}
               onClick={handleZoomToggle}
+              loading="lazy"
+              priority={false}
+              unoptimized
             />
           </div>
 
@@ -192,7 +198,7 @@ export default function ProductImageGallery({ images }) {
 
         {/* Thumbnail Images */}
         {images.length > 1 && (
-          <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2">
+          <div className="flex gap-2 sm:gap-3 overflow-x-auto pt-1 sm:pt-2 pb-2 px-1 sm:px-2">
             {images.map((image, index) => (
               <button
                 key={index}
@@ -201,17 +207,23 @@ export default function ProductImageGallery({ images }) {
                   setIsZoomed(false);
                   setZoomLevel(1);
                 }}
-                className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 touch-manipulation ${
+                className={`relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl border-2 transition-all duration-300 touch-manipulation ${
                   currentImage === index
-                    ? 'border-black dark:border-white shadow-lg scale-105'
+                    ? 'border-transparent ring-2 ring-black dark:ring-white ring-offset-2 ring-offset-white dark:ring-offset-gray-900 z-10'
                     : 'border-gray-200 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-400 hover:scale-105'
                 }`}
               >
-                <img
-                  src={image}
-                  alt={`Thumbnail ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
+                <div className="w-full h-full rounded-xl overflow-hidden">
+                  <Image
+                    src={image}
+                    alt={`${productName} – thumbnail ${index + 1}`}
+                    width={80}
+                    height={80}
+                    className="object-cover w-full h-full"
+                    loading="lazy"
+                    unoptimized
+                  />
+                </div>
               </button>
             ))}
           </div>
@@ -245,11 +257,18 @@ export default function ProductImageGallery({ images }) {
           </button>
           
           <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center p-4">
-            <img
-              src={images[currentImage]}
-              alt={`Product image ${currentImage + 1}`}
-              className="max-w-full max-h-full object-contain"
-            />
+            <div className="relative w-full h-full">
+              <Image
+                src={images[currentImage]}
+                alt={`${productName} – image ${currentImage + 1}`}
+                fill
+                sizes="100vw"
+                className="object-contain"
+                loading="lazy"
+                unoptimized
+                priority={false}
+              />
+            </div>
             
             {images.length > 1 && (
               <>

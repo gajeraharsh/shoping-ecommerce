@@ -6,6 +6,9 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/useToast';
 import { BRAND } from '@/lib/brand';
+import SmartImage from '@/components/ui/SmartImage';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function QuickViewModal({ product, isOpen, onClose }) {
   const [selectedSize, setSelectedSize] = useState('');
@@ -17,6 +20,21 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { showToast } = useToast();
+  const { isAuthenticated, tokenPresent } = useAuth();
+  const router = useRouter();
+  const ensureAuthed = () => {
+    const authed = Boolean(isAuthenticated || tokenPresent);
+    if (!authed) {
+      const next = typeof window !== 'undefined'
+        ? window.location.pathname + window.location.search
+        : '/';
+      try {
+        router.push(`/auth/login?next=${encodeURIComponent(next)}`);
+      } catch (_) {}
+      return false;
+    }
+    return true;
+  };
   
   const inWishlist = isInWishlist(product?.id);
 
@@ -58,6 +76,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   if (!isOpen || !product) return null;
 
   const handleAddToCart = () => {
+    if (!ensureAuthed()) return;
     if (!selectedSize) {
       showToast('Please select a size', 'error');
       return;
@@ -73,6 +92,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   };
 
   const handleWishlistToggle = () => {
+    if (!ensureAuthed()) return;
     if (inWishlist) {
       removeFromWishlist(product.id);
       showToast('Removed from wishlist', 'info');
@@ -154,10 +174,10 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
               {isImageLoading && (
                 <div className="absolute inset-0 bg-gray-100 dark:bg-gray-800 animate-pulse z-10" />
               )}
-              <img
+              <SmartImage
                 src={product.images[selectedImageIndex]}
                 alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
                 onLoad={() => setIsImageLoading(false)}
               />
               
@@ -213,11 +233,13 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
                       }`}
                     >
-                      <img
-                        src={image}
-                        alt={`${product.name} ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
+                      <div className="absolute inset-0">
+                        <SmartImage
+                          src={image}
+                          alt={`${product.name} ${index + 1}`}
+                          className="object-cover"
+                        />
+                      </div>
                     </button>
                   ))}
                 </div>

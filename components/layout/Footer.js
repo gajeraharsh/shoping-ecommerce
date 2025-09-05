@@ -39,7 +39,7 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
               <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 text-black px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl font-bold text-lg sm:text-xl shadow-lg">
-                M
+                F
               </div>
               <div>
                 <span className="text-lg sm:text-xl font-bold tracking-tight">{BRAND.name}</span>
@@ -78,8 +78,8 @@ export default function Footer() {
               <li><Link href="/products" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">All Collections</Link></li>
               <li><Link href="/products?sort=newest" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">New Arrivals</Link></li>
               <li><Link href="/products?sale=true" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">Sale</Link></li>
-              <li><Link href="/products?category=bestsellers" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">Bestsellers</Link></li>
-              <li><Link href="/wishlist" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">Wishlist</Link></li>
+              <li><Link href="/products?q=bestsellers" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">Bestsellers</Link></li>
+              <li><Link href="/account/wishlist" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base touch-manipulation block py-1">Wishlist</Link></li>
             </ul>
           </div>
 
