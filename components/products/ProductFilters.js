@@ -135,7 +135,7 @@ export default function ProductFilters({ filters, onFilterChange, categories: ca
           </div>
 
       {/* Dynamic Attribute Filters */}
-      {productOptions.map((opt) => (
+      {/* {productOptions.map((opt) => (
         <div key={opt.title} className="bg-white dark:bg-gray-900 p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
           <button
             type="button"
@@ -166,7 +166,7 @@ export default function ProductFilters({ filters, onFilterChange, categories: ca
             </div>
           )}
         </div>
-      ))}
+      ))} */}
           <div className="flex flex-wrap gap-2">
             {appliedChips.map(chip => (
               <span key={chip.key} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700">
