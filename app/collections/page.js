@@ -11,7 +11,7 @@ const COLLECTIONS = [
     description: 'Fresh drops just in—discover the latest styles first.',
     image:
       'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2340&auto=format&fit=crop',
-    collection_id: 'pcol_01K3V0ZFHSH1BTQW2828K6C14P',
+    collection_id: 'pcol_01K4DAC1GF65JJVCNHPQKNNTGJ',
   },
   {
     key: 'best_seller',
@@ -19,7 +19,7 @@ const COLLECTIONS = [
     description: "Our most-loved pieces that customers can't get enough of.",
     image:
       'https://images.unsplash.com/photo-1520975930418-5b233e9894a5?q=80&w=2340&auto=format&fit=crop',
-    collection_id: 'pcol_01K3V0KC1402M0C54RT3ER9DJ5',
+    collection_id: 'pcol_01K4DADGWSMNKK1PE2299V95SV',
   },
   {
     key: 'sale',
@@ -28,7 +28,7 @@ const COLLECTIONS = [
     image:
       'https://images.unsplash.com/photo-1592878904946-b3cd9f3fbc4b?q=80&w=2340&auto=format&fit=crop',
     // User provided Sale collection id
-    collection_id: '3439849387434',
+    collection_id: 'pcol_01K4DAEBZ3594BTM7302Z75ABJ',
   },
 ];
 

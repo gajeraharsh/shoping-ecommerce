@@ -50,19 +50,19 @@ export default function Hero() {
       title: "New Arrivals",
       description: "Latest trends and seasonal favorites",
       image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
-      link: { pathname: '/products', query: { collection_id: 'pcol_01K3V0ZFHSH1BTQW2828K6C14P', page: 1 } }
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K4DAC1GF65JJVCNHPQKNNTGJ', page: 1 } }
     },
     {
       title: "Bestsellers",
       description: "Customer favorites and top-rated pieces",
       image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
-      link: { pathname: '/products', query: { collection_id: 'pcol_01K3V0KC1402M0C54RT3ER9DJ5', page: 1 } }
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K4DADGWSMNKK1PE2299V95SV', page: 1 } }
     },
     {
       title: "Sale",
       description: "Limited time offers on premium pieces",
       image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1000&auto=format&fit=crop",
-      link: { pathname: '/products', query: { collection_id: '3439849387434', page: 1 } }
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K4DAEBZ3594BTM7302Z75ABJ', page: 1 } }
     }
   ], []);
 
@@ -239,7 +239,7 @@ export default function Hero() {
         <CollectionProductsSection
           title="Best Sellers"
           description="Our most-loved pieces that customers can't get enough of."
-          collectionId="pcol_01K3V0KC1402M0C54RT3ER9DJ5"
+          collectionId="pcol_01K4DADGWSMNKK1PE2299V95SV"
           limit={8}
         />
 
@@ -247,7 +247,7 @@ export default function Hero() {
         <CollectionProductsSection
           title="New Arrivals"
           description="Fresh drops just in—discover the latest styles first."
-          collectionId="pcol_01K3V0ZFHSH1BTQW2828K6C14P"
+          collectionId="pcol_01K4DAC1GF65JJVCNHPQKNNTGJ"
           limit={8}
         />
 
