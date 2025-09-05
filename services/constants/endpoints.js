@@ -2,9 +2,9 @@
 export const ENDPOINTS = {
   AUTH: {
     LOGIN: (provider = 'local') => `/auth/customer/${provider}`,
-    REGISTER: '/auth/register',
+    REGISTER: '/store/auth/register',
     LOGOUT: '/auth/logout',
-    VERIFY_OTP: '/auth/verify-otp',
+    VERIFY_OTP: '/store/auth/verify-otp',
     FORGOT_PASSWORD: '/store/auth/forgot-password',
     RESET_PASSWORD: (provider = 'emailpass') => `/store/auth/reset-password/${provider}`,
     CHANGE_PASSWORD: '/store/auth/change-password',
