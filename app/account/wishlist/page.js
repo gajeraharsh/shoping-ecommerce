@@ -354,13 +354,13 @@ export default function WishlistPage() {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => handleAddToCart(item)}
+                        <Link
+                          href={`/products/${item.id}`}
                           className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
                         >
-                          <ShoppingBag className="w-4 h-4" />
-                          Add to Cart
-                        </button>
+                          <Eye className="w-4 h-4" />
+                          View Details
+                        </Link>
                         <button
                           onClick={() => removeFromWishlist(item.id)}
                           className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
@@ -457,13 +457,13 @@ export default function WishlistPage() {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => handleAddToCart(item)}
+                <Link
+                  href={`/products/${item.id}`}
                   className="w-full flex items-center justify-center gap-2 bg-black dark:bg-white text-white dark:text-black py-3 px-4 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
                 >
-                  <ShoppingBag className="w-4 h-4" />
-                  Add to Cart
-                </button>
+                  <Eye className="w-4 h-4" />
+                  View Details
+                </Link>
               </div>
             </div>
           );
