@@ -23,6 +23,10 @@ export default function useAutoSaveTempAddress({
   useEffect(() => {
     if (addressesLength > 0) return; // only when there are no saved addresses
     if (!autoSaveEnabled) return; // only after user explicitly saved once
+    // IMPORTANT: Only auto-save when we already have a temp address id.
+    // This avoids a race where we might attempt to create a new address
+    // immediately after the initial manual creation (leading to duplicates).
+    if (!tempAddressId) return;
     const errs = validateInlineAddress(formData);
     const hasMin = Object.keys(errs).length === 0;
     if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
@@ -38,30 +42,19 @@ export default function useAutoSaveTempAddress({
           city,
           state,
           pincode: zipCode,
-          country_code: 'dk',
+          country_code: 'in',
           isDefault: true,
         };
-        if (!tempAddressId) {
-          const created = await createAddress(uiAddr, { successMessage: null });
-          const newId = created?.address?.id || created?.id;
-          if (newId) {
-            setTempAddressId(newId);
-            setAddresses(prev => [{ ...uiAddr, id: newId, isDefault: true }, ...prev]);
-            const picked = { ...uiAddr, id: newId };
-            try {
-              await setShippingAddress(picked);
-              await setBillingAddress(picked);
-            } catch {}
-          }
-        } else {
-          await updateAddress(tempAddressId, uiAddr, { successMessage: null });
-          setAddresses(prev => prev.map(a => a.id === tempAddressId ? { ...a, ...uiAddr } : a));
-          const picked = { ...uiAddr, id: tempAddressId };
-          try {
-            await setShippingAddress(picked);
-            await setBillingAddress(picked);
-          } catch {}
-        }
+        // Only update the existing temp address. Creation of the initial
+        // address is handled explicitly by the Save action; auto-save should
+        // never create a second address.
+        await updateAddress(tempAddressId, uiAddr, { successMessage: null });
+        setAddresses(prev => prev.map(a => a.id === tempAddressId ? { ...a, ...uiAddr } : a));
+        const picked = { ...uiAddr, id: tempAddressId };
+        try {
+          await setShippingAddress(picked);
+          await setBillingAddress(picked);
+        } catch {}
         setAddressError('');
       } catch (err) {
         setAddressError(typeof err === 'string' ? err : err?.message || 'Failed to save address');

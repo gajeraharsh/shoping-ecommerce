@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useToast } from '@/hooks/useToast';
 import { login as loginApi } from '@/services/modules/auth/authService';
 import { Eye, EyeOff } from 'lucide-react';
 import { Formik } from 'formik';
@@ -11,20 +10,20 @@ import * as Yup from 'yup';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDispatch } from 'react-redux';
 import { fetchMeUser } from '@/features/auth/authThunks';
+import { ensureCart } from '@/features/cart/cartSlice';
 
 export default function LoginClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
-  const toast = useToast();
   const { login: setAuthSession } = useAuth();
   const dispatch = useDispatch();
   
+  // Do not auto-toast here; verify page already shows a success toast via interceptor.
+  // Keeping this effect empty avoids duplicate notifications on the login screen.
   useEffect(() => {
-    if (searchParams.get('verified') === '1') {
-      toast.success('Your email has been verified. You can log in now.');
-    }
-  }, [searchParams, toast]);
+    // Intentionally left blank
+  }, [searchParams]);
   
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -59,6 +58,8 @@ export default function LoginClient() {
                   setAuthSession(user, token);
                   // Fire-and-forget profile fetch to sync counts like wishlist_count
                   try { await dispatch(fetchMeUser()).unwrap(); } catch (_) {}
+                  // Ensure a cart exists right after login (no need to reload)
+                  try { await dispatch(ensureCart()).unwrap(); } catch (_) {}
                   router.push(redirect);
                 } catch (err) {
                   // handled by interceptor

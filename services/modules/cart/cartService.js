@@ -1,8 +1,8 @@
 // /services/modules/cart/cartService.js
-import { createApiClient } from '@/services/config/apiClient'
+import { apiClient as api } from '@/services/config/setupApi'
 import { getToken } from '@/services/utils/authStorage'
 
-const api = createApiClient()
+// use the preconfigured store api client from setupApi
 
 // Utilities
 function getStoredCartId() {
@@ -76,12 +76,38 @@ export const cartService = {
 
   async addLineItem({ cartId, variant_id, quantity = 1, metadata }) {
     requireAuth()
-    const id = cartId || getStoredCartId()
-    const { cart } = await api.post(`/carts/${id}/line-items`, { variant_id, quantity, metadata }, {
-      meta: { successMessage: 'Added to cart' },
-    })
-    setStoredCartId(cart.id)
-    return cart
+    let id = cartId || getStoredCartId()
+    // If no cart yet, create/ensure one first
+    if (!id) {
+      const ensured = await this.ensureCart()
+      id = ensured?.id
+    }
+    try {
+      const { cart } = await api.post(
+        `/carts/${id}/line-items`,
+        { variant_id, quantity, metadata },
+        { meta: { successMessage: 'Added to cart' } }
+      )
+      setStoredCartId(cart.id)
+      return cart
+    } catch (err) {
+      const status = err?.response?.status
+      const msg = err?.response?.data?.message || err?.message || ''
+      const notFound = status === 404 || /cart id not found/i.test(String(msg))
+      if (notFound) {
+        // Create a fresh cart and retry once
+        const fresh = await this.ensureCart()
+        const freshId = fresh?.id
+        const { cart } = await api.post(
+          `/carts/${freshId}/line-items`,
+          { variant_id, quantity, metadata },
+          { meta: { successMessage: 'Added to cart' } }
+        )
+        setStoredCartId(cart.id)
+        return cart
+      }
+      throw err
+    }
   },
 
   async updateLineItem({ cartId, line_id, quantity, metadata }) {
