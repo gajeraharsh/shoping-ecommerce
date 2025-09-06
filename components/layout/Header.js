@@ -16,10 +16,10 @@ import { useSelector } from 'react-redux';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const isScrolled = false; // disable scroll-based header changes
   const { getItemsCount } = useCart();
   const { wishlistItems, wishlistVersion } = useWishlist();
   const { user, logout, isAuthenticated } = useAuth();
@@ -77,16 +77,7 @@ export default function Header() {
     };
   }, [isMenuOpen]);
 
-  // Detect scroll to apply compact header styling
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY || document.documentElement.scrollTop;
-      setIsScrolled(y > 8);
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  // Scroll-based header styling disabled
 
   // Handle escape key for mobile menu
   useEffect(() => {
@@ -634,7 +625,7 @@ export default function Header() {
               <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center space-x-3">
                   <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black px-3 py-2 rounded-xl font-bold text-lg tracking-tight">
-                    M
+                    F
                   </div>
                   <span id="mobile-menu-title" className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
                     {BRAND.name}
