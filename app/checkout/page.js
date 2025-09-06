@@ -60,10 +60,10 @@ export default function CheckoutPage() {
     return 'review';
   })();
 
-  const currency = cart?.region?.currency_code || 'usd';
+  const currency = (cart?.region?.currency_code || 'inr');
   const formatMoney = (amount) => {
     try {
-      return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format((amount || 0) / 100);
+      return new Intl.NumberFormat(undefined, { style: 'currency', currency: String(currency).toUpperCase() }).format((amount || 0) / 100);
     } catch {
       return `₹${(amount || 0) / 100}`;
     }

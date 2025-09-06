@@ -38,7 +38,7 @@ export function formatAmount(minorAmount, code) {
   try {
     return new Intl.NumberFormat(undefined, {
       style: 'currency',
-      currency: (code || 'USD').toUpperCase(),
+      currency: (code || 'INR').toUpperCase(),
     }).format(major);
   } catch (_) {
     return major.toLocaleString();

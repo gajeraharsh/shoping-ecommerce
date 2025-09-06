@@ -192,7 +192,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What are your shipping options?</h3>
-              <p className="text-gray-600 dark:text-gray-300">We offer standard, express, and overnight shipping options. Free shipping on orders over $75.</p>
+              <p className="text-gray-600 dark:text-gray-300">We offer standard, express, and overnight shipping options. Free shipping on orders over ₹75.</p>
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What is your return policy?</h3>
