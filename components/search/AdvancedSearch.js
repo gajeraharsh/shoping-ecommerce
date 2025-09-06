@@ -343,14 +343,14 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
               <div className="flex flex-wrap gap-2">
                 {/* Collections quick links */}
                 <Link
-                  href={{ pathname: '/products', query: { collection_id: 'pcol_01K3V0ZFHSH1BTQW2828K6C14P', page: 1 } }}
+                  href={{ pathname: '/products', query: { collection_id: 'pcol_01K4G67CX7A92V3YEKSND0KWQ1', page: 1 } }}
                   onClick={onClose}
                   className="px-4 py-3 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors touch-manipulation min-h-[44px] flex items-center"
                 >
                   New Arrivals
                 </Link>
                 <Link
-                  href={{ pathname: '/products', query: { collection_id: 'pcol_01K3V0KC1402M0C54RT3ER9DJ5', page: 1 } }}
+                  href={{ pathname: '/products', query: { collection_id: 'pcol_01K4G6886D7GMXZ22JDJJCM615', page: 1 } }}
                   onClick={onClose}
                   className="px-4 py-3 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors touch-manipulation min-h-[44px] flex items-center"
                 >
