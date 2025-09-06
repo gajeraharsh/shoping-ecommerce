@@ -56,7 +56,7 @@ export function createApiClient(baseURL) {
         try {
           clearAuth()
           const dispatch = getDispatcher()
-          // Also clear any cart data since guest carts are disabled
+          // Also clear any cart data
           if (typeof window !== 'undefined') {
             localStorage.removeItem('cart_id')
           }

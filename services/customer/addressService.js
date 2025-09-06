@@ -19,7 +19,7 @@ function uiToMedusaPayload(ui) {
     // Medusa expects province as ISO-3166-2 (lowercase); we pass as-is for now
     province: (ui.state || '').toLowerCase(),
     postal_code: ui.pincode || '',
-    // Use provided country code or default to Denmark ('dk')
+    // Use provided country code or default to Denmark ('in')
     country_code: (ui.country_code || 'DK').toLowerCase(),
     address_name: ui.type || 'other',
     is_default_shipping: !!ui.isDefault,

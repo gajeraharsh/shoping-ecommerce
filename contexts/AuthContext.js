@@ -4,6 +4,9 @@ import { createContext, useContext, useReducer, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation';
 import { setAuth as setAuthStorage, clearAuth as clearAuthStorage, getUser as getStoredUser, getToken as getStoredToken } from '@/services/utils/authStorage';
 import { getMe as apiGetMe } from '@/services/modules/customer/customerService';
+import { getDispatcher } from '@/services/config/dispatcher';
+import { clearCredentials } from '@/features/auth/authSlice';
+import { resetCartState } from '@/features/cart/cartSlice';
 
 // Guards to avoid duplicate /me calls in React 18 Strict Mode (dev double-mount).
 // Use window-scoped flags so a single request is guaranteed per page load even if modules re-evaluate.
@@ -119,6 +122,17 @@ export function AuthProvider({ children }) {
     try {
       // Clear all auth artifacts using shared util
       clearAuthStorage();
+    } catch (_) {}
+    // Also clear cart artifacts and reset Redux state immediately
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('cart_id');
+      }
+      const dispatch = getDispatcher();
+      if (dispatch) {
+        dispatch(clearCredentials());
+        dispatch(resetCartState());
+      }
     } catch (_) {}
     // Reflect cleared token in state immediately
     dispatch({ type: 'SET_TOKEN_PRESENT', payload: false });

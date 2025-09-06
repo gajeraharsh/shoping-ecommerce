@@ -300,7 +300,7 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
         city: formData.city,
         state: formData.state,
         pincode: formData.pincode || formData.zipCode,
-        country_code: 'dk',
+        country_code: 'in',
         isDefault: typeof formData.isDefault === 'boolean' ? formData.isDefault : true,
       };
       let newId = tempAddressId;
