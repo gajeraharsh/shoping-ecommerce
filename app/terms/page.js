@@ -137,7 +137,7 @@ export default function TermsPage() {
                   <ul className="list-disc list-inside text-gray-600 space-y-1 ml-4">
                     <li>Payment is due at the time of order placement</li>
                     <li>We accept major credit cards, PayPal, and other approved payment methods</li>
-                    <li>All prices are in USD and include applicable taxes</li>
+                    <li>All prices are in INR and include applicable taxes</li>
                     <li>Additional charges may apply for international orders</li>
                   </ul>
                 </div>
