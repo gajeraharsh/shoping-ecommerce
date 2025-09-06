@@ -136,6 +136,7 @@ export default function AddAddressModal({ isOpen, onClose, onSubmit, editingAddr
       <div 
         className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-100"
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); } }}
       >
         {/* Header */}
         <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 rounded-t-3xl">
@@ -149,7 +150,7 @@ export default function AddAddressModal({ isOpen, onClose, onSubmit, editingAddr
               </p>
             </div>
             <button
-              onClick={handleClose}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleClose(); }}
               className="p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl transition-colors group"
             >
               <X className="w-6 h-6 text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
@@ -374,7 +375,8 @@ export default function AddAddressModal({ isOpen, onClose, onSubmit, editingAddr
               Cancel
             </button>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={isSubmitting}
               className="flex-1 bg-black dark:bg-white text-white dark:text-black py-4 px-6 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[56px] touch-manipulation flex items-center justify-center gap-2"
             >

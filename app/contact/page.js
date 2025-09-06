@@ -54,8 +54,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white">Email Us</h3>
-                  <p className="text-gray-600 dark:text-gray-300">support@modave.com</p>
-                  <p className="text-gray-600 dark:text-gray-300">business@modave.com</p>
+                  <p className="text-gray-600 dark:text-gray-300">storemanager.faxio@gmail.com</p>
                 </div>
               </div>
 
@@ -65,8 +64,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white">Call Us</h3>
-                  <p className="text-gray-600 dark:text-gray-300">+1 (555) 123-4567</p>
-                  <p className="text-gray-600 dark:text-gray-300">+1 (555) 123-4568</p>
+                  <p className="text-gray-600 dark:text-gray-300">7801959924</p>
                 </div>
               </div>
 
@@ -76,8 +74,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white">Visit Us</h3>
-                  <p className="text-gray-600 dark:text-gray-300">123 Fashion Street</p>
-                  <p className="text-gray-600 dark:text-gray-300">New York, NY 10001</p>
+                  <p className="text-gray-600 dark:text-gray-300">A/10 Harikrishan Socity Ahmedabad Thakkarnagar</p>
+                  <p className="text-gray-600 dark:text-gray-300">Gujarat, India</p>
                 </div>
               </div>
 
@@ -194,7 +192,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What are your shipping options?</h3>
-              <p className="text-gray-600 dark:text-gray-300">We offer standard, express, and overnight shipping options. Free shipping on orders over $75.</p>
+              <p className="text-gray-600 dark:text-gray-300">We offer standard, express, and overnight shipping options. Free shipping on orders over ₹75.</p>
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What is your return policy?</h3>

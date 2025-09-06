@@ -4,31 +4,46 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search, Heart, ShoppingBag, User, Menu, X, Shield, ChevronDown } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AdvancedSearch from '@/components/search/AdvancedSearch';
+// Removed direct /me fetch here to avoid duplicate calls; rely on AuthContext
 
 import { BRAND } from '@/lib/brand';
 import { CATEGORY_TREE } from '@/lib/categories';
+import { useSelector } from 'react-redux';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const { getCartItemsCount } = useCart();
-  const { wishlistItems } = useWishlist();
-  const { user, logout } = useAuth();
+  const isScrolled = false; // disable scroll-based header changes
+  const { getItemsCount } = useCart();
+  const { wishlistItems, wishlistVersion } = useWishlist();
+  const { user, logout, isAuthenticated } = useAuth();
   const router = useRouter();
   const profileDropdownRef = useRef(null);
   const categoriesRef = useRef(null);
   const panelRef = useRef(null);
   const hoverBridgeRef = useRef(null);
 
-  const cartCount = getCartItemsCount();
-  const wishlistCount = wishlistItems.length;
+  const cartCount = getItemsCount();
+  const [wishlistApiCount, setWishlistApiCount] = useState(null);
+  const wishlistCount = (isAuthenticated && typeof wishlistApiCount === 'number')
+    ? wishlistApiCount
+    : wishlistItems.length;
+
+  // Derive wishlist_count from AuthContext.user when authenticated, no extra /me fetch
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setWishlistApiCount(null);
+      return;
+    }
+    const count = Number(user?.wishlist_count ?? user?.customer?.wishlist_count);
+    setWishlistApiCount(Number.isFinite(count) ? count : 0);
+  }, [isAuthenticated, wishlistVersion, user]);
 
   // Handle click outside for profile dropdown
   useEffect(() => {
@@ -62,16 +77,7 @@ export default function Header() {
     };
   }, [isMenuOpen]);
 
-  // Detect scroll to apply compact header styling
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY || document.documentElement.scrollTop;
-      setIsScrolled(y > 8);
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  // Scroll-based header styling disabled
 
   // Handle escape key for mobile menu
   useEffect(() => {
@@ -89,8 +95,60 @@ export default function Header() {
     }
   }, [isMenuOpen]);
 
-  const handleSearch = (searchTerm) => {
-    router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
+  const saveRecentSearch = (item) => {
+    try {
+      const stored = localStorage.getItem('recentSearches');
+      let list = [];
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        list = Array.isArray(parsed) ? parsed : [];
+      }
+      // migrate strings
+      list = list.map((it) => (typeof it === 'string' ? { type: 'keyword', value: it } : it)).filter((it) => it && it.value);
+      const key = (it) => `${it.type}:${it.id ?? it.value}`.toLowerCase();
+      const dedup = [item, ...list].reduce((acc, cur) => {
+        const k = key(cur);
+        if (!acc.map.has(k)) { acc.map.set(k, true); acc.list.push(cur); }
+        return acc;
+      }, { map: new Map(), list: [] }).list.slice(0, 10);
+      localStorage.setItem('recentSearches', JSON.stringify(dedup));
+    } catch (_) {
+      // ignore
+    }
+  };
+
+  const handleSearch = (payload) => {
+    // Supports string or typed object { type: 'keyword'|'category'|'product', value, id? }
+    if (!payload) return;
+    if (typeof payload === 'string') {
+      const term = payload.trim();
+      if (!term) return;
+      saveRecentSearch({ type: 'keyword', value: term });
+      router.push(`/products?q=${encodeURIComponent(term)}`);
+      return;
+    }
+    const { type, value, id } = payload;
+    switch (type) {
+      case 'product': {
+        const pid = id || value;
+        if (pid) router.push(`/products/${encodeURIComponent(pid)}`);
+        break;
+      }
+      case 'category': {
+        const cid = id || value;
+        if (cid) router.push(`/products?category_id=${encodeURIComponent(cid)}&page=1`);
+        break;
+      }
+      case 'keyword':
+      default: {
+        const term = (value || '').trim();
+        if (term) {
+          saveRecentSearch({ type: 'keyword', value: term });
+          router.push(`/products?q=${encodeURIComponent(term)}&page=1`);
+        }
+        break;
+      }
+    }
   };
 
   const handleSearchKeyPress = (e) => {
@@ -100,16 +158,29 @@ export default function Header() {
   };
 
   const navigation = [
-    { name: 'Collections', href: '/products' },
-    { name: 'New Arrivals', href: '/products?sort=newest' },
+    { name: 'Collections', href: '/collections' },
+    { name: 'Reels', href: '/reels' },
     { name: 'Blog', href: '/blog' },
-    { name: 'Sale', href: '/products?sale=true' },
+    { name: 'Feed', href: '/feed' },
     { name: 'About', href: '/about' }
   ];
 
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [isCategoriesPinned, setIsCategoriesPinned] = useState(false); // kept for compatibility but no longer used to pin
   const closeTimer = useRef(null);
+  const [categoriesTop, setCategoriesTop] = useState(0);
+  const [categoriesRight, setCategoriesRight] = useState(0);
+  const categoryTree = useSelector((state) => state.category?.items || []);
+  const [activeTopIdx, setActiveTopIdx] = useState(0);
+
+  const updateCategoriesTop = () => {
+    const el = categoriesRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    // Use viewport coordinates for fixed-positioned dropdown
+    setCategoriesTop(rect.bottom);
+    setCategoriesRight(rect.right);
+  };
 
   // Close categories on outside click or Escape (must be after state declarations)
   useEffect(() => {
@@ -146,7 +217,9 @@ export default function Header() {
       clearTimeout(closeTimer.current);
       closeTimer.current = null;
     }
+    updateCategoriesTop();
     setIsCategoriesOpen(true);
+    setActiveTopIdx(0);
   };
 
   const scheduleCloseCategories = () => {
@@ -171,6 +244,21 @@ export default function Header() {
 
   const handleMouseEnter = () => openCategories();
   const [mobileCatOpen, setMobileCatOpen] = useState({ top: null, sub: null });
+
+  // Keep dropdown aligned on scroll/resize while open
+  useEffect(() => {
+    if (!isCategoriesOpen) return;
+    const handler = () => updateCategoriesTop();
+    handler();
+    window.addEventListener('scroll', handler, { passive: true });
+    window.addEventListener('resize', handler);
+    return () => {
+      window.removeEventListener('scroll', handler);
+      window.removeEventListener('resize', handler);
+    };
+  }, [isCategoriesOpen]);
+
+  // Categories are now preloaded at app init via Providers->InitBoot dispatching fetchCategoryTree
 
   return (
     <header
@@ -206,7 +294,7 @@ export default function Header() {
               <div className={`bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black rounded-xl font-bold tracking-tight shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105
                 ${isScrolled ? 'px-2.5 py-1.5 text-base sm:text-base md:text-lg' : 'px-2.5 py-1.5 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-base sm:text-lg md:text-xl'}
               `}>
-                M
+                F
               </div>
               <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 rounded-xl opacity-0 group-hover:opacity-30 blur-sm transition-all duration-300"></div>
             </div>
@@ -243,47 +331,131 @@ export default function Header() {
                 <>
                   {/* Hover bridge to prevent flicker when moving from trigger to panel */}
                   <div
-                    className="absolute left-1/2 -translate-x-1/2 top-full -mt-px w-[92vw] max-w-[80rem] h-6 z-[70]"
+                    className="fixed left-0 right-0 h-6 z-[70]"
+                    style={{ top: categoriesTop - 1 }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
                     ref={hoverBridgeRef}
                   />
+                  {/* Full-width premium mega menu */}
                   <div
-                    className={`absolute left-1/2 -translate-x-1/2 top-full -mt-px w-[92vw] max-w-[80rem] bg-white dark:bg-gray-900
-                      border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 z-[200] max-h-[70vh] overflow-y-auto`}
+                    className="fixed left-0 right-0 z-[200]"
+                    style={{ top: categoriesTop }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    ref={panelRef}
                   >
-                  {CATEGORY_TREE.map((top, idx) => (
-                    <div key={top.slug} className={`min-w-0 px-2 ${idx !== 0 ? 'lg:border-l border-gray-100 dark:border-gray-800' : ''}`}>
-                      <Link href={`/products?category=${top.slug}`} className="block text-base font-semibold text-gray-900 dark:text-white mb-4 hover:text-black dark:hover:text-white" onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}>
-                        {top.name}
-                      </Link>
-                      <div className="space-y-5">
-                        {top.children?.map((sub) => (
-                          <div key={sub.slug}>
-                            <Link href={`/products?category=${top.slug}&sub=${sub.slug}`} className="block text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 hover:text-gray-700 dark:hover:text-gray-300" onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}>
-                              {sub.name}
-                            </Link>
-                            <div className="flex flex-wrap gap-2.5">
-                              {sub.children?.map((leaf) => (
-                                <Link
-                                  key={leaf.slug}
-                                  href={`/products?category=${top.slug}&sub=${sub.slug}&type=${leaf.slug}`}
-                                  className="text-[13px] text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-100 dark:border-gray-700 rounded-lg px-3 py-1.5 transition-colors"
-                                  onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
-                                >
-                                  {leaf.name}
-                                </Link>
-                              ))}
+                    <div className="max-w-7xl mx-auto px-4 lg:px-6">
+                      <div
+                        ref={panelRef}
+                        className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl overflow-hidden"
+                      >
+                        <div className="grid grid-cols-[240px_1fr] gap-0 max-h-[70vh]">
+                          {/* Left rail: Top categories list + search */}
+                          <div className="border-r border-gray-100 dark:border-gray-800 p-3 sm:p-4 overflow-y-auto">
+                            <div className="relative mb-3 sm:mb-4">
+                              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                              <input
+                                type="text"
+                                placeholder="Search categories"
+                                className="w-full pl-9 pr-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent"
+                                onChange={(e) => {
+                                  const q = (e.target.value || '').trim().toLowerCase();
+                                  const tops = (categoryTree.length ? categoryTree : CATEGORY_TREE);
+                                  const matches = (t) => {
+                                    if (!q) return false;
+                                    if (t.name?.toLowerCase().includes(q)) return true;
+                                    if (Array.isArray(t.children)) {
+                                      for (const sub of t.children) {
+                                        if (sub?.name?.toLowerCase().includes(q)) return true;
+                                        if (Array.isArray(sub.children)) {
+                                          for (const leaf of sub.children) {
+                                            if (leaf?.name?.toLowerCase().includes(q)) return true;
+                                          }
+                                        }
+                                      }
+                                    }
+                                    return false;
+                                  };
+                                  let idx = tops.findIndex(matches);
+                                  if (idx < 0) idx = 0;
+                                  setActiveTopIdx(idx);
+                                }}
+                              />
                             </div>
+                            <ul className="space-y-1">
+                              {(categoryTree.length ? categoryTree : CATEGORY_TREE).map((top, idx) => (
+                                <li key={top.slug}>
+                                  <button
+                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                                      ${idx === activeTopIdx ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                                    onMouseEnter={() => setActiveTopIdx(idx)}
+                                    onFocus={() => setActiveTopIdx(idx)}
+                                    onClick={() => {
+                                      setIsCategoriesPinned(false);
+                                      setIsCategoriesOpen(false);
+                                      window.location.href = `/products?category_id=${encodeURIComponent(top.id || top.slug)}`;
+                                    }}
+                                  >
+                                    {top.name}
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
                           </div>
-                        ))}
+                          {/* Right content: subcategories and chips */}
+                          <div className="p-4 sm:p-6 overflow-y-auto">
+                            {(() => {
+                              const tops = (categoryTree.length ? categoryTree : CATEGORY_TREE);
+                              const active = tops[activeTopIdx] || tops[0];
+                              if (!active) return null;
+                              return (
+                                <div className="flex flex-col gap-4 sm:gap-6">
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white tracking-tight">{active.name}</h3>
+                                      <p className="text-xs text-gray-500 dark:text-gray-400">Explore all {active.name} categories</p>
+                                    </div>
+                                    <Link
+                                      href={`/products?category_id=${active.id || active.slug}`}
+                                      onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
+                                      className="px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                    >
+                                      View all
+                                    </Link>
+                                  </div>
+                                  <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
+                                    {active.children?.map((sub) => (
+                                      <div key={sub.slug} className="min-w-0">
+                                        <Link
+                                          href={`/products?category_id=${sub.id || active.id || active.slug}`}
+                                          onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
+                                          className="block text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 hover:text-gray-700 dark:hover:text-gray-300"
+                                        >
+                                          {sub.name}
+                                        </Link>
+                                        <div className="flex flex-wrap gap-2.5">
+                                          {sub.children?.map((leaf) => (
+                                            <Link
+                                              key={leaf.slug}
+                                              href={`/products?category_id=${leaf.id || sub.id || active.id || active.slug}`}
+                                              onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
+                                              className="text-[13px] text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-100 dark:border-gray-700 rounded-lg px-3 py-1.5 transition-colors"
+                                            >
+                                              {leaf.name}
+                                            </Link>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  ))}
                   </div>
                 </>
               )}
@@ -333,7 +505,7 @@ export default function Header() {
             </button>
 
             {/* Wishlist */}
-            <Link href="/wishlist" className={`relative text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`} style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
+            <Link href="/account/wishlist" className={`relative text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-full touch-manipulation flex items-center justify-center ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 sm:w-12 sm:h-12 hover:bg-gray-50 dark:hover:bg-gray-800'}`} style={{ margin: 0, padding: 0, textDecoration: 'none' }}>
               <Heart className="h-5 w-5" style={{ margin: 0, padding: 0, display: 'block' }} />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium text-[10px] sm:text-[11px] min-w-[20px] min-h-[20px]">
@@ -364,11 +536,11 @@ export default function Header() {
               <div className={`absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg transition-all duration-200 z-50 ${
                 isProfileDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'
               }`}>
-                {user ? (
+                {isAuthenticated ? (
                   <>
                     <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">Welcome back!</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || 'Account'}</p>
                     </div>
                     <Link
                       href="/account"
@@ -453,7 +625,7 @@ export default function Header() {
               <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center space-x-3">
                   <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black px-3 py-2 rounded-xl font-bold text-lg tracking-tight">
-                    M
+                    F
                   </div>
                   <span id="mobile-menu-title" className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
                     {BRAND.name}
@@ -474,7 +646,7 @@ export default function Header() {
                 <div className="px-6 py-6 border-b border-gray-100 dark:border-gray-800">
                   <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Shop by Category</h3>
                   <div className="divide-y divide-gray-100 dark:divide-gray-800">
-                    {CATEGORY_TREE.map((top, i) => (
+                    {(categoryTree.length ? categoryTree : CATEGORY_TREE).map((top, i) => (
                       <div key={top.slug} className="py-2">
                         <button
                           className="w-full flex items-center justify-between py-2 text-gray-700 dark:text-gray-300"
@@ -501,7 +673,7 @@ export default function Header() {
                                     {sub.children?.map((leaf) => (
                                       <Link
                                         key={leaf.slug}
-                                        href={`/products?category=${top.slug}&sub=${sub.slug}&type=${leaf.slug}`}
+                                        href={`/products?category_id=${encodeURIComponent(leaf.id || sub.id || top.id || top.slug)}`}
                                         onClick={() => setIsMenuOpen(false)}
                                         className="text-sm text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg px-2.5 py-1"
                                       >
@@ -548,7 +720,7 @@ export default function Header() {
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 px-4">Quick Actions</h3>
                     <div className="space-y-2">
                       <Link
-                        href="/wishlist"
+                        href="/account/wishlist"
                         onClick={() => setIsMenuOpen(false)}
                         className="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-200"
                       >
@@ -634,7 +806,7 @@ export default function Header() {
 
                 {/* Sidebar Footer */}
                 <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
-                  {user && (
+                  {isAuthenticated && (
                     <button
                       onClick={() => {
                         logout();

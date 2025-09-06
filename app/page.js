@@ -1,7 +1,8 @@
 import { ArrowRight } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
 import Hero from '@/components/home/Hero';
-import InstagramFeed from '@/components/social/InstagramFeed';
-import InstagramReelsFeed from '@/components/social/InstagramReelsFeed';
+import VideoReelGrid from '@/components/social/VideoReelGrid';
+import PhotoReelGrid from '@/components/social/PhotoReelGrid';
 import SimpleTrustSection from '@/components/ui/SimpleTrustSection';
 import SimpleTestimonials from '@/components/ui/SimpleTestimonials';
 
@@ -49,12 +50,11 @@ export default function Home() {
               </div>
               <div className="relative mt-12 lg:mt-0">
                 <div className="absolute -inset-4 bg-gradient-to-r from-gray-200/40 to-gray-300/40 dark:from-gray-600/20 dark:to-gray-700/20 rounded-3xl blur-xl"></div>
-                <div className="relative">
-                  <img
+                <div className="relative h-80 sm:h-96 lg:h-[650px] rounded-2xl shadow-2xl overflow-hidden">
+                  <SmartImage
                     src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2340&auto=format&fit=crop"
                     alt="Fashion atelier"
-                    className="w-full h-80 sm:h-96 lg:h-[650px] object-cover rounded-2xl shadow-2xl"
-                    style={{ transform: 'translateZ(0)' }}
+                    className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl"></div>
                   <div className="absolute bottom-6 left-6 right-6">
@@ -83,79 +83,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Featured Collections */}
-        <section className="py-20 sm:py-24 lg:py-32 bg-gradient-to-b from-gray-50/30 to-white dark:from-gray-800/30 dark:to-gray-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16 sm:mb-20">
-              <div className="inline-block mb-6">
-                <div className="w-16 h-px bg-black/20 dark:bg-white/20 mb-4 mx-auto"></div>
-                <p className="text-sm font-medium tracking-[0.1em] uppercase text-gray-500 dark:text-gray-400">Collections</p>
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-gray-900 dark:text-white mb-6 sm:mb-8 leading-[1.1] tracking-[-0.02em]">
-                Featured
-                <br />
-                <span className="italic font-extralight text-gray-700 dark:text-gray-200">Collections</span>
-              </h2>
-              <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed font-light">
-                Discover our most coveted pieces, carefully selected for their exceptional quality and timeless appeal
-              </p>
-            </div>
+        {/* Style Stories - Video Reels (limit 4) */}
+        <VideoReelGrid title="Style Stories" filters={{ is_display_home: true, type: 'video' }} limit={4} />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12">
-              {[
-                {
-                  title: "Evening Elegance",
-                  description: "Sophisticated pieces for special occasions",
-                  image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
-                  link: "/collections/evening"
-                },
-                {
-                  title: "Casual Chic",
-                  description: "Effortless style for everyday wear",
-                  image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
-                  link: "/collections/casual"
-                },
-                {
-                  title: "Workwear Essentials",
-                  description: "Professional pieces that command attention",
-                  image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1000&auto=format&fit=crop",
-                  link: "/collections/workwear"
-                }
-              ].map((collection, index) => (
-                <a
-                  key={index}
-                  href={collection.link}
-                  className="group relative overflow-hidden rounded-xl sm:rounded-2xl aspect-[4/5] block touch-manipulation"
-                  style={{ transform: 'translateZ(0)' }}
-                >
-                  <img
-                    src={collection.image}
-                    alt={collection.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{ transform: 'translateZ(0)' }}
-                  />
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
-                  <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{collection.title}</h3>
-                    <p className="text-white/90 mb-3 sm:mb-4 text-sm sm:text-base">{collection.description}</p>
-                    <div className="inline-flex items-center text-white group-hover:text-white transition-colors text-sm sm:text-base">
-                      <span className="font-medium">Explore Collection</span>
-                      <svg className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Instagram Reels Section */}
-        <InstagramReelsFeed />
-
-        {/* Instagram Feed Section */}
-        <InstagramFeed />
+        {/* Follow Our Journey - Photo Grid (limit 4) */}
+        <PhotoReelGrid title="Follow Our Journey" filters={{ is_display_home: true, type: 'image' }} limit={4} />
 
         {/* Verified Testimonials */}
         <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">

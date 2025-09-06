@@ -1,65 +1,69 @@
 import { Instagram, Heart, MessageCircle, ExternalLink } from 'lucide-react';
 import { useMemo } from 'react';
+import SmartImage from '@/components/ui/SmartImage';
 
 export default function InstagramFeed() {
   const instagramPosts = useMemo(() => [
     {
       id: 1,
-      image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 2847,
       comments: 124,
-      caption: 'Elegant summer collection featuring our bestselling maxi dress ✨ #ModaveStyle'
+      caption: 'Elegant summer collection featuring our bestselling maxi dress ✨ #FaxioStyle'
     },
     {
       id: 2,
-      image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 1923,
       comments: 89,
       caption: 'Behind the scenes at our autumn photoshoot 📸 #BehindTheScenes'
     },
     {
       id: 3,
-      image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 3456,
       comments: 156,
       caption: 'Sustainable fashion meets contemporary style 🌱 #SustainableFashion'
     },
     {
       id: 4,
-      image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1503342394128-c104d54dba01?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 2167,
       comments: 92,
       caption: 'Customer spotlight: Looking absolutely stunning! 💫 #CustomerLove'
     },
     {
       id: 5,
-      image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 1876,
       comments: 78,
       caption: 'New arrivals: Timeless pieces for modern women 👗 #NewArrivals'
     },
     {
       id: 6,
-      image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1520975661595-6453be3f7070?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 2345,
       comments: 103,
       caption: 'Effortless elegance in our workwear collection 💼 #WorkwearStyle'
     },
     {
       id: 7,
-      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 1654,
       comments: 67,
       caption: 'Evening glamour redefined ✨ #EveningWear'
     },
     {
       id: 8,
-      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&h=800&fit=crop&auto=format&q=80',
       likes: 2789,
       comments: 134,
       caption: 'Casual sophistication for everyday moments 🌸 #CasualChic'
     }
   ], []);
+
+  // Limit: only 4 images on homepage
+  const displayPosts = useMemo(() => instagramPosts.slice(0, 4), [instagramPosts]);
 
   const formatNumber = (num) => {
     if (num >= 1000) {
@@ -80,34 +84,35 @@ export default function InstagramFeed() {
             Get daily fashion inspiration, styling tips, and behind-the-scenes content from our community
           </p>
           <a
-            href="https://instagram.com/modave_official"
+            href="https://instagram.com/faxio_official"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary inline-flex items-center gap-2"
           >
             <Instagram className="h-5 w-5" />
-            @modave_official
+            @faxio_official
             <ExternalLink className="h-4 w-4" />
           </a>
         </div>
 
         {/* Instagram Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-12">
-          {instagramPosts.map((post) => (
+          {displayPosts.map((post) => (
             <a
               key={post.id}
-              href={`https://instagram.com/modave_official`}
+              href={`https://instagram.com/faxio_official`}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-xl overflow-hidden block"
               style={{ transform: 'translateZ(0)' }}
             >
-              <img
-                src={post.image}
-                alt="Instagram post"
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                style={{ transform: 'translateZ(0)' }}
-              />
+              <div className="absolute inset-0">
+                <SmartImage
+                  src={post.image}
+                  alt="Instagram post"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
               
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-300 flex items-center justify-center">
@@ -142,11 +147,11 @@ export default function InstagramFeed() {
             Join Our Style Community
           </h3>
           <p className="body-base text-fade mb-6">
-            Tag us <span className="font-semibold text-gray-900 dark:text-white">@modave_official</span> and use
-            <span className="font-semibold text-gray-900 dark:text-white"> #ModaveStyle</span> for a chance to be featured!
+            Tag us <span className="font-semibold text-gray-900 dark:text-white">@faxio_official</span> and use
+            <span className="font-semibold text-gray-900 dark:text-white"> #FaxioStyle</span> for a chance to be featured!
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            {['#ModaveStyle', '#OOTD', '#ElegantFashion', '#TimelessStyle', '#ModernWoman'].map((tag) => (
+            {['#FaxioStyle', '#OOTD', '#ElegantFashion', '#TimelessStyle', '#ModernWoman'].map((tag) => (
               <span
                 key={tag}
                 className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"

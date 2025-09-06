@@ -1,15 +1,26 @@
 'use client';
 
 import Link from 'next/link';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 
 export default function CartSummary() {
-  const { cartItems, getCartTotal } = useCart();
-  
-  const subtotal = getCartTotal();
-  const shipping = subtotal > 999 ? 0 : 99;
-  const tax = Math.round(subtotal * 0.18);
-  const total = subtotal + shipping + tax;
+  const { items, totals, cart } = useCart();
+  const totalsSource = totals ?? cart ?? {};
+  const shipping = Number(totalsSource?.shipping_total || 0);
+  const tax = Number(totalsSource?.tax_total || 0);
+  const discount = Number(totalsSource?.discount_total || 0);
+  const computedItemsTotal = Array.isArray(items)
+    ? items.reduce((sum, i) => sum + (Number(i?.unit_price) || 0) * (Number(i?.quantity) || 0), 0)
+    : 0;
+  const itemTotal = Number(
+    totalsSource?.item_total ?? totalsSource?.item_subtotal ?? computedItemsTotal
+  ) || 0;
+  const totalQty = Array.isArray(items)
+    ? items.reduce((acc, i) => acc + (Number(i?.quantity) || 0), 0)
+    : 0;
+  const finalTotal = Number(
+    totalsSource?.total ?? (itemTotal - discount + shipping + tax)
+  ) || 0;
 
   return (
     <div className="bg-white border rounded-lg p-4 sm:p-6 lg:sticky lg:top-24">
@@ -17,32 +28,30 @@ export default function CartSummary() {
       
       <div className="space-y-3 text-sm">
         <div className="flex justify-between">
-          <span>Subtotal ({cartItems.length} items)</span>
-          <span>₹{subtotal}</span>
+          <span>Total Product Price ({totalQty} {totalQty === 1 ? 'item' : 'items'})</span>
+          <span>₹{itemTotal}</span>
         </div>
+        {discount > 0 && (
+          <div className="flex justify-between text-green-600">
+            <span>Total Discount</span>
+            <span>-₹{discount}</span>
+          </div>
+        )}
         <div className="flex justify-between">
-          <span>Shipping</span>
+          <span>Shipping Fee</span>
           <span className={shipping === 0 ? 'text-green-600' : ''}>
             {shipping === 0 ? 'FREE' : `₹${shipping}`}
           </span>
         </div>
-        <div className="flex justify-between">
-          <span>Tax (18%)</span>
-          <span>₹{tax}</span>
-        </div>
         <div className="border-t pt-3">
           <div className="flex justify-between text-lg font-semibold">
             <span>Total</span>
-            <span>₹{total}</span>
+            <span>₹{finalTotal}</span>
           </div>
         </div>
       </div>
 
-      {shipping > 0 && (
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
-          Add ₹{999 - subtotal} more to get FREE shipping!
-        </div>
-      )}
+      {/* Promo or shipping notice can be reintroduced with business logic if needed */}
 
       <Link
         href="/checkout"

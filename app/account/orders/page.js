@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import {
   Package,
@@ -20,6 +20,8 @@ import {
   Eye,
   ArrowLeft
 } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
+import { listMyOrders } from '@/services/order/orderService';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -27,102 +29,117 @@ export default function OrdersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [limit] = useState(10);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState('');
+  const didInit = useRef(false);
+  const searchingRef = useRef(false);
+  const currentQueryRef = useRef({}); // e.g., { id: 'order_...' } when server-side searching
+  const requestIdRef = useRef(0);
+
+  async function fetchOrders(reset = false, extraQuery = {}) {
+    try {
+      setError('');
+      if (reset) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+      const res = await listMyOrders({
+        limit,
+        offset: reset ? 0 : offset,
+        ...currentQueryRef.current,
+        ...extraQuery,
+      });
+      const newOrders = res.orders || [];
+      setHasMore((reset ? newOrders.length : orders.length + newOrders.length) < (res.count ?? Infinity));
+      setOrders(reset ? newOrders : [...orders, ...newOrders]);
+      setFilteredOrders(reset ? newOrders : [...orders, ...newOrders]);
+      setOffset(reset ? newOrders.length : offset + newOrders.length);
+    } catch (e) {
+      // errors globally toasted by apiClient
+      setError(e?.response?.data?.message || e.message || 'Failed to load orders');
+      // prevent sentinel from hammering when there is an error
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  }
 
   useEffect(() => {
-    // Mock orders data
-    setTimeout(() => {
-      const mockOrders = [
-        {
-          id: 'ORD-2024-001',
-          date: '2024-01-15',
-          status: 'delivered',
-          total: 2499,
-          items: 2,
-          deliveryDate: '2024-01-18',
-          address: 'Home - 123 Main Street, Mumbai',
-          items_detail: [
-            { name: 'Elegant Black Dress', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400', price: 1299, quantity: 1 },
-            { name: 'Designer Handbag', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400', price: 1200, quantity: 1 }
-          ]
-        },
-        {
-          id: 'ORD-2024-002', 
-          date: '2024-01-12',
-          status: 'shipped',
-          total: 1899,
-          items: 1,
-          deliveryDate: '2024-01-16',
-          address: 'Office - 456 Business Park, Delhi',
-          items_detail: [
-            { name: 'Casual Summer Top', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400', price: 1899, quantity: 1 }
-          ]
-        },
-        {
-          id: 'ORD-2024-003',
-          date: '2024-01-08',
-          status: 'processing',
-          total: 3299,
-          items: 3,
-          deliveryDate: '2024-01-20',
-          address: 'Home - 123 Main Street, Mumbai',
-          items_detail: [
-            { name: 'Designer Jacket', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400', price: 2299, quantity: 1 },
-            { name: 'Cotton T-Shirt', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400', price: 599, quantity: 1 },
-            { name: 'Denim Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400', price: 1299, quantity: 1 }
-          ]
-        },
-        {
-          id: 'ORD-2024-004',
-          date: '2024-01-05',
-          status: 'cancelled',
-          total: 999,
-          items: 1,
-          deliveryDate: null,
-          address: 'Home - 123 Main Street, Mumbai',
-          items_detail: [
-            { name: 'Sports Shoes', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400', price: 999, quantity: 1 }
-          ]
-        },
-        {
-          id: 'ORD-2024-005',
-          date: '2024-01-02',
-          status: 'delivered',
-          total: 1599,
-          items: 2,
-          deliveryDate: '2024-01-05',
-          address: 'Home - 123 Main Street, Mumbai',
-          items_detail: [
-            { name: 'Winter Scarf', image: 'https://images.unsplash.com/photo-1520975954732-35dd22299614?w=400', price: 799, quantity: 1 },
-            { name: 'Woolen Gloves', image: 'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?w=400', price: 800, quantity: 1 }
-          ]
-        }
-      ];
-      setOrders(mockOrders);
-      setFilteredOrders(mockOrders);
-      setLoading(false);
-    }, 1000);
+    if (didInit.current) return;
+    didInit.current = true;
+    fetchOrders(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Debounced search: server-side when it looks like an order id; otherwise client-side filter
   useEffect(() => {
-    let filtered = orders;
+    const qRaw = searchQuery.trim();
+    const isIdQuery = /^order_/i.test(qRaw) || qRaw.length > 8; // heuristic for order id
 
-    // Filter by status
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(order => order.status === statusFilter);
+    // Always apply status filter first on the baseline list we hold
+    const applyStatusFilter = (list) => {
+      if (statusFilter === 'all') return list;
+      return list.filter(order => (order.status || '').toLowerCase() === statusFilter);
+    };
+
+    if (!qRaw) {
+      // Clear server-side query and restore default pagination
+      currentQueryRef.current = {};
+      searchingRef.current = false;
+      setHasMore(true);
+      setFilteredOrders(applyStatusFilter(orders));
+      // Ensure base list is refreshed to default if we had been in a filtered mode
+      // Only refetch if we previously had a server query
+      // eslint-disable-next-line no-unused-expressions
+      // (If you want an immediate fresh list, uncomment the line below)
+      // fetchOrders(true);
+      return;
     }
 
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter(order =>
-        order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.items_detail.some(item => 
-          item.name.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+    if (!isIdQuery) {
+      // Client-side search on current orders; disable infinite scroll while searching
+      searchingRef.current = false;
+      const q = qRaw.toLowerCase();
+      const filtered = applyStatusFilter(orders).filter(order =>
+        (order.id || '').toLowerCase().includes(q) ||
+        (order.items_detail || []).some(item => (item.name || '').toLowerCase().includes(q))
       );
+      setFilteredOrders(filtered);
+      setHasMore(false);
+      return;
     }
 
-    setFilteredOrders(filtered);
-  }, [orders, statusFilter, searchQuery]);
+    // Server-side ID search (debounced)
+    const rid = ++requestIdRef.current;
+    searchingRef.current = true;
+    setError('');
+    const timer = setTimeout(async () => {
+      try {
+        currentQueryRef.current = { id: qRaw };
+        // Reset pagination and fetch server-filtered
+        const res = await listMyOrders({ limit, offset: 0, ...currentQueryRef.current });
+        if (requestIdRef.current !== rid) return; // ignore stale
+        const base = res.orders || [];
+        setOrders(base);
+        const filtered = applyStatusFilter(base);
+        setFilteredOrders(filtered);
+        setOffset(base.length);
+        setHasMore(base.length < (res.count ?? base.length));
+      } catch (e) {
+        if (requestIdRef.current !== rid) return;
+        setError(e?.response?.data?.message || e.message || 'Search failed');
+        setHasMore(false);
+      } finally {
+        if (requestIdRef.current === rid) searchingRef.current = false;
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery, statusFilter]);
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -201,7 +218,7 @@ export default function OrdersPage() {
               <Download className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             </button>
             <button 
-              onClick={() => setLoading(true)}
+              onClick={() => fetchOrders(true)}
               className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors"
             >
               <RefreshCw className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -256,6 +273,12 @@ export default function OrdersPage() {
 
       {/* Orders List */}
       <div className="space-y-4">
+        {error && (
+          <div className="bg-red-50 text-red-700 border border-red-200 p-3 rounded-xl flex items-center justify-between">
+            <span className="text-sm">{error}</span>
+            <button onClick={() => fetchOrders(true)} className="px-3 py-1 text-xs font-semibold bg-red-600 text-white rounded-lg hover:bg-red-700">Retry</button>
+          </div>
+        )}
         {filteredOrders.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-gray-700 text-center">
             <Package className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
@@ -338,11 +361,13 @@ export default function OrdersPage() {
                 <div className="space-y-4">
                   {order.items_detail.map((item, index) => (
                     <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 rounded-xl object-cover border border-gray-200 dark:border-gray-600"
-                      />
+                      <div className="w-16 h-16 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-600 relative">
+                        <SmartImage
+                          src={item.image}
+                          alt={item.name}
+                          className="object-cover"
+                        />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate">
                           {item.name}
@@ -377,7 +402,7 @@ export default function OrdersPage() {
                     </button>
                   )}
 
-                  {(order.status === 'shipped' || order.status === 'processing') && (
+                  {order.status === 'shipped' && (
                     <Link
                       href={`/account/tracking?orderId=${order.id}`}
                       className="flex-1 flex items-center justify-center gap-2 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
@@ -391,7 +416,59 @@ export default function OrdersPage() {
             </div>
           ))
         )}
+        {/* Infinite loader skeletons */}
+        {hasMore && !loading && !searchingRef.current && (
+          <div className="space-y-3">
+            {(loadingMore ? [1,2,3] : [1]).map((i) => (
+              <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-200 dark:border-gray-700 animate-pulse">
+                <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-3"></div>
+                <div className="h-20 bg-gray-100 dark:bg-gray-700 rounded"></div>
+              </div>
+            ))}
+          </div>
+        )}
+        {/* Observer sentinel */}
+        <Sentinel
+          hasMore={hasMore && !searchingRef.current}
+          loading={loading || loadingMore}
+          onVisible={() => !loading && !loadingMore && hasMore && !searchingRef.current && fetchOrders(false)}
+        />
       </div>
     </div>
   );
+}
+
+function Sentinel({ hasMore, loading, onVisible }) {
+  const ref = useRef(null);
+  const observerRef = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (!hasMore || loading) return;
+
+    // Disconnect any old observer before creating a new one
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+      observerRef.current = null;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      if (entry.isIntersecting) {
+        // Disconnect immediately to avoid multiple rapid triggers
+        observer.disconnect();
+        onVisible?.();
+      }
+    }, { rootMargin: '200px 0px' });
+
+    observer.observe(el);
+    observerRef.current = observer;
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+      observerRef.current = null;
+    };
+  }, [hasMore, loading, onVisible]);
+
+  return <div ref={ref} className="h-1" aria-hidden />;
 }

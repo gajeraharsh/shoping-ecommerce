@@ -2,20 +2,98 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Heart, Star, ShoppingBag } from 'lucide-react';
+import Image from 'next/image';
+import { Star, Heart } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
-import { useCart } from '@/contexts/CartContext';
-import { useToast } from '@/hooks/useToast';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, priority = false, viewMode }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  const { addToCart } = useCart();
-  const { showToast } = useToast();
+  const [imgSrc, setImgSrc] = useState('');
+  const { addToWishlist, removeFromWishlist } = useWishlist();
+  const { isAuthenticated, tokenPresent } = useAuth();
+  const router = useRouter();
+  const [inWishlist, setInWishlist] = useState(!!product?.is_wishlist);
+  useEffect(() => {
+    setInWishlist(!!product?.is_wishlist);
+  }, [product?.id, product?.is_wishlist]);
+  const ensureAuthed = () => {
+    const authed = Boolean(isAuthenticated || tokenPresent);
+    if (!authed) {
+      const next = typeof window !== 'undefined'
+        ? window.location.pathname + window.location.search
+        : '/';
+      try {
+        router.push(`/auth/login?next=${encodeURIComponent(next)}`);
+      } catch (_) {}
+      return false;
+    }
+    return true;
+  };
+  // Local state retained for image interactions only
+  const rating = Number(product?.rating) || 0;
+  const reviewCount = Number(product?.review_count) || 0;
+
+  // Inline monochrome SVG placeholder to avoid missing file issues
+  const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 533">
+      <rect width="400" height="533" fill="#f3f4f6" />
+      <g fill="#9ca3af" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle">
+        <text x="200" y="266">No Image</text>
+      </g>
+    </svg>`
+  );
   
-  const inWishlist = isInWishlist(product.id);
+  // Simple palette to ensure known color names render reliably
+  const COLOR_PALETTE = {
+    black: '#000000',
+    white: '#ffffff',
+    gray: '#808080',
+    grey: '#808080',
+    silver: '#c0c0c0',
+    charcoal: '#36454F',
+    offwhite: '#f5f5f5',
+    off_white: '#f5f5f5',
+    cream: '#f2efe6',
+    ivory: '#fffff0',
+    beige: '#f5f5dc',
+    brown: '#8B4513',
+    tan: '#d2b48c',
+    navy: '#000080',
+    blue: '#0000ff',
+    sky: '#87ceeb',
+    red: '#ff0000',
+    maroon: '#800000',
+    burgundy: '#800020',
+    green: '#008000',
+    olive: '#808000',
+    mint: '#98ff98',
+    teal: '#008080',
+    purple: '#800080',
+    violet: '#8F00FF',
+    pink: '#ffc0cb',
+    orange: '#ffa500',
+    yellow: '#ffff00',
+    gold: '#d4af37',
+  };
+
+  const normalizeName = (name = '') => String(name).toLowerCase().replace(/\s|-/g, '');
+
+  const getSwatchStyle = (name) => {
+    const key = normalizeName(name);
+    const bg = COLOR_PALETTE[key] || (typeof name === 'string' ? name.toLowerCase() : '#000');
+    const isLight = ['#ffffff', '#f5f5f5', '#f2efe6', '#fffff0', '#f5f5dc'].includes(bg) || /white/i.test(name || '');
+    return {
+      backgroundColor: bg,
+      // Strengthen border for very light colors so it stays visible
+      borderColor: isLight ? '#9ca3af' : undefined, // gray-400
+    };
+  };
+  
+  // (Removed wishlist state sync)
 
   // Image cycling effect on hover
   useEffect(() => {
@@ -32,24 +110,30 @@ export default function ProductCard({ product }) {
     };
   }, [isHovered, product.images]);
 
-  const handleWishlistToggle = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (inWishlist) {
-      removeFromWishlist(product.id);
-      showToast('Removed from wishlist', 'info');
-    } else {
-      addToWishlist(product);
-      showToast('Added to wishlist', 'success');
-    }
-  };
+  // Note: do not reset imageLoaded on product/currentImageIndex directly,
+  // we handle it via imgSrc change to avoid flicker during search updates.
 
-  const handleQuickAdd = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart(product, product.sizes[0], product.colors[0], 1);
-    showToast('Added to cart', 'success');
-  };
+  // Derive a safe image source and update when index/product changes
+  useEffect(() => {
+    const imgs = Array.isArray(product?.images) ? product.images : [];
+    const candidate = imgs[currentImageIndex] || imgs[0] || '';
+    const safe = typeof candidate === 'string' && candidate.trim().length > 0 ? candidate : FALLBACK_SVG;
+    setImgSrc(safe);
+  }, [product?.images, currentImageIndex]);
+
+  // Failsafe: if onLoad/onError don't fire (rare), reveal image area after a short delay
+  useEffect(() => {
+    if (!imgSrc) return;
+    setImageLoaded(false);
+    const t = setTimeout(() => setImageLoaded(true), 500);
+    return () => clearTimeout(t);
+  }, [imgSrc]);
+
+  // (Removed wishlist handler and Quick Add; product card now only links to product page)
+
+  // (Removed variant resolution; actions are no longer present on card)
+
+  // (Removed Quick Add handler)
 
   return (
     <div
@@ -59,16 +143,22 @@ export default function ProductCard({ product }) {
     >
       <Link href={`/products/${product.id}`}>
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-50 dark:bg-gray-800 rounded-t-xl">
-          {!imageLoaded && (
-            <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse"></div>
-          )}
-          <img
-            src={product.images[currentImageIndex] || product.images[0]}
+          <Image
+            key={`${product.id || 'prod'}:${imgSrc}`}
+            src={imgSrc || FALLBACK_SVG}
             alt={product.name}
-            className={`w-full h-full object-cover transition-all duration-700 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            } ${isHovered ? 'scale-105' : 'scale-100'}`}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 480px) 50vw, 100vw"
+            className={`object-cover transition-transform duration-700 ${isHovered ? 'scale-105' : 'scale-100'}`}
             onLoad={() => setImageLoaded(true)}
+            onError={() => { setImgSrc(FALLBACK_SVG); setImageLoaded(true); }}
+            placeholder="blur"
+            blurDataURL={FALLBACK_SVG}
+            loading={priority ? 'eager' : 'lazy'}
+            priority={priority}
+            decoding="async"
+            fetchPriority={priority ? 'high' : 'auto'}
+            unoptimized
           />
           
           {/* Discount Badge */}
@@ -78,33 +168,31 @@ export default function ProductCard({ product }) {
             </div>
           )}
 
-          {/* Wishlist Button - Always visible on mobile, hover on desktop */}
-          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
-            <button
-              onClick={handleWishlistToggle}
-              className={`w-11 h-11 rounded-full transition-all flex items-center justify-center shadow-md border ${
-                inWishlist
-                  ? 'bg-accent/10 text-accent border-accent'
-                  : 'bg-white/90 text-gray-600 hover:text-accent border-transparent'
-              }`}
-              title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-              style={{ margin: 0, padding: 0, border: 'none' }}
-            >
-              <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current text-accent' : ''}`} style={{ margin: 0, padding: 0, display: 'block' }} />
-            </button>
-          </div>
-
-          {/* Quick Add Button - Always visible on mobile, hover on desktop */}
-          <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform translate-y-0 sm:translate-y-2 sm:group-hover:translate-y-0">
-            <button
-              onClick={handleQuickAdd}
-              className="w-full btn-primary py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium transition-colors rounded-lg touch-manipulation min-h-[48px] flex items-center justify-center shadow-md"
-              style={{ margin: 0, border: 'none' }}
-            >
-              <ShoppingBag className="h-4 w-4 mr-2" style={{ margin: 0, padding: 0, display: 'block' }} />
-              <span>Add to Cart</span>
-            </button>
-          </div>
+          {/* Wishlist Heart */}
+          <button
+            type="button"
+            aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (!ensureAuthed()) return;
+              if (inWishlist) {
+                setInWishlist(false); // optimistic
+                removeFromWishlist(product.id);
+              } else {
+                setInWishlist(true); // optimistic
+                // For list cards, pass minimal product; WishlistContext should handle normalization
+                addToWishlist(product);
+              }
+            }}
+            className={`absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-full border shadow-sm transition-colors ${
+              inWishlist
+                ? 'bg-red-50 border-red-200 text-red-600'
+                : 'bg-white/90 border-gray-200 text-gray-600 hover:text-red-600'
+            }`}
+          >
+            <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+          </button>
         </div>
       </Link>
 
@@ -122,12 +210,12 @@ export default function ProductCard({ product }) {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`h-4 w-4 ${i < Math.round(product.rating) ? 'fill-current text-accent' : 'text-gray-300 dark:text-gray-600'}`}
+                className={`h-4 w-4 ${i < Math.round(rating) ? 'fill-current text-accent' : 'text-gray-300 dark:text-gray-600'}`}
               />
             ))}
-            <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">{Number(product.rating).toFixed(1)}</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">{rating.toFixed(1)}</span>
           </div>
-          <span className="text-xs sm:text-sm text-gray-400">({product.reviews} reviews)</span>
+          <span className="text-xs sm:text-sm text-gray-400">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
         </div>
 
         {/* Price */}
@@ -143,17 +231,17 @@ export default function ProductCard({ product }) {
         {/* Colors and Stock */}
         <div className="flex items-center justify-between">
           <div className="flex gap-1">
-            {product.colors.slice(0, 4).map((color, index) => (
+            {(Array.isArray(product.colors) ? product.colors : []).slice(0, 4).map((color, index) => (
               <div
                 key={index}
                 className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-gray-200 dark:border-gray-600"
-                style={{ backgroundColor: color.toLowerCase() }}
-                title={color}
+                style={getSwatchStyle(color)}
+                title={String(color)}
               />
             ))}
-            {product.colors.length > 4 && (
+            {(Array.isArray(product.colors) ? product.colors : []).length > 4 && (
               <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 flex items-center justify-center">
-                <span className="text-[9px] sm:text-xs text-gray-500 font-medium">+{product.colors.length - 4}</span>
+                <span className="text-[9px] sm:text-xs text-gray-500 font-medium">+{(product.colors?.length || 0) - 4}</span>
               </div>
             )}
           </div>

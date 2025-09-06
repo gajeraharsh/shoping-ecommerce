@@ -1,7 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { Star, Camera, X, Upload, Check } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Star, Camera, X, Check } from 'lucide-react';
+import { createReview } from '@/services/modules/review/reviewService';
+import { useAuth } from '@/contexts/AuthContext';
+import { useModal } from '@/hooks/useModal';
+import { MODAL_TYPES } from '@/features/ui/modalTypes';
+import { useRouter } from 'next/navigation';
 
 export default function WriteReview({ product, isOpen, onClose, onSubmit }) {
   const [rating, setRating] = useState(0);
@@ -11,6 +16,44 @@ export default function WriteReview({ product, isOpen, onClose, onSubmit }) {
   const [images, setImages] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const { open } = useModal();
+  const router = useRouter();
+
+  // Show login modal if a guest opens WriteReview
+  useEffect(() => {
+    if (!isOpen) return;
+    if (isAuthenticated) return;
+    const next = typeof window !== 'undefined' ? `${window.location.pathname}${window.location.search}` : '/';
+    open({
+      type: MODAL_TYPES.CUSTOM,
+      props: {
+        Component: function LoginRequiredModal({ onClose: close }) {
+          const handleLogin = () => {
+            close?.();
+            onClose?.();
+            router.push(`/auth/login?next=${encodeURIComponent(next)}`);
+          };
+          return (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+              <div className="absolute inset-0 bg-black/40" onClick={() => { close?.(); onClose?.(); }} />
+              <div className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Login Required</h3>
+                <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">Please log in to write a review.</p>
+                <div className="mt-6 flex items-center justify-end gap-3">
+                  <button className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => { close?.(); onClose?.(); }}>Cancel</button>
+                  <button className="px-4 py-2 rounded-lg bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100" onClick={handleLogin}>Log in</button>
+                </div>
+              </div>
+            </div>
+          );
+        },
+      },
+    });
+    // Immediately close the WriteReview modal so guests cannot interact
+    onClose?.();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, isAuthenticated]);
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -32,29 +75,55 @@ export default function WriteReview({ product, isOpen, onClose, onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!rating || !title.trim() || !comment.trim()) return;
+    if (!isAuthenticated) {
+      const next = typeof window !== 'undefined' ? `${window.location.pathname}${window.location.search}` : '/';
+      open({
+        type: MODAL_TYPES.CUSTOM,
+        props: {
+          Component: function LoginRequiredModal({ onClose: close }) {
+            const handleLogin = () => {
+              close?.();
+              onClose?.();
+              router.push(`/auth/login?next=${encodeURIComponent(next)}`);
+            };
+            return (
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+                <div className="absolute inset-0 bg-black/40" onClick={() => { close?.(); onClose?.(); }} />
+                <div className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Login Required</h3>
+                  <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">Please log in to submit a review.</p>
+                  <div className="mt-6 flex items-center justify-end gap-3">
+                    <button className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => { close?.(); onClose?.(); }}>Cancel</button>
+                    <button className="px-4 py-2 rounded-lg bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100" onClick={handleLogin}>Log in</button>
+                  </div>
+                </div>
+              </div>
+            );
+          },
+        },
+      });
+      return;
+    }
 
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const reviewData = {
-      rating,
-      title: title.trim(),
-      comment: comment.trim(),
-      images,
-      productId: product.id,
-      date: new Date().toISOString(),
-    };
-
-    setSubmitted(true);
-    setIsSubmitting(false);
-    
-    setTimeout(() => {
-      onSubmit && onSubmit(reviewData);
-      onClose();
-      resetForm();
-    }, 2000);
+    try {
+      await createReview({
+        product_id: String(product.id),
+        rating: Number(rating),
+        title: title.trim(),
+        content: comment.trim(),
+      });
+      setSubmitted(true);
+      setIsSubmitting(false);
+      setTimeout(() => {
+        onSubmit && onSubmit({ rating, title: title.trim(), content: comment.trim(), productId: product.id });
+        onClose();
+        resetForm();
+      }, 1200);
+    } catch (err) {
+      // error toast shown via api client interceptors
+      setIsSubmitting(false);
+    }
   };
 
   const resetForm = () => {

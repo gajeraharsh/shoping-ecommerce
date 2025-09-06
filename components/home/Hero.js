@@ -5,25 +5,15 @@ import Link from 'next/link';
 import { ArrowRight, Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
-import ProductCard from '@/components/products/ProductCard';
-import ProductSkeleton from '@/components/products/ProductSkeleton';
-import { mockProducts } from '@/utils/mockData';
+import SmartImage from '@/components/ui/SmartImage';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
+import CollectionProductsSection from './CollectionProductsSection';
 
 export default function Hero() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setProducts(mockProducts.slice(0, 8));
-      setLoading(false);
-    }, 800);
-  }, []);
 
   const heroSlides = useMemo(() => [
     {
@@ -42,7 +32,7 @@ export default function Hero() {
       description: "Exquisite evening wear crafted for the modern woman who values elegance",
       image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2340&auto=format&fit=crop",
       cta: "Explore Now",
-      link: "/products?category=evening"
+      link: "/products?q=evening"
     },
     {
       id: 3,
@@ -51,7 +41,7 @@ export default function Hero() {
       description: "Premium casual wear that transitions seamlessly from day to night",
       image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2340&auto=format&fit=crop",
       cta: "Shop Now",
-      link: "/products?category=casual"
+      link: "/products?q=casual"
     }
   ], []);
 
@@ -60,19 +50,19 @@ export default function Hero() {
       title: "New Arrivals",
       description: "Latest trends and seasonal favorites",
       image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
-      link: "/products?sort=newest"
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K4DAC1GF65JJVCNHPQKNNTGJ', page: 1 } }
     },
     {
       title: "Bestsellers",
       description: "Customer favorites and top-rated pieces",
       image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
-      link: "/products?sort=popular"
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K4DADGWSMNKK1PE2299V95SV', page: 1 } }
     },
     {
       title: "Sale",
       description: "Limited time offers on premium pieces",
       image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1000&auto=format&fit=crop",
-      link: "/products?sale=true"
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K4DAEBZ3594BTM7302Z75ABJ', page: 1 } }
     }
   ], []);
 
@@ -125,12 +115,13 @@ export default function Hero() {
               <div className="relative h-full">
                 <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent z-10"></div>
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="w-full h-full object-cover"
-                  style={{ transform: 'translateZ(0)' }}
-                />
+                <div className="absolute inset-0">
+                  <SmartImage
+                    src={slide.image}
+                    alt={slide.title}
+                    className="object-cover"
+                  />
+                </div>
                 
                 <div className="absolute inset-0 z-20 flex items-center safe-area-bottom">
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -218,12 +209,13 @@ export default function Hero() {
                 className="group relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/3] block touch-manipulation shadow-sm"
                 style={{ transform: 'translateZ(0)' }}
               >
-                <img
-                  src={category.image}
-                  alt={category.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  style={{ transform: 'translateZ(0)' }}
-                />
+                <div className="absolute inset-0">
+                  <SmartImage
+                    src={category.image}
+                    alt={category.title}
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/70 transition-colors duration-300"></div>
                 <div className="absolute inset-0 p-6 sm:p-8 lg:p-10 flex flex-col justify-end">
                   <div className="transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
@@ -243,41 +235,22 @@ export default function Hero() {
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4 sm:px-0">
-              Featured This Week
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4 sm:px-0">
-              Handpicked favorites that showcase exceptional craftsmanship and design
-            </p>
-          </div>
+        {/* Dynamic Collections: Best Sellers */}
+        <CollectionProductsSection
+          title="Best Sellers"
+          description="Our most-loved pieces that customers can't get enough of."
+          collectionId="pcol_01K4DADGWSMNKK1PE2299V95SV"
+          limit={8}
+        />
 
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
-            {loading ? (
-              Array.from({ length: 4 }).map((_, index) => (
-                <ProductSkeleton key={index} />
-              ))
-            ) : (
-              products.slice(0, 4).map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            )}
-          </div>
+        {/* Dynamic Collections: New Arrivals */}
+        <CollectionProductsSection
+          title="New Arrivals"
+          description="Fresh drops just in—discover the latest styles first."
+          collectionId="pcol_01K4DAC1GF65JJVCNHPQKNNTGJ"
+          limit={8}
+        />
 
-          <div className="text-center px-4 sm:px-0">
-            <Link
-              href="/products"
-              className="inline-flex items-center bg-black dark:bg-white text-white dark:text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
-            >
-              View All Products
-              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* Testimonials */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">

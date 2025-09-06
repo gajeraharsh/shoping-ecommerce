@@ -1,100 +1,63 @@
-'use client';
+export { default } from './ServerPage';
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import Breadcrumb from '@/components/ui/Breadcrumb';
-import ProductImageGallery from '@/components/products/ProductImageGallery';
-import ProductInfo from '@/components/products/ProductInfo';
-import ProductTabs from '@/components/products/ProductTabs';
-import RelatedProducts from '@/components/products/RelatedProducts';
-import RecentlyViewed from '@/components/products/RecentlyViewed';
-import { mockProducts } from '@/utils/mockData';
+import { getProductById } from '@/services/modules/product/productService';
 
-export default function ProductDetailPage() {
-  const params = useParams();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+export const revalidate = 300; // cache page for 5 minutes
 
-  useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const foundProduct = mockProducts.find(p => p.id === parseInt(params.id));
-      setProduct(foundProduct);
-      setLoading(false);
-    }, 500);
-  }, [params.id]);
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  try {
+    const res = await getProductById(id, { params: { fields: '+images,+thumbnail,+metadata,+title,+description' } });
+    const p = res?.product || res || {};
+    const title = p?.title ? `${p.title} | Faxio` : 'Product | Faxio';
+    const description = p?.description || p?.subtitle || 'Discover quality products on Faxio.';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com';
+    const url = `${siteUrl}/products/${id}`;
+    const images = (p?.images?.map((i) => i.url).filter(Boolean) || []).slice(0, 4);
+    const ogImages = images.length ? images : (p?.thumbnail ? [p.thumbnail] : []);
+    const keywords = Array.isArray(p?.tags)
+      ? p.tags.map((t) => t.name || '').filter(Boolean)
+      : (Array.isArray(p?.metadata?.keywords) ? p.metadata.keywords : []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-          {/* Breadcrumb Skeleton */}
-          <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 w-64 rounded mb-6 sm:mb-8"></div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-96 lg:h-[600px] rounded-2xl"></div>
-            <div className="space-y-6">
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-8 rounded"></div>
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-6 rounded w-3/4"></div>
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 rounded w-1/2"></div>
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-12 rounded"></div>
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-12 rounded"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return {
+      title,
+      description,
+      keywords,
+      robots: {
+        index: true,
+        follow: true,
+        nocache: false,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+          'max-video-preview': -1,
+        },
+      },
+      alternates: { canonical: url },
+      openGraph: {
+        title,
+        description,
+        url,
+        type: 'website',
+        siteName: 'Faxio',
+        locale: 'en_US',
+        images: ogImages.map((src) => ({ url: src })),
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        images: ogImages,
+        site: '@faxio',
+        creator: '@faxio',
+      },
+    };
+  } catch (_) {
+    return {
+      title: 'Product | Faxio',
+      description: 'Discover quality products on Faxio.',
+    };
   }
-
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <div className="text-6xl mb-4">🔍</div>
-          <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Product Not Found</h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-8">The product you're looking for doesn't exist.</p>
-          <Link 
-            href="/products" 
-            className="inline-flex items-center bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
-          >
-            Browse All Products
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const breadcrumbItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Products', href: '/products' },
-    { name: product.category.charAt(0).toUpperCase() + product.category.slice(1), href: `/products?category=${product.category}` },
-    { name: product.name, href: '#', current: true }
-  ];
-
-  return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {/* New Breadcrumb Component */}
-        <Breadcrumb items={breadcrumbItems} />
-
-        {/* Product Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 sm:mb-16">
-          <ProductImageGallery images={product.images} />
-          <ProductInfo product={product} />
-        </div>
-        
-        {/* Product Tabs */}
-        <ProductTabs product={product} />
-        
-        {/* Related Products */}
-        <RelatedProducts currentProductId={product.id} />
-        
-        {/* Recently Viewed */}
-        <RecentlyViewed currentProductId={product.id} />
-      </div>
-      
-    </div>
-  );
 }

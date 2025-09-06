@@ -2,91 +2,117 @@
 
 import { useState, useEffect } from 'react';
 import { Star, ThumbsUp, ThumbsDown, User, ChevronDown, Filter, CheckCircle } from 'lucide-react';
+import { getProductReviews, createReview } from '@/services/modules/review/reviewService';
+import { useAuth } from '@/contexts/AuthContext';
+import { useModal } from '@/hooks/useModal';
+import { MODAL_TYPES } from '@/features/ui/modalTypes';
+import { useRouter } from 'next/navigation';
 
-export default function ProductReviews({ productId }) {
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function ProductReviews({ productId, initialReviewsData = null, fallbackAggregates = null }) {
+  // Modal shown when login is required
+  function LoginRequiredModal({ title = 'Login Required', message = 'Please log in to write a review.', redirectTo = '/auth/login', onClose }) {
+    const router = useRouter();
+    const handleLogin = () => {
+      onClose?.();
+      router.push(redirectTo);
+    };
+    return (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+        <div className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h3>
+          <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">{message}</p>
+          <div className="mt-6 flex items-center justify-end gap-3">
+            <button
+              className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+            <button
+              className="px-4 py-2 rounded-lg bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100"
+              onClick={handleLogin}
+            >
+              Log in
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const mapList = (res) => {
+    const list = Array.isArray(res?.reviews) ? res.reviews : Array.isArray(res) ? res : [];
+    return list.map((r) => ({
+      id: r.id,
+      author: [r.first_name, r.last_name].filter(Boolean).join(' ') || 'Anonymous',
+      rating: r.rating,
+      title: r.title || '',
+      content: r.content || '',
+      date: r.created_at || r.updated_at || new Date().toISOString(),
+      verified: !!r.customer_id,
+      helpful: 0,
+    }));
+  };
+
+  const initialCount = typeof initialReviewsData?.count === 'number'
+    ? initialReviewsData.count
+    : (typeof fallbackAggregates?.count === 'number' ? fallbackAggregates.count : null);
+
+  const [reviews, setReviews] = useState(() => (initialReviewsData ? mapList(initialReviewsData) : []));
+  const [loading, setLoading] = useState(!initialReviewsData);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [totalCount, setTotalCount] = useState(initialCount);
+  const [limit] = useState(10);
+  const [offset, setOffset] = useState(0);
   const [sortBy, setSortBy] = useState('newest');
   const [filterBy, setFilterBy] = useState('all');
+  const [submitting, setSubmitting] = useState(false);
   const [showWriteReview, setShowWriteReview] = useState(false);
-  const [newReview, setNewReview] = useState({
-    rating: 0,
-    title: '',
-    content: '',
-    name: '',
-    verified: false
-  });
-
-  // Mock reviews data
-  const mockReviews = [
-    {
-      id: 1,
-      author: 'Priya Sharma',
-      rating: 5,
-      title: 'Perfect fit and beautiful design!',
-      content: 'I absolutely love this kurti! The fabric quality is excellent and the fit is perfect. I ordered size M and it fits exactly as expected. The color is vibrant and the stitching is top-notch. Highly recommend!',
-      date: '2024-01-15',
-      verified: true,
-      helpful: 12,
-      size: 'M',
-      fit: 'Perfect',
-      color: 'Blue',
-      images: []
-    },
-    {
-      id: 2,
-      author: 'Anjali R.',
-      rating: 4,
-      title: 'Good quality, runs slightly large',
-      content: 'Beautiful kurti with great fabric quality. The design is elegant and perfect for both casual and formal occasions. However, it runs slightly large, so I would recommend sizing down. Overall very satisfied with the purchase.',
-      date: '2024-01-12',
-      verified: true,
-      helpful: 8,
-      size: 'L',
-      fit: 'Runs Large',
-      color: 'Blue',
-      images: []
-    },
-    {
-      id: 3,
-      author: 'Sneha K.',
-      rating: 5,
-      title: 'Exceeded expectations!',
-      content: 'This is my third purchase from this brand and they never disappoint. The quality is consistent and the designs are always on trend. Fast delivery and excellent packaging too!',
-      date: '2024-01-10',
-      verified: true,
-      helpful: 15,
-      size: 'S',
-      fit: 'Perfect',
-      color: 'Blue',
-      images: []
-    },
-    {
-      id: 4,
-      author: 'Meera D.',
-      rating: 3,
-      title: 'Average quality',
-      content: 'The kurti is okay for the price. Fabric is decent but not as soft as I expected. The color is nice and shipping was quick. It\'s fine for casual wear.',
-      date: '2024-01-08',
-      verified: false,
-      helpful: 3,
-      size: 'M',
-      fit: 'Perfect',
-      color: 'Blue',
-      images: []
-    }
-  ];
+  const [newReview, setNewReview] = useState({ rating: 0, title: '', content: '', name: '' });
+  const { isAuthenticated } = useAuth();
+  const { open } = useModal();
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setReviews(mockReviews);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    let mounted = true;
+    const load = async () => {
+      try {
+        setLoading(true);
+        const res = await getProductReviews(productId, { limit, offset: 0, order: '-created_at' });
+        const mapped = mapList(res);
+        if (mounted) setReviews(mapped);
+        if (mounted) setTotalCount(typeof res?.count === 'number' ? res.count : null);
+        if (mounted) setOffset(mapped.length);
+      } catch (e) {
+        // errors are auto-toasted by apiClient
+        if (mounted) setReviews([]);
+        if (mounted) setTotalCount(null);
+        if (mounted) setOffset(0);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    if (!initialReviewsData && productId) load();
+    return () => {
+      mounted = false;
+    };
+  }, [productId, initialReviewsData, limit]);
 
-  const averageRating = reviews.length > 0 ? 
-    (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1) : 0;
+  // Ensure offset is correct when initial data is provided from parent
+  useEffect(() => {
+    if (initialReviewsData) {
+      const mapped = mapList(initialReviewsData);
+      setOffset(mapped.length);
+      if (typeof initialReviewsData?.count === 'number') {
+        setTotalCount(initialReviewsData.count);
+      }
+    }
+  }, [initialReviewsData]);
+
+  const computedAverage = reviews.length > 0 
+    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length)
+    : null;
+  const displayedAverage = (computedAverage ?? (typeof fallbackAggregates?.average === 'number' ? fallbackAggregates.average : 0)).toFixed(1);
 
   const ratingDistribution = {
     5: reviews.filter(r => r.rating === 5).length,
@@ -96,12 +122,67 @@ export default function ProductReviews({ productId }) {
     1: reviews.filter(r => r.rating === 1).length,
   };
 
-  const handleSubmitReview = (e) => {
+  const handleSubmitReview = async (e) => {
     e.preventDefault();
-    // Add review logic here
-    console.log('New review:', newReview);
-    setShowWriteReview(false);
-    setNewReview({ rating: 0, title: '', content: '', name: '', verified: false });
+    if (!productId) return;
+    const [first_name = '', last_name = ''] = (newReview.name || '').trim().split(/\s+/, 2);
+    if (!isAuthenticated) {
+      const next = typeof window !== 'undefined' ? `${window.location.pathname}${window.location.search}` : '/';
+      open({
+        type: MODAL_TYPES.CUSTOM,
+        props: {
+          Component: LoginRequiredModal,
+          title: 'Login Required',
+          message: 'You need to log in to submit a review.',
+          redirectTo: `/auth/login?next=${encodeURIComponent(next)}`,
+        },
+      });
+      return;
+    }
+    try {
+      setSubmitting(true);
+      await createReview({
+        title: newReview.title || undefined,
+        content: newReview.content,
+        rating: Number(newReview.rating),
+        product_id: String(productId),
+        first_name,
+        last_name,
+      });
+      // Refresh list
+      const res = await getProductReviews(productId, { limit, offset: 0, order: '-created_at' });
+      const mapped = mapList(res);
+      setReviews(mapped);
+      setTotalCount(typeof res?.count === 'number' ? res.count : null);
+      setOffset(mapped.length);
+      setShowWriteReview(false);
+      setNewReview({ rating: 0, title: '', content: '', name: '' });
+    } catch (err) {
+      // error toast handled globally
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const hasMore = typeof totalCount === 'number' 
+    ? reviews.length < totalCount 
+    : (reviews.length > 0 && reviews.length % limit === 0);
+
+  const loadMore = async () => {
+    if (!productId || loadingMore) return;
+    try {
+      setLoadingMore(true);
+      const res = await getProductReviews(productId, { limit, offset, order: '-created_at' });
+      const mapped = mapList(res);
+      setReviews((prev) => [...prev, ...mapped]);
+      setOffset((prev) => prev + mapped.length);
+      if (typeof res?.count === 'number') setTotalCount(res.count);
+      else if (mapped.length < limit) setTotalCount(offset + mapped.length);
+    } catch (e) {
+      // handled globally
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   const sortedAndFilteredReviews = reviews
@@ -148,7 +229,7 @@ export default function ProductReviews({ productId }) {
           </h3>
           <div className="flex items-center gap-4 mb-4">
             <div className="text-4xl font-bold text-gray-900 dark:text-white">
-              {averageRating}
+              {displayedAverage}
             </div>
             <div>
               <div className="flex items-center gap-1 mb-1">
@@ -156,7 +237,7 @@ export default function ProductReviews({ productId }) {
                   <Star 
                     key={star} 
                     className={`h-5 w-5 ${
-                      star <= Math.round(averageRating) 
+                      star <= Math.round(Number(displayedAverage)) 
                         ? 'text-yellow-400 fill-current' 
                         : 'text-gray-300'
                     }`} 
@@ -164,7 +245,7 @@ export default function ProductReviews({ productId }) {
                 ))}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                Based on {reviews.length} reviews
+                Based on {typeof totalCount === 'number' ? totalCount : reviews.length} reviews
               </div>
             </div>
           </div>
@@ -199,7 +280,22 @@ export default function ProductReviews({ productId }) {
       {/* Write Review Button */}
       <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
         <button
-          onClick={() => setShowWriteReview(!showWriteReview)}
+          onClick={() => {
+            if (isAuthenticated) {
+              setShowWriteReview((prev) => !prev);
+              return;
+            }
+            const next = typeof window !== 'undefined' ? `${window.location.pathname}${window.location.search}` : '/';
+            open({
+              type: MODAL_TYPES.CUSTOM,
+              props: {
+                Component: LoginRequiredModal,
+                title: 'Login Required',
+                message: 'You need to log in to write a review.',
+                redirectTo: `/auth/login?next=${encodeURIComponent(next)}`,
+              },
+            });
+          }}
           className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
         >
           Write a Review
@@ -209,88 +305,35 @@ export default function ProductReviews({ productId }) {
       {/* Write Review Form */}
       {showWriteReview && (
         <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-          <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Write Your Review
-          </h4>
+          <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Write Your Review</h4>
           <form onSubmit={handleSubmitReview} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Rating *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Rating *</label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setNewReview({...newReview, rating: star})}
-                    className="p-1"
-                  >
-                    <Star 
-                      className={`h-6 w-6 ${
-                        star <= newReview.rating 
-                          ? 'text-yellow-400 fill-current' 
-                          : 'text-gray-300 hover:text-yellow-400'
-                      } transition-colors`} 
-                    />
+                  <button key={star} type="button" onClick={() => setNewReview({ ...newReview, rating: star })} className="p-1">
+                    <Star className={`h-6 w-6 ${star <= newReview.rating ? 'text-yellow-400 fill-current' : 'text-gray-300 hover:text-yellow-400'} transition-colors`} />
                   </button>
                 ))}
               </div>
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Review Title *
-              </label>
-              <input
-                type="text"
-                value={newReview.title}
-                onChange={(e) => setNewReview({...newReview, title: e.target.value})}
-                placeholder="Summarize your experience"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                required
-              />
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Review Title</label>
+              <input type="text" value={newReview.title} onChange={(e) => setNewReview({ ...newReview, title: e.target.value })} placeholder="Summarize your experience" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Your Review *
-              </label>
-              <textarea
-                value={newReview.content}
-                onChange={(e) => setNewReview({...newReview, content: e.target.value})}
-                placeholder="Tell others about your experience with this product"
-                rows={4}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                required
-              />
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Review *</label>
+              <textarea value={newReview.content} onChange={(e) => setNewReview({ ...newReview, content: e.target.value })} placeholder="Tell others about your experience with this product" rows={4} className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required />
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Your Name *
-              </label>
-              <input
-                type="text"
-                value={newReview.name}
-                onChange={(e) => setNewReview({...newReview, name: e.target.value})}
-                placeholder="Enter your name"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                required
-              />
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Name *</label>
+              <input type="text" value={newReview.name} onChange={(e) => setNewReview({ ...newReview, name: e.target.value })} placeholder="Enter your name" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required />
             </div>
-
             <div className="flex gap-3">
-              <button
-                type="submit"
-                className="bg-black dark:bg-white text-white dark:text-black px-6 py-2 rounded-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
-              >
-                Submit Review
+              <button type="submit" disabled={submitting} className="bg-black dark:bg-white text-white dark:text-black px-6 py-2 rounded-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-60">
+                {submitting ? 'Submitting...' : 'Submit Review'}
               </button>
-              <button
-                type="button"
-                onClick={() => setShowWriteReview(false)}
-                className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
+              <button type="button" onClick={() => setShowWriteReview(false)} className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 Cancel
               </button>
             </div>
@@ -401,6 +444,19 @@ export default function ProductReviews({ productId }) {
           </div>
         ))}
       </div>
+
+      {/* Load More */}
+      {reviews.length > 0 && hasMore && (
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={loadMore}
+            disabled={loadingMore}
+            className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-60"
+          >
+            {loadingMore ? 'Loading...' : 'Load More Reviews'}
+          </button>
+        </div>
+      )}
 
       {sortedAndFilteredReviews.length === 0 && (
         <div className="text-center py-12">

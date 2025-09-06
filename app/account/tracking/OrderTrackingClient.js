@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Package, Truck, CheckCircle, Calendar, Navigation, ArrowLeft, Copy, Search } from 'lucide-react';
+import SmartImage from '@/components/ui/SmartImage';
+import { listMyOrders, retrieveMyOrder } from '@/services/order/orderService';
 
 export default function OrderTrackingClient() {
   const searchParams = useSearchParams();
@@ -11,47 +13,89 @@ export default function OrderTrackingClient() {
   const [trackingData, setTrackingData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [recentOrders, setRecentOrders] = useState([]);
+  const [error, setError] = useState('');
 
+  // Load recent orders once (limit 3) for quick selection
   useEffect(() => {
-    setRecentOrders([
-      { id: 'ORD-2024-001', status: 'delivered', date: '2024-01-15' },
-      { id: 'ORD-2024-002', status: 'shipped', date: '2024-01-12' },
-      { id: 'ORD-2024-003', status: 'processing', date: '2024-01-08' }
-    ]);
+    let active = true;
+    (async () => {
+      try {
+        const res = await listMyOrders({ limit: 3, offset: 0 });
+        if (!active) return;
+        setRecentOrders((res?.orders || []).map(o => ({ id: o.id, status: o.status, date: o.date })));
+      } catch (_) {
+        // errors globally handled by api client toasts
+      }
+    })();
+    return () => { active = false; };
+  }, []);
 
-    if (selectedOrderId) {
-      fetchTrackingData(selectedOrderId);
-    }
+  // Track when orderId is present initially via query
+  useEffect(() => {
+    if (!selectedOrderId) return;
+    fetchTrackingData(selectedOrderId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOrderId]);
 
   const fetchTrackingData = async (orderId) => {
-    setLoading(true);
-    setTimeout(() => {
-      const mockData = {
-        orderId: orderId,
-        status: 'shipped',
-        estimatedDelivery: '2024-01-16',
-        trackingNumber: 'TRK123456789',
-        carrier: 'Express Delivery',
-        courierPhone: '+91 98765 43210',
-        courierName: 'Rajesh Kumar',
-        currentLocation: 'Mumbai Distribution Center',
-        deliveryAddress: { name: 'John Doe', street: '123 Main Street, Apartment 4B', city: 'Mumbai', state: 'Maharashtra', pincode: '400001', phone: '+91 98765 43210' },
-        timeline: [
-          { status: 'Order Confirmed', description: 'Your order has been confirmed and is being prepared', timestamp: '2024-01-12T10:00:00Z', completed: true, icon: CheckCircle },
-          { status: 'Order Packed', description: 'Your items have been carefully packed and labeled', timestamp: '2024-01-12T14:30:00Z', completed: true, icon: Package },
-          { status: 'Shipped', description: 'Your order is on its way to the delivery location', timestamp: '2024-01-13T09:15:00Z', completed: true, icon: Truck, isCurrent: true },
-          { status: 'Out for Delivery', description: 'Your order is out for delivery and will arrive soon', timestamp: null, completed: false, icon: Navigation },
-          { status: 'Delivered', description: 'Your order has been successfully delivered', timestamp: null, completed: false, icon: CheckCircle }
-        ],
-        items: [
-          { name: 'Elegant Black Dress', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400', price: 1299, quantity: 1 },
-          { name: 'Designer Handbag', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400', price: 1200, quantity: 1 }
-        ]
+    try {
+      setError('');
+      setLoading(true);
+      const { order } = await retrieveMyOrder(orderId);
+      // Map order detail to the UI shape expected by this component without changing design
+      const timelineIcons = (label) => {
+        const s = (label || '').toLowerCase();
+        if (s.includes('ship')) return Truck;
+        if (s.includes('deliver')) return CheckCircle;
+        if (s.includes('payment')) return CheckCircle;
+        return Package; // default for order placed/packed
       };
-      setTrackingData(mockData);
+      const timeline = Array.isArray(order.timeline)
+        ? order.timeline.map((t, idx) => {
+            const dateObj = t?.date ? new Date(t.date) : null;
+            const validTs = dateObj && !isNaN(dateObj.getTime()) ? dateObj.toISOString() : null;
+            return {
+              status: t.status,
+              description: t.description,
+              timestamp: validTs,
+              completed: !!t.completed,
+              icon: timelineIcons(t.status),
+              isCurrent: !t.completed && idx === 0, // simple current marker when not completed
+            };
+          })
+        : [];
+
+      const mapped = {
+        orderId: order.id,
+        status: order.status,
+        estimatedDelivery: order.deliveryDate || order.date,
+        trackingNumber: order.trackingNumber || '',
+        carrier: order.shippingProvider || '',
+        courierPhone: '',
+        courierName: '',
+        currentLocation: '',
+        deliveryAddress: {
+          name: order.shippingAddress?.name || '—',
+          street: order.shippingAddress?.address || '—',
+          city: order.shippingAddress?.city || '—',
+          state: order.shippingAddress?.state || '—',
+          pincode: order.shippingAddress?.pincode || '—',
+          phone: order.shippingAddress?.phone || '—',
+        },
+        timeline,
+        items: Array.isArray(order.items) ? order.items.map(i => ({
+          name: i.name,
+          image: i.image,
+          price: i.price,
+          quantity: i.quantity,
+        })) : [],
+      };
+      setTrackingData(mapped);
+    } catch (e) {
+      setError(e?.response?.data?.message || e.message || 'Failed to fetch tracking');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   const copyTrackingNumber = () => {
@@ -60,7 +104,12 @@ export default function OrderTrackingClient() {
     }
   };
 
-  const formatDate = (d) => new Date(d).toLocaleDateString('en-IN');
+  const formatDate = (d) => {
+    if (!d) return '—';
+    const dt = new Date(d);
+    if (isNaN(dt.getTime())) return '—';
+    return dt.toLocaleDateString('en-IN');
+  };
 
   return (
     <div className="space-y-6">
@@ -84,7 +133,7 @@ export default function OrderTrackingClient() {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Enter order ID (e.g., ORD-2024-001)"
+                placeholder="Enter order ID"
                 value={selectedOrderId}
                 onChange={(e) => setSelectedOrderId(e.target.value)}
                 className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-base touch-manipulation min-h-[56px]"
@@ -93,6 +142,9 @@ export default function OrderTrackingClient() {
             <button onClick={() => fetchTrackingData(selectedOrderId)} disabled={!selectedOrderId || loading} className="w-full bg-black dark:bg-white text-white dark:text-black py-4 px-6 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[56px] touch-manipulation">
               {loading ? 'Tracking...' : 'Track Order'}
             </button>
+            {error && (
+              <div className="text-red-600 dark:text-red-400 text-sm">{error}</div>
+            )}
           </div>
 
           {/* Desktop */}
@@ -101,7 +153,7 @@ export default function OrderTrackingClient() {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Enter order ID (e.g., ORD-2024-001)"
+                placeholder="Enter order ID"
                 value={selectedOrderId}
                 onChange={(e) => setSelectedOrderId(e.target.value)}
                 className="w-full pl-12 pr-32 py-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm touch-manipulation"
@@ -110,6 +162,9 @@ export default function OrderTrackingClient() {
                 {loading ? 'Tracking...' : 'Track'}
               </button>
             </div>
+            {error && (
+              <div className="mt-2 text-red-600 dark:text-red-400 text-sm">{error}</div>
+            )}
           </div>
 
           {/* Recent Orders */}
@@ -157,17 +212,19 @@ export default function OrderTrackingClient() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs text-gray-5 00 dark:text-gray-400 mb-1">Tracking Number</p>
-                      <p className="font-mono text-sm font-semibold text-gray-900 dark:text-white">{trackingData.trackingNumber}</p>
+                {trackingData.trackingNumber ? (
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs text-gray-5 00 dark:text-gray-400 mb-1">Tracking Number</p>
+                        <p className="font-mono text-sm font-semibold text-gray-900 dark:text-white">{trackingData.trackingNumber}</p>
+                      </div>
+                      <button onClick={copyTrackingNumber} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                        <Copy className="w-4 h-4" />
+                      </button>
                     </div>
-                    <button onClick={copyTrackingNumber} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
-                      <Copy className="w-4 h-4" />
-                    </button>
                   </div>
-                </div>
+                ) : null}
               </div>
             </div>
 
@@ -199,7 +256,9 @@ export default function OrderTrackingClient() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {trackingData.items.map((item, idx) => (
                 <div key={idx} className="flex gap-4 items-center">
-                  <img src={item.image} alt={item.name} className="w-16 h-16 rounded-xl object-cover" />
+                  <div className="w-16 h-16 rounded-xl overflow-hidden relative">
+                    <SmartImage src={item.image} alt={item.name} className="object-cover" />
+                  </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">{item.name}</p>
                     <p className="text-gray-600 dark:text-gray-400">Qty: {item.quantity}</p>

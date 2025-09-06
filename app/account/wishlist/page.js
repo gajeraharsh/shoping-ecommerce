@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
+import SmartImage from '@/components/ui/SmartImage';
 import {
   Heart,
   ShoppingBag,
@@ -23,6 +24,7 @@ import {
   Tag,
   Clock
 } from 'lucide-react';
+import Private from '@/components/auth/Private';
 
 export default function WishlistPage() {
   const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
@@ -32,6 +34,9 @@ export default function WishlistPage() {
   const [sortBy, setSortBy] = useState('newest');
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  // Client-side pagination (Load More)
+  const PAGE_SIZE = 9; // items per batch
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   useEffect(() => {
     let filtered = [...wishlistItems];
@@ -61,6 +66,8 @@ export default function WishlistPage() {
     }
 
     setFilteredItems(filtered);
+    // Reset visible count whenever the filtered list changes
+    setVisibleCount(PAGE_SIZE);
   }, [wishlistItems, searchQuery, sortBy]);
 
   const handleAddToCart = (item) => {
@@ -107,7 +114,8 @@ export default function WishlistPage() {
 
   if (wishlistItems.length === 0) {
     return (
-      <div className="space-y-6">
+      <Private>
+        <div className="space-y-6">
         <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-6">
             <Link
@@ -137,12 +145,14 @@ export default function WishlistPage() {
             Start Shopping
           </Link>
         </div>
-      </div>
+        </div>
+      </Private>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <Private>
+      <div className="space-y-6">
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-6">
@@ -156,12 +166,12 @@ export default function WishlistPage() {
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
               <p className="text-gray-600 dark:text-gray-400">
-                {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'} • 
+                {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'} •
                 ₹{calculateTotalValue().toLocaleString()} total value
               </p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
             <button className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors">
               <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -189,7 +199,7 @@ export default function WishlistPage() {
               className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-sm touch-manipulation"
             />
           </div>
-          
+
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-1 border border-gray-200 dark:border-gray-700 rounded-full p-1">
               <button
@@ -205,7 +215,7 @@ export default function WishlistPage() {
                 <List className="h-4 w-4" />
               </button>
             </div>
-            
+
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -254,11 +264,10 @@ export default function WishlistPage() {
             onClick={handleSelectAll}
             className="flex items-center gap-3 w-full text-left"
           >
-            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-              selectedItems.length === filteredItems.length
-                ? 'bg-black dark:bg-white border-black dark:border-white'
-                : 'border-gray-300 dark:border-gray-600'
-            }`}>
+            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${selectedItems.length === filteredItems.length
+              ? 'bg-black dark:bg-white border-black dark:border-white'
+              : 'border-gray-300 dark:border-gray-600'
+              }`}>
               {selectedItems.length === filteredItems.length && (
                 <svg className="w-3 h-3 text-white dark:text-black" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -273,32 +282,29 @@ export default function WishlistPage() {
       )}
 
       {/* Items Grid/List */}
-      <div className={`${
-        viewMode === 'grid' 
-          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' 
-          : 'space-y-4'
-      }`}>
-        {filteredItems.map((item) => {
+      <div className={`${viewMode === 'grid'
+        ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
+        : 'space-y-4'
+        }`}>
+        {filteredItems.slice(0, visibleCount).map((item) => {
           const isSelected = selectedItems.find(p => p.id === item.id);
-          
+
           if (viewMode === 'list') {
             return (
               <div
                 key={item.id}
-                className={`bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border transition-all duration-200 hover:shadow-2xl ${
-                  isSelected 
-                    ? 'border-black dark:border-white ring-2 ring-black/20 dark:ring-white/20' 
-                    : 'border-gray-200 dark:border-gray-700'
-                }`}
+                className={`bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border transition-all duration-200 hover:shadow-2xl ${isSelected
+                  ? 'border-black dark:border-white ring-2 ring-black/20 dark:ring-white/20'
+                  : 'border-gray-200 dark:border-gray-700'
+                  }`}
               >
                 <div className="flex items-center gap-6">
                   <button
                     onClick={() => handleSelectItem(item)}
-                    className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                      isSelected
-                        ? 'bg-black dark:bg-white border-black dark:border-white'
-                        : 'border-gray-300 dark:border-gray-600'
-                    }`}
+                    className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${isSelected
+                      ? 'bg-black dark:bg-white border-black dark:border-white'
+                      : 'border-gray-300 dark:border-gray-600'
+                      }`}
                   >
                     {isSelected && (
                       <svg className="w-3 h-3 text-white dark:text-black" fill="currentColor" viewBox="0 0 20 20">
@@ -308,11 +314,9 @@ export default function WishlistPage() {
                   </button>
 
                   <Link href={`/products/${item.id}`} className="flex-shrink-0">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-24 h-24 object-cover rounded-2xl border border-gray-200 dark:border-gray-600"
-                    />
+                    <div className="w-24 h-24 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-600 relative">
+                      <SmartImage src={item.image} alt={item.name} className="object-cover" />
+                    </div>
                   </Link>
 
                   <div className="flex-1 min-w-0">
@@ -321,7 +325,7 @@ export default function WishlistPage() {
                         {item.name}
                       </h3>
                     </Link>
-                    
+
                     <div className="flex items-center gap-2 mb-3">
                       <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 fill-current text-yellow-400" />
@@ -348,15 +352,15 @@ export default function WishlistPage() {
                           </span>
                         )}
                       </div>
-                      
+
                       <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => handleAddToCart(item)}
+                        <Link
+                          href={`/products/${item.id}`}
                           className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
                         >
-                          <ShoppingBag className="w-4 h-4" />
-                          Add to Cart
-                        </button>
+                          <Eye className="w-4 h-4" />
+                          View Details
+                        </Link>
                         <button
                           onClick={() => removeFromWishlist(item.id)}
                           className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
@@ -374,20 +378,18 @@ export default function WishlistPage() {
           return (
             <div
               key={item.id}
-              className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl border transition-all duration-200 hover:shadow-2xl hover:-translate-y-1 ${
-                isSelected 
-                  ? 'border-black dark:border-white ring-2 ring-black/20 dark:ring-white/20' 
-                  : 'border-gray-200 dark:border-gray-700'
-              }`}
+              className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl border transition-all duration-200 hover:shadow-2xl hover:-translate-y-1 ${isSelected
+                ? 'border-black dark:border-white ring-2 ring-black/20 dark:ring-white/20'
+                : 'border-gray-200 dark:border-gray-700'
+                }`}
             >
               <div className="relative">
                 <button
                   onClick={() => handleSelectItem(item)}
-                  className={`absolute top-4 left-4 z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors backdrop-blur-sm ${
-                    isSelected
-                      ? 'bg-black dark:bg-white border-black dark:border-white'
-                      : 'bg-white/80 dark:bg-gray-800/80 border-gray-300 dark:border-gray-600'
-                  }`}
+                  className={`absolute top-4 left-4 z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors backdrop-blur-sm ${isSelected
+                    ? 'bg-black dark:bg-white border-black dark:border-white'
+                    : 'bg-white/80 dark:bg-gray-800/80 border-gray-300 dark:border-gray-600'
+                    }`}
                 >
                   {isSelected && (
                     <svg className="w-3 h-3 text-white dark:text-black" fill="currentColor" viewBox="0 0 20 20">
@@ -404,11 +406,13 @@ export default function WishlistPage() {
                 </button>
 
                 <Link href={`/products/${item.id}`}>
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
-                  />
+                  <div className="w-full h-64 relative overflow-hidden">
+                    <SmartImage
+                      src={item.image}
+                      alt={item.name}
+                      className="object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
                 </Link>
 
                 {item.originalPrice && item.originalPrice > item.price && (
@@ -453,18 +457,30 @@ export default function WishlistPage() {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => handleAddToCart(item)}
+                <Link
+                  href={`/products/${item.id}`}
                   className="w-full flex items-center justify-center gap-2 bg-black dark:bg-white text-white dark:text-black py-3 px-4 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
                 >
-                  <ShoppingBag className="w-4 h-4" />
-                  Add to Cart
-                </button>
+                  <Eye className="w-4 h-4" />
+                  View Details
+                </Link>
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* Load More */}
+      {visibleCount < filteredItems.length && (
+        <div className="flex justify-center">
+          <button
+            onClick={() => setVisibleCount((c) => Math.min(c + PAGE_SIZE, filteredItems.length))}
+            className="mt-6 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+          >
+            Load more ({filteredItems.length - visibleCount} left)
+          </button>
+        </div>
+      )}
 
       {filteredItems.length === 0 && searchQuery && (
         <div className="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-gray-700 text-center">
@@ -482,5 +498,6 @@ export default function WishlistPage() {
         </div>
       )}
     </div>
+    </Private>
   );
 }

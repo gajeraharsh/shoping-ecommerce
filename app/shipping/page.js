@@ -5,21 +5,21 @@ export default function ShippingPage() {
     {
       name: 'Standard Shipping',
       time: '5-7 business days',
-      cost: '$5.99',
+      cost: '₹5.99',
       description: 'Reliable delivery for everyday orders',
       icon: Truck
     },
     {
       name: 'Express Shipping',
       time: '2-3 business days',
-      cost: '$12.99',
+      cost: '₹12.99',
       description: 'Faster delivery when you need it sooner',
       icon: Clock
     },
     {
       name: 'Overnight Shipping',
       time: '1 business day',
-      cost: '$24.99',
+      cost: '₹24.99',
       description: 'Next-day delivery for urgent orders',
       icon: Package
     },
@@ -27,18 +27,18 @@ export default function ShippingPage() {
       name: 'Free Shipping',
       time: '5-7 business days',
       cost: 'FREE',
-      description: 'On orders over $75',
+      description: 'On orders over ₹75',
       icon: MapPin
     }
   ];
 
   const internationalRates = [
-    { region: 'Canada', time: '7-10 business days', cost: '$15.99' },
-    { region: 'United Kingdom', time: '10-14 business days', cost: '$19.99' },
-    { region: 'European Union', time: '10-14 business days', cost: '$22.99' },
-    { region: 'Australia & New Zealand', time: '12-16 business days', cost: '$25.99' },
-    { region: 'Asia', time: '14-21 business days', cost: '$28.99' },
-    { region: 'Other Countries', time: '14-21 business days', cost: '$32.99' }
+    { region: 'Canada', time: '7-10 business days', cost: '₹15.99' },
+    { region: 'United Kingdom', time: '10-14 business days', cost: '₹19.99' },
+    { region: 'European Union', time: '10-14 business days', cost: '₹22.99' },
+    { region: 'Australia & New Zealand', time: '12-16 business days', cost: '₹25.99' },
+    { region: 'Asia', time: '14-21 business days', cost: '₹28.99' },
+    { region: 'Other Countries', time: '14-21 business days', cost: '₹32.99' }
   ];
 
   return (
@@ -169,7 +169,7 @@ export default function ShippingPage() {
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Delivery Instructions</h3>
                 <ul className="space-y-2 text-gray-600">
-                  <li>• Signature required for orders over $200</li>
+                  <li>• Signature required for orders over ₹200</li>
                   <li>• Leave delivery instructions during checkout</li>
                   <li>• Packages may be left with neighbors if authorized</li>
                   <li>• P.O. Box delivery available for standard shipping</li>

@@ -1,11 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Star, Heart, ShoppingBag, Truck, RotateCcw, Shield, ShieldCheck, CreditCard, Lock, Leaf, Clock, MapPin, Package } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/contexts/WishlistContext';
+import { getProductById } from '@/services/modules/product/productService';
 import { useToast } from '@/hooks/useToast';
 import SizeGuideModal from '@/components/modals/SizeGuideModal';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function ProductInfo({ product }) {
   const [selectedSize, setSelectedSize] = useState('');
@@ -14,47 +17,137 @@ export default function ProductInfo({ product }) {
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   
   const { addToCart } = useCart();
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { addToWishlist, removeFromWishlist } = useWishlist();
   const { showToast } = useToast();
+  const { isAuthenticated, tokenPresent } = useAuth();
+  const router = useRouter();
+  const ensureAuthed = () => {
+    const authed = Boolean(isAuthenticated || tokenPresent);
+    if (!authed) {
+      const next = typeof window !== 'undefined'
+        ? window.location.pathname + window.location.search
+        : '/';
+      try {
+        router.push(`/auth/login?next=${encodeURIComponent(next)}`);
+      } catch (_) {}
+      return false;
+    }
+    return true;
+  };
   
-  const inWishlist = isInWishlist(product.id);
+  // Use API-provided is_wishlist; manage optimistic local state
+  const [inWishlist, setInWishlist] = useState(!!product?.is_wishlist);
+  useEffect(() => {
+    setInWishlist(!!product?.is_wishlist);
+  }, [product?.id, product?.is_wishlist]);
+
+  // Client-side hydrate of is_wishlist so SSR/ISR can stay cached without user-specific state
+  useEffect(() => {
+    let cancelled = false;
+    async function hydrateWishlist() {
+      if (!product?.id) return;
+      try {
+        const res = await getProductById(product.id, { params: { fields: '+wishlist' } });
+        const fresh = !!res?.product?.is_wishlist;
+        if (!cancelled) setInWishlist(fresh);
+      } catch (_) {
+        // ignore; keep SSR-provided state
+      }
+    }
+    hydrateWishlist();
+    return () => {
+      cancelled = true;
+    };
+  }, [product?.id]);
+  const hasSizes = Array.isArray(product?.sizes) && product.sizes.length > 0;
+  const hasColors = Array.isArray(product?.colors) && product.colors.length > 0;
+
+  // Find matching Medusa variant by selected options
+  const resolveVariantId = () => {
+    const variants = Array.isArray(product?.variants) ? product.variants : [];
+    if (!variants.length) return null;
+    // case-insensitive keys for matching
+    const want = {};
+    if (hasSizes && selectedSize) want.size = selectedSize.toLowerCase();
+    if (hasColors && selectedColor) want.color = selectedColor.toLowerCase();
+    const match = variants.find((v) => {
+      const opts = v?.options || {};
+      const entries = Object.entries(opts).reduce((acc, [k, v]) => {
+        acc[k.toLowerCase()] = String(v).toLowerCase();
+        return acc;
+      }, {});
+      const sizeOk = !want.size || entries.size === want.size;
+      const colorOk = !want.color || entries.color === want.color;
+      return sizeOk && colorOk;
+    });
+    return match?.id || null;
+  };
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
+    if (!ensureAuthed()) return;
+    if (hasSizes && !selectedSize) {
       showToast('Please select a size', 'error');
       return;
     }
-    if (!selectedColor) {
+    if (hasColors && !selectedColor) {
       showToast('Please select a color', 'error');
       return;
     }
-    
-    addToCart(product, selectedSize, selectedColor, quantity);
-    showToast('Added to cart successfully!', 'success');
+
+    const variantId = resolveVariantId();
+    if (!variantId) {
+      showToast('Unable to determine product variant. Please try different options.', 'error');
+      return;
+    }
+
+    addToCart({
+      variant_id: variantId,
+      quantity,
+      metadata: {
+        product_id: product?.id,
+        size: hasSizes ? selectedSize : undefined,
+        color: hasColors ? selectedColor : undefined,
+      },
+    });
+    // Success toast is handled globally via API interceptors (cartService meta.successMessage)
   };
 
   const handleBuyNow = () => {
-    if (!selectedSize) {
+    if (!ensureAuthed()) return;
+    if (hasSizes && !selectedSize) {
       showToast('Please select a size', 'error');
       return;
     }
-    if (!selectedColor) {
+    if (hasColors && !selectedColor) {
       showToast('Please select a color', 'error');
       return;
     }
-    
-    addToCart(product, selectedSize, selectedColor, quantity);
+    const variantId = resolveVariantId();
+    if (!variantId) {
+      showToast('Unable to determine product variant. Please try different options.', 'error');
+      return;
+    }
+    addToCart({
+      variant_id: variantId,
+      quantity,
+      metadata: {
+        product_id: product?.id,
+        size: hasSizes ? selectedSize : undefined,
+        color: hasColors ? selectedColor : undefined,
+      },
+    });
     // Navigate to checkout
     window.location.href = '/checkout';
   };
 
   const handleWishlistToggle = () => {
+    if (!ensureAuthed()) return;
     if (inWishlist) {
+      setInWishlist(false); // optimistic UI
       removeFromWishlist(product.id);
-      showToast('Removed from wishlist', 'info');
     } else {
+      setInWishlist(true); // optimistic UI
       addToWishlist(product);
-      showToast('Added to wishlist', 'success');
     }
   };
 
@@ -91,19 +184,25 @@ export default function ProductInfo({ product }) {
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center">
             <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-5 w-5 ${
-                    i < Math.floor(product.rating)
-                      ? 'fill-yellow-400 text-yellow-400'
-                      : 'text-gray-300 dark:text-gray-600'
-                  }`}
-                />
-              ))}
+              {(() => {
+                const raw = Number.isFinite(product?.rating) ? Number(product.rating) : Number.parseFloat(String(product?.rating || 0));
+                const safe = Number.isFinite(raw) ? raw : 0;
+                const oneDecimal = Number(safe.toFixed(1));
+                const rounded = Math.round(oneDecimal);
+                return [...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-5 w-5 ${
+                      i < rounded
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-gray-300 dark:text-gray-600'
+                    }`}
+                  />
+                ));
+              })()}
             </div>
             <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
-              {product.rating} ({product.reviews} reviews)
+              {Number.isFinite(product?.rating) ? Number(product.rating).toFixed(1) : Number.parseFloat(String(product?.rating || 0)).toFixed(1)} ({product.reviews} reviews)
             </span>
           </div>
           <span className="text-sm text-gray-500 dark:text-gray-400">SKU: MOD{product.id.toString().padStart(4, '0')}</span>
@@ -147,52 +246,56 @@ export default function ProductInfo({ product }) {
       </div>
 
       {/* Size Selection */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Size</h3>
-          <button
-            onClick={() => setShowSizeGuide(true)}
-            className="text-sm text-accent font-medium underline hover:no-underline"
-          >
-            Size Guide
-          </button>
-        </div>
-        <div className="flex gap-3 flex-wrap">
-          {product.sizes.map(size => (
+      {hasSizes && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Size</h3>
             <button
-              key={size}
-              onClick={() => setSelectedSize(size)}
-              className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
-                selectedSize === size
-                  ? 'bg-accent text-accent-foreground border-accent'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
-              }`}
+              onClick={() => setShowSizeGuide(true)}
+              className="text-sm text-accent font-medium underline hover:no-underline"
             >
-              {size}
+              Size Guide
             </button>
-          ))}
+          </div>
+          <div className="flex gap-3 flex-wrap">
+            {product.sizes.map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
+                  selectedSize === size
+                    ? 'bg-accent text-accent-foreground border-accent'
+                    : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
+                }`}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Color Selection */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Color: {selectedColor}</h3>
-        <div className="flex gap-3 flex-wrap">
-          {product.colors.map(color => (
-            <button
-              key={color}
-              onClick={() => setSelectedColor(color)}
-              className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
-                selectedColor === color
-                  ? 'bg-accent text-accent-foreground border-accent'
-                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
-              }`}
-            >
-              {color}
-            </button>
-          ))}
+      {hasColors && (
+        <div>
+          <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Color{selectedColor ? `: ${selectedColor}` : ''}</h3>
+          <div className="flex gap-3 flex-wrap">
+            {product.colors.map((color) => (
+              <button
+                key={color}
+                onClick={() => setSelectedColor(color)}
+                className={`px-4 py-2 border rounded-lg transition-colors font-medium ${
+                  selectedColor === color
+                    ? 'bg-accent text-accent-foreground border-accent'
+                    : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-accent hover:text-accent bg-white dark:bg-gray-800'
+                }`}
+              >
+                {color}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Quantity */}
       <div>
