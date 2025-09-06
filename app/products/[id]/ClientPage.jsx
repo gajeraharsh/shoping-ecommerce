@@ -146,7 +146,7 @@ export default function ProductDetailClient({ initialProduct = null }) {
         <ProductTabs product={normalizedProduct} initialReviewsData={initialReviewsData} />
         
         {/* Related Products */}
-        <RelatedProducts currentProductId={product.id} />
+        {/* <RelatedProducts currentProductId={product.id} /> */}
         
         {/* Recently Viewed */}
         <RecentlyViewed currentProductId={product.id} />
