@@ -12,7 +12,7 @@ export default async function ServerProductPage({ params, searchParams }) {
 
   const query = {
     // include wishlist to hint backend and preserve consistency
-    fields: '+variants,+variants.options,+options,+images,+tags,+collection,+categories,+metadata,+wishlist',
+    fields: '+variants,+variants.options,+variants.metadata,+options,+images,+tags,+collection,+categories,+metadata,+wishlist',
   };
   if (process.env.NEXT_PUBLIC_MEDUSA_REGION_ID) {
     query.region_id = process.env.NEXT_PUBLIC_MEDUSA_REGION_ID;
@@ -29,6 +29,7 @@ export default async function ServerProductPage({ params, searchParams }) {
 
     const res = await productPromise;
     const p = res?.product || res; // our apiClient returns response.data
+    // Debug: inspect variants and their metadata as returned by API
     // Server-side log of raw data as requested
 
     // Map Medusa product to UI shape expected by client
@@ -173,7 +174,44 @@ export default async function ServerProductPage({ params, searchParams }) {
           const t = optionIdToTitle.get(vo.option_id)
           if (t) opts[t] = vo.value
         })
-        return { id: v.id, options: opts }
+        // Derive variant pricing similar to product-level calculation
+        const cpObj = v?.calculated_price
+        const cp =
+          typeof v?.calculated_price_incl_tax === 'number'
+            ? v.calculated_price_incl_tax
+            : typeof v?.calculated_price === 'number'
+            ? v.calculated_price
+            : typeof cpObj?.calculated_amount === 'number'
+            ? cpObj.calculated_amount
+            : null
+        const op =
+          typeof v?.original_price === 'number'
+            ? v.original_price
+            : typeof cpObj?.original_amount === 'number'
+            ? cpObj.original_amount
+            : null
+
+        // Normalize variant-specific images from metadata if present
+        const vMeta = v?.metadata || {}
+        let vImages = []
+        try {
+          if (Array.isArray(vMeta.images)) {
+            vImages = vMeta.images
+              .map((img) => (typeof img === 'string' ? img : (img && img.url)))
+              .filter(Boolean)
+          }
+        } catch (_) {}
+        const vThumb = vMeta.thumbnail || undefined
+        const imagesForVariant = vImages.length ? vImages : (vThumb ? [vThumb] : [])
+
+        return {
+          id: v.id,
+          options: opts,
+          metadata: vMeta,
+          price: typeof cp === 'number' ? Math.round(cp / 1) : null,
+          originalPrice: typeof op === 'number' ? Math.round(op / 1) : null,
+          images: imagesForVariant,
+        }
       })
 
     

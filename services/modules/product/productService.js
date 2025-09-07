@@ -17,7 +17,7 @@ export const getProducts = (params = {}) => {
   const cart_id = params.cart_id || getStoredCartId() || undefined
 
   // Default fields to include common expansions if not explicitly provided
-  const defaultFields = '+variants,+variants.options,+options,+images,+tags,+collection,+categories,+wishlist'
+  const defaultFields = '+variants,+variants.options,+options,+images,+tags,+collection,+categories,+wishlist,+metadata'
 
   // Ensure region_id and optional sales_channel_id are passed; allow caller to override
   const merged = {
@@ -31,8 +31,30 @@ export const getProducts = (params = {}) => {
   return apiClient.get(ENDPOINTS.PRODUCT.LIST, { params: merged })
 }
 
-export const getProductById = (id, config = {}) =>
-  apiClient.get(ENDPOINTS.PRODUCT.DETAILS(id), config)
+export const getProductById = (id, config = {}) => {
+  const region_id = process.env.NEXT_PUBLIC_MEDUSA_REGION_ID
+  const sales_channel_id = process.env.NEXT_PUBLIC_MEDUSA_SALES_CHANNEL
+
+  // Helper to ensure "+metadata" is always present in fields param
+  const ensurePlusMetadata = (fields) => {
+    const parts = String(fields || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+    if (!parts.includes('+metadata')) parts.push('+metadata')
+    return parts.join(',')
+  }
+
+  const incomingParams = config?.params || {}
+  const params = {
+    ...incomingParams,
+    region_id,
+    ...(sales_channel_id ? { sales_channel_id } : {}),
+    fields: ensurePlusMetadata(incomingParams.fields || '+variants,+variants.options,+options,+images,+tags,+collection,+categories'),
+  }
+
+  return apiClient.get(ENDPOINTS.PRODUCT.DETAILS(id), { ...config, params })
+}
 
 export const createProduct = (payload) =>
   apiClient.post(ENDPOINTS.PRODUCT.LIST, payload, {

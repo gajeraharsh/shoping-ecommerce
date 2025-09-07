@@ -22,7 +22,7 @@ export default function CartItems() {
             <div className="flex gap-3 sm:hidden">
               <Link href="#" className="flex-shrink-0">
                 <div className="relative w-16 h-16 rounded-lg overflow-hidden">
-                  <SmartImage src={item.thumbnail} alt={item.title} className="object-cover" />
+                  <SmartImage src={item?.metadata?.image_url || item.thumbnail} alt={item.title} className="object-cover" />
                 </div>
               </Link>
 
@@ -77,7 +77,7 @@ export default function CartItems() {
             <div className="hidden sm:flex gap-4">
               <Link href="#" className="flex-shrink-0">
                 <div className="relative w-20 h-20 rounded-lg overflow-hidden">
-                  <SmartImage src={item.thumbnail} alt={item.title} className="object-cover" />
+                  <SmartImage src={item?.metadata?.image_url || item.thumbnail} alt={item.title} className="object-cover" />
                 </div>
               </Link>
 
