@@ -47,7 +47,7 @@ export function medusaToUiOrder(m) {
     ].filter(Boolean).join(', ') || '—',
     items_detail: items.map((it) => ({
       name: it.title || it.variant_title || 'Item',
-      image: it.thumbnail || it.metadata?.image || '/images/placeholder.png',
+      image: it?.metadata?.image_url || it.thumbnail || it.metadata?.image || '/images/placeholder.png',
       price: Number(it.total || it.unit_price || 0),
       quantity: it.quantity || 1,
     })),

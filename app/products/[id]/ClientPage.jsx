@@ -18,6 +18,9 @@ export default function ProductDetailClient({ initialProduct = null }) {
   const [product, setProduct] = useState(initialProduct);
   const [loading, setLoading] = useState(!initialProduct);
   const [initialReviewsData, setInitialReviewsData] = useState(null);
+  // Lifted option selections so we can also control gallery images
+  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
 
   useEffect(() => {
     if (initialProduct) return; // already have server-fetched product
@@ -129,6 +132,33 @@ export default function ProductDetailClient({ initialProduct = null }) {
     };
   }, [product]);
 
+  // Resolve active variant based on selected options
+  const activeVariant = useMemo(() => {
+    const variants = Array.isArray(product?.variants) ? product.variants : [];
+    if (!variants.length) return null;
+    const want = {};
+    if (selectedSize) want.size = String(selectedSize).toLowerCase();
+    if (selectedColor) want.color = String(selectedColor).toLowerCase();
+    const match = variants.find((v) => {
+      const opts = v?.options || {};
+      const entries = Object.entries(opts).reduce((acc, [k, v]) => {
+        acc[String(k).toLowerCase()] = String(v).toLowerCase();
+        return acc;
+      }, {});
+      const sizeOk = !want.size || entries.size === want.size;
+      const colorOk = !want.color || entries.color === want.color;
+      return sizeOk && colorOk;
+    });
+    return match || null;
+  }, [product?.variants, selectedSize, selectedColor]);
+
+  // Compute gallery images based on active variant metadata images if present
+  const galleryImages = useMemo(() => {
+    const vImgs = Array.isArray(activeVariant?.images) ? activeVariant.images : [];
+    if (vImgs.length) return vImgs;
+    return Array.isArray(product?.images) ? product.images : [];
+  }, [activeVariant?.images, product?.images]);
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       
@@ -138,8 +168,15 @@ export default function ProductDetailClient({ initialProduct = null }) {
 
         {/* Product Details */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 sm:mb-16">
-          <ProductImageGallery images={product.images} productName={product.name} />
-          <ProductInfo product={product} />
+          <ProductImageGallery images={galleryImages} productName={product.name} />
+          <ProductInfo
+            product={product}
+            selectedSize={selectedSize}
+            setSelectedSize={setSelectedSize}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            activeVariant={activeVariant}
+          />
         </div>
         
         {/* Product Tabs */}

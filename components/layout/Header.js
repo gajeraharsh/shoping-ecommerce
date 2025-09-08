@@ -159,9 +159,9 @@ export default function Header() {
 
   const navigation = [
     { name: 'Collections', href: '/collections' },
-    { name: 'Reels', href: '/reels' },
+    // { name: 'Reels', href: '/reels' },
     { name: 'Blog', href: '/blog' },
-    { name: 'Feed', href: '/feed' },
+    // { name: 'Feed', href: '/feed' },
     { name: 'About', href: '/about' }
   ];
 

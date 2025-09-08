@@ -90,7 +90,7 @@ export default function OrderSummary() {
         {items.map(item => (
           <div key={item.id} className="flex gap-3">
             <div className="relative w-12 h-12 rounded overflow-hidden">
-              <SmartImage src={item.thumbnail} alt={item.title} className="object-cover" />
+              <SmartImage src={item?.metadata?.image_url || item.thumbnail} alt={item.title} className="object-cover" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium text-gray-900 truncate">

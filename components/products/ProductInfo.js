@@ -10,9 +10,14 @@ import SizeGuideModal from '@/components/modals/SizeGuideModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 
-export default function ProductInfo({ product }) {
-  const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
+export default function ProductInfo({ product, selectedSize: cSelectedSize, setSelectedSize: cSetSelectedSize, selectedColor: cSelectedColor, setSelectedColor: cSetSelectedColor, activeVariant }) {
+  // Support controlled or uncontrolled selection
+  const [uSelectedSize, uSetSelectedSize] = useState('');
+  const [uSelectedColor, uSetSelectedColor] = useState('');
+  const selectedSize = typeof cSelectedSize !== 'undefined' ? cSelectedSize : uSelectedSize;
+  const setSelectedSize = cSetSelectedSize || uSetSelectedSize;
+  const selectedColor = typeof cSelectedColor !== 'undefined' ? cSelectedColor : uSelectedColor;
+  const setSelectedColor = cSetSelectedColor || uSetSelectedColor;
   const [quantity, setQuantity] = useState(1);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   
@@ -62,6 +67,18 @@ export default function ProductInfo({ product }) {
   const hasSizes = Array.isArray(product?.sizes) && product.sizes.length > 0;
   const hasColors = Array.isArray(product?.colors) && product.colors.length > 0;
 
+  // Display price info: prefer activeVariant if available
+  const { displayPrice, displayOriginal, displayDiscount } = useMemo(() => {
+    const vPrice = Number.isFinite(activeVariant?.price) ? Number(activeVariant.price) : null;
+    const vOriginal = Number.isFinite(activeVariant?.originalPrice) ? Number(activeVariant.originalPrice) : null;
+    const pPrice = Number(product?.price) || 0;
+    const pOriginal = Number.isFinite(product?.originalPrice) ? Number(product.originalPrice) : null;
+    const price = vPrice ?? pPrice;
+    const original = vOriginal ?? pOriginal;
+    const discount = original && price ? Math.round(((original - price) / original) * 100) : (Number.isFinite(product?.discount) ? Number(product.discount) : null);
+    return { displayPrice: price, displayOriginal: original, displayDiscount: discount };
+  }, [activeVariant?.price, activeVariant?.originalPrice, product?.price, product?.originalPrice, product?.discount]);
+
   // Find matching Medusa variant by selected options
   const resolveVariantId = () => {
     const variants = Array.isArray(product?.variants) ? product.variants : [];
@@ -100,6 +117,11 @@ export default function ProductInfo({ product }) {
       return;
     }
 
+    // Prefer variant-specific image if available
+    const variantPrimaryImage = Array.isArray(activeVariant?.images) && activeVariant.images.length
+      ? activeVariant.images[0]
+      : (activeVariant?.metadata?.thumbnail || (Array.isArray(product?.images) && product.images[0]) || undefined);
+
     addToCart({
       variant_id: variantId,
       quantity,
@@ -107,6 +129,7 @@ export default function ProductInfo({ product }) {
         product_id: product?.id,
         size: hasSizes ? selectedSize : undefined,
         color: hasColors ? selectedColor : undefined,
+        image_url: variantPrimaryImage,
       },
     });
     // Success toast is handled globally via API interceptors (cartService meta.successMessage)
@@ -127,6 +150,10 @@ export default function ProductInfo({ product }) {
       showToast('Unable to determine product variant. Please try different options.', 'error');
       return;
     }
+    const variantPrimaryImage = Array.isArray(activeVariant?.images) && activeVariant.images.length
+      ? activeVariant.images[0]
+      : (activeVariant?.metadata?.thumbnail || (Array.isArray(product?.images) && product.images[0]) || undefined);
+
     addToCart({
       variant_id: variantId,
       quantity,
@@ -134,6 +161,7 @@ export default function ProductInfo({ product }) {
         product_id: product?.id,
         size: hasSizes ? selectedSize : undefined,
         color: hasColors ? selectedColor : undefined,
+        image_url: variantPrimaryImage,
       },
     });
     // Navigate to checkout
@@ -211,15 +239,17 @@ export default function ProductInfo({ product }) {
 
       {/* Price */}
       <div className="flex items-center gap-4 flex-wrap">
-        <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{product.price.toLocaleString()}</span>
-        {product.originalPrice && (
+        <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{Number(displayPrice || 0).toLocaleString()}</span>
+        {Number.isFinite(displayOriginal) && displayOriginal > displayPrice && (
           <>
             <span className="text-xl text-gray-500 dark:text-gray-400 line-through">
-              ₹{product.originalPrice.toLocaleString()}
+              ₹{Number(displayOriginal).toLocaleString()}
             </span>
-            <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-3 py-1 rounded-full text-sm font-semibold">
-              {product.discount}% OFF
-            </span>
+            {Number.isFinite(displayDiscount) && displayDiscount > 0 && (
+              <span className="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 px-3 py-1 rounded-full text-sm font-semibold">
+                {displayDiscount}% OFF
+              </span>
+            )}
           </>
         )}
       </div>

@@ -268,35 +268,35 @@ export const categories = [
     id: 1,
     name: "Kurtis",
     slug: "kurtis",
-    image: "https://images.pexels.com/photos/33133599/pexels-photo-33133599.jpeg",
+    image: "https://images.pexels.com/photos/33133599/pexels-photo-33133599.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&q=60",
     count: 45
   },
   {
     id: 2,
     name: "Dresses",
     slug: "dresses",
-    image: "https://images.pexels.com/photos/33161433/pexels-photo-33161433.jpeg",
+    image: "https://images.pexels.com/photos/33161433/pexels-photo-33161433.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&q=60",
     count: 32
   },
   {
     id: 3,
     name: "Ethnic Wear",
     slug: "ethnic",
-    image: "https://images.pexels.com/photos/20777203/pexels-photo-20777203.jpeg",
+    image: "https://images.pexels.com/photos/20777203/pexels-photo-20777203.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&q=60",
     count: 28
   },
   {
     id: 4,
     name: "Tops",
     slug: "tops",
-    image: "https://images.pexels.com/photos/3061814/pexels-photo-3061814.jpeg",
+    image: "https://images.pexels.com/photos/3061814/pexels-photo-3061814.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&q=60",
     count: 56
   },
   {
     id: 5,
     name: "Gowns",
     slug: "gowns",
-    image: "https://images.pexels.com/photos/33171268/pexels-photo-33171268.jpeg",
+    image: "https://images.pexels.com/photos/33171268/pexels-photo-33171268.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&q=60",
     count: 24
   }
 ];

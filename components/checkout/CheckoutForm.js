@@ -9,6 +9,7 @@ import AddAddressModal from '@/components/modals/AddAddressModal';
 import { listAddresses, createAddress, updateAddress } from '@/services/customer/addressService';
 import { paymentService } from '@/services/modules/payment/paymentService';
 import { shippingService } from '@/services/modules/shipping/shippingService';
+import { loadRazorpay } from '@/utils/razorpay';
 import ContactInformationSection from '@/components/checkout/sections/ContactInformationSection';
 import ShippingMethodSection from '@/components/checkout/sections/ShippingMethodSection';
 import PaymentMethodSection from '@/components/checkout/sections/PaymentMethodSection';
@@ -468,7 +469,8 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       }
     }
     try {
-      await paymentService.initPaymentSession({ payment_collection_id: paymentCollection?.id, provider_id });
+      // Use the returned payment_collection so we don't need to refetch it
+      paymentCollection = await paymentService.initPaymentSession({ payment_collection_id: paymentCollection?.id, provider_id });
     } catch (err) {
       const msg = err?.message || 'Failed to initialize payment session';
       setPaymentError(msg);
@@ -478,6 +480,79 @@ export default function CheckoutForm({ onSubmit, loading, onSubmittingChange }) 
       scrollToFirstInvalid();
       releaseSubmitting();
       return;
+    }
+    // If Razorpay selected, open Checkout before completing cart
+    // Medusa v2 provider ids are often prefixed, e.g., 'pp_razorpay_razorpay'. Match by substring.
+    const isRazorpayProvider = typeof provider_id === 'string' && provider_id.toLowerCase().includes('razorpay')
+    if (isRazorpayProvider) {
+      try {
+        // Load Razorpay script
+        await loadRazorpay();
+        // Use the payment collection returned by initPaymentSession
+        const pc = paymentCollection;
+        const session = (pc?.payment_sessions || pc?.sessions || []).find((s) =>
+          typeof s?.provider_id === 'string' && s.provider_id.toLowerCase().includes('razorpay')
+        );
+        if (!session) {
+          throw new Error('Razorpay session not found');
+        }
+        const sdata = session?.data || {};
+        const key_id = sdata.key_id;
+        const order_id = sdata.order_id;
+        const currency = (sdata.currency_code || 'INR').toUpperCase();
+        if (!key_id || !order_id) {
+          throw new Error('Razorpay session data incomplete');
+        }
+
+        let resolveFlow;
+        const flowPromise = new Promise((resolve) => { resolveFlow = resolve });
+
+        const options = {
+          key: key_id,
+          // Do not pass amount when order_id is provided; Razorpay uses the order's amount.
+          currency,
+          name: 'Faxio',
+          description: 'Order Payment',
+          order_id,
+          prefill: {
+            email: cart?.email || '',
+            contact: defaultAddress?.phone || '',
+            name: defaultAddress?.name || '',
+          },
+          theme: { color: '#000000' },
+          handler: async function (resp) {
+            try {
+              await paymentService.verifyRazorpayPayment({
+                payment_collection_id: pc.id,
+                session_id: session.id,
+                razorpay_payment_id: resp.razorpay_payment_id,
+                razorpay_order_id: resp.razorpay_order_id,
+                razorpay_signature: resp.razorpay_signature,
+              })
+              resolveFlow(true)
+            } catch (e) {
+              setPaymentError(e?.message || 'Payment verification failed. Please try again.')
+              releaseSubmitting()
+              resolveFlow(false)
+            }
+          },
+          modal: {
+            ondismiss: () => {
+              setPaymentError('Payment cancelled');
+              releaseSubmitting();
+              resolveFlow(false);
+            },
+          },
+        };
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+        const completed = await flowPromise;
+        if (!completed) return; // early exit after ondismiss
+      } catch (e) {
+        setPaymentError(e?.message || 'Razorpay checkout failed to start');
+        releaseSubmitting();
+        return;
+      }
     }
     // Trigger cart completion
     try {
