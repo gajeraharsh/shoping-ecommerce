@@ -50,19 +50,19 @@ export default function Hero() {
       title: "New Arrivals",
       description: "Latest trends and seasonal favorites",
       image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
-      link: { pathname: '/products', query: { collection_id: 'pcol_01K4G67CX7A92V3YEKSND0KWQ1', page: 1 } }
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K4N7BTPRPGRYNAKS5YAYC5DC', page: 1 } }
     },
     {
       title: "Bestsellers",
       description: "Customer favorites and top-rated pieces",
       image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
-      link: { pathname: '/products', query: { collection_id: 'pcol_01K4G6886D7GMXZ22JDJJCM615', page: 1 } }
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K4N7C20DD14BD7WM6B7GZ1P8', page: 1 } }
     },
     {
       title: "Sale",
       description: "Limited time offers on premium pieces",
       image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1000&auto=format&fit=crop",
-      link: { pathname: '/products', query: { collection_id: 'pcol_01K4G691JSYDWEV61J91JNTWP7', page: 1 } }
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K4N7C74DCWX3TDXPQ2ATNRQ9', page: 1 } }
     }
   ], []);
 
@@ -239,7 +239,7 @@ export default function Hero() {
         <CollectionProductsSection
           title="Best Sellers"
           description="Our most-loved pieces that customers can't get enough of."
-          collectionId="pcol_01K4G6886D7GMXZ22JDJJCM615"
+          collectionId="pcol_01K4N7C20DD14BD7WM6B7GZ1P8 "
           limit={8}
         />
 
@@ -247,7 +247,7 @@ export default function Hero() {
         <CollectionProductsSection
           title="New Arrivals"
           description="Fresh drops just in—discover the latest styles first."
-          collectionId="pcol_01K4G67CX7A92V3YEKSND0KWQ1"
+          collectionId="pcol_01K4N7BTPRPGRYNAKS5YAYC5DC"
           limit={8}
         />
 
