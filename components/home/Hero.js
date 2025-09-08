@@ -239,7 +239,7 @@ export default function Hero() {
         <CollectionProductsSection
           title="Best Sellers"
           description="Our most-loved pieces that customers can't get enough of."
-          collectionId="pcol_01K4N7C20DD14BD7WM6B7GZ1P8 "
+          collectionId="pcol_01K4N7C20DD14BD7WM6B7GZ1P8"
           limit={8}
         />
 
