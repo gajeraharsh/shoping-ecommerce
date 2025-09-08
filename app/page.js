@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react';
 import SmartImage from '@/components/ui/SmartImage';
 import Hero from '@/components/home/Hero';
+import Categories from '@/components/home/Categories';
 import VideoReelGrid from '@/components/social/VideoReelGrid';
 import PhotoReelGrid from '@/components/social/PhotoReelGrid';
 import SimpleTrustSection from '@/components/ui/SimpleTrustSection';
@@ -92,7 +93,9 @@ export default function Home() {
         {/* Verified Testimonials */}
         <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SimpleTestimonials />
+            {/* <SimpleTestimonials /> */}
+            <Categories />
+
           </div>
         </section>
 

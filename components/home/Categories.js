@@ -4,7 +4,7 @@ import SmartImage from '@/components/ui/SmartImage';
 
 export default function Categories() {
   return (
-    <section className="py-6 sm:py-8 md:py-12 lg:py-16 bg-white dark:bg-gray-900">
+    <section className="py-6 sm:py-8 md:py-12 lg:py-16 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="text-center mb-6 sm:mb-8 md:mb-12">
           <h2 className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-2">
@@ -15,24 +15,62 @@ export default function Categories() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 lg:gap-6">
-          {categories.map((category) => (
+        {/* Mobile: Horizontal scrollable categories */}
+        <div className="sm:hidden -mx-3 pb-1">
+          <div
+            className="flex gap-3 overflow-x-auto px-3 scroll-smooth snap-x snap-mandatory"
+            role="list"
+            aria-label="Browse categories"
+          >
+            {categories.map((category, idx) => (
+              <Link
+                key={category.id}
+                href={`/products?category_id=${encodeURIComponent(category.id || category.slug)}`}
+                aria-label={`Open category ${category.name}`}
+                className="group relative overflow-hidden rounded-2xl min-w-[72%] xs:min-w-[64%] aspect-[4/5] bg-gray-200 border border-black/10 dark:border-white/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-black/20 dark:hover:border-white/20 snap-start touch-manipulation active:scale-[0.99] transition-all duration-300"
+              >
+                <div className="absolute inset-0">
+                  <SmartImage
+                    src={category.image}
+                    alt={`Category: ${category.name}`}
+                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    sizes="(max-width: 640px) 70vw, (max-width: 1024px) 45vw, 25vw"
+                    priority={idx === 0}
+                  />
+                </div>
+                {/* Minimal: only category name, bright image, no overlays */}
+                <div className="absolute inset-x-3 bottom-3">
+                  <h3 className="text-white text-lg xs:text-xl font-semibold tracking-tight leading-none line-clamp-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.65)]">
+                    {category.name}
+                  </h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Tablet/Desktop: Grid layout */}
+        <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          {categories.map((category, idx) => (
             <Link
               key={category.id}
               href={`/products?category_id=${encodeURIComponent(category.id || category.slug)}`}
-              className="group relative overflow-hidden rounded-lg sm:rounded-2xl aspect-square bg-gray-200 hover:scale-105 transition-transform duration-300"
+              aria-label={`Open category ${category.name}`}
+              className="group relative overflow-hidden rounded-2xl aspect-square bg-gray-200 border border-black/10 dark:border-white/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-black/20 dark:hover:border-white/20 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 dark:focus-visible:ring-white/60"
             >
               <div className="absolute inset-0">
                 <SmartImage
                   src={category.image}
-                  alt={category.name}
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
+                  alt={`Category: ${category.name}`}
+                  className="object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  priority={idx === 0}
                 />
               </div>
-              <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"></div>
-              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 text-white">
-                <h3 className="text-xs xs:text-sm sm:text-lg lg:text-xl font-bold mb-1 line-clamp-1">{category.name}</h3>
-                <p className="text-xs sm:text-sm opacity-90">{category.count} items</p>
+              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4">
+                <h3 className="text-white text-base sm:text-lg lg:text-2xl font-semibold tracking-tight leading-none line-clamp-1 drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.65)]">
+                  {category.name}
+                </h3>
               </div>
             </Link>
           ))}
@@ -41,3 +79,4 @@ export default function Categories() {
     </section>
   );
 }
+
