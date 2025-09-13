@@ -22,6 +22,8 @@ export default function Hero() {
       subtitle: "Elegance Redefined",
       description: "Discover sophisticated pieces that blend timeless style with contemporary flair",
       image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2340&auto=format&fit=crop",
+      imageMobile: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1080&auto=format&fit=crop",
+      imageDesktop: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2340&auto=format&fit=crop",
       cta: "Shop Collection",
       link: "/products?collection=autumn"
     },
@@ -31,6 +33,8 @@ export default function Hero() {
       subtitle: "Luxury Redefined",
       description: "Exquisite evening wear crafted for the modern woman who values elegance",
       image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2340&auto=format&fit=crop",
+      imageMobile: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1080&auto=format&fit=crop",
+      imageDesktop: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2340&auto=format&fit=crop",
       cta: "Explore Now",
       link: "/products?q=evening"
     },
@@ -40,6 +44,8 @@ export default function Hero() {
       subtitle: "Effortless Style",
       description: "Premium casual wear that transitions seamlessly from day to night",
       image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2340&auto=format&fit=crop",
+      imageMobile: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1080&auto=format&fit=crop",
+      imageDesktop: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2340&auto=format&fit=crop",
       cta: "Shop Now",
       link: "/products?q=casual"
     }
@@ -90,7 +96,7 @@ export default function Hero() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Hero Slider */}
-      <section className="relative h-screen safe-area-top">
+      <section className="relative h-[60vh] safe-area-top">
         <Swiper
           modules={[Autoplay, EffectFade, Pagination]}
           effect="fade"
@@ -116,11 +122,14 @@ export default function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent z-10"></div>
                 <div className="absolute inset-0">
-                  <SmartImage
-                    src={slide.image}
-                    alt={slide.title}
-                    className="object-cover"
-                  />
+                  <picture>
+                    <source media="(max-width: 767px)" srcSet={slide.imageMobile || slide.image} />
+                    <img
+                      src={slide.imageDesktop || slide.image}
+                      alt={slide.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </picture>
                 </div>
                 
                 <div className="absolute inset-0 z-20 flex items-center safe-area-bottom">
