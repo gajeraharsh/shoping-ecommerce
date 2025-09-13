@@ -3,6 +3,19 @@ import { Suspense } from "react"
 
 export const metadata = {
   title: "Feed | Faxio",
+  description: "Discover the latest looks, reels, and product highlights from Faxio. Like and share your favorite fashion moments.",
+  alternates: { canonical: "/feed" },
+  openGraph: {
+    title: "Faxio Feed",
+    description: "Discover the latest looks, reels, and product highlights from Faxio.",
+    url: "/feed",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Faxio Feed",
+    description: "Discover the latest looks, reels, and product highlights from Faxio.",
+  },
 }
 
 export default function FeedPage() {

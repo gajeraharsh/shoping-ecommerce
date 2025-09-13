@@ -510,13 +510,13 @@ export default function ProductsClient({
   if (!mounted) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          <div className="flex gap-8">
+        <div className="max-w-none sm:max-w-7xl mx-auto w-full px-1 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="flex gap-4 lg:gap-8">
             <div className="hidden lg:block w-64">
               <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-96 rounded-xl"></div>
             </div>
             <div className="flex-1">
-              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-5">
                 {Array.from({ length: 12 }).map((_, i) => (
                   <ProductSkeleton key={i} />
                 ))}
@@ -534,7 +534,7 @@ export default function ProductsClient({
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Hero Section */}
       <section className="bg-gray-50 dark:bg-gray-800 py-12 sm:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-none sm:max-w-7xl mx-auto w-full px-1 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">Our Collections</h1>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -545,7 +545,7 @@ export default function ProductsClient({
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      <div className="max-w-none sm:max-w-7xl mx-auto w-full px-1 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 gap-4">
           <div className="text-sm text-gray-600 dark:text-gray-400 order-2 sm:order-1">
@@ -627,11 +627,11 @@ export default function ProductsClient({
               </div>
               {/* Panel */}
               <div
-                className="fixed inset-y-0 left-0 w-full max-w-sm bg-white dark:bg-gray-900 z-50 shadow-2xl lg:hidden transform transition-all duration-300 ease-out translate-x-0 animate-in slide-in-from-left-full"
+                className="fixed inset-0 left-0 right-0 w-screen max-w-none bg-white dark:bg-gray-900 z-50 shadow-2xl lg:hidden transform transition-all duration-300 ease-out translate-x-0 animate-in slide-in-from-left-full flex flex-col"
                 role="dialog"
                 aria-modal="true"
               >
-                <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+                <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 bg-white dark:bg-gray-900">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Filters</h2>
                   <button
                     onClick={() => setIsFiltersOpen(false)}
@@ -641,7 +641,7 @@ export default function ProductsClient({
                     <X className="h-5 w-5" />
                   </button>
                 </div>
-                <div className="h-[calc(100vh-60px-68px)] overflow-y-auto p-4">
+                <div className="flex-1 overflow-y-auto p-4">
                   <ProductFilters
                     filters={pendingFilters}
                     onFilterChange={(nf) => setPendingFilters((prev) => ({ ...prev, ...nf }))}
@@ -652,7 +652,7 @@ export default function ProductsClient({
                   />
                 </div>
                 {/* Sticky footer actions */}
-                <div className="p-4 border-t border-gray-200 dark:border-gray-800 flex gap-3">
+                <div className="sticky bottom-0 p-4 pb-[max(env(safe-area-inset-bottom),1rem)] border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex gap-3">
                   <button
                     onClick={() => setIsFiltersOpen(false)}
                     className="flex-1 py-3 rounded-full border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -671,10 +671,10 @@ export default function ProductsClient({
           )}
 
           {/* Products Grid */}
-          <div ref={productsTopRef} />
           <div className={`flex-1 min-w-0 ${isPending ? 'opacity-95' : ''}`}>
+            <div ref={productsTopRef} />
             {visualLoading ? (
-              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 transition-opacity duration-200">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-1 sm:gap-5 grid-flow-row dense transition-opacity duration-200 items-stretch">
                 {[...Array(limit || 12)].map((_, i) => (
                   <ProductSkeleton key={i} />
                 ))}
@@ -697,10 +697,15 @@ export default function ProductsClient({
                 </button>
               </div>
             ) : (
-              <div className={`grid gap-4 sm:gap-6 transition-opacity duration-200 ${viewMode === 'grid' ? 'grid-cols-1 xs:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
-                {filteredProducts.map((product, idx) => (
-                  <ProductCard key={product.id} product={product} viewMode={viewMode} priority={idx < 4} />
-                ))}
+              <div className={`grid gap-1 sm:gap-5 grid-flow-row dense transition-opacity duration-200 items-stretch ${viewMode === 'grid' ? 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1'}`}>
+                {filteredProducts.map((product, idx) => {
+                  const isLastOdd = viewMode === 'grid' && (filteredProducts.length % 2 === 1) && idx === filteredProducts.length - 1;
+                  return (
+                    <div key={product.id} className={`${isLastOdd ? 'col-span-2 sm:col-span-1' : ''}`}>
+                      <ProductCard product={product} viewMode={viewMode} priority={idx < 4} />
+                    </div>
+                  );
+                })}
               </div>
             )}
 

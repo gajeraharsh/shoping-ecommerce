@@ -137,12 +137,12 @@ export default function ProductCard({ product, priority = false, viewMode }) {
 
   return (
     <div
-      className="group relative card-minimal overflow-hidden transition-all duration-300 hover:shadow-lg"
+      className="group relative w-full h-full overflow-hidden rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link href={`/products/${product.id}`}>
-        <div className="relative aspect-[3/4] overflow-hidden bg-gray-50 dark:bg-gray-800 rounded-t-xl">
+        <div className="relative aspect-[4/5] sm:aspect-square overflow-hidden bg-gray-50 dark:bg-gray-800">
           <Image
             key={`${product.id || 'prod'}:${imgSrc}`}
             src={imgSrc || FALLBACK_SVG}
@@ -161,9 +161,9 @@ export default function ProductCard({ product, priority = false, viewMode }) {
             unoptimized
           />
           
-          {/* Discount Badge */}
+          {/* Discount Badge - green accent */}
           {product.discount && (
-            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-accent text-accent-foreground px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm font-medium rounded-lg shadow">
+            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm font-medium rounded-lg shadow bg-green-600 text-white">
               -{product.discount}%
             </div>
           )}
@@ -185,13 +185,13 @@ export default function ProductCard({ product, priority = false, viewMode }) {
                 addToWishlist(product);
               }
             }}
-            className={`absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-full border shadow-sm transition-colors ${
+            className={`absolute top-2 right-2 sm:top-4 sm:right-4 rounded-full border shadow-sm transition-colors flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 leading-none ${
               inWishlist
                 ? 'bg-red-50 border-red-200 text-red-600'
                 : 'bg-white/90 border-gray-200 text-gray-600 hover:text-red-600'
             }`}
           >
-            <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+            <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${inWishlist ? 'fill-current' : ''}`} />
           </button>
         </div>
       </Link>
@@ -205,22 +205,22 @@ export default function ProductCard({ product, priority = false, viewMode }) {
         </Link>
 
         {/* Rating */}
-        <div className="flex items-center gap-2 mb-3">
-          <div className="flex items-center">
+        <div className="flex flex-wrap items-center gap-1.5 mb-3">
+          <div className="flex items-center shrink-0">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`h-4 w-4 ${i < Math.round(rating) ? 'fill-current text-accent' : 'text-gray-300 dark:text-gray-600'}`}
+                className={`h-4 w-4 ${i < Math.round(rating) ? 'fill-current text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`}
               />
             ))}
-            <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">{rating.toFixed(1)}</span>
+            <span className="text-xs sm:text-sm text-green-700 dark:text-green-400 ml-2 leading-none">{rating.toFixed(1)}</span>
           </div>
-          <span className="text-xs sm:text-sm text-gray-400">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
+          <span className="text-xs text-green-600 dark:text-green-400 leading-tight">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</span>
         </div>
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">₹{product.price}</span>
+          <span className={`text-base sm:text-lg font-semibold ${product.originalPrice ? 'text-green-700 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}>₹{product.price}</span>
           {product.originalPrice && (
             <span className="text-xs sm:text-sm text-gray-500 line-through">
               ₹{product.originalPrice}

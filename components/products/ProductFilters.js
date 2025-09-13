@@ -95,6 +95,10 @@ export default function ProductFilters({ filters, onFilterChange, categories: ca
       const label = categories.find(c => c.value === filters.category)?.label || filters.category;
       chips.push({ key: 'category', label });
     }
+    if (filters.collection) {
+      // We might only have the ID from URL; still show it so user can remove it
+      chips.push({ key: 'collection', label: `Collection: ${filters.collection}` });
+    }
     if (filters.priceRange) {
       const label = priceRanges.find(p => p.value === filters.priceRange)?.label || filters.priceRange;
       chips.push({ key: 'priceRange', label });
@@ -124,7 +128,7 @@ export default function ProductFilters({ filters, onFilterChange, categories: ca
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Applied Filters</p>
             <button
               onClick={() => {
-                const clear = { category: '', priceRange: '', size: '', color: '' };
+                const clear = { category: '', collection: '', priceRange: '', size: '', color: '' };
                 productOptions.forEach((opt) => { clear[`option_${opt.title}`] = ''; });
                 onFilterChange(clear);
               }}
@@ -321,7 +325,7 @@ export default function ProductFilters({ filters, onFilterChange, categories: ca
       {/* Clear Filters */}
       <button
         onClick={() => {
-          const clear = { category: '', priceRange: '', size: '', color: '' };
+          const clear = { category: '', collection: '', priceRange: '', size: '', color: '' };
           productOptions.forEach((opt) => { clear[`option_${opt.title}`] = ''; });
           onFilterChange(clear);
         }}
