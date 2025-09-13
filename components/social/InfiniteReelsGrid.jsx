@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState, useCallback } from "react"
-import { useSearchParams, useRouter, usePathname } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import SmartImage from "@/components/ui/SmartImage"
 import { reelsService } from "@/services/modules/reels/reelsService"
 import ReelsModal from "@/components/social/ReelsModal"
@@ -46,11 +46,24 @@ export default function InfiniteReelsGrid({
   const effectiveFilters = useMemo(() => ({ ...filters }), [JSON.stringify(filters)])
 
   // Deep-link: open modal by reel id from query param
-  const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
+
+  const isAuthed = useCallback(() => {
+    try { return typeof window !== 'undefined' && !!localStorage.getItem('token') } catch { return false }
+  }, [])
+
+  const redirectToLogin = useCallback(() => {
+    try {
+      const qs = typeof window !== 'undefined' ? (window.location.search || '') : ''
+      const back = qs ? `${pathname}${qs}` : pathname
+      router.push(`/auth/login?redirect=${encodeURIComponent(back)}`)
+    } catch {
+      router.push('/auth/login')
+    }
+  }, [router, pathname])
   useEffect(() => {
-    const reelId = searchParams?.get('reel')
+    const reelId = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('reel') : null
     if (!reelId) return
     let cancelled = false
     ;(async () => {
@@ -70,7 +83,7 @@ export default function InfiniteReelsGrid({
     })()
     return () => { cancelled = true }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams])
+  }, [pathname])
 
   const load = useCallback(async (reset = false) => {
     if (fetchingRef.current) return
@@ -221,6 +234,13 @@ export default function InfiniteReelsGrid({
   const onCardClick = (it) => {
     setActiveId(it.id)
     setModalOpen(true)
+    // reflect in URL for deep-link/share
+    try {
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search || "") : new URLSearchParams()
+      params.set('reel', String(it.id))
+      const nextUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname
+      router.replace(nextUrl, { scroll: false })
+    } catch {}
   }
 
   const currentVariant = useMemo(() => {
@@ -230,28 +250,64 @@ export default function InfiniteReelsGrid({
 
   const isVideo = (it) => it?.type === "video"
 
+  // simple mobile detection for using system share
+  const isMobile = useCallback(() => {
+    if (typeof window === 'undefined') return false
+    try {
+      // Prefer viewport-based heuristic
+      const smallViewport = window.matchMedia && window.matchMedia('(max-width: 768px)').matches
+      // Basic UA fallback
+      const ua = navigator.userAgent || navigator.vendor || ''
+      const uaMobile = /android|iphone|ipad|ipod|iemobile|blackberry|opera mini/i.test(ua)
+      return smallViewport || uaMobile
+    } catch {
+      return false
+    }
+  }, [])
+
   const handleLike = async (e, it) => {
     e?.stopPropagation?.()
     const id = it?.id
     if (!id) return
-    // optimistic update
-    setItems((prev) => prev.map((r) => (r.id === id ? { ...r, is_like: !r.is_like } : r)))
+    if (!isAuthed()) { redirectToLogin(); return }
+    // optimistic update with count
+    const prevLiked = !!it.is_like
+    setItems((prev) => prev.map((r) => (r.id === id ? { ...r, is_like: !prevLiked, like_count: (r.like_count || 0) + (prevLiked ? -1 : 1) } : r)))
     try {
-      if (it.is_like) {
+      if (prevLiked) {
         await reelsService.unlike(id)
       } else {
         await reelsService.like(id)
       }
     } catch (err) {
       // revert on failure
-      setItems((prev) => prev.map((r) => (r.id === id ? { ...r, is_like: it.is_like } : r)))
+      setItems((prev) => prev.map((r) => (r.id === id ? { ...r, is_like: prevLiked, like_count: (r.like_count || 0) + (prevLiked ? 1 : -1) } : r)))
     }
   }
 
-  const handleShare = (e, it) => {
+  const handleShare = async (e, it) => {
     e?.stopPropagation?.()
     const base = typeof window !== 'undefined' ? window.location.origin : ''
-    const url = `${base}/reels?reel=${encodeURIComponent(it?.id || '')}`
+    const url = `${base}/feed?reel=${encodeURIComponent(it?.id || '')}`
+    const title = it?.name || 'Check this reel'
+    const text = Array.isArray(it?.tags) && it.tags.length
+      ? `${title} ${it.tags.map((t) => `#${String(t).replace(/\s+/g, '')}`).join(' ')}`
+      : title
+
+    // Mobile behavior: never open modal
+    if (isMobile()) {
+      try {
+        if (typeof navigator !== 'undefined' && navigator.share) {
+          await navigator.share({ title, text, url })
+        } else if (navigator?.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url)
+        }
+      } catch (_) {
+        // swallow; do not open modal on mobile as per requirement
+      }
+      return
+    }
+
     setShareUrl(url)
     setShareOpen(true)
   }

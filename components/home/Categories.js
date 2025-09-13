@@ -1,8 +1,29 @@
+"use client";
 import Link from 'next/link';
-import { categories } from '@/utils/mockData';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import SmartImage from '@/components/ui/SmartImage';
 
 export default function Categories() {
+  // Use categories already fetched for header via Redux (feature/categorySlice)
+  const categoryTree = useSelector((s) => s.category?.items || []);
+
+  // Flatten tree and filter nodes marked for home display
+  const categories = useMemo(() => {
+    const out = [];
+    const visit = (node) => {
+      if (!node) return;
+      const m = node.metadata || node.meta || {};
+      const isForHome = m?.is_category_list === true || m?.is_category_list === 'true' || m?.is_category_list === 1 || m?.is_category_list === '1';
+      if (isForHome) out.push(node);
+      if (Array.isArray(node.children)) node.children.forEach(visit);
+    };
+    categoryTree.forEach(visit);
+    // Keep stable order by name, then id
+    return out.sort((a, b) => (a?.name || '').localeCompare(b?.name || '') || String(a?.id).localeCompare(String(b?.id))).slice(0, 8);
+  }, [categoryTree]);
+
+  if (!categories.length) return null; // No selected categories; hide section
   return (
     <section className="py-6 sm:py-8 md:py-12 lg:py-16 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
@@ -22,7 +43,9 @@ export default function Categories() {
             role="list"
             aria-label="Browse categories"
           >
-            {categories.map((category, idx) => (
+            {categories.map((category, idx) => {
+              const image = category?.metadata?.image_url || category?.meta?.image_url || category?.thumbnail || '/icons/fallback-image.svg'
+              return (
               <Link
                 key={category.id}
                 href={`/products?category_id=${encodeURIComponent(category.id || category.slug)}`}
@@ -31,7 +54,7 @@ export default function Categories() {
               >
                 <div className="absolute inset-0">
                   <SmartImage
-                    src={category.image}
+                    src={image}
                     alt={`Category: ${category.name}`}
                     className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                     sizes="(max-width: 640px) 70vw, (max-width: 1024px) 45vw, 25vw"
@@ -45,13 +68,16 @@ export default function Categories() {
                   </h3>
                 </div>
               </Link>
-            ))}
+              )
+            })}
           </div>
         </div>
 
         {/* Tablet/Desktop: Grid layout */}
         <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-          {categories.map((category, idx) => (
+          {categories.map((category, idx) => {
+            const image = category?.metadata?.image_url || category?.meta?.image_url || category?.thumbnail || '/icons/fallback-image.svg'
+            return (
             <Link
               key={category.id}
               href={`/products?category_id=${encodeURIComponent(category.id || category.slug)}`}
@@ -60,7 +86,7 @@ export default function Categories() {
             >
               <div className="absolute inset-0">
                 <SmartImage
-                  src={category.image}
+                  src={image}
                   alt={`Category: ${category.name}`}
                   className="object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -73,7 +99,8 @@ export default function Categories() {
                 </h3>
               </div>
             </Link>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

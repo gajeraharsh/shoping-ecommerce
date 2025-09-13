@@ -11,9 +11,17 @@ import { ensureCart, fetchCart } from '@/features/cart/cartSlice'
 function InitBoot() {
   const isAuthenticated = useSelector((s) => s.auth.isAuthenticated)
   const bootEnsuredRef = useRef(false)
+  const didInitRef = useRef(false)
   useEffect(() => {
-    // Preload categories on app init
-    store.dispatch(fetchCategoryTree())
+    // Guard against React 18 StrictMode double-invoking effects in development
+    if (didInitRef.current) return
+    didInitRef.current = true
+
+    // Preload categories on app init (header/menu) only if not already loaded
+    const catStatus = store.getState()?.category?.status
+    if (catStatus !== 'succeeded' && catStatus !== 'loading') {
+      store.dispatch(fetchCategoryTree())
+    }
 
     // AuthContext handles /me hydration; avoid duplicate fetchMe here
 

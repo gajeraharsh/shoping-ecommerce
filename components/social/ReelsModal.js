@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState, useCallback, useMemo, useRef } from "react"
-import { X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Heart, Share2 } from "lucide-react"
+import { useRouter, usePathname } from 'next/navigation'
+import { X, Heart, Share2 } from "lucide-react"
 import SmartImage from "@/components/ui/SmartImage"
 import { reelsService } from "@/services/modules/reels/reelsService"
 import ShareDialog from "@/components/social/ShareDialog"
@@ -21,6 +22,35 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
   const touchStartY = useRef(0)
   const touchDeltaX = useRef(0)
   const isSwiping = useRef(false)
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const isAuthed = useCallback(() => {
+    try { return typeof window !== 'undefined' && !!localStorage.getItem('token') } catch { return false }
+  }, [])
+
+  const redirectToLogin = useCallback(() => {
+    try {
+      const qs = typeof window !== 'undefined' ? (window.location.search || '') : ''
+      const back = qs ? `${pathname}${qs}` : pathname
+      router.push(`/auth/login?redirect=${encodeURIComponent(back)}`)
+    } catch {
+      router.push('/auth/login')
+    }
+  }, [router, pathname])
+
+  // simple mobile detection for using system share
+  const isMobile = useCallback(() => {
+    if (typeof window === 'undefined') return false
+    try {
+      const smallViewport = window.matchMedia && window.matchMedia('(max-width: 768px)').matches
+      const ua = navigator.userAgent || navigator.vendor || ''
+      const uaMobile = /android|iphone|ipad|ipod|iemobile|blackberry|opera mini/i.test(ua)
+      return smallViewport || uaMobile
+    } catch {
+      return false
+    }
+  }, [])
 
   const loadAll = useCallback(async () => {
     setLoading(true)
@@ -110,6 +140,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
 
   const handleLike = async (reel) => {
     if (!reel?.id) return
+    if (!isAuthed()) { redirectToLogin(); return }
     const id = reel.id
     const prevLiked = !!reel.is_like
     // optimistic update
@@ -123,9 +154,28 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
     }
   }
 
-  const handleShare = (reel) => {
+  const handleShare = async (reel) => {
     const base = typeof window !== 'undefined' ? window.location.origin : ''
-    const url = `${base}/reels?reel=${encodeURIComponent(reel?.id || '')}`
+    const url = `${base}/feed?reel=${encodeURIComponent(reel?.id || '')}`
+    const title = reel?.name || 'Check this reel'
+    const text = Array.isArray(reel?.tags) && reel.tags.length
+      ? `${title} ${reel.tags.map((t) => `#${String(t).replace(/\s+/g, '')}`).join(' ')}`
+      : title
+
+    // Mobile behavior: never open modal
+    if (isMobile()) {
+      try {
+        if (typeof navigator !== 'undefined' && navigator.share) {
+          await navigator.share({ title, text, url })
+        } else if (navigator?.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url)
+        }
+      } catch (_) {
+        // swallow; do not open modal on mobile as per requirement
+      }
+      return
+    }
+
     setShareUrl(url)
     setShareOpen(true)
   }
@@ -198,30 +248,6 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
             className="absolute inset-y-0 right-0 w-1/3 z-[105] cursor-pointer"
             onClick={() => !singleOnly && scrollToIndex(index + 1)}
           />
-
-          {/* Visible left/right arrows with labels - aligned via flex containers */}
-          <div className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-[110] flex flex-col items-center gap-1 select-none">
-            <button
-              onClick={() => scrollToIndex(index - 1)}
-              disabled={index === 0 || singleOnly}
-              className="p-4 rounded-full bg-black/45 backdrop-blur text-white hover:bg-black/60 disabled:opacity-40"
-              aria-label="Previous"
-            >
-              <ChevronLeft size={32} />
-            </button>
-            <span className="text-white/80 text-[10px] sm:text-xs">Prev</span>
-          </div>
-          <div className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-[110] flex flex-col items-center gap-1 select-none">
-            <button
-              onClick={() => scrollToIndex(index + 1)}
-              disabled={index >= allReels.length - 1 || singleOnly}
-              className="p-4 rounded-full bg-black/45 backdrop-blur text-white hover:bg-black/60 disabled:opacity-40"
-              aria-label="Next"
-            >
-              <ChevronRight size={32} />
-            </button>
-            <span className="text-white/80 text-[10px] sm:text-xs">Next</span>
-          </div>
 
           {/* Counter removed per request */}
 
@@ -299,19 +325,21 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
                   )}
 
                   {/* Side actions */}
-                  <div className="absolute right-6 bottom-28 flex flex-col items-center gap-4 text-white">
-                    <button className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 grid place-items-center shadow">
-                      <Heart size={18} />
-                    </button>
+                  <div className="absolute right-6 bottom-28 flex flex-col items-center gap-4 text-white z-[120] pointer-events-auto">
                     <button
+                      type="button"
+                      className={`h-10 w-10 rounded-full grid place-items-center shadow border ${reel.is_like ? 'bg-red-500/90 border-red-500 text-white' : 'bg-white/10 hover:bg-white/20 border-white/20'}`}
+                      onClick={(e) => { e.stopPropagation(); handleLike(reel) }}
+                      aria-label="Like"
+                    >
+                      <Heart size={18} className={reel.is_like ? 'fill-white text-white' : ''} />
+                    </button>
+                    <div className="text-xs opacity-90">{Math.max(0, reel.like_count || 0)}</div>
+                    <button
+                      type="button"
                       className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 grid place-items-center shadow"
-                      onClick={() => {
-                        try {
-                          navigator?.share?.({ title: reel?.name || 'Reel', url: window.location.href })
-                        } catch (e) {
-                          navigator.clipboard?.writeText(window.location.href)
-                        }
-                      }}
+                      onClick={(e) => { e.stopPropagation(); handleShare(reel) }}
+                      aria-label="Share"
                     >
                       <Share2 size={18} />
                     </button>
@@ -335,23 +363,7 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
         // Phone-sized centered layout (video reels)
         <div className="absolute inset-0 flex items-center justify-center p-6">
           <div className="relative w-[360px] h-[640px] md:w-[375px] md:h-[700px] bg-black rounded-2xl overflow-hidden shadow-2xl">
-            {/* Up/Down inside phone box */}
-            <button
-              onClick={() => scrollToIndex(index - 1)}
-              disabled={index === 0 || singleOnly}
-              className="absolute right-3 top-1/2 -translate-y-16 z-[20] p-2 rounded-full bg-white/10 text-white hover:bg-white/20 disabled:opacity-40"
-              aria-label="Previous"
-            >
-              <ChevronUp size={18} />
-            </button>
-            <button
-              onClick={() => scrollToIndex(index + 1)}
-              disabled={index >= allReels.length - 1 || singleOnly}
-              className="absolute right-3 top-1/2 translate-y-16 z-[20] p-2 rounded-full bg-white/10 text-white hover:bg-white/20 disabled:opacity-40"
-              aria-label="Next"
-            >
-              <ChevronDown size={18} />
-            </button>
+            {/* Up/Down icons removed per request */}
 
             <div ref={containerRef} className={`absolute inset-0 ${singleOnly ? 'overflow-hidden' : 'overflow-y-auto'} ${singleOnly ? '' : 'snap-y snap-mandatory scroll-smooth'}`}>
               {loading ? (
@@ -390,18 +402,20 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
                     )}
 
                     {/* Side actions */}
-                    <div className="absolute right-3 bottom-24 flex flex-col items-center gap-3 text-white">
+                    <div className="absolute right-3 bottom-24 flex flex-col items-center gap-3 text-white z-[20] pointer-events-auto">
                       <button
+                        type="button"
                         className={`h-10 w-10 rounded-full grid place-items-center shadow border ${reel.is_like ? 'bg-red-500/90 border-red-500 text-white' : 'bg-white/10 hover:bg-white/20 border-white/20'}`}
-                        onClick={() => handleLike(reel)}
+                        onClick={(e) => { e.stopPropagation(); handleLike(reel) }}
                         aria-label="Like"
                       >
                         <Heart size={18} className={reel.is_like ? 'fill-white text-white' : ''} />
                       </button>
                       <div className="text-xs opacity-90">{Math.max(0, reel.like_count || 0)}</div>
                       <button
+                        type="button"
                         className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 grid place-items-center shadow"
-                        onClick={() => handleShare(reel)}
+                        onClick={(e) => { e.stopPropagation(); handleShare(reel) }}
                         aria-label="Share"
                       >
                         <Share2 size={18} />

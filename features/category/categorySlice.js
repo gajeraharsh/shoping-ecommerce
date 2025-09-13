@@ -38,6 +38,9 @@ const categorySlice = createSlice({
           id: c.id,
           name: c.name,
           slug: c.handle || c.id,
+          // Preserve metadata and common media fields for downstream UI needs (e.g., home categories)
+          metadata: c.metadata || c.meta || {},
+          thumbnail: c.thumbnail || c.image || c.preview_image || null,
           children: sortCats(
             Array.isArray(c.category_children)
               ? c.category_children

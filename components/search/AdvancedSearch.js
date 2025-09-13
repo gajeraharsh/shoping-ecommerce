@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Search, X, Clock, TrendingUp, Tag } from 'lucide-react';
 import { getProducts } from '@/services/modules/product/productService';
-import { getCategoryTree } from '@/services/modules/category/categoryService';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import SmartImage from '@/components/ui/SmartImage';
 
@@ -17,6 +17,7 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
   const [trendingSearches, setTrendingSearches] = useState([]);
   const inputRef = useRef(null);
   const [mounted, setMounted] = useState(false);
+  const categoryTree = useSelector((s) => s.category?.items || []);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -37,30 +38,20 @@ export default function AdvancedSearch({ isOpen, onClose, onSearch }) {
     setMounted(true);
   }, []);
 
-  // Load trending searches from Medusa categories (flattened categories with ids)
+  // Build trending searches from Redux category tree instead of refetching
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const tree = await getCategoryTree({ include_descendants_tree: true, limit: 100 });
-        if (cancelled) return;
-        const flatten = (nodes = []) => nodes.flatMap((n) => [
-          { type: 'category', id: n.id, value: n.name },
-          ...(n.category_children?.length ? flatten(n.category_children) : []),
-        ]);
-        const items = flatten(tree)
-          .filter((it) => it.id && it.value)
-          .reduce((acc, cur) => {
-            if (!acc.find((x) => x.id === cur.id)) acc.push(cur);
-            return acc;
-          }, []);
-        setTrendingSearches(items.slice(0, 12));
-      } catch (e) {
-        setTrendingSearches([]);
-      }
-    })();
-    return () => { cancelled = true; };
-  }, []);
+    const flatten = (nodes = []) => nodes.flatMap((n) => [
+      { type: 'category', id: n.id, value: n.name },
+      ...(Array.isArray(n.children) && n.children.length ? flatten(n.children) : []),
+    ]);
+    const items = flatten(categoryTree)
+      .filter((it) => it.id && it.value)
+      .reduce((acc, cur) => {
+        if (!acc.find((x) => x.id === cur.id)) acc.push(cur);
+        return acc;
+      }, []);
+    setTrendingSearches(items.slice(0, 12));
+  }, [categoryTree]);
 
   useEffect(() => {
     if (!mounted) return;

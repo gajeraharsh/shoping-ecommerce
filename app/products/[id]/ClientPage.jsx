@@ -168,7 +168,11 @@ export default function ProductDetailClient({ initialProduct = null }) {
 
         {/* Product Details */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 sm:mb-16">
-          <ProductImageGallery images={galleryImages} productName={product.name} />
+          <ProductImageGallery
+            images={galleryImages}
+            productName={product.name}
+            videoUrl={normalizedProduct?.metadata?.video_url || normalizedProduct?.metadata?.videoUrl || null}
+          />
           <ProductInfo
             product={product}
             selectedSize={selectedSize}
