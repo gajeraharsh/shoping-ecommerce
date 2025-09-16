@@ -62,8 +62,8 @@ export default function SimpleTrustSection({ className = '' }) {
                 <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
               </div>
               <div className="min-w-0">
-                <div className="text-sm sm:text-base font-semibold tracking-tight text-gray-900 dark:text-white truncate">{badge.title}</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">{badge.description}</div>
+                <div className="text-sm sm:text-base font-semibold tracking-tight text-gray-900 dark:text-white line-clamp-2">{badge.title}</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{badge.description}</div>
               </div>
             </div>
             <div className={`pointer-events-none absolute inset-x-0 -bottom-px h-[2px] opacity-70 bg-gradient-to-r ${badge.theme?.from} ${badge.theme?.to}`} />

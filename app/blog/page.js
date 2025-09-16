@@ -30,7 +30,7 @@ export async function generateMetadata() {
       url,
       type: 'website',
       siteName: 'Faxio',
-      locale: 'en_US',
+      locale: 'en_IN',
     },
     twitter: {
       card: 'summary_large_image',

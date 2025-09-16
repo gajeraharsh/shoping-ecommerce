@@ -32,9 +32,9 @@ export default function ReelsPageClient() {
   return (
     <main>
       {isMobile ? (
-        <MobileReelsFeed title="Reels" filters={{ type: "video" }} pageSize={10} order="-created_at" />
+        <MobileReelsFeed title="Trendzs" filters={{ type: "video" }} pageSize={10} order="-created_at" />
       ) : (
-        <InfiniteReelsGrid title="Reels" filters={{ type: "video" }} pageSize={16} order="-created_at" />
+        <InfiniteReelsGrid title="Trendzs" filters={{ type: "video" }} pageSize={16} order="-created_at" />
       )}
     </main>
   )

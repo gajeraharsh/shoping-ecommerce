@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from 'react';
+import { useSelector } from 'react-redux'
 import { ChevronDown, X } from 'lucide-react';
 
 // colors fallback palette for common names
@@ -17,6 +18,8 @@ const DEFAULT_COLOR_PALETTE = {
 };
 
 export default function ProductFilters({ filters, onFilterChange, categories: categoriesProp, sizes: sizesProp, colors: colorsProp, priceRanges: priceRangesProp, productOptions = [] }) {
+  // Collections from global store for mapping IDs -> names
+  const collections = useSelector((s) => s.collection?.items || [])
   const categories = useMemo(() => {
     const base = Array.isArray(categoriesProp) ? categoriesProp : [];
     // Deduplicate by value to avoid duplicate React keys
@@ -96,8 +99,10 @@ export default function ProductFilters({ filters, onFilterChange, categories: ca
       chips.push({ key: 'category', label });
     }
     if (filters.collection) {
-      // We might only have the ID from URL; still show it so user can remove it
-      chips.push({ key: 'collection', label: `Collection: ${filters.collection}` });
+      // Map collection id/handle to readable title if available
+      const col = collections.find((c) => c.id === filters.collection || c.handle === filters.collection)
+      const colLabel = col?.title || filters.collection
+      chips.push({ key: 'collection', label: `Collection: ${colLabel}` });
     }
     if (filters.priceRange) {
       const label = priceRanges.find(p => p.value === filters.priceRange)?.label || filters.priceRange;

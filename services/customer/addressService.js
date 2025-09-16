@@ -19,15 +19,15 @@ function uiToMedusaPayload(ui) {
     // Medusa expects province as ISO-3166-2 (lowercase); we pass as-is for now
     province: (ui.state || '').toLowerCase(),
     postal_code: ui.pincode || '',
-    // Use provided country code or default to Denmark ('in')
-    country_code: (ui.country_code || 'DK').toLowerCase(),
+    // Use provided country code or default to India ('in')
+    country_code: (ui.country_code || 'IN').toLowerCase(),
     address_name: ui.type || 'other',
     is_default_shipping: !!ui.isDefault,
     is_default_billing: !!ui.isDefault,
     metadata: {
       type: ui.type || 'other',
       landmark: ui.landmark || '',
-      country: ui.country || 'Denmark',
+      country: ui.country || 'India',
     },
   }
 }
@@ -35,21 +35,17 @@ function uiToMedusaPayload(ui) {
 // Build a partial payload for PATCH updates: only include keys present in ui input
 function uiToMedusaPartial(ui) {
   const out = {}
-  if (typeof ui.name === 'string') {
-    const parts = ui.name.trim().split(' ')
-    out.first_name = parts.shift() || ''
-    out.last_name = parts.length ? parts.join(' ') : ''
-  }
-  if (typeof ui.phone === 'string') out.phone = ui.phone
-  if (typeof ui.company === 'string') out.company = ui.company
-  if (typeof ui.street === 'string') out.address_1 = ui.street
-  if (typeof ui.landmark === 'string') {
-    out.address_2 = ui.landmark
-    out.metadata = { ...(ui.metadata || {}), landmark: ui.landmark }
+  if (typeof ui.firstName === 'string') out.first_name = ui.firstName
+  if (typeof ui.lastName === 'string') out.last_name = ui.lastName
+  if (typeof ui.address1 === 'string') out.address_1 = ui.address1
+  if (typeof ui.address2 === 'string') {
+    out.address_2 = ui.address2
+    out.metadata = { ...(out.metadata || {}), landmark: ui.address2 }
   }
   if (typeof ui.city === 'string') out.city = ui.city
   if (typeof ui.state === 'string') out.province = ui.state.toLowerCase()
   if (typeof ui.pincode === 'string') out.postal_code = ui.pincode
+  if (typeof ui.phone === 'string') out.phone = ui.phone
   if (typeof ui.country_code === 'string') out.country_code = ui.country_code.toLowerCase()
   if (typeof ui.country === 'string') {
     out.metadata = { ...(out.metadata || {}), country: ui.country }
@@ -77,7 +73,7 @@ function medusaToUiAddress(m) {
     city: m.city || '',
     state: m.province || '',
     pincode: m.postal_code || '',
-    country_code: (m.country_code || 'DK').toLowerCase(),
+    country_code: (m.country_code || 'IN').toLowerCase(),
     country: m.metadata?.country || undefined,
     isDefault: !!(m.is_default_shipping || m.is_default_billing),
     raw: m,

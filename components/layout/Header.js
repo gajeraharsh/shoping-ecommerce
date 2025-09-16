@@ -159,7 +159,7 @@ export default function Header() {
 
   const navigation = [
     { name: 'Collections', href: '/collections' },
-    { name: 'Reels', href: '/reels' },
+    { name: 'Trendzs', href: '/trendzs' },
     { name: 'Feed', href: '/feed' },
     { name: 'Blog', href: '/blog' },
     { name: 'About', href: '/about' }
@@ -275,7 +275,7 @@ export default function Header() {
               <span>Secure Shopping</span>
             </div>
             <span>•</span>
-            <span>Free shipping on orders over ₹2,999</span>
+            <span>Free Shipping Across India</span>
             <span>•</span>
             <span>24/7 Customer Support</span>
           </div>
@@ -417,7 +417,7 @@ export default function Header() {
                                       <p className="text-xs text-gray-500 dark:text-gray-400">Explore all {active.name} categories</p>
                                     </div>
                                     <Link
-                                      href={`/products?category_id=${active.id || active.slug}`}
+                                      href={`/products`}
                                       onClick={() => { setIsCategoriesPinned(false); setIsCategoriesOpen(false); }}
                                       className="px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                                     >
@@ -656,8 +656,8 @@ export default function Header() {
                           <span className="font-medium">{top.name}</span>
                           <ChevronDown className={`h-4 w-4 transition-transform ${mobileCatOpen.top === i ? 'rotate-180' : ''}`} />
                         </button>
-                        {mobileCatOpen.top === i && (
-                          <div className="pl-3">
+                          {mobileCatOpen.top === i && (
+                          <div className="pt-1">
                             {top.children?.map((sub) => (
                               <div key={sub.slug} className="py-1">
                                 <button
@@ -669,13 +669,13 @@ export default function Header() {
                                   <ChevronDown className={`h-4 w-4 transition-transform ${mobileCatOpen.sub === sub.slug ? 'rotate-180' : ''}`} />
                                 </button>
                                 {mobileCatOpen.sub === sub.slug && (
-                                  <div className="pl-3 pb-2 flex flex-wrap gap-2">
+                                  <div className="w-full pb-2 flex flex-wrap gap-2 justify-center items-center content-center">
                                     {sub.children?.map((leaf) => (
                                       <Link
                                         key={leaf.slug}
                                         href={`/products?category_id=${encodeURIComponent(leaf.id || sub.id || top.id || top.slug)}`}
                                         onClick={() => setIsMenuOpen(false)}
-                                        className="text-sm text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg px-2.5 py-1"
+                                        className="inline-flex h-8 items-center justify-center whitespace-nowrap leading-none text-sm text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-full px-3 text-center"
                                       >
                                         {leaf.name}
                                       </Link>

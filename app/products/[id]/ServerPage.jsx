@@ -139,7 +139,7 @@ export default async function ServerProductPage({ params, searchParams }) {
 
     const care = md.care || 'Machine wash cold, gentle cycle. Do not bleach. Tumble dry low. Iron on low heat if needed.';
     const fabric = md.fabric || md.material || p?.material || 'Cotton';
-    const deliveryTime = md.delivery_time || '3–5 business days';
+    const deliveryTime = md.delivery_time || '7–10 days';
     const returnPolicy = md.return_policy || '30-day return policy. No questions asked.';
     // Prefer server-aggregated review stats from Medusa route augmentation
     const aggStats = (p?.metadata && p.metadata.review_stats) ? p.metadata.review_stats : (p?.review_stats || null);

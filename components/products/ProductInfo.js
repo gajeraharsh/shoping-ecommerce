@@ -422,7 +422,7 @@ export default function ProductInfo({ product, selectedSize: cSelectedSize, setS
             <div>
               <div className="font-medium text-gray-900 dark:text-white">Free Delivery</div>
               <div className="text-sm text-gray-600 dark:text-gray-300">Enter your pincode for delivery date</div>
-              <div className="text-sm text-black dark:text-white font-medium mt-1">Usually delivered in 2-4 business days</div>
+              <div className="text-sm text-black dark:text-white font-medium mt-1">Usually delivered in 7-10 days</div>
             </div>
           </div>
           
@@ -460,8 +460,8 @@ export default function ProductInfo({ product, selectedSize: cSelectedSize, setS
           <div className="flex items-center gap-3">
             <Clock className="h-6 w-6 sm:h-5 sm:w-5 text-black dark:text-white flex-shrink-0" />
             <div>
-              <div className="font-medium text-gray-900 dark:text-white">Express Delivery</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">Same day delivery available in select cities</div>
+              <div className="font-medium text-gray-900 dark:text-white">Estimated Delivery</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">7-10 days across India</div>
             </div>
           </div>
           

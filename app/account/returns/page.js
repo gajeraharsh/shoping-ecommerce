@@ -23,6 +23,27 @@ export default function ReturnsPage() {
   const [activeTab, setActiveTab] = useState('returns');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const showDetails = false;
+
+  // When detailed returns UI is disabled, show a simple contact-only policy
+  if (!showDetails) {
+    return (
+      <div className="p-6 lg:p-8">
+        <div className="mb-8">
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Returns Policy</h1>
+          <p className="text-gray-700">To return an order, please contact us. We currently process returns manually via our support team.</p>
+          <div className="mt-4 flex gap-3">
+            <Link href="/contact" className="inline-flex items-center px-5 py-2.5 bg-primary text-white rounded-lg hover:opacity-90 transition-colors text-sm font-semibold">
+              Contact Us
+            </Link>
+            <a href="mailto:storemanager.faxio@gmail.com" className="inline-flex items-center px-5 py-2.5 border border-gray-300 text-gray-800 rounded-lg hover:bg-gray-50 transition-colors text-sm font-semibold">
+              Email Support
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Mock returns data
   const returns = [
@@ -190,8 +211,16 @@ export default function ReturnsPage() {
     <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Returns & Exchanges</h1>
-        <p className="text-gray-600">Manage your return and exchange requests</p>
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Returns Policy</h1>
+        <p className="text-gray-700">To return an order, please contact us. We currently process returns manually via our support team.</p>
+        <div className="mt-4 flex gap-3">
+          <Link href="/contact" className="inline-flex items-center px-5 py-2.5 bg-primary text-white rounded-lg hover:opacity-90 transition-colors text-sm font-semibold">
+            Contact Us
+          </Link>
+          <a href="mailto:storemanager.faxio@gmail.com" className="inline-flex items-center px-5 py-2.5 border border-gray-300 text-gray-800 rounded-lg hover:bg-gray-50 transition-colors text-sm font-semibold">
+            Email Support
+          </a>
+        </div>
       </div>
 
       {/* Tabs */}

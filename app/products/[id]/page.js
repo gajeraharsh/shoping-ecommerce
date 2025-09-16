@@ -42,7 +42,7 @@ export async function generateMetadata({ params }) {
         url,
         type: 'website',
         siteName: 'Faxio',
-        locale: 'en_US',
+        locale: 'en_IN',
         images: ogImages.map((src) => ({ url: src })),
       },
       twitter: {

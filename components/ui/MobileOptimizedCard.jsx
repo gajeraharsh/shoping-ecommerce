@@ -113,7 +113,7 @@ export default function MobileOptimizedCard({ product, className = '' }) {
         <div className="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1">
           <div className="flex items-center gap-1">
             <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-            <span>Free shipping & returns</span>
+            <span>Free Shipping & Returns</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="w-2 h-2 bg-blue-500 rounded-full"></span>

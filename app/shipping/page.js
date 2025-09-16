@@ -3,43 +3,35 @@ import { Truck, Clock, MapPin, Package } from 'lucide-react';
 export default function ShippingPage() {
   const shippingOptions = [
     {
-      name: 'Standard Shipping',
-      time: '5-7 business days',
-      cost: '₹5.99',
-      description: 'Reliable delivery for everyday orders',
+      name: 'Standard Delivery',
+      time: '7-10 days',
+      cost: 'FREE',
+      description: 'Reliable delivery for everyday orders – now free',
       icon: Truck
     },
     {
-      name: 'Express Shipping',
-      time: '2-3 business days',
-      cost: '₹12.99',
-      description: 'Faster delivery when you need it sooner',
+      name: 'Priority Delivery',
+      time: '7-10 days',
+      cost: 'FREE',
+      description: 'Estimated delivery across India within 7-10 days',
       icon: Clock
     },
     {
-      name: 'Overnight Shipping',
-      time: '1 business day',
-      cost: '₹24.99',
-      description: 'Next-day delivery for urgent orders',
+      name: 'Assured Delivery',
+      time: '7-10 days',
+      cost: 'FREE',
+      description: 'Consistent delivery timelines across India',
       icon: Package
     },
     {
       name: 'Free Shipping',
-      time: '5-7 business days',
+      time: '7-10 days',
       cost: 'FREE',
-      description: 'On orders over ₹75',
+      description: 'Free shipping across India',
       icon: MapPin
     }
   ];
 
-  const internationalRates = [
-    { region: 'Canada', time: '7-10 business days', cost: '₹15.99' },
-    { region: 'United Kingdom', time: '10-14 business days', cost: '₹19.99' },
-    { region: 'European Union', time: '10-14 business days', cost: '₹22.99' },
-    { region: 'Australia & New Zealand', time: '12-16 business days', cost: '₹25.99' },
-    { region: 'Asia', time: '14-21 business days', cost: '₹28.99' },
-    { region: 'Other Countries', time: '14-21 business days', cost: '₹32.99' }
-  ];
 
   return (
     <div className="min-h-screen">
@@ -47,15 +39,15 @@ export default function ShippingPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Shipping Information</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Free Shipping Across India</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We offer multiple shipping options to get your fashion favorites to you quickly and safely.
+            Enjoy free shipping on all orders across India. Delivery timelines vary by destination and service speed.
           </p>
         </div>
 
-        {/* Domestic Shipping Options */}
+        {/* Shipping Options */}
         <div className="mb-16">
-          <h2 className="text-2xl font-semibold mb-8">Domestic Shipping (United States)</h2>
+          <h2 className="text-2xl font-semibold mb-8">Shipping Options (All Free)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {shippingOptions.map((option, index) => (
               <div key={index} className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
@@ -73,33 +65,7 @@ export default function ShippingPage() {
           </div>
         </div>
 
-        {/* International Shipping */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-semibold mb-8">International Shipping</h2>
-          <div className="bg-gray-50 rounded-lg p-6 mb-6">
-            <p className="text-gray-600 mb-4">
-              We're proud to ship to customers worldwide! International shipping rates vary by destination.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {internationalRates.map((rate, index) => (
-                <div key={index} className="bg-white rounded-lg p-4 border">
-                  <h3 className="font-semibold text-gray-900 mb-2">{rate.region}</h3>
-                  <div className="text-primary font-semibold">{rate.cost}</div>
-                  <div className="text-sm text-gray-600">{rate.time}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-900 mb-2">Important Notes for International Orders:</h3>
-            <ul className="text-sm text-blue-800 space-y-1">
-              <li>• Additional duties and taxes may apply upon delivery</li>
-              <li>• Delivery times may vary due to customs processing</li>
-              <li>• Free shipping promotions apply to domestic orders only</li>
-            </ul>
-          </div>
-        </div>
+        {/* International Shipping - Removed for India-only site */}
 
         {/* Processing and Handling */}
         <div className="mb-16">
@@ -110,11 +76,11 @@ export default function ShippingPage() {
               <ul className="space-y-2 text-gray-600">
                 <li className="flex items-start">
                   <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  Orders placed before 2 PM EST ship the same business day
+                  Orders placed before 2 PM IST ship the same business day
                 </li>
                 <li className="flex items-start">
                   <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  Orders placed after 2 PM EST ship the next business day
+                  Orders placed after 2 PM IST ship the next business day
                 </li>
                 <li className="flex items-start">
                   <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>

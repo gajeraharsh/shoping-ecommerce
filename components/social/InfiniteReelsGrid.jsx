@@ -393,16 +393,16 @@ export default function InfiniteReelsGrid({
                 ) : null}
 
                 {/* actions */}
-                <div className="absolute right-2 bottom-20 flex flex-col items-center gap-3 text-white z-[2]">
+                <div className="absolute right-2 bottom-2 sm:bottom-3 md:bottom-4 lg:bottom-5 xl:bottom-6 flex flex-col items-center gap-2 sm:gap-3 text-white z-[2]">
                   <button
-                    className={`h-9 w-9 rounded-full grid place-items-center shadow border ${it.is_like ? 'bg-red-500 border-red-500' : 'bg-white/10 hover:bg-white/20 border-white/20'}`}
+                    className={`h-8 w-8 sm:h-9 sm:w-9 rounded-full grid place-items-center shadow border ${it.is_like ? 'bg-red-500 border-red-500' : 'bg-white/10 hover:bg-white/20 border-white/20'}`}
                     onClick={(e) => handleLike(e, it)}
                     aria-label="Like"
                   >
                     <Heart size={16} className={it.is_like ? 'fill-white text-white' : ''} />
                   </button>
                   <button
-                    className="h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 grid place-items-center shadow"
+                    className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 grid place-items-center shadow"
                     onClick={(e) => handleShare(e, it)}
                     aria-label="Share"
                   >
@@ -411,7 +411,7 @@ export default function InfiniteReelsGrid({
                 </div>
 
                 {/* caption */}
-                <div className="absolute left-3 bottom-3 right-16 text-white z-[2]">
+                <div className="absolute left-2 sm:left-3 bottom-2 sm:bottom-3 right-14 sm:right-16 text-white z-[2]">
                   <div className="text-xs font-medium truncate">{it?.name || "Reel"}</div>
                   {renderTags(it) ? <div className="text-[10px] opacity-80 line-clamp-1">{renderTags(it)}</div> : null}
                 </div>

@@ -85,7 +85,7 @@ export default function VideoReelGrid({ title = 'Style Stories', filters = {}, l
   const handleShare = (e, it) => {
     e?.stopPropagation?.()
     const base = typeof window !== 'undefined' ? window.location.origin : ''
-    const url = `${base}/reels?reel=${encodeURIComponent(it?.id || '')}`
+    const url = `${base}/trendzs?reel=${encodeURIComponent(it?.id || '')}`
     setShareUrl(url)
     setShareOpen(true)
   }

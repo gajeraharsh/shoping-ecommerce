@@ -5,6 +5,7 @@ import categoryReducer from '@/features/category/categorySlice'
 import authReducer from '@/features/auth/authSlice'
 import cartReducer from '@/features/cart/cartSlice'
 import { setDispatcher } from '@/services/config/dispatcher'
+import collectionReducer from '@/features/collection/collectionSlice'
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     category: categoryReducer,
     auth: authReducer,
     cart: cartReducer,
+    collection: collectionReducer,
   },
   // add middleware customization if needed
 })

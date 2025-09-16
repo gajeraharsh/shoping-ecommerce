@@ -28,7 +28,7 @@ export const metadata = {
     title: 'Faxio - Premium Fashion & Style',
     description: 'Discover exceptional fashion pieces that blend timeless style with contemporary flair.',
     type: 'website',
-    locale: 'en_US',
+    locale: 'en_IN',
     siteName: 'Faxio',
   },
   twitter: {

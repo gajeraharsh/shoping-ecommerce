@@ -75,21 +75,21 @@ export default function Hero() {
 
   const testimonials = useMemo(() => [
     {
-      quote: "Absolutely stunning quality and the perfect fit. The attention to detail is remarkable.",
-      author: "Sarah Chen",
-      role: "Fashion Enthusiast",
-      rating: 5
-    },
-    {
-      quote: "Finally found a brand that understands elegance. Every piece feels like it was made just for me.",
+      quote: "Loved the fit of the Anarkali kurti — lightweight, elegant, and perfect for festive evenings.",
       author: "Priya Sharma",
-      role: "Working Professional",
+      role: "Software Engineer",
       rating: 5
     },
     {
-      quote: "The craftsmanship is exceptional. These pieces have become staples in my wardrobe.",
-      author: "Emma Thompson",
-      role: "Style Blogger",
+      quote: "The cotton straight-cut kurti is ideal for daily wear in Mumbai heat. Neat stitching and true to size!",
+      author: "Aishwarya Iyer",
+      role: "Teacher",
+      rating: 5
+    },
+    {
+      quote: "The rayon A-line kurti drapes beautifully — minimal yet classy. Received so many compliments at a family function.",
+      author: "Neha Verma",
+      role: "Marketing Manager",
       rating: 5
     }
   ], []);
