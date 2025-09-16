@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { submitContact } from '@/services/modules/contact/contactService'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -22,13 +23,15 @@ export default function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      await submitContact(formData)
+      // On success, reset form; toasts are handled by interceptors
+      setFormData({ name: '', email: '', subject: '', message: '' })
+    } catch (err) {
+      // Errors are auto-toasted by interceptor, no need to do anything here
+    } finally {
       setIsSubmitting(false);
-      alert('Thank you for your message! We\'ll get back to you soon.');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 1000);
+    }
   };
 
   return (

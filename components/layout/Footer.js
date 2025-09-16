@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Instagram, Twitter, Facebook, Mail, Phone, MapPin, ArrowRight, Shield, Award } from 'lucide-react';
+import FooterNewsletterForm from '@/components/layout/FooterNewsletterForm';
 import { BRAND, getSocialLinks, getContactInfo, getTrustIndicators } from '@/lib/brand';
 import PaymentLogos from '@/components/common/PaymentLogos';
 
@@ -18,15 +19,7 @@ export default function Footer() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                className="flex-1 px-4 py-3 sm:px-6 sm:py-4 bg-gray-800 border border-gray-700 rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent text-sm sm:text-base min-h-[48px]"
-              />
-              <button className="bg-white text-black px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center group touch-manipulation min-h-[48px] text-sm sm:text-base">
-                Subscribe
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+              <FooterNewsletterForm />
             </div>
           </div>
         </div>

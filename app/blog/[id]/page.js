@@ -1,5 +1,6 @@
 import BlogImage from '@/components/blog/BlogImage';
 import { Calendar, Clock, Heart, MessageCircle, Share2, BookOpen, Tag, ArrowLeft } from 'lucide-react';
+import BlogSidebarNewsletterForm from '@/components/blog/BlogSidebarNewsletterForm';
 import { getBlogById } from '@/services/modules/blog/blogService';
 import { notFound } from 'next/navigation';
 import RelatedBlogsClient from '@/components/blog/RelatedBlogsClient';
@@ -381,16 +382,7 @@ export default async function BlogPostPage({ params }) {
                   <p className="text-gray-200 text-sm mb-4">
                     Get the latest fashion tips and trends delivered to your inbox
                   </p>
-                  <form className="space-y-3">
-                    <input 
-                      type="email" 
-                      placeholder="Your email address"
-                      className="w-full px-4 py-2 rounded-lg text-gray-900 bg-white/90 focus:bg-white focus:outline-none focus:ring-2 focus:ring-white/50"
-                    />
-                    <button className="w-full bg-white text-gray-900 py-2 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
-                      Subscribe
-                    </button>
-                  </form>
+                  <BlogSidebarNewsletterForm />
                 </div>
               </div>
             </div>

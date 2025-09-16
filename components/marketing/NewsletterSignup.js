@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Mail, Gift, Star, CheckCircle, X } from 'lucide-react';
+import { subscribeNewsletter } from '@/services/modules/newsletter/newsletterService'
 
 export default function NewsletterSignup({ variant = 'default', onClose }) {
   const [email, setEmail] = useState('');
@@ -13,20 +14,27 @@ export default function NewsletterSignup({ variant = 'default', onClose }) {
     if (!email.trim()) return;
 
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSubscribed(true);
-      setEmail('');
-      
+    try {
+      await subscribeNewsletter(email)
+      setIsSubscribed(true)
+      setEmail('')
       // Close popup after success if it's a popup variant
       if (variant === 'popup' && onClose) {
-        setTimeout(() => {
-          onClose();
-        }, 2000);
+        setTimeout(() => onClose(), 2000)
       }
-    }, 1000);
+    } catch (err) {
+      const msg = err?.response?.data?.message || err?.message || ''
+      // Treat duplicates as success UX
+      if (/unique|already|exists|duplicate/i.test(msg)) {
+        setIsSubscribed(true)
+      } else {
+        // Optionally we could show an inline error state; for simplicity, keep UX calm
+        // eslint-disable-next-line no-console
+        console.error('Newsletter subscribe failed:', msg)
+      }
+    } finally {
+      setIsLoading(false)
+    }
   };
 
   const benefits = [

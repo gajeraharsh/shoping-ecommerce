@@ -33,6 +33,12 @@ export const ENDPOINTS = {
   REVIEW: {
     CREATE: '/reviews',
   },
+  CONTACT: {
+    SUBMIT: '/contact',
+  },
+  NEWSLETTER: {
+    SUBSCRIBE: '/newsletter',
+  },
   WISHLIST: {
     LIST: '/wishlist',
     ADD: '/wishlist',
