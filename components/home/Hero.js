@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import SmartImage from '@/components/ui/SmartImage';
@@ -50,6 +50,7 @@ export default function Hero() {
       link: "/products?q=casual"
     }
   ], []);
+ 
 
   const categories = useMemo(() => [
     {
@@ -95,7 +96,7 @@ export default function Hero() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Hero Slider */}
+      {/* Hero Slider - now image-only (no overlay text/buttons) */}
       <section className="relative h-[60vh] safe-area-top">
         <Swiper
           modules={[Autoplay, EffectFade, Pagination]}
@@ -119,8 +120,6 @@ export default function Hero() {
           {heroSlides.map((slide) => (
             <SwiperSlide key={slide.id}>
               <div className="relative h-full">
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent z-10"></div>
                 <div className="absolute inset-0">
                   <picture>
                     <source media="(max-width: 767px)" srcSet={slide.imageMobile || slide.image} />
@@ -131,45 +130,6 @@ export default function Hero() {
                     />
                   </picture>
                 </div>
-                
-                <div className="absolute inset-0 z-20 flex items-center safe-area-bottom">
-                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                    <div className="max-w-2xl text-center sm:text-left">
-                      <div className="space-y-1 mb-6 sm:mb-8">
-                        <p className="text-white/70 text-xs sm:text-sm font-light tracking-[0.2em] uppercase opacity-90">
-                          {slide.subtitle}
-                        </p>
-                        <div className="w-12 h-px bg-white/30 mt-2"></div>
-                      </div>
-                      <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-white mb-6 sm:mb-8 leading-[0.9] tracking-[-0.02em] px-2 sm:px-0">
-                        <span className="font-extralight italic text-white/90">{slide.title.split(' ')[0]}</span>
-                        <br />
-                        <span className="font-bold">{slide.title.split(' ').slice(1).join(' ')}</span>
-                      </h1>
-                      <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-white/80 mb-8 sm:mb-12 leading-relaxed max-w-2xl mx-auto sm:mx-0 px-2 sm:px-0 font-light">
-                        {slide.description}
-                      </p>
-                      <div className="px-2 sm:px-0">
-                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                          <Link
-                            href={slide.link}
-                            className="relative inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium hover:bg-white/20 hover:border-white/30 transition-colors duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base overflow-hidden"
-                          >
-                            <span className="relative z-10">{slide.cta}</span>
-                            <ArrowRight className="ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300 relative z-10" />
-                          </Link>
-                          <Link
-                            href="/about"
-                            className="inline-flex items-center text-white/80 hover:text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-medium border border-white/10 hover:border-white/30 transition-colors duration-300 group touch-manipulation min-h-[48px] text-sm sm:text-base"
-                          >
-                            <span>Learn More</span>
-                            <ArrowRight className="ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </SwiperSlide>
           ))}
@@ -178,25 +138,25 @@ export default function Hero() {
         {/* Custom Pagination Styles */}
         <style jsx global>{`
           .swiper-pagination {
-            bottom: 60px !important;
-            left: 20px !important;
-            width: auto !important;
-            text-align: left !important;
+            bottom: 16px !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            text-align: center !important;
           }
           @media (min-width: 640px) {
             .swiper-pagination {
-              left: 48px !important;
-              bottom: 40px !important;
+              bottom: 20px !important;
             }
           }
           @media (max-width: 374px) {
             .swiper-pagination {
-              left: 16px !important;
-              bottom: 80px !important;
+              bottom: 12px !important;
             }
           }
         `}</style>
       </section>
+
 
       {/* Featured Categories */}
       {/* <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">
