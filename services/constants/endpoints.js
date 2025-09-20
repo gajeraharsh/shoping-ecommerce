@@ -15,6 +15,11 @@ export const ENDPOINTS = {
     CREATE: '/product-categories',
     DETAILS: (idOrHandle) => `/product-categories/${idOrHandle}`,
   },
+  COLLECTION: {
+    // Medusa Store API for product collections
+    LIST: '/collections',
+    DETAILS: (idOrHandle) => `/collections/${idOrHandle}`,
+  },
   PRODUCT: {
     LIST: '/products',
     DETAILS: (id) => `/products/${id}`,
@@ -32,6 +37,12 @@ export const ENDPOINTS = {
   },
   REVIEW: {
     CREATE: '/reviews',
+  },
+  CONTACT: {
+    SUBMIT: '/contact',
+  },
+  NEWSLETTER: {
+    SUBSCRIBE: '/newsletter',
   },
   WISHLIST: {
     LIST: '/wishlist',

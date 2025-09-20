@@ -1,4 +1,5 @@
 import { User, Phone, Check } from 'lucide-react';
+import StateSelect from '../../forms/StateSelect';
 
 export default function InlineAddressForm({
   formData,
@@ -152,19 +153,13 @@ export default function InlineAddressForm({
 
         <div>
           <label htmlFor="state" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">State *</label>
-          <input
-            type="text"
+          <StateSelect
+            id="state"
             name="state"
             value={formData.state}
             onChange={onChange}
-            id="state"
-            autoComplete="address-level1"
-            aria-invalid={!!inlineErrors.state}
-            aria-describedby={inlineErrors.state ? 'error-state' : undefined}
-            className={`w-full px-4 py-3 min-h-[48px] border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 focus:ring-offset-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
-              inlineErrors.state ? 'border-red-400 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'
-            }`}
-            placeholder="Maharashtra"
+            error={inlineErrors.state}
+            placeholder="Select State"
           />
           {inlineErrors.state && (
             <p id="error-state" role="alert" className="mt-1.5 text-xs text-red-600 dark:text-red-400">{inlineErrors.state}</p>

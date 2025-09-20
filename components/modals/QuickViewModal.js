@@ -403,8 +403,8 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                     <Truck className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <div className="font-bold text-sm text-green-800 dark:text-green-200">Free Express Delivery</div>
-                    <div className="text-xs text-green-600 dark:text-green-300">On orders over ₹{BRAND.features.shipping.free}</div>
+                    <div className="font-bold text-sm text-green-800 dark:text-green-200">Estimated Delivery (India)</div>
+                    <div className="text-xs text-green-600 dark:text-green-300">7-10 days. Free on orders over ₹{BRAND.features.shipping.free}</div>
                   </div>
                 </div>
                 

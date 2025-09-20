@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { submitContact } from '@/services/modules/contact/contactService'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -22,13 +23,15 @@ export default function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      await submitContact(formData)
+      // On success, reset form; toasts are handled by interceptors
+      setFormData({ name: '', email: '', subject: '', message: '' })
+    } catch (err) {
+      // Errors are auto-toasted by interceptor, no need to do anything here
+    } finally {
       setIsSubmitting(false);
-      alert('Thank you for your message! We\'ll get back to you soon.');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 1000);
+    }
   };
 
   return (
@@ -192,7 +195,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What are your shipping options?</h3>
-              <p className="text-gray-600 dark:text-gray-300">We offer standard, express, and overnight shipping options. Free shipping on orders over ₹75.</p>
+              <p className="text-gray-600 dark:text-gray-300">We deliver across India in 7-10 days. Free Shipping Across India.</p>
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">What is your return policy?</h3>
@@ -200,7 +203,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Do you ship internationally?</h3>
-              <p className="text-gray-600 dark:text-gray-300">Yes, we ship to most countries worldwide. International shipping rates apply.</p>
+              <p className="text-gray-600 dark:text-gray-300">We currently ship across India only.</p>
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">How can I track my order?</h3>

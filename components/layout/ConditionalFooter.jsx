@@ -6,8 +6,8 @@ import Footer from "@/components/layout/Footer";
 export default function ConditionalFooter() {
   const pathname = usePathname() || "";
 
-  // Hide footer on checkout, account, and reels pages
-  const hide = pathname.startsWith("/checkout") || pathname.startsWith("/account") || pathname.startsWith("/reels");
+  // Hide footer on checkout, account, and Trendzs pages
+  const hide = pathname.startsWith("/checkout") || pathname.startsWith("/account") || pathname.startsWith("/trendzs");
 
   if (hide) return null;
   return <Footer />;

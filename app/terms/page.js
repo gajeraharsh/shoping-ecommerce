@@ -57,11 +57,11 @@ export default function TermsPage() {
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">1. Acceptance of Terms</h2>
               <div className="space-y-4 text-gray-600">
                 <p>
-                  By accessing and using the Fashionista website and services, you accept and agree to be bound by the 
+                  By accessing and using the Faxio website and services, you accept and agree to be bound by the 
                   terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
                 </p>
                 <p>
-                  These terms constitute a legally binding agreement between you and Fashionista. We reserve the right to 
+                  These terms constitute a legally binding agreement between you and Faxio. We reserve the right to 
                   change these terms at any time, and such changes will be effective immediately upon posting.
                 </p>
               </div>
@@ -194,7 +194,7 @@ export default function TermsPage() {
               <div className="space-y-4 text-gray-600">
                 <p>
                   The service and its original content, features, and functionality are and will remain the exclusive property 
-                  of Fashionista and its licensors. The service is protected by copyright, trademark, and other laws.
+                  of Faxio and its licensors. The service is protected by copyright, trademark, and other laws.
                 </p>
                 <p>
                   You may not reproduce, distribute, modify, create derivative works of, publicly display, publicly perform, 
@@ -237,7 +237,7 @@ export default function TermsPage() {
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">10. Limitation of Liability</h2>
               <div className="space-y-4 text-gray-600">
                 <p>
-                  In no event shall Fashionista, nor its directors, employees, partners, agents, suppliers, or affiliates, 
+                  In no event shall Faxio, nor its directors, employees, partners, agents, suppliers, or affiliates, 
                   be liable for any indirect, incidental, special, consequential, or punitive damages, including without 
                   limitation, loss of profits, data, use, goodwill, or other intangible losses.
                 </p>
@@ -252,7 +252,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">11. Indemnification</h2>
               <p className="text-gray-600">
-                You agree to defend, indemnify, and hold harmless Fashionista and its licensee and licensors, and their 
+                You agree to defend, indemnify, and hold harmless Faxio and its licensee and licensors, and their 
                 employees, contractors, agents, officers and directors, from and against any and all claims, damages, 
                 obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees).
               </p>
@@ -278,9 +278,9 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">13. Governing Law</h2>
               <p className="text-gray-600">
-                These terms shall be interpreted and enforced in accordance with the laws of the State of New York, 
+                These terms shall be interpreted and enforced in accordance with the laws of India, and specifically the State of Gujarat, 
                 without regard to conflict of law provisions. Any disputes arising from these terms will be resolved 
-                in the courts of New York.
+                in the courts of Ahmedabad, Gujarat, India.
               </p>
             </section>
 
@@ -300,9 +300,9 @@ export default function TermsPage() {
                 If you have any questions about these Terms of Service, please contact us:
               </p>
               <div className="space-y-2 text-gray-600">
-                <p><strong>Email:</strong> legal@fashionista.com</p>
-                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                <p><strong>Mail:</strong> Fashionista Legal Department, 123 Fashion Street, New York, NY 10001</p>
+                <p><strong>Email:</strong> storemanager.faxio@gmail.com</p>
+                <p><strong>Phone:</strong> +91 7801959924</p>
+                <p><strong>Mail:</strong> A/10 Harikrishan Socity Ahmedabad Thakkarnagar<br/>Gujarat, India</p>
               </div>
             </section>
           </div>

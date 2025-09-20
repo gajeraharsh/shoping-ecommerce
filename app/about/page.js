@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, Award, Truck, Shield, Users, Star } from 'lucide-react';
+import { Heart, Award, Shield, Users } from 'lucide-react';
 import PageHero from '@/components/common/PageHero';
 import SectionHeading from '@/components/common/SectionHeading';
 import GlassCard from '@/components/common/GlassCard';
@@ -76,7 +76,7 @@ export default function AboutPage() {
         ctas={[{ label: 'Shop Collections', href: '/products' }, { label: 'Contact Us', href: '/contact', variant: 'outline' }]}
       />
 
-      <div className="container-fluid section-padding">
+      <div className="container-fluid section-padding max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Story Section */}
         <div className="mb-16" ref={storyRef}>
@@ -103,15 +103,15 @@ export default function AboutPage() {
             <GlassCard className="p-8 text-center">
               <div className="space-y-6">
                 <div>
-                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">1M+</div>
+                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 text-accent">1M+</div>
                   <div className="text-gray-600 dark:text-gray-400">Happy Customers</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">50+</div>
+                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 text-accent">50+</div>
                   <div className="text-gray-600 dark:text-gray-400">Countries Served</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">10K+</div>
+                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2 text-accent">10K+</div>
                   <div className="text-gray-600 dark:text-gray-400">Products Available</div>
                 </div>
               </div>
@@ -122,11 +122,11 @@ export default function AboutPage() {
         {/* Values Section */}
         <div className="mb-16" ref={valuesRef}>
           <SectionHeading title="Our Values" align="center" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
             {values.map((value, index) => (
-              <GlassCard key={index} className="text-center p-6">
-                <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4 bg-gray-50/60 dark:bg-gray-800/60">
-                  <value.icon className="h-8 w-8 text-gray-700 dark:text-gray-300" />
+              <GlassCard key={index} className="text-center p-6 h-full">
+                <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4 bg-accent/10 dark:bg-accent/20">
+                  <value.icon className="h-8 w-8 text-accent" />
                 </div>
                 <h3 className="heading-sm text-gray-900 dark:text-white mb-2">{value.title}</h3>
                 <p className="body-base text-fade">{value.description}</p>
@@ -140,7 +140,7 @@ export default function AboutPage() {
           <SectionHeading title="Our Journey" />
           <div className="max-w-4xl mx-auto">
             <div className="relative">
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gray-200/70 dark:bg-gray-700/70"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-accent/20"></div>
               {milestones.map((milestone, index) => (
                 <div key={index} className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
                   <div className={`w-full max-w-md ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
@@ -150,7 +150,7 @@ export default function AboutPage() {
                       <p className="body-base text-fade">{milestone.description}</p>
                     </GlassCard>
                   </div>
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gray-900 dark:bg-white rounded-full border-4 border-white dark:border-gray-900"></div>
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-accent rounded-full border-4 border-white dark:border-gray-900"></div>
                 </div>
               ))}
             </div>
@@ -160,9 +160,9 @@ export default function AboutPage() {
         {/* Team Section */}
         <div className="mb-16" ref={teamRef}>
           <SectionHeading title="Meet Our Team" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
             {team.map((member, index) => (
-              <GlassCard key={index} className="text-center p-6">
+              <GlassCard key={index} className="text-center p-6 h-full flex flex-col">
                 <div className="w-40 h-40 sm:w-48 sm:h-48 bg-gray-100 dark:bg-gray-800 rounded-full mx-auto mb-6 overflow-hidden flex items-center justify-center">
                   <div className="text-5xl sm:text-6xl">👤</div>
                 </div>
@@ -175,7 +175,7 @@ export default function AboutPage() {
         </div>
 
         {/* Mission Statement */}
-        <div className="bg-black dark:bg-white rounded-2xl p-12 text-center text-white dark:text-black">
+        <div className="bg-black/95 dark:bg-white rounded-2xl p-12 text-center text-white dark:text-black border border-accent/30">
           <h2 className="heading-lg mb-6">Our Mission</h2>
           <p className="body-lg max-w-4xl mx-auto">
             To empower individuals to express their unique style through accessible, high-quality fashion 

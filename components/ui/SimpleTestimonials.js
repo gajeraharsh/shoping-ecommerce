@@ -5,26 +5,26 @@ import { Star, CheckCircle } from 'lucide-react';
 export default function SimpleTestimonials({ className = '' }) {
   const testimonials = [
     {
-      quote: "Absolutely stunning quality and the perfect fit. Every piece feels luxurious and well-crafted. I've ordered 5 times now!",
-      author: "Sarah Chen",
-      role: "Fashion Enthusiast",
-      location: "Mumbai, India",
-      rating: 5,
-      verified: true
-    },
-    {
-      quote: "Finally found a brand that understands elegance. The attention to detail is remarkable and shipping was super fast.",
+      quote: "Loved the fit and flare of the Anarkali kurti — airy, elegant, and perfect for festive dinners. The fabric feels premium and doesn’t bleed after wash.",
       author: "Priya Sharma",
-      role: "Working Professional", 
+      role: "Software Engineer",
       location: "Delhi, India",
       rating: 5,
       verified: true
     },
     {
-      quote: "These pieces have become staples in my wardrobe. The designs are timeless and sophisticated. Great customer service too!",
-      author: "Emma Thompson",
-      role: "Style Blogger",
-      location: "Bangalore, India", 
+      quote: "Your cotton straight‑cut kurti is my daily go‑to. Breathable for Mumbai heat and the stitching is neat. True to size and very comfortable.",
+      author: "Aishwarya Iyer",
+      role: "Teacher",
+      location: "Mumbai, India",
+      rating: 5,
+      verified: true
+    },
+    {
+      quote: "The rayon A‑line kurti drapes beautifully. Minimal yet classy — paired it with oxidised jhumkas and got so many compliments!",
+      author: "Neha Verma",
+      role: "Marketing Manager",
+      location: "Bengaluru, India",
       rating: 5,
       verified: true
     }
@@ -41,14 +41,14 @@ export default function SimpleTestimonials({ className = '' }) {
         </p>
         <div className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
           <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 text-yellow-400 fill-current" />
+            <Star className="h-4 w-4 text-gray-900 dark:text-white fill-current" />
             <span className="font-semibold">4.8/5</span>
           </div>
           <span>•</span>
           <span>Based on 2,847 reviews</span>
           <span>•</span>
           <div className="flex items-center gap-1">
-            <CheckCircle className="h-4 w-4 text-green-600" />
+            <CheckCircle className="h-4 w-4 text-gray-700 dark:text-gray-300" />
             <span>All verified purchases</span>
           </div>
         </div>
@@ -59,12 +59,12 @@ export default function SimpleTestimonials({ className = '' }) {
           <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center mb-4">
               {Array.from({ length: testimonial.rating }).map((_, i) => (
-                <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                <Star key={i} className="w-4 h-4 text-gray-900 dark:text-white fill-current" />
               ))}
               {testimonial.verified && (
                 <div className="ml-2 flex items-center gap-1">
-                  <CheckCircle className="h-3 w-3 text-green-600" />
-                  <span className="text-xs text-green-600 font-medium">Verified</span>
+                  <CheckCircle className="h-3 w-3 text-gray-700 dark:text-gray-300" />
+                  <span className="text-xs text-gray-700 dark:text-gray-300 font-medium">Verified</span>
                 </div>
               )}
             </div>
@@ -84,8 +84,8 @@ export default function SimpleTestimonials({ className = '' }) {
                 <p className="text-gray-500 dark:text-gray-400 text-xs">
                   {testimonial.role} • {testimonial.location}
                 </p>
-                <p className="text-green-600 text-xs font-medium">
-                  Verified Purchase - November 2024
+                <p className="text-gray-600 dark:text-gray-300 text-xs font-medium">
+                  Verified Purchase - September 2025
                 </p>
               </div>
             </div>
@@ -94,7 +94,7 @@ export default function SimpleTestimonials({ className = '' }) {
       </div>
 
       <div className="text-center mt-8">
-        <span className="text-blue-600 font-medium text-sm">
+        <span className="text-gray-900 dark:text-white font-medium text-sm underline underline-offset-4">
           Read all 2,847 reviews
         </span>
       </div>

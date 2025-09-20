@@ -35,11 +35,11 @@ export default function TrustFAQ({ className = '' }) {
       faqs: [
         {
           question: 'How fast do you ship?',
-          answer: 'Orders placed before 2 PM are shipped the same day. We offer free standard shipping (3-5 days), express shipping (1-2 days), and next-day delivery options to most locations.'
+          answer: 'Typical delivery time is 7-10 days across India.'
         },
         {
           question: 'Do you ship internationally?',
-          answer: 'Yes, we ship to over 50 countries worldwide. International shipping typically takes 7-14 business days with full tracking provided.'
+          answer: 'We currently ship across India only.'
         },
         {
           question: 'What if my package is lost?',
@@ -79,7 +79,7 @@ export default function TrustFAQ({ className = '' }) {
         },
         {
           question: 'Are there any hidden fees?',
-          answer: 'Never. The price you see is the price you pay. Free shipping on orders over ₹2,999, no hidden charges, and transparent pricing always.'
+          answer: 'Never. The price you see is the price you pay. Free Shipping Across India, no hidden charges, and transparent pricing always.'
         },
         {
           question: 'Is it safe to save my payment information?',

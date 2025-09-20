@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { Mail } from 'lucide-react';
+import { subscribeNewsletter } from '@/services/modules/newsletter/newsletterService'
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
@@ -18,13 +19,21 @@ export default function Newsletter() {
     }
 
     setLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      showToast('Successfully subscribed to newsletter!', 'success');
+    try {
+      await subscribeNewsletter(email)
+      showToast('You are subscribed to the newsletter!', 'success');
       setEmail('');
+    } catch (err) {
+      // Treat duplicates or other non-fatal errors as soft success
+      const msg = err?.response?.data?.message || err?.message || 'Subscription failed'
+      if (/unique|already|exists|duplicate/i.test(msg)) {
+        showToast('You are already subscribed.', 'info')
+      } else {
+        showToast(msg, 'error')
+      }
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (

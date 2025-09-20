@@ -270,7 +270,7 @@ export default function SizeGuidePage() {
               Contact Support
             </a>
             <a
-              href="mailto:sizing@fashionista.com"
+              href="mailto:storemanager.faxio@gmail.com"
               className="inline-flex items-center px-6 py-3 border border-white text-white rounded-lg hover:bg-white hover:text-primary transition-colors font-semibold"
             >
               Email Sizing Team

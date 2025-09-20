@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react';
+import { codeToName } from '@/utils/state';
 
 export default function AddressBookSection({
   addresses = [],
@@ -68,7 +69,7 @@ export default function AddressBookSection({
                     {address.street}{address.landmark ? `, Near ${address.landmark}` : ''}
                   </div>
                   <div className="text-sm text-gray-600">
-                    {address.city}, {address.state} - {address.pincode}
+                    {address.city}, {codeToName(address.state) || address.state} - {address.pincode}
                   </div>
                 </div>
               </div>

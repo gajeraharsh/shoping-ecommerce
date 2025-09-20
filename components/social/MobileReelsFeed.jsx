@@ -17,7 +17,7 @@ import ShareModal from '@/components/social/ShareModal'
  * - Proper skeletons on initial and incremental loads
  */
 export default function MobileReelsFeed({
-  title = "Reels",
+  title = "Trendzs",
   filters = { type: "video" },
   pageSize = 10,
   order = "-created_at",
@@ -361,7 +361,7 @@ export default function MobileReelsFeed({
 
   const handleShare = (it) => {
     const base = typeof window !== 'undefined' ? window.location.origin : ''
-    const url = `${base}/reels?reel=${encodeURIComponent(it?.id || '')}`
+    const url = `${base}/trendzs?reel=${encodeURIComponent(it?.id || '')}`
     modal.open({
       type: MODAL_TYPES.CUSTOM,
       props: {
@@ -422,14 +422,14 @@ export default function MobileReelsFeed({
                 {isVideo(it) && it?.video_url ? (
                   <video
                     src={it.video_url}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain bg-black"
                     controls={false}
                     playsInline
                     loop
                     muted={muted}
                   />
                 ) : (
-                  <SmartImage src={it?.thumbnail_url} alt={it?.name || 'Reel'} className="h-full w-full object-cover" />
+                  <SmartImage src={it?.thumbnail_url} alt={it?.name || 'Reel'} className="h-full w-full object-contain bg-black" />
                 )}
 
                 {/* gradient */}

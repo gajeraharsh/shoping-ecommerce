@@ -5,6 +5,16 @@ export default function robots() {
       {
         userAgent: '*',
         allow: '/',
+        disallow: [
+          '/auth/',
+          '/account/',
+          '/checkout',
+          '/cart',
+          '/order-confirmation',
+          '/api/',
+          '/_next/',
+          '/search?*',
+        ],
       },
     ],
     sitemap: `${base}/sitemap.xml`,

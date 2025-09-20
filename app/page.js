@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import HomeNewsletterForm from '@/components/home/HomeNewsletterForm';
 import SmartImage from '@/components/ui/SmartImage';
 import Hero from '@/components/home/Hero';
 import Categories from '@/components/home/Categories';
@@ -94,7 +95,10 @@ export default function Home() {
         <section className="py-12 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* <SimpleTestimonials /> */}
-            <Categories />
+
+            <div className="mt-12">
+              <Categories />
+            </div>
 
           </div>
         </section>
@@ -118,15 +122,7 @@ export default function Home() {
                   Be the first to know about new collections, exclusive offers, and styling tips
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 max-w-xl mx-auto">
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="flex-1 px-6 py-4 sm:px-8 sm:py-5 rounded-full text-black bg-white/95 backdrop-blur-sm border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white text-sm sm:text-base min-h-[48px] touch-manipulation font-medium placeholder:text-gray-500"
-                  />
-                  <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white dark:text-black px-8 py-4 sm:px-10 sm:py-5 rounded-full font-medium hover:bg-white/20 hover:border-white/30 transition-colors duration-300 text-sm sm:text-base min-h-[48px] touch-manipulation group">
-                    <span>Subscribe</span>
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300 inline" />
-                  </button>
+                  <HomeNewsletterForm />
                 </div>
               </div>
             </div>

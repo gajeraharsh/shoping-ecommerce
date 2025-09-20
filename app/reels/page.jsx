@@ -1,11 +1,5 @@
-import ReelsPageClient from "@/components/social/ReelsPageClient"
+import { redirect } from "next/navigation"
 
-export const metadata = {
-  title: "Reels | Faxio",
-}
-
-export default function ReelsPage() {
-  return (
-    <ReelsPageClient />
-  )
+export default function ReelsLegacyRedirect() {
+  redirect("/trendzs")
 }

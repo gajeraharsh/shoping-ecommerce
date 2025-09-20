@@ -154,7 +154,7 @@ export default function ExitIntentPopup() {
               Get <span className="text-red-500">20% OFF</span> Your First Order!
             </h3>
             <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-3 sm:mb-4 px-2">
-              Plus free shipping on orders over ₹999. Limited time offer!
+              Plus Free Shipping Across India. Limited time offer!
             </p>
 
             {/* Countdown */}
@@ -176,7 +176,7 @@ export default function ExitIntentPopup() {
               </li>
               <li className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-                Free shipping (save ₹150)
+                Free Shipping Across India
               </li>
               <li className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full flex-shrink-0"></div>

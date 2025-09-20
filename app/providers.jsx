@@ -7,6 +7,7 @@ import ModalManager from '@/components/ui/ModalManager'
 import { useEffect, useRef } from 'react'
 import { fetchCategoryTree } from '@/features/category/categorySlice'
 import { ensureCart, fetchCart } from '@/features/cart/cartSlice'
+import { fetchCollections } from '@/features/collection/collectionSlice'
 
 function InitBoot() {
   const isAuthenticated = useSelector((s) => s.auth.isAuthenticated)
@@ -21,6 +22,12 @@ function InitBoot() {
     const catStatus = store.getState()?.category?.status
     if (catStatus !== 'succeeded' && catStatus !== 'loading') {
       store.dispatch(fetchCategoryTree())
+    }
+
+    // Preload collections globally for filter label mapping
+    const colStatus = store.getState()?.collection?.status
+    if (colStatus !== 'succeeded' && colStatus !== 'loading') {
+      store.dispatch(fetchCollections())
     }
 
     // AuthContext handles /me hydration; avoid duplicate fetchMe here

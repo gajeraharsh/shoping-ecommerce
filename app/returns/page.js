@@ -1,6 +1,7 @@
 import { RotateCcw, Package, CreditCard, AlertCircle } from 'lucide-react';
 
 export default function ReturnsPage() {
+  const showDetails = false;
   const returnSteps = [
     {
       step: 1,
@@ -43,14 +44,23 @@ export default function ReturnsPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Returns & Exchanges</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We want you to love your purchase. If you're not completely satisfied, 
-            we make returns and exchanges easy and hassle-free.
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Returns Policy</h1>
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+            To return an order, please contact us. We currently process returns manually via our support team.
           </p>
+          <div className="mt-6 flex gap-3 justify-center">
+            <a href="/contact" className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:opacity-90 transition-colors font-semibold">
+              Contact Us
+            </a>
+            <a href="mailto:storemanager.faxio@gmail.com" className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-800 rounded-lg hover:bg-gray-50 transition-colors font-semibold">
+              Email Support
+            </a>
+          </div>
         </div>
 
         {/* Return Policy Overview */}
+        {showDetails && (
+        <>
         <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-12">
           <h2 className="text-xl font-semibold text-green-900 mb-4">Our Return Promise</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
@@ -275,7 +285,7 @@ export default function ReturnsPage() {
         {/* Contact Section */}
         <div className="text-center bg-primary text-white rounded-lg p-8">
           <h2 className="text-2xl font-bold mb-4">Need Help with a Return?</h2>
-          <p className="mb-6">Our customer service team is ready to assist you with any return questions.</p>
+          <p className="mb-6">Please contact our support team to initiate any return.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/contact"
@@ -284,13 +294,15 @@ export default function ReturnsPage() {
               Contact Support
             </a>
             <a
-              href="mailto:returns@fashionista.com"
+              href="mailto:storemanager.faxio@gmail.com"
               className="inline-flex items-center px-6 py-3 border border-white text-white rounded-lg hover:bg-white hover:text-primary transition-colors font-semibold"
             >
-              Email Returns Team
+              Email Support
             </a>
           </div>
         </div>
+        </>
+        )}
       </div>
       
     </div>

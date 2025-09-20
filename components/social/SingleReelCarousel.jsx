@@ -177,7 +177,7 @@ export default function SingleReelCarousel({
 
   const handleShare = (it) => {
     const base = typeof window !== 'undefined' ? window.location.origin : ''
-    const url = `${base}/reels?reel=${encodeURIComponent(it?.id || '')}`
+    const url = `${base}/trendzs?reel=${encodeURIComponent(it?.id || '')}`
     modal.open({
       type: MODAL_TYPES.CUSTOM,
       props: {

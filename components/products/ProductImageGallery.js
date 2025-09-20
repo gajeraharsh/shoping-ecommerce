@@ -276,8 +276,9 @@ export default function ProductImageGallery({ images, productName = 'Product', v
                       src={slide.src}
                       controls={false}
                       playsInline
+                      loop
                       preload="metadata"
-                      className="w-full h-full object-cover bg-black"
+                      className="w-full h-full object-contain bg-black"
                     />
                   )}
                   {slide.type === 'video' && (
@@ -505,8 +506,9 @@ export default function ProductImageGallery({ images, productName = 'Product', v
                         src={slide.src}
                         controls={false}
                         playsInline
+                        loop
                         preload="metadata"
-                        className="w-full h-full object-cover bg-black"
+                        className="w-full h-full object-contain bg-black"
                       />
                     )}
                     {slide.type === 'video' && (

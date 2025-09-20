@@ -364,9 +364,7 @@ export default function ProductTabs({ product, initialReviewsData = null }) {
                     <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3">Free Delivery</h4>
                     <p className="text-green-800 dark:text-green-200 mb-3">On all orders above ₹999</p>
                     <ul className="space-y-2 text-green-700 dark:text-green-300 text-sm">
-                      <li>• Standard delivery: {product.deliveryTime}</li>
-                      <li>• Express delivery: 1-2 business days (₹99)</li>
-                      <li>• Same day delivery: Available in select cities</li>
+                      <li>• Delivery across India: 7-10 days</li>
                     </ul>
                   </div>
                   

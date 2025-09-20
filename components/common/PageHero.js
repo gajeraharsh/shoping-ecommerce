@@ -19,6 +19,9 @@ export default function PageHero({
     right: 'items-end text-right',
   };
 
+  // Determine if we're on a dark overlay to adjust CTA contrast
+  const onDark = typeof overlay === 'string' && overlay.includes('black');
+
   return (
     <section className="relative h-[60vh] md:h-[70vh] lg:h-[75vh] w-full overflow-hidden">
       {image && (
@@ -46,23 +49,36 @@ export default function PageHero({
               {title}
             </h1>
             {description && (
-              <p className="body-lg text-white/90 max-w-2xl mx-auto sm:mx-0 mb-6 sm:mb-8">
+              <p
+                className={`body-lg text-white/90 max-w-2xl mb-6 sm:mb-8 ${
+                  align === 'center' ? 'mx-auto' : 'mx-0'
+                }`}
+              >
                 {description}
               </p>
             )}
             {ctas?.length > 0 && (
               <div className={`flex flex-wrap gap-3 sm:gap-4 ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : ''}`}>
-                {ctas.map((cta, i) => (
-                  <Link
-                    key={i}
-                    href={cta.href || '#'}
-                    className={`inline-flex items-center rounded-full min-h-[48px] px-6 sm:px-8 py-3 sm:py-4 font-semibold transition-colors duration-300 group
-                      ${cta.variant === 'outline' ? 'btn-outline' : cta.variant === 'secondary' ? 'btn-secondary' : 'btn-primary'}`}
-                  >
-                    {cta.label}
-                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Link>
-                ))}
+                {ctas.map((cta, i) => {
+                  const baseBtn =
+                    'inline-flex items-center rounded-full min-h-[48px] px-6 sm:px-8 py-3 sm:py-4 font-semibold transition-colors duration-300 group';
+                  const variantClass =
+                    cta.variant === 'outline'
+                      ? onDark
+                        ? 'border border-white text-white hover:bg-white hover:text-black'
+                        : 'btn-outline'
+                      : cta.variant === 'secondary'
+                      ? 'btn-secondary'
+                      : onDark
+                      ? 'bg-white text-black hover:bg-white/90'
+                      : 'btn-primary';
+                  return (
+                    <Link key={i} href={cta.href || '#'} className={`${baseBtn} ${variantClass}`}>
+                      {cta.label}
+                      <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>
