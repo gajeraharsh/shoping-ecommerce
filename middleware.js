@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  // Rewrite /favicon.ico to existing SVG to avoid 404s
-  if (pathname === '/favicon.ico') {
+  // Rewrite /favicon.svg to existing SVG to avoid 404s
+  if (pathname === '/favicon.svg') {
     const url = request.nextUrl.clone();
     url.pathname = '/favicon.svg';
     return NextResponse.rewrite(url);
@@ -14,5 +14,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/favicon.ico'],
+  matcher: ['/favicon.svg'],
 };

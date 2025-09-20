@@ -1,5 +1,39 @@
 // services/customer/addressService.js
 import { apiClient as api } from '@/services/config/setupApi'
+import states from '@/data/india-states.json'
+
+// Build helpers for state <-> code mapping
+const CODE_SET = new Set(states.map((s) => s.code))
+const CODE_SET_LOWER = new Set(states.map((s) => s.code.toLowerCase()))
+const NAME_TO_CODE = states.reduce((acc, s) => {
+  acc[s.name] = s.code
+  acc[s.name.toLowerCase()] = s.code
+  return acc
+}, {})
+const LOWER_TO_CODE = states.reduce((acc, s) => {
+  acc[s.code.toLowerCase()] = s.code
+  return acc
+}, {})
+
+function toUiStateCode(input) {
+  if (!input) return ''
+  const raw = String(input)
+  // If already a 2-letter code (any case), normalize to uppercase if recognized
+  if (raw.length === 2 && CODE_SET_LOWER.has(raw.toLowerCase())) {
+    return LOWER_TO_CODE[raw.toLowerCase()] || raw.toUpperCase()
+  }
+  // If looks like a name, try to map to code
+  const mapped = NAME_TO_CODE[raw] || NAME_TO_CODE[raw.toLowerCase()]
+  if (mapped) return mapped
+  // Fallback: return original uppercased if 2 letters, else empty string
+  return raw.length === 2 ? raw.toUpperCase() : ''
+}
+
+function toMedusaProvince(input) {
+  // Expect 2-letter code; convert names to code and lowercase for Medusa
+  const code = toUiStateCode(input)
+  return code ? code.toLowerCase() : ''
+}
 
 // Helpers to map between UI model and Medusa model
 function uiToMedusaPayload(ui) {
@@ -16,8 +50,8 @@ function uiToMedusaPayload(ui) {
     address_1: ui.street || '',
     address_2: ui.landmark || '',
     city: ui.city || '',
-    // Medusa expects province as ISO-3166-2 (lowercase); we pass as-is for now
-    province: (ui.state || '').toLowerCase(),
+    // Medusa expects province normalized; we send 2-letter code in lowercase
+    province: toMedusaProvince(ui.state),
     postal_code: ui.pincode || '',
     // Use provided country code or default to India ('in')
     country_code: (ui.country_code || 'IN').toLowerCase(),
@@ -43,7 +77,7 @@ function uiToMedusaPartial(ui) {
     out.metadata = { ...(out.metadata || {}), landmark: ui.address2 }
   }
   if (typeof ui.city === 'string') out.city = ui.city
-  if (typeof ui.state === 'string') out.province = ui.state.toLowerCase()
+  if (typeof ui.state === 'string') out.province = toMedusaProvince(ui.state)
   if (typeof ui.pincode === 'string') out.postal_code = ui.pincode
   if (typeof ui.phone === 'string') out.phone = ui.phone
   if (typeof ui.country_code === 'string') out.country_code = ui.country_code.toLowerCase()
@@ -71,7 +105,8 @@ function medusaToUiAddress(m) {
     street: m.address_1 || '',
     landmark: m.address_2 || m.metadata?.landmark || '',
     city: m.city || '',
-    state: m.province || '',
+    // Normalize province from Medusa to uppercase 2-letter code for UI
+    state: toUiStateCode(m.province || ''),
     pincode: m.postal_code || '',
     country_code: (m.country_code || 'IN').toLowerCase(),
     country: m.metadata?.country || undefined,

@@ -22,6 +22,7 @@ import {
   Heart
 } from 'lucide-react';
 import Private from '@/components/auth/Private';
+import { codeToName } from '@/utils/state';
 
 export default function AddressesPage() {
   const [addresses, setAddresses] = useState([]);
@@ -244,7 +245,7 @@ export default function AddressesPage() {
                     <div className="space-y-2 text-gray-600 dark:text-gray-400">
                       <p className="font-medium text-gray-900 dark:text-white">{address.street}</p>
                       {address.landmark && <p className="text-sm">Near: {address.landmark}</p>}
-                      <p>{address.city}, {address.state} - {address.pincode}</p>
+                      <p>{address.city}, {codeToName(address.state) || address.state} - {address.pincode}</p>
                       <div className="flex items-center gap-2 text-sm">
                         <Phone className="w-4 h-4" />
                         {address.phone}

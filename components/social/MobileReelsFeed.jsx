@@ -422,14 +422,14 @@ export default function MobileReelsFeed({
                 {isVideo(it) && it?.video_url ? (
                   <video
                     src={it.video_url}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain bg-black"
                     controls={false}
                     playsInline
                     loop
                     muted={muted}
                   />
                 ) : (
-                  <SmartImage src={it?.thumbnail_url} alt={it?.name || 'Reel'} className="h-full w-full object-cover" />
+                  <SmartImage src={it?.thumbnail_url} alt={it?.name || 'Reel'} className="h-full w-full object-contain bg-black" />
                 )}
 
                 {/* gradient */}

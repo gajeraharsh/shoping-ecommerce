@@ -10,6 +10,8 @@ import {
   Phone,
   Check
 } from 'lucide-react';
+import StateSelect from '../forms/StateSelect';
+import { nameToCode } from '@/utils/state';
 
 export default function AddAddressModal({ isOpen, onClose, onSubmit, editingAddress = null }) {
   const [formData, setFormData] = useState({
@@ -35,7 +37,12 @@ export default function AddAddressModal({ isOpen, onClose, onSubmit, editingAddr
 
   useEffect(() => {
     if (editingAddress) {
-      setFormData(editingAddress);
+      // Normalize state to code so the dropdown selects correctly for existing addresses
+      const normalized = {
+        ...editingAddress,
+        state: nameToCode(editingAddress.state) || editingAddress.state || '',
+      };
+      setFormData(normalized);
     } else {
       setFormData({
         type: 'home',
@@ -310,17 +317,13 @@ export default function AddAddressModal({ isOpen, onClose, onSubmit, editingAddr
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 State *
               </label>
-              <input
-                type="text"
+              <StateSelect
+                id="state"
                 name="state"
                 value={formData.state}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-4 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
-                  errors.state 
-                    ? 'border-red-300 dark:border-red-600' 
-                    : 'border-gray-300 dark:border-gray-600'
-                }`}
-                placeholder="Maharashtra"
+                error={errors.state}
+                placeholder="Select State"
               />
               {errors.state && (
                 <p className="mt-2 text-sm text-red-600 dark:text-red-400">{errors.state}</p>

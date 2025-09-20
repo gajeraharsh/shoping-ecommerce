@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Search, Heart, ShoppingBag, User, Menu, X, Shield, ChevronDown } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -159,7 +160,7 @@ export default function Header() {
 
   const navigation = [
     { name: 'Collections', href: '/collections' },
-    { name: 'Trendzs', href: '/trendzs' },
+    { name: 'Trends', href: '/trendzs' },
     { name: 'Feed', href: '/feed' },
     { name: 'Blog', href: '/blog' },
     { name: 'About', href: '/about' }
@@ -271,7 +272,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
           <div className="flex items-center space-x-6">
             <div className="flex items-center gap-1">
-              <Shield className="h-3 w-3 text-green-600" />
+              <Shield className="h-3 w-3 text-gray-500" />
               <span>Secure Shopping</span>
             </div>
             <span>•</span>
@@ -291,19 +292,14 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 flex-shrink-0 group">
             <div className="relative">
-              <div className={`bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black rounded-xl font-bold tracking-tight shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105
-                ${isScrolled ? 'px-2.5 py-1.5 text-base sm:text-base md:text-lg' : 'px-2.5 py-1.5 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-base sm:text-lg md:text-xl'}
-              `}>
-                F
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 rounded-xl opacity-0 group-hover:opacity-30 blur-sm transition-all duration-300"></div>
-            </div>
-            <div className="flex flex-col">
-              <span className={`font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-black dark:group-hover:text-white transition-colors
-                ${isScrolled ? 'text-sm sm:text-base md:text-lg' : 'text-sm sm:text-base md:text-lg lg:text-xl'}
-              `}>
-                {BRAND.name}
-              </span>
+              <Image
+                src="/logo.svg"
+                alt={`${BRAND.name} logo`}
+                width={120}
+                height={32}
+                priority
+                className={`h-8 w-auto md:h-9 transition-transform duration-300 group-hover:scale-105 ${isScrolled ? '' : ''}`}
+              />
             </div>
           </Link>
 

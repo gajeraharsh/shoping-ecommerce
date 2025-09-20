@@ -71,7 +71,8 @@ export function medusaToUiOrderDetail(m) {
   const shippedAt = fulfillment?.shipped_at || fulfillment?.created_at || null
   const deliveredAt = m.delivered_at || fulfillment?.delivered_at || null
   const rawPaymentStatus = (m.payment_status || m.payment_collection?.status || '').toString().toLowerCase()
-  const paymentStatus = rawPaymentStatus === 'captured' ? 'paid' : rawPaymentStatus
+  // Treat both 'captured' and 'authorized' as 'paid' for user clarity
+  const paymentStatus = ['captured', 'authorized'].includes(rawPaymentStatus) ? 'paid' : rawPaymentStatus
   const paidAt = m.captured_at || m.paid_at || m.payment_collection?.captured_at || null
 
   const timeline = [

@@ -241,7 +241,7 @@ export default function OrdersPage() {
           </div>
 
           {/* Filter Tabs */}
-          <div className="relative">
+          {/* <div className="relative">
             <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory -mx-2 px-2">
               {Object.entries(statusCounts).map(([status, count]) => (
                 <button
@@ -265,9 +265,8 @@ export default function OrdersPage() {
               ))}
             </div>
 
-            {/* Scroll Indicator */}
             <div className="absolute right-0 top-0 bottom-2 w-6 bg-gradient-to-l from-white dark:from-gray-800 to-transparent pointer-events-none sm:hidden" />
-          </div>
+          </div> */}
         </div>
       </div>
 

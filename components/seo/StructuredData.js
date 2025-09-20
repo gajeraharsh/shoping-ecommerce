@@ -9,12 +9,31 @@ export default function StructuredData() {
     name: BRAND.name,
     url: base,
     logo: `${base}/favicon.svg`,
-    sameAs: [
-      `https://instagram.com/${BRAND.social.instagram.replace('@','')}`,
-      `https://facebook.com/${BRAND.social.facebook}`,
-      `https://twitter.com/${BRAND.social.twitter.replace('@','')}`,
-      `https://youtube.com/@${BRAND.social.youtube}`,
-    ],
+    sameAs: (() => {
+      const links = [];
+      // Instagram
+      if (BRAND?.social?.instagram) {
+        const igHandle = String(BRAND.social.instagram).replace('@', '');
+        links.push(`https://instagram.com/${igHandle}`);
+      }
+      // Facebook: allow full URL or page/handle
+      if (BRAND?.social?.facebook) {
+        const fb = String(BRAND.social.facebook);
+        links.push(fb.startsWith('http') ? fb : `https://facebook.com/${fb}`);
+      }
+      // Twitter/X: optional
+      if (BRAND?.social?.twitter) {
+        const tw = String(BRAND.social.twitter);
+        const normalized = tw.startsWith('http') ? tw : `https://twitter.com/${tw.replace('@', '')}`;
+        links.push(normalized);
+      }
+      // YouTube: allow channel/handle, assume handle if no protocol
+      if (BRAND?.social?.youtube) {
+        const yt = String(BRAND.social.youtube);
+        links.push(yt.startsWith('http') ? yt : `https://youtube.com/@${yt}`);
+      }
+      return links;
+    })(),
     contactPoint: [{
       '@type': 'ContactPoint',
       email: BRAND.contact.email,

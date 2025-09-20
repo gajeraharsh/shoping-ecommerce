@@ -165,25 +165,25 @@ export default function WishlistPage() {
             </Link>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              {/* <p className="text-gray-600 dark:text-gray-400">
                 {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'} •
                 ₹{calculateTotalValue().toLocaleString()} total value
-              </p>
+              </p> */}
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors">
+            {/* <button className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors">
               <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-            </button>
-            {wishlistItems.length > 0 && (
+            </button> */}
+            {/* {wishlistItems.length > 0 && (
               <button
                 onClick={clearWishlist}
                 className="p-3 bg-red-100 dark:bg-red-900/20 hover:bg-red-200 dark:hover:bg-red-900/30 rounded-xl transition-colors"
               >
                 <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
               </button>
-            )}
+            )} */}
           </div>
         </div>
 
