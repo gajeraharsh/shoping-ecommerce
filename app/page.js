@@ -8,6 +8,35 @@ import PhotoReelGrid from '@/components/social/PhotoReelGrid';
 import SimpleTrustSection from '@/components/ui/SimpleTrustSection';
 import SimpleTestimonials from '@/components/ui/SimpleTestimonials';
 
+export const metadata = {
+  title: 'Faxio – Official Site | Premium Fashion & Style',
+  description:
+    'Discover Faxio’s curated collection of premium, timeless fashion. Shop elegant styles crafted for the modern woman. Official website.',
+  alternates: { canonical: '/' },
+  openGraph: {
+    title: 'Faxio – Official Site | Premium Fashion & Style',
+    description:
+      'Discover Faxio’s curated collection of premium, timeless fashion. Shop elegant styles crafted for the modern woman. Official website.',
+    type: 'website',
+    url: '/',
+    images: [
+      {
+        url: '/og.svg',
+        width: 1200,
+        height: 630,
+        alt: 'Faxio – Premium Fashion & Style',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Faxio – Official Site | Premium Fashion & Style',
+    description:
+      'Discover Faxio’s curated collection of premium, timeless fashion. Shop elegant styles crafted for the modern woman. Official website.',
+    images: ['/og.svg'],
+  },
+};
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
