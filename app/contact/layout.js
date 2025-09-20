@@ -1,10 +1,10 @@
 export const metadata = {
-  title: 'Contact Us | Faxio',
+  title: 'Customer Support & Enquiries | Faxio',
   description: 'Get in touch with Faxio for support, order inquiries, partnerships, and general questions.',
   keywords: ['contact Faxio', 'customer support', 'order support', 'partnerships'],
   alternates: { canonical: '/contact' },
   openGraph: {
-    title: 'Contact Us | Faxio',
+    title: 'Customer Support & Enquiries | Faxio',
     description: 'Reach our team for support, orders, and partnerships.',
     type: 'website',
     url: '/contact',
@@ -12,7 +12,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Contact Us | Faxio',
+    title: 'Customer Support & Enquiries | Faxio',
     description: 'Reach our team for support, orders, and partnerships.',
   },
 };
