@@ -6,6 +6,7 @@ import { Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import SmartImage from '@/components/ui/SmartImage';
+import { getBanners } from '@/services/modules/banner/bannerService';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -50,7 +51,33 @@ export default function Hero() {
       link: "/products?q=casual"
     }
   ], []);
- 
+  
+  const [bannerSlides, setBannerSlides] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const { data } = await getBanners({ limit: 50, offset: 0 });
+        const banners = Array.isArray(data?.banners) ? data.banners : [];
+        if (!mounted) return;
+        const mapped = banners.map((b) => ({
+          id: b.id,
+          title: b.name || '',
+          image: b.desktop_image_url || b.mobile_image_url || '',
+          imageMobile: b.mobile_image_url || b.desktop_image_url || '',
+          imageDesktop: b.desktop_image_url || b.mobile_image_url || '',
+          link: b.link_url || '#',
+        })).filter((s) => s.image);
+        setBannerSlides(mapped);
+      } catch (e) {
+        // fail silently and keep static slides
+      }
+    })();
+    return () => { mounted = false };
+  }, []);
+
+  const slidesToRender = (bannerSlides && bannerSlides.length) ? bannerSlides : heroSlides;
 
   const categories = useMemo(() => [
     {
@@ -117,7 +144,7 @@ export default function Hero() {
           className="h-full"
           style={{ willChange: 'auto' }}
         >
-          {heroSlides.map((slide) => (
+          {slidesToRender.map((slide) => (
             <SwiperSlide key={slide.id}>
               <div className="relative h-full">
                 <div className="absolute inset-0">
