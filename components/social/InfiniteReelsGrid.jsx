@@ -7,6 +7,7 @@ import { reelsService } from "@/services/modules/reels/reelsService"
 import ReelsModal from "@/components/social/ReelsModal"
 import ShareDialog from "@/components/social/ShareDialog"
 import { Heart, Share2 } from "lucide-react"
+import Link from 'next/link'
 
 export default function InfiniteReelsGrid({
   title = "Reels",
@@ -392,8 +393,23 @@ export default function InfiniteReelsGrid({
                   />
                 ) : null}
 
-                {/* actions */}
-                <div className="absolute right-2 bottom-2 sm:bottom-3 md:bottom-4 lg:bottom-5 xl:bottom-6 flex flex-col items-center gap-2 sm:gap-3 text-white z-[2]">
+                {/* Shop Now CTA (bottom-right on cards) */}
+                {it?.product_id ? (
+                  <div className="absolute right-2 bottom-2 z-[3]">
+                    <Link
+                      href={`/products/${encodeURIComponent(it.product_id)}`}
+                      prefetch={false}
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-3.5 py-1.5 rounded-full bg-white text-gray-900 text-[13px] font-medium shadow border border-gray-200/80 hover:bg-gray-50 active:scale-[0.99] transition"
+                      aria-label="Shop Now"
+                    >
+                      Shop now
+                    </Link>
+                  </div>
+                ) : null}
+
+                {/* actions moved up to avoid overlap with CTA */}
+                <div className="absolute right-2 bottom-16 sm:bottom-16 md:bottom-20 lg:bottom-24 flex flex-col items-center gap-2 sm:gap-3 text-white z-[2]">
                   <button
                     className={`h-8 w-8 sm:h-9 sm:w-9 rounded-full grid place-items-center shadow border ${it.is_like ? 'bg-red-500 border-red-500' : 'bg-white/10 hover:bg-white/20 border-white/20'}`}
                     onClick={(e) => handleLike(e, it)}

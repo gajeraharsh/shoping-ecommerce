@@ -6,6 +6,7 @@ import { X, Heart, Share2 } from "lucide-react"
 import SmartImage from "@/components/ui/SmartImage"
 import { reelsService } from "@/services/modules/reels/reelsService"
 import ShareDialog from "@/components/social/ShareDialog"
+import Link from 'next/link'
 
 export default function ReelsModal({ isOpen, onClose, initialReelId, initialReelData = null, filters = {}, order = "-created_at", variant = 'phone', forceHome = true, singleOnly = false }) {
   const [allReels, setAllReels] = useState([])
@@ -421,6 +422,21 @@ export default function ReelsModal({ isOpen, onClose, initialReelId, initialReel
                         <Share2 size={18} />
                       </button>
                     </div>
+
+                    {/* Shop Now CTA (bottom-right on mobile) */}
+                    {reel?.product_id ? (
+                      <div className="absolute right-3 bottom-[calc(env(safe-area-inset-bottom,0)+12px)] z-[30] pointer-events-auto">
+                        <Link
+                          href={`/products/${encodeURIComponent(reel.product_id)}`}
+                          prefetch={false}
+                          onClick={(e) => e.stopPropagation()}
+                          className="px-3.5 py-1.5 rounded-full bg-white text-gray-900 text-[13px] font-medium shadow-lg border border-gray-200/80 hover:bg-gray-50 active:scale-[0.99] transition"
+                          aria-label="Shop Now"
+                        >
+                          Shop now
+                        </Link>
+                      </div>
+                    ) : null}
 
                     {/* Caption */}
                     <div className="absolute left-4 bottom-4 right-20 text-white/95">
