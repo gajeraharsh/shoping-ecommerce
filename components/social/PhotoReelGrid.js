@@ -6,6 +6,7 @@ import { reelsService } from '@/services/modules/reels/reelsService'
 import ReelsModal from '@/components/social/ReelsModal'
 import ShareDialog from '@/components/social/ShareDialog'
 import { Heart, Share2 } from 'lucide-react'
+import Link from 'next/link'
 
 export default function PhotoReelGrid({ title = 'Follow Our Journey', filters = {}, limit = 12, className = '' }) {
   const [items, setItems] = useState([])
@@ -95,10 +96,25 @@ export default function PhotoReelGrid({ title = 'Follow Our Journey', filters = 
                   setActiveReelId(it.id)
                   setModalOpen(true)
                 }}
-             >
+              >
                 <SmartImage src={it.thumbnail_url || it.video_url} alt={it.name || 'Reel Photo'} className="object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* Shop Now CTA (bottom-right on cards) */}
+                {it?.product_id ? (
+                  <div className="absolute right-2 bottom-2 z-[3]">
+                    <Link
+                      href={`/products/${encodeURIComponent(it.product_id)}`}
+                      prefetch={false}
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-3 py-1.5 rounded-full bg-white text-gray-900 text-[12.5px] font-medium shadow border border-gray-200/80 hover:bg-gray-50 active:scale-[0.99] transition"
+                      aria-label="Shop Now"
+                    >
+                      Shop now
+                    </Link>
+                  </div>
+                ) : null}
+                {/* Lift overlay actions to avoid overlapping Shop CTA */}
+                <div className="pointer-events-none absolute bottom-14 left-3 right-3 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="text-white text-sm line-clamp-1 drop-shadow">{it.name || 'Journey'}</div>
                   <div className="flex items-center gap-2">
                     <button

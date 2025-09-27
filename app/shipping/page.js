@@ -1,4 +1,5 @@
 import { Truck, Clock, MapPin, Package } from 'lucide-react';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export default function ShippingPage() {
   const shippingOptions = [
@@ -35,6 +36,21 @@ export default function ShippingPage() {
 
   return (
     <div className="min-h-screen">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="Shipping Information | Faxio"
+            description="Free shipping across India. Learn about delivery timelines, processing, tracking, and restrictions."
+            url={`${base}/shipping`}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Shipping', item: `${base}/shipping` },
+            ]}
+          />
+        );
+      })()}
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Hero Section */}

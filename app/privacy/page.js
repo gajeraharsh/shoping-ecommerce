@@ -1,8 +1,24 @@
 import { Shield, Eye, Lock, Users } from 'lucide-react';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="Privacy Policy | Faxio"
+            description="Learn how Faxio collects, uses, and protects your information. Read our privacy practices."
+            url={`${base}/privacy`}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Privacy Policy', item: `${base}/privacy` },
+            ]}
+          />
+        );
+      })()}
       
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}

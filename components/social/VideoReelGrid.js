@@ -6,6 +6,7 @@ import { reelsService } from '@/services/modules/reels/reelsService'
 import ReelsModal from '@/components/social/ReelsModal'
 import ShareDialog from '@/components/social/ShareDialog'
 import { Heart, Share2 } from 'lucide-react'
+import Link from 'next/link'
 
 export default function VideoReelGrid({ title = 'Style Stories', filters = {}, limit = 12, className = '' }) {
   const [items, setItems] = useState([])
@@ -147,8 +148,23 @@ export default function VideoReelGrid({ title = 'Style Stories', filters = {}, l
                   />
                 )}
 
-                {/* Side actions like modal (right side) */}
-                <div className="absolute right-2 bottom-20 flex flex-col items-center gap-3 text-white z-[2]">
+                {/* Shop Now CTA (bottom-right on cards) */}
+                {it?.product_id ? (
+                  <div className="absolute right-2 bottom-2 z-[3]">
+                    <Link
+                      href={`/products/${encodeURIComponent(it.product_id)}`}
+                      prefetch={false}
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-3.5 py-1.5 rounded-full bg-white text-gray-900 text-[13px] font-medium shadow border border-gray-200/80 hover:bg-gray-50 active:scale-[0.99] transition"
+                      aria-label="Shop Now"
+                    >
+                      Shop now
+                    </Link>
+                  </div>
+                ) : null}
+
+                {/* Side actions moved up to avoid overlap with CTA */}
+                <div className="absolute right-2 bottom-[88px] flex flex-col items-center gap-3 text-white z-[2]">
                   <button
                     className={`h-9 w-9 rounded-full grid place-items-center shadow border ${it.is_like ? 'bg-red-500 border-red-500' : 'bg-white/10 hover:bg-white/20 border-white/20'}`}
                     onClick={(e) => handleLike(e, it)}

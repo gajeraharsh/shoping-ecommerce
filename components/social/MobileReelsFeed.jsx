@@ -7,6 +7,7 @@ import { Heart, Share2, Volume2, VolumeX } from "lucide-react"
 import { useModal } from '@/hooks/useModal'
 import { MODAL_TYPES } from '@/features/ui/modalTypes'
 import ShareModal from '@/components/social/ShareModal'
+import Link from 'next/link'
 
 /**
  * MobileReelsFeed
@@ -470,6 +471,20 @@ export default function MobileReelsFeed({
                     <Share2 size={18} />
                   </button>
                 </div>
+
+                {/* Shop Now CTA - bottom right, mobile priority */}
+                {it?.product_id ? (
+                  <div className="absolute right-3 bottom-[calc(env(safe-area-inset-bottom,0)+12px)] z-30">
+                    <Link
+                      href={`/products/${encodeURIComponent(it.product_id)}`}
+                      prefetch={false}
+                      className="px-3.5 py-1.5 rounded-full bg-white text-gray-900 text-[13px] font-medium shadow-lg border border-gray-200/80 hover:bg-gray-50 active:scale-[0.99] transition"
+                      aria-label="Shop Now"
+                    >
+                      Shop now
+                    </Link>
+                  </div>
+                ) : null}
               </div>
             </div>
           ))}

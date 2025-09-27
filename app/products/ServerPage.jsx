@@ -2,6 +2,7 @@ import ProductsClient from '@/components/products/ProductsClient';
 import { getProducts } from '@/services/modules/product/productService';
 import { getCategoryTree } from '@/services/modules/category/categoryService';
 import PaginationLinks from '@/components/seo/PaginationLinks';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 // Server Component: first paint is fully rendered HTML for SEO
 export default async function ServerProductsPage({ searchParams }) {
@@ -154,6 +155,23 @@ export default async function ServerProductsPage({ searchParams }) {
 
   return (
     <>
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        const basePath = '/products';
+        const url = page && page > 1 ? `${base}${basePath}?page=${page}&limit=${limit}` : `${base}${basePath}`;
+        return (
+          <PageJsonLd
+            type="CollectionPage"
+            title="Shop Products | Faxio"
+            description="Explore Faxio’s latest products and curated fashion pieces."
+            url={url}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Products', item: `${base}${basePath}` },
+            ]}
+          />
+        );
+      })()}
       <PaginationLinks basePath="/products" page={page} limit={limit} count={count} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <ProductsClient

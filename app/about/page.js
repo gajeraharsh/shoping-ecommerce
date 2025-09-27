@@ -5,6 +5,7 @@ import PageHero from '@/components/common/PageHero';
 import SectionHeading from '@/components/common/SectionHeading';
 import GlassCard from '@/components/common/GlassCard';
 import useRevealOnScroll from '@/hooks/useRevealOnScroll';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export default function AboutPage() {
   const storyRef = useRevealOnScroll();
@@ -66,6 +67,21 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="About | Faxio"
+            description="Learn about Faxio — our story, values, mission, and the team behind the brand delivering premium fashion & style."
+            url={`${base}/about`}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'About', item: `${base}/about` },
+            ]}
+          />
+        );
+      })()}
       {/* Page Hero with brand aesthetic */}
       <PageHero
         title="About Faxio"

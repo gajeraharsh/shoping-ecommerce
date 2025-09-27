@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import SmartImage from '@/components/ui/SmartImage';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 // Known collection IDs (from homepage Hero.js and user-provided Sale ID)
 const COLLECTIONS = [
@@ -11,7 +12,7 @@ const COLLECTIONS = [
     description: 'Fresh drops just in—discover the latest styles first.',
     image:
       'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2340&auto=format&fit=crop',
-    collection_id: 'pcol_01K4N7BTPRPGRYNAKS5YAYC5DC',
+    collection_id: 'pcol_01K6582SDF4VDSDDCRB3J3WNVM',
   },
   {
     key: 'best_seller',
@@ -19,7 +20,7 @@ const COLLECTIONS = [
     description: "Our most-loved pieces that customers can't get enough of.",
     image:
       'https://images.unsplash.com/photo-1520975930418-5b233e9894a5?q=80&w=2340&auto=format&fit=crop',
-    collection_id: 'pcol_01K4N7C20DD14BD7WM6B7GZ1P8',
+    collection_id: 'pcol_01K65824AQ7PKJV8ZAM9E5RB71',
   },
   {
     key: 'sale',
@@ -28,13 +29,29 @@ const COLLECTIONS = [
     image:
       'https://images.unsplash.com/photo-1592878904946-b3cd9f3fbc4b?q=80&w=2340&auto=format&fit=crop',
     // User provided Sale collection id
-    collection_id: 'pcol_01K4N7C74DCWX3TDXPQ2ATNRQ9',
+    collection_id: 'pcol_01K6583CAWE3N7JPS55M881G0B',
   },
 ];
 
 export default function CollectionsPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-gray-900">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        const url = `${base}/collections`;
+        return (
+          <PageJsonLd
+            type="CollectionPage"
+            title="Collections | Faxio"
+            description="Explore curated collections designed to elevate your wardrobe."
+            url={url}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Collections', item: url },
+            ]}
+          />
+        );
+      })()}
       {/* Header section */}
       <section className="border-b border-gray-100 dark:border-gray-800 bg-gray-50/60 dark:bg-gray-800/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">

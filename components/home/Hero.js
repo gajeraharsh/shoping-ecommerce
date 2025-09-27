@@ -6,6 +6,7 @@ import { Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import SmartImage from '@/components/ui/SmartImage';
+import { getBanners } from '@/services/modules/banner/bannerService';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -50,26 +51,52 @@ export default function Hero() {
       link: "/products?q=casual"
     }
   ], []);
- 
+  
+  const [bannerSlides, setBannerSlides] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const { data } = await getBanners({ limit: 50, offset: 0 });
+        const banners = Array.isArray(data?.banners) ? data.banners : [];
+        if (!mounted) return;
+        const mapped = banners.map((b) => ({
+          id: b.id,
+          title: b.name || '',
+          image: b.desktop_image_url || b.mobile_image_url || '',
+          imageMobile: b.mobile_image_url || b.desktop_image_url || '',
+          imageDesktop: b.desktop_image_url || b.mobile_image_url || '',
+          link: b.link_url || '#',
+        })).filter((s) => s.image);
+        setBannerSlides(mapped);
+      } catch (e) {
+        // fail silently and keep static slides
+      }
+    })();
+    return () => { mounted = false };
+  }, []);
+
+  const slidesToRender = (bannerSlides && bannerSlides.length) ? bannerSlides : heroSlides;
 
   const categories = useMemo(() => [
     {
       title: "New Arrivals",
       description: "Latest trends and seasonal favorites",
       image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000&auto=format&fit=crop",
-      link: { pathname: '/products', query: { collection_id: 'pcol_01K4N7BTPRPGRYNAKS5YAYC5DC', page: 1 } }
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K6582SDF4VDSDDCRB3J3WNVM', page: 1 } }
     },
     {
       title: "Bestsellers",
       description: "Customer favorites and top-rated pieces",
       image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
-      link: { pathname: '/products', query: { collection_id: 'pcol_01K4N7C20DD14BD7WM6B7GZ1P8', page: 1 } }
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K65824AQ7PKJV8ZAM9E5RB71', page: 1 } }
     },
     {
       title: "Sale",
       description: "Limited time offers on premium pieces",
       image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1000&auto=format&fit=crop",
-      link: { pathname: '/products', query: { collection_id: 'pcol_01K4N7C74DCWX3TDXPQ2ATNRQ9', page: 1 } }
+      link: { pathname: '/products', query: { collection_id: 'pcol_01K6583CAWE3N7JPS55M881G0B', page: 1 } }
     }
   ], []);
 
@@ -117,7 +144,7 @@ export default function Hero() {
           className="h-full"
           style={{ willChange: 'auto' }}
         >
-          {heroSlides.map((slide) => (
+          {slidesToRender.map((slide) => (
             <SwiperSlide key={slide.id}>
               <div className="relative h-full">
                 <div className="absolute inset-0">
@@ -208,7 +235,7 @@ export default function Hero() {
         <CollectionProductsSection
           title="Best Sellers"
           description="Our most-loved pieces that customers can't get enough of."
-          collectionId="pcol_01K4N7C20DD14BD7WM6B7GZ1P8"
+          collectionId="pcol_01K65824AQ7PKJV8ZAM9E5RB71"
           limit={8}
         />
 
@@ -216,7 +243,7 @@ export default function Hero() {
         <CollectionProductsSection
           title="New Arrivals"
           description="Fresh drops just in—discover the latest styles first."
-          collectionId="pcol_01K4N7BTPRPGRYNAKS5YAYC5DC"
+          collectionId="pcol_01K6582SDF4VDSDDCRB3J3WNVM"
           limit={8}
         />
 

@@ -7,6 +7,7 @@ import { Heart, Share2, ChevronLeft, ChevronRight } from "lucide-react"
 import { useModal } from '@/hooks/useModal'
 import { MODAL_TYPES } from '@/features/ui/modalTypes'
 import ShareModal from '@/components/social/ShareModal'
+import Link from 'next/link'
 
 /**
  * SingleReelCarousel
@@ -243,6 +244,20 @@ export default function SingleReelCarousel({
                     <div className="text-xs opacity-80 line-clamp-1">{activeItem.tags.map((t) => `#${String(t).replace(/\s+/g, "")}`).join(" ")}</div>
                   ) : null}
                 </div>
+
+                {/* Shop Now CTA (mobile priority) */}
+                {activeItem?.product_id ? (
+                  <div className="absolute inset-x-3 bottom-[calc(env(safe-area-inset-bottom,0)+12px)] z-20 flex justify-center md:justify-start md:left-4 md:right-auto">
+                    <Link
+                      href={`/products/${encodeURIComponent(activeItem.product_id)}`}
+                      className="px-4 py-2 rounded-full bg-white text-gray-900 text-sm font-medium shadow-lg border border-gray-200/80 hover:bg-gray-50 active:scale-[0.99] transition md:px-5 md:py-2.5"
+                      aria-label="Shop Now"
+                      prefetch={false}
+                    >
+                      Shop now
+                    </Link>
+                  </div>
+                ) : null}
 
                 {/* Right-side controls (overlay on mobile) */}
                 <div className="md:hidden absolute right-3 bottom-[calc(env(safe-area-inset-bottom,0)+64px)] flex flex-col items-center gap-2 z-20">

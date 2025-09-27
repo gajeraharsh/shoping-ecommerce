@@ -7,6 +7,7 @@ import VideoReelGrid from '@/components/social/VideoReelGrid';
 import PhotoReelGrid from '@/components/social/PhotoReelGrid';
 import SimpleTrustSection from '@/components/ui/SimpleTrustSection';
 import SimpleTestimonials from '@/components/ui/SimpleTestimonials';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export const metadata = {
   title: 'Faxio – Official Site | Premium Fashion & Style',
@@ -40,6 +41,20 @@ export const metadata = {
 export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="Faxio – Official Site | Premium Fashion & Style"
+            description="Discover Faxio’s curated collection of premium, timeless fashion. Shop elegant styles crafted for the modern woman. Official website."
+            url={`${base}/`}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+            ]}
+          />
+        );
+      })()}
       <main>
         <Hero />
         

@@ -44,6 +44,9 @@ export const ENDPOINTS = {
   NEWSLETTER: {
     SUBSCRIBE: '/newsletter',
   },
+  BANNER: {
+    LIST: '/banners',
+  },
   WISHLIST: {
     LIST: '/wishlist',
     ADD: '/wishlist',
