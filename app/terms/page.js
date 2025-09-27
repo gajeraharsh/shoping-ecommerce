@@ -1,8 +1,24 @@
 import { FileText, Scale, Shield, AlertTriangle } from 'lucide-react';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="Terms of Service | Faxio"
+            description="Read Faxio's Terms of Service — your rights, responsibilities, and our policies."
+            url={`${base}/terms`}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Terms', item: `${base}/terms` },
+            ]}
+          />
+        );
+      })()}
       
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}

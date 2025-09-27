@@ -6,6 +6,23 @@ export const metadata = {
 export default function CookiePolicyPage() {
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        const url = `${base}/cookies`;
+        const PageJsonLd = require('@/components/seo/PageJsonLd.jsx').default;
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="Cookie Policy | Faxio"
+            description="Learn how Faxio uses cookies to enhance your shopping experience, provide secure checkout, and analyze site usage."
+            url={url}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Cookie Policy', item: url },
+            ]}
+          />
+        );
+      })()}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">Cookie Policy</h1>
         <p className="text-gray-600 dark:text-gray-400 mb-8">

@@ -30,6 +30,7 @@ import {
 import Private from '@/components/auth/Private';
 import SmartImage from '@/components/ui/SmartImage';
 import { listMyOrders } from '@/services/order/orderService';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export default function AccountDashboard() {
   const { user } = useAuth();
@@ -117,6 +118,21 @@ export default function AccountDashboard() {
   return (
     <Private>
       <div className="space-y-6">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="My Account | Faxio"
+            description="Manage your orders, wishlist, addresses, and settings on your Faxio account."
+            url={`${base}/account`}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Account', item: `${base}/account` },
+            ]}
+          />
+        );
+      })()}
       {/* Welcome Section */}
       <div className="bg-gradient-to-br from-black via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-gray-200 text-white dark:text-black rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">

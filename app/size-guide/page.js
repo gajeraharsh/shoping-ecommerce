@@ -1,4 +1,5 @@
 import { Ruler, Users, AlertTriangle } from 'lucide-react';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export default function SizeGuidePage() {
   const generalSizing = [
@@ -44,6 +45,21 @@ export default function SizeGuidePage() {
 
   return (
     <div className="min-h-screen">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="Size Guide | Faxio"
+            description="Find your perfect fit with Faxio's comprehensive size guide and measurement tips."
+            url={`${base}/size-guide`}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Size Guide', item: `${base}/size-guide` },
+            ]}
+          />
+        );
+      })()}
       
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}

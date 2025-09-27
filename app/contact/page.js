@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import { submitContact } from '@/services/modules/contact/contactService'
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -36,6 +37,21 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="Contact | Faxio"
+            description="Get in touch with Faxio — we're here to help with orders, returns, shipping, and product questions."
+            url={`${base}/contact`}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Contact', item: `${base}/contact` },
+            ]}
+          />
+        );
+      })()}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10 overflow-x-hidden">
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">

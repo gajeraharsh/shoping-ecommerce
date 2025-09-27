@@ -3,6 +3,7 @@ import BlogHero from '@/components/blog/BlogHero';
 import InstagramFeed from '@/components/social/InstagramFeed';
 import InstagramReelsFeed from '@/components/social/InstagramReelsFeed';
 import BlogListingClient from '@/components/blog/BlogListingClient';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export const revalidate = 300;
 
@@ -45,6 +46,23 @@ export async function generateMetadata() {
 export default function BlogPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* JSON-LD for Blog listing page */}
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        const url = `${base}/blog`;
+        return (
+          <PageJsonLd
+            type="CollectionPage"
+            title="Blog | Faxio"
+            description="Read the latest fashion tips, trends, and stories from Faxio."
+            url={url}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Blog', item: url },
+            ]}
+          />
+        );
+      })()}
       
       {/* <BlogHero /> */}
       <BlogListingClient />

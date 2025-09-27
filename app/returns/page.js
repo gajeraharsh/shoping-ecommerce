@@ -1,4 +1,5 @@
 import { RotateCcw, Package, CreditCard, AlertCircle } from 'lucide-react';
+import PageJsonLd from '@/components/seo/PageJsonLd.jsx';
 
 export default function ReturnsPage() {
   const showDetails = false;
@@ -40,6 +41,21 @@ export default function ReturnsPage() {
 
   return (
     <div className="min-h-screen">
+      {(() => {
+        const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
+        return (
+          <PageJsonLd
+            type="WebPage"
+            title="Returns Policy | Faxio"
+            description="Learn how to initiate returns and refunds at Faxio. Read our return windows, conditions, and shipping details."
+            url={`${base}/returns`}
+            breadcrumbs={[
+              { name: 'Home', item: `${base}/` },
+              { name: 'Returns', item: `${base}/returns` },
+            ]}
+          />
+        );
+      })()}
       
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
