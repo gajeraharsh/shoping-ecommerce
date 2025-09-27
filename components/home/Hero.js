@@ -58,17 +58,19 @@ export default function Hero() {
     let mounted = true;
     (async () => {
       try {
-        const { data } = await getBanners({ limit: 50, offset: 0 });
-        const banners = Array.isArray(data?.banners) ? data.banners : [];
-        if (!mounted) return;
-        const mapped = banners.map((b) => ({
-          id: b.id,
-          title: b.name || '',
-          image: b.desktop_image_url || b.mobile_image_url || '',
-          imageMobile: b.mobile_image_url || b.desktop_image_url || '',
-          imageDesktop: b.desktop_image_url || b.mobile_image_url || '',
-          link: b.link_url || '#',
-        })).filter((s) => s.image);
+        const res = await getBanners({ limit: 50 });
+        const mapped = (res?.banners || [])
+          .map((b) => ({
+            id: b.id,
+            title: b.name || '',
+            image: b.desktop_image_url || b.mobile_image_url || '',
+            imageMobile: b.mobile_image_url || b.desktop_image_url || '',
+            imageDesktop: b.desktop_image_url || b.mobile_image_url || '',
+            link: b.link_url || '#',
+            position: Number.isFinite(b?.position) ? b.position : 9999,
+          }))
+          .filter((s) => s.image)
+          .sort((a, b) => a.position - b.position);
         setBannerSlides(mapped);
       } catch (e) {
         // fail silently and keep static slides
@@ -77,7 +79,7 @@ export default function Hero() {
     return () => { mounted = false };
   }, []);
 
-  const slidesToRender = (bannerSlides && bannerSlides.length) ? bannerSlides : heroSlides;
+  const slidesToRender = bannerSlides;
 
   const categories = useMemo(() => [
     {
